@@ -1,6 +1,0 @@
-{
-  "python.analysis.autoSearchPaths": true,
-  "python.analysis.extraPaths": [
-    "/home/abdelnour-main/Documents/Projects/Text2KG/cli/external/pycli"
-  ]
-}

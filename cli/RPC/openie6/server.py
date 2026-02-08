@@ -46,6 +46,9 @@ def copy_resources():
                 shutil.copyfile(src, dst)
                 print(f"Copied {src} to {dst}")
 
+def cleanup():
+    os.remove(os.path.join())
+
 def load_model_for_task(
     task : str,
     gpus : int = 0
