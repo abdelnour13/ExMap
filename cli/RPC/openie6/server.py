@@ -28,6 +28,17 @@ CONJ_MODEL_PATH = os.path.join(OPENIE6_DIR, "models","conj_model", "epoch=28_eva
 
 MODELS = {}
 
+def clean_up():
+    """
+    clean up openie6 side effects.
+    """
+        
+    if os.path.exists(path='carb'):
+        shutil.rmtree('carb')
+
+    if os.path.exists(path="lightning_logs"):
+        shutil.rmtree('lightning_logs')
+
 def copy_resources():
     """
     copies resources needed by openie6 into the interpreter path
@@ -294,6 +305,8 @@ def main():
         server.serve_forever()
     except KeyboardInterrupt:
         print("Openie6 server shutting down...")
+    finally:
+        clean_up()
 
 if __name__ == '__main__':
     main()
