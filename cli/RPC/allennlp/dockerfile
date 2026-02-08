@@ -1,0 +1,15 @@
+FROM python:3.8.20-slim
+
+WORKDIR /allennlp
+
+# Install system dependencies for building Python packages
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install AllenNLP and its models
+RUN pip install --no-cache-dir allennlp allennlp_models
+
+# Command to run your application
+CMD ["python3", "server.py"]

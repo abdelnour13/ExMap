@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  allennlp:
+    build: ./RPC/allennlp
+    ports:
+    - 8080:8080
+    volumes:
+    - ./RPC/allennlp/server.py:/allennlp/server.py
+  openie6:
+    build: ./RPC/openie6
+    ports:
+    - 8081:8081
+    volumes:
+    - ./RPC/openie6/server.py:/openie6/server.py
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: all
+            capabilities:
+            - gpu
