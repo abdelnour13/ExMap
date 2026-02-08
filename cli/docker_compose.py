@@ -9,16 +9,17 @@ cli = Cli(
 )
 
 class RPCService(BaseModel):
+    add : bool
     port : int
-    gpu_access : bool
+    enable_gpu_access : bool
 
 @cli.register_command(
     name="generate-docker-compose",
     description="Automatically generates docker-compose.yml file."
 )
 def generate(
-    allennlp : Parsable[RPCService, toml_parser],
-    openie6 : Optional[Parsable[RPCService, toml_parser]] = None
+    allennlp : RPCService,
+    openie6 : RPCService,
 ):
 
     ### GPU capabilities
@@ -44,19 +45,21 @@ def generate(
     }
 
     ### AllenNLP Service
-    allennlp_service = {
-        "build" : "./RPC/allennlp",
-        "ports" : [f"{allennlp.port}:{allennlp.port}"],
-        "volumes" : ["./RPC/allennlp/server.py:/allennlp/server.py"]
-    }
+    if allennlp.add:
 
-    if allennlp.gpu_access:
-        allennlp_service["deploy"] = deploy
+        allennlp_service = {
+            "build" : "./RPC/allennlp",
+            "ports" : [f"{allennlp.port}:{allennlp.port}"],
+            "volumes" : ["./RPC/allennlp/server.py:/allennlp/server.py"]
+        }
 
-    services["allennlp"] = allennlp_service
+        if allennlp.enable_gpu_access:
+            allennlp_service["deploy"] = deploy
+
+        services["allennlp"] = allennlp_service
 
     ### Openie6 Service
-    if openie6 is not None:
+    if openie6.add:
 
         openie6_service = {
             "build" : "./RPC/openie6",
@@ -64,7 +67,7 @@ def generate(
             "volumes" : ["./RPC/openie6/server.py:/openie6/server.py"],
         }
 
-        if openie6.gpu_access:
+        if openie6.enable_gpu_access:
             openie6_service["deploy"] = deploy
 
         services["openie6"] = openie6_service

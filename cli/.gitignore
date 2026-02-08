@@ -1,4 +1,4 @@
-external/*
+external
 .vscode
 __pycache__/*
 RPC/openie6/openie6
