@@ -6,7 +6,8 @@ sudo apt-get install -y nvidia-container-toolkit
 sudo apt-get install -y nvidia-docker2
 sudo systemctl restart docker
 
-### TEST NVIDIA-CONNECTIVITY (nvidia-drivers should be installed on the host machine)
 sudo ln -s /sbin/ldconfig /sbin/ldconfig.real # YOU MAY NEED TO RUN THIS
+
+### TEST NVIDIA-CONNECTIVITY (nvidia-drivers should be installed on the host machine)
 sudo  run --name=test --gpus all -it ubuntu
 sudo docker exec -it test nvidia-smi

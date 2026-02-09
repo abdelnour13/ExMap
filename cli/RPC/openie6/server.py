@@ -5,13 +5,13 @@ import shutil
 import tempfile
 import logging
 import sys
-sys.path.insert(0, os.path.join('.', 'openie6', 'imojie', 'benchmark'))
-sys.path.insert(0, os.path.join('.', 'openie6', 'imojie'))
-sys.path.insert(0, os.path.join('.', 'openie6'))
+sys.path.insert(0, os.path.join('external', 'openie6', 'openie6', 'imojie', 'benchmark'))
+sys.path.insert(0, os.path.join('external', 'openie6', 'openie6', 'imojie'))
+sys.path.insert(0, os.path.join('external', 'openie6', 'openie6'))
 from pytorch_lightning import Trainer
-from openie6.model import Model
-from openie6.params import add_args
-from openie6.data import override_args, convert_to_namespace, process_data, pad_data
+from external.openie6.openie6.model import Model
+from external.openie6.openie6.params import add_args
+from external.openie6.openie6.data import override_args, convert_to_namespace, process_data, pad_data
 from pytorch_lightning import Trainer
 from typing import List, Dict, Tuple
 from torch.utils.data import DataLoader
@@ -22,7 +22,7 @@ logging.getLogger('transformers.configuration_utils').setLevel(logging.ERROR)
 logging.getLogger('transformers.modeling_utils').setLevel(logging.ERROR)
 
 PORT = 8081
-OPENIE6_DIR = os.path.join('.', 'openie6')
+OPENIE6_DIR = os.path.join('external', 'openie6', 'openie6')
 OIE_MODEL_PATH = os.path.join(OPENIE6_DIR, "models","oie_model","epoch=14_eval_acc=0.551_v0.ckpt")
 CONJ_MODEL_PATH = os.path.join(OPENIE6_DIR, "models","conj_model", "epoch=28_eval_acc=0.854.ckpt")
 
@@ -38,6 +38,9 @@ def clean_up():
 
     if os.path.exists(path="lightning_logs"):
         shutil.rmtree('lightning_logs')
+
+    if os.path.exists(path="utils"):
+        shutil.rmtree('utils')
 
 def copy_resources():
     """

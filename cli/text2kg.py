@@ -1,0 +1,130 @@
+import yaml
+import tomllib
+import subprocess
+from pydantic import BaseModel
+from pycli import Cli
+
+cli = Cli(
+    name="Text2KG.",
+    description="A CLI tool for LLM based Knowledge Graphs generation."
+)
+
+class RPCService(BaseModel):
+    add : bool
+    port : int
+    gpu_access : bool
+
+class Config(BaseModel):
+    allennlp : RPCService
+    openie6 : RPCService
+
+    @classmethod
+    def load(cls) -> 'Config':
+        with open('confog.toml', 'rb') as f:
+            return Config(**tomllib.load(f))
+
+@cli.register_command(
+    name="dockerize",
+    description="Generate the 'docker-compose.yml' file according to the 'config.yml' file."
+)
+def generate_docker_compose():
+
+    config = Config.load()
+
+    ### GPU capabilities
+    deploy = {
+        "resources" : {
+            "reservations" :  {
+                "devices" : [
+                    {
+                        "driver" : "nvidia",
+                        "count" : "all",
+                        "capabilities" : ["gpu"]
+                    }
+                ]
+            }
+        }
+    }
+
+    services = {}
+
+    docker_compose = {
+        "version" : "3.8",
+        "services" : services
+    }
+
+    ### AllenNLP Service
+    if config.allennlp.add:
+
+        allennlp_service = {
+            "build" : "./RPC/allennlp",
+            "ports" : [f"{config.allennlp.port}:{config.allennlp.port}"],
+            "volumes" : ["./RPC/allennlp/server.py:/allennlp/server.py"]
+        }
+
+        if config.allennlp.gpu_access:
+            allennlp_service["deploy"] = deploy
+
+        services["allennlp"] = allennlp_service
+
+    ### Openie6 Service
+    if config.openie6:
+
+        openie6_service = {
+            "build" : "./RPC/openie6",
+            "ports" : [f"{config.openie6.port}:{config.openie6.port}"],
+            "volumes" : ["./RPC/openie6/server.py:/openie6/server.py"],
+        }
+
+        if config.openie6.gpu_access:
+            openie6_service["deploy"] = deploy
+
+        services["openie6"] = openie6_service
+
+    ### Save docker compose
+    with open('docker-compose.yaml', 'w') as file:
+        yaml.dump(docker_compose, file, sort_keys=False, indent=2)
+
+
+@cli.register_command(
+    name="create-envs",
+    description="Creates the conda envirenments according to the 'config.toml' project."
+)
+def create_envs() -> None:
+
+    config = Config.load()
+
+    ### AllenNLP
+    if config.allennlp.add:
+
+        subprocess.run(
+            ["bash", "create-allennlp-env.sh"],
+            cwd="scripts",
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+
+    ### Openi6
+    if config.allennlp.add:
+
+        subprocess.run(
+            ["bash", "create-openie6-env.sh"],
+            cwd="scripts",
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+
+    ### Text2KG
+    subprocess.run(
+        ["bash", "create-text2kg-env.sh"],
+        cwd="scripts",
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    
+
+if __name__ == "__main__":
+    cli.run()

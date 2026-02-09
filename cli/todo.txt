@@ -1,5 +1,0 @@
-1- change openie6 setup :
-    - cloning & models downloading inside host machine
-    - copy requirements.txt & download 
-    - move it to openie6
-    - add repo to openie6 volumes

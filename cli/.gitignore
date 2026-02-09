@@ -1,6 +1,6 @@
 external
-.vscode
 __pycache__/*
+
 RPC/openie6/openie6
 RPC/openie6/carb
 RPC/openie6/lightning_logs
