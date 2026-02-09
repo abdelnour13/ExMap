@@ -1,0 +1,10 @@
+FROM python:3.12.12-slim
+
+WORKDIR /text2kg
+
+# Install Python Packages
+COPY requirements.txt .
+RUN RUN pip install --no-cache-dir -r requirements.txt 
+
+# To prevent container from exiting
+CMD ["tail", "-f", "/dev/null"]

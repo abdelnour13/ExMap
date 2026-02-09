@@ -57,7 +57,7 @@ def generate_docker_compose():
     if config.allennlp.add:
 
         allennlp_service = {
-            "build" : "./RPC/allennlp",
+            "build" : "./docker/allennlp",
             "ports" : [f"{config.allennlp.port}:{config.allennlp.port}"],
             "volumes" : [".:/allennlp"]
         }
@@ -71,7 +71,7 @@ def generate_docker_compose():
     if config.openie6:
 
         openie6_service = {
-            "build" : "./RPC/openie6",
+            "build" : "./docker/openie6",
             "ports" : [f"{config.openie6.port}:{config.openie6.port}"],
             "volumes" : [".:/openie6"],
         }
@@ -80,6 +80,15 @@ def generate_docker_compose():
             openie6_service["deploy"] = deploy
 
         services["openie6"] = openie6_service
+
+    ### Main
+    text2kg_service = {
+        "build" : "./docker/text2kg",
+        "volumes" : [".:/text2kg"],
+        "depends_on" : list(services.keys())
+    }
+
+    services["text2kg"] = text2kg_service
 
     ### Save docker compose
     with open('docker-compose.yaml', 'w') as file:

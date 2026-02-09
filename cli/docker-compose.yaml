@@ -20,3 +20,10 @@ services:
             count: all
             capabilities:
             - gpu
+  text2kg:
+    build: ./docker/text2kg
+    volumes:
+    - .:/text2kg
+    depends_on:
+    - allennlp
+    - openie6
