@@ -1,0 +1,7 @@
+pyyaml==6.0.3
+ijson==3.4.0.post0
+lingua-language-detector==2.1.0
+lmdb==1.7.5
+msgpack==1.1.2
+returns==0.26.0
+openai==2.17.0
