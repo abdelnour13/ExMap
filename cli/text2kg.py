@@ -12,7 +12,7 @@ cli = Cli(
 class RPCService(BaseModel):
     add : bool
     port : int
-    gpu_access : bool
+    enable_gpu_access : bool
 
 class Config(BaseModel):
     allennlp : RPCService
@@ -20,7 +20,7 @@ class Config(BaseModel):
 
     @classmethod
     def load(cls) -> 'Config':
-        with open('confog.toml', 'rb') as f:
+        with open('config.toml', 'rb') as f:
             return Config(**tomllib.load(f))
 
 @cli.register_command(
@@ -59,10 +59,10 @@ def generate_docker_compose():
         allennlp_service = {
             "build" : "./RPC/allennlp",
             "ports" : [f"{config.allennlp.port}:{config.allennlp.port}"],
-            "volumes" : ["./RPC/allennlp/server.py:/allennlp/server.py"]
+            "volumes" : [".:/allennlp"]
         }
 
-        if config.allennlp.gpu_access:
+        if config.allennlp.enable_gpu_access:
             allennlp_service["deploy"] = deploy
 
         services["allennlp"] = allennlp_service
@@ -73,10 +73,10 @@ def generate_docker_compose():
         openie6_service = {
             "build" : "./RPC/openie6",
             "ports" : [f"{config.openie6.port}:{config.openie6.port}"],
-            "volumes" : ["./RPC/openie6/server.py:/openie6/server.py"],
+            "volumes" : [".:/openie6"],
         }
 
-        if config.openie6.gpu_access:
+        if config.openie6.enable_gpu_access:
             openie6_service["deploy"] = deploy
 
         services["openie6"] = openie6_service

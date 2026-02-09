@@ -7,4 +7,4 @@ COPY setup.sh .
 RUN chmod +x setup.sh && bash setup.sh
 
 # Command to run your application
-CMD ["python3", "server.py"]
+CMD ["python3", "-m", "RPC.openie6.server"]
