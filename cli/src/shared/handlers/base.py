@@ -3,7 +3,7 @@ from enum import Enum
 from dataclasses import dataclass, field
 from datetime import datetime
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Optional, Dict
 
 class EventLevel(Enum):
     INFO = logging.INFO

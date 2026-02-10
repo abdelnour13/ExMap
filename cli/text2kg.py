@@ -1,13 +1,9 @@
+import os
 import yaml
 import tomllib
 import subprocess
 from pydantic import BaseModel
-from pycli import Cli
-
-cli = Cli(
-    name="Text2KG.",
-    description="A CLI tool for LLM based Knowledge Graphs generation."
-)
+from instance import cli
 
 class RPCService(BaseModel):
     add : bool
@@ -25,7 +21,7 @@ class Config(BaseModel):
 
 @cli.register_command(
     name="dockerize",
-    description="Generate the 'docker-compose.yml' file according to the 'config.yml' file."
+    description="Generate the 'docker-compose.yml' file according to the 'config.toml' file."
 )
 def generate_docker_compose():
 
@@ -134,6 +130,6 @@ def create_envs() -> None:
         capture_output=True,
     )
     
-
 if __name__ == "__main__":
+    cli.scan_dir(os.path.join(".", "src", "commands"), pattern_or_predicate="(.+).py")
     cli.run()
