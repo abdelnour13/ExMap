@@ -4,7 +4,6 @@ from abc import abstractmethod
 from src.shared.file_tools import Reader, FileWriter, batched
 from src.shared.handlers import Event, EventLevel
 from src.helpers.config import assert_file_exists, makedirs
-from xmlrpc.client import ServerProxy
 from pycli import Parsable, toml_parser
 from pydantic import BaseModel, Field, computed_field, BeforeValidator
 from .base_command import BaseCommand
@@ -71,7 +70,7 @@ class Stage(BaseCommand):
         :return: a boolean indicating if the document should be skipped or not.
         :rtype: bool
         """
-        return True
+        return False
 
     @abstractmethod
     def transform(self, doc : Dict) -> Union[Dict, List[Dict]]:
