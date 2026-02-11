@@ -1,0 +1,1 @@
+mkdir -p ../resources/models && hf download timpal0l/mdeberta-v3-base-squad2 --local-dir ../resources/models

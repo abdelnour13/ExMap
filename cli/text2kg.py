@@ -23,7 +23,7 @@ class Config(BaseModel):
     name="dockerize",
     description="Generate the 'docker-compose.yml' file according to the 'config.toml' file."
 )
-def generate_docker_compose():
+def dockerize():
 
     config = Config.load()
 
@@ -130,6 +130,9 @@ def create_envs() -> None:
         capture_output=True,
     )
     
-if __name__ == "__main__":
+def main():
     cli.scan_dir(os.path.join(".", "src", "commands"), pattern_or_predicate="(.+).py")
     cli.run()
+
+if __name__ == "__main__":
+    main()

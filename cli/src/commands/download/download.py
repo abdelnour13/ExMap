@@ -2,7 +2,6 @@ import httpx
 import math
 import time
 import json
-import tomllib
 from typing import Optional, Generator, Dict, Union, List
 from src.shared.command_tools import BaseCommand
 from src.shared.handlers import ConsoleLogger, Event, EventLevel
@@ -249,7 +248,7 @@ def download(
 ) -> None:
     
     with open(config, 'rb') as f:
-        data = tomllib.load(f)
+        data = json.load(f)
         config = HALConfig(**data)
 
     downloader = DataDownloader(

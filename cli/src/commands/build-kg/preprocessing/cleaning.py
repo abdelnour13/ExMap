@@ -1,10 +1,11 @@
 import re
 from bs4 import BeautifulSoup
 from src.shared.handlers import ConsoleLogger, FileLogger, SocketHandler
-from src.shared.command_tools import Stage, BaseConfig, Connection
+from src.shared.command_tools import Stage, BaseConfig
 from src.shared.file_tools import FileReader, FileWriter
 from src.shared.language_detectors import LanguageDetector
-from typing import Dict, Optional
+from typing import Dict
+from pycli import Model
 from instance import cli
 
 class CorpusCleaner(Stage):
@@ -91,39 +92,24 @@ class CorpusCleaner(Stage):
     description=("Performs an initial cleaning on the corpus, including : removing HTML tags and links, filtering non-english "
         "documents and keywords."
     ),
-    model=BaseConfig,
+    model=Model(BaseConfig, spread=False),
     add_from_conf=False,
     add_save_to=False
 )
-def clean(
-
-    ### Fields
-    connection : Optional[Connection],
-    input_filename : str,
-    output_dir : str,
-    batch_size : int,
-    buffer_size : int,
-    format : str,
-
-    ### Computed Field
-    output_filename : str,
-    log_filename : str,
-    checkpoint_filename : str
-
-) -> None:
+def clean(config : BaseConfig) -> None:
 
     cleaner = CorpusCleaner(
-        reader=FileReader.from_filename(input_filename),
-        writer=FileWriter.from_filename(output_filename),
-        batch_size=batch_size,
-        buffer_size=buffer_size,
+        reader=FileReader.from_filename(config.input_filename),
+        writer=FileWriter.from_filename(config.output_filename),
+        batch_size=config.batch_size,
+        buffer_size=config.buffer_size,
         language_detector=LanguageDetector.create("lingua")
     )
 
-    if connection is not None:
-        cleaner.add_handler(SocketHandler(host=connection.host, port=connection.port))
+    if config.connection is not None:
+        cleaner.add_handler(SocketHandler(host=config.connection.host, port=config.connection.port))
 
     cleaner.add_handler(ConsoleLogger("CorpusCleaner"))
-    cleaner.add_handler(FileLogger(name="CorpusHandler", log_file=log_filename))
+    cleaner.add_handler(FileLogger(name="CorpusHandler", log_file=config.log_filename))
 
     cleaner.run()
