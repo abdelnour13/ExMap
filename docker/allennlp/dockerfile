@@ -8,8 +8,11 @@ RUN apt-get update && apt-get install -y \
     g++ \
     && rm -rf /var/lib/apt/lists/*
 
+# Copy requirements.txt
+COPY requirements.txt .
+
 # Install AllenNLP and its models
-RUN pip install --no-cache-dir allennlp allennlp_models
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Command to run your application
-CMD ["python3", "-m", "src.rpc.allennlp.server"]
+CMD ["python3", "-u", "-m", "src.rpc.allennlp"]

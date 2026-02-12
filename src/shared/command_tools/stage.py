@@ -6,6 +6,7 @@ from src.shared.handlers import Event, EventLevel
 from src.helpers.config import assert_file_exists, makedirs
 from pycli import toml_parser
 from pydantic import BaseModel, Field, computed_field, BeforeValidator
+from collections import defaultdict
 from .base_command import BaseCommand
 
 class Connection(BaseModel):

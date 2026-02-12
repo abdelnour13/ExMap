@@ -1,0 +1,109 @@
+{"id": "5477204_1_0", "sentence_id": "5477204_1", "document_id": "5477204", "acronym": "GNNs", "expansion": "Graph Neural Networks", "score": 0.9218656420707703}
+{"id": "5471943_1_0", "sentence_id": "5471943_1", "document_id": "5471943", "acronym": "GNNs", "expansion": "Graph Neural Networks", "score": 0.9717237949371338}
+{"id": "5106183_0_0", "sentence_id": "5106183_0", "document_id": "5106183", "acronym": "NoC", "expansion": "Network-on-Chip", "score": 0.9626282615208765}
+{"id": "5020362_1_0", "sentence_id": "5020362_1", "document_id": "5020362", "acronym": "LLMs", "expansion": "Large Language Models", "score": 0.9813183395308442}
+{"id": "5020362_1_1", "sentence_id": "5020362_1", "document_id": "5020362", "acronym": "VQA", "expansion": "Visual Question Answering", "score": 0.9731795635307208}
+{"id": "5020362_8_0", "sentence_id": "5020362_8", "document_id": "5020362", "acronym": "LLMs", "expansion": "Large Language Models", "score": 0.9711502362042665}
+{"id": "5031263_2_0", "sentence_id": "5031263_2", "document_id": "5031263", "acronym": "BN", "expansion": "Bayesian networks", "score": 0.961321443610359}
+{"id": "5031263_5_0", "sentence_id": "5031263_5", "document_id": "5031263", "acronym": "MT", "expansion": "multi-task", "score": 0.8862810663995333}
+{"id": "5241807_4_0", "sentence_id": "5241807_4", "document_id": "5241807", "acronym": "NISQ", "expansion": "Noisy Intermediate-Scale Quantum", "score": 0.9460517495317617}
+{"id": "4750257_1_0", "sentence_id": "4750257_1", "document_id": "4750257", "acronym": "NISQ", "expansion": "noisy intermediate quantum devices", "score": 0.8733741000760347}
+{"id": "4750257_3_0", "sentence_id": "4750257_3", "document_id": "4750257", "acronym": "QBN", "expansion": "Quantum Bayesian network", "score": 0.8035823106765747}
+{"id": "5084547_2_0", "sentence_id": "5084547_2", "document_id": "5084547", "acronym": "ADHD", "expansion": "hyperactivity disorder", "score": 0.5453901886940002}
+{"id": "5084547_3_0", "sentence_id": "5084547_3", "document_id": "5084547", "acronym": "ADHD", "expansion": "Background Attention-deficit / hyperactivity disorder", "score": 0.5091466307640076}
+{"id": "5084547_6_0", "sentence_id": "5084547_6", "document_id": "5084547", "acronym": "PANDAH", "expansion": "TDA-H", "score": 0.5126407694915542}
+{"id": "5084547_7_0", "sentence_id": "5084547_7", "document_id": "5084547", "acronym": "PANDAH", "expansion": "TDA-H", "score": 0.6639504713675706}
+{"id": "5084547_10_0", "sentence_id": "5084547_10", "document_id": "5084547", "acronym": "HPQ", "expansion": "Homework Performance Questionnaire", "score": 0.5691014528274536}
+{"id": "5084547_18_0", "sentence_id": "5084547_18", "document_id": "5084547", "acronym": "IRRID", "expansion": "International Registered Report Identifier", "score": 0.9198476076126099}
+{"id": "5244508_1_2", "sentence_id": "5244508_1", "document_id": "5244508", "acronym": "PLM", "expansion": "Pre-trained Language Model", "score": 0.5659183008829132}
+{"id": "5133101_0_0", "sentence_id": "5133101_0", "document_id": "5133101", "acronym": "JMETTS", "expansion": "Joint Modelling of Event Traces and Time Series", "score": 0.6646926403045654}
+{"id": "4702397_0_0", "sentence_id": "4702397_0", "document_id": "4702397", "acronym": "KG", "expansion": "Knowledge Graph", "score": 0.5890904664993286}
+{"id": "4702397_0_1", "sentence_id": "4702397_0", "document_id": "4702397", "acronym": "OpenIE", "expansion": "Open Information Extraction", "score": 0.9804047957295552}
+{"id": "4654407_0_0", "sentence_id": "4654407_0", "document_id": "4654407", "acronym": "ERs", "expansion": "Educational Resources", "score": 0.9208491416211473}
+{"id": "4654407_1_0", "sentence_id": "4654407_1", "document_id": "4654407", "acronym": "ERs", "expansion": "Educational Resources", "score": 0.9852761037400342}
+{"id": "4654407_2_0", "sentence_id": "4654407_2", "document_id": "4654407", "acronym": "ERs", "expansion": "Educational Resources", "score": 0.9219483137130737}
+{"id": "4654407_4_0", "sentence_id": "4654407_4", "document_id": "4654407", "acronym": "KG", "expansion": "Knowledge Graph", "score": 0.8331056833267212}
+{"id": "4654407_5_0", "sentence_id": "4654407_5", "document_id": "4654407", "acronym": "GNN", "expansion": "Graph Neural Network", "score": 0.9050024151802063}
+{"id": "4550997_6_0", "sentence_id": "4550997_6", "document_id": "4550997", "acronym": "BOPTEST", "expansion": "Building Optimization Performance Tests", "score": 0.9181313811277505}
+{"id": "4081227_6_0", "sentence_id": "4081227_6", "document_id": "4081227", "acronym": "LOD", "expansion": "Linked Open Data", "score": 0.5150260329246521}
+{"id": "4274100_0_0", "sentence_id": "4274100_0", "document_id": "4274100", "acronym": "MIR", "expansion": "Music information retrieval", "score": 0.9461695113423048}
+{"id": "4222385_1_0", "sentence_id": "4222385_1", "document_id": "4222385", "acronym": "NISQ", "expansion": "noisy intermediate quantum devices", "score": 0.8733741000760347}
+{"id": "4222385_3_0", "sentence_id": "4222385_3", "document_id": "4222385", "acronym": "QBN", "expansion": "Quantum Bayesian network", "score": 0.7241612672805786}
+{"id": "4139744_0_0", "sentence_id": "4139744_0", "document_id": "4139744", "acronym": "XAI", "expansion": "eXplainable Artificial Intelligence", "score": 0.9345662314735819}
+{"id": "4586874_1_0", "sentence_id": "4586874_1", "document_id": "4586874", "acronym": "HMC", "expansion": "Hidden Markov Chain", "score": 0.8389713764190674}
+{"id": "4586874_4_0", "sentence_id": "4586874_4", "document_id": "4586874", "acronym": "MLAR", "expansion": "multivariate linear autoregressive", "score": 0.8057207644160371}
+{"id": "4586874_4_1", "sentence_id": "4586874_4", "document_id": "4586874", "acronym": "PHMCs", "expansion": "Partially Hidden Markov Chains", "score": 0.9565419117570855}
+{"id": "4586874_5_0", "sentence_id": "4586874_5", "document_id": "4586874", "acronym": "EM", "expansion": "expectation maximization", "score": 0.8899447917938232}
+{"id": "4586874_10_0", "sentence_id": "4586874_10", "document_id": "4586874", "acronym": "MSAR", "expansion": "Markov Switching AutoRegressive model", "score": 0.8854005209141178}
+{"id": "4586874_10_1", "sentence_id": "4586874_10", "document_id": "4586874", "acronym": "HMC", "expansion": "Hidden Markov Chain", "score": 0.5850277796853334}
+{"id": "4083055_0_0", "sentence_id": "4083055_0", "document_id": "4083055", "acronym": "LADs", "expansion": "Learning Analytics Dashboards", "score": 0.9782056642980024}
+{"id": "4083055_1_0", "sentence_id": "4083055_1", "document_id": "4083055", "acronym": "LADs", "expansion": "Learning Analytics Dashboards", "score": 0.8250922560691833}
+{"id": "3764231_2_0", "sentence_id": "3764231_2", "document_id": "3764231", "acronym": "ML", "expansion": "Machine Learning", "score": 0.9166799783706665}
+{"id": "4671262_0_0", "sentence_id": "4671262_0", "document_id": "4671262", "acronym": "MOOCs", "expansion": "Massive Open Online Courses", "score": 0.8354572762909811}
+{"id": "3677117_0_0", "sentence_id": "3677117_0", "document_id": "3677117", "acronym": "tDCS", "expansion": "Transcranial Direct Current Stimulation", "score": 0.981353551534994}
+{"id": "3677117_0_1", "sentence_id": "3677117_0", "document_id": "3677117", "acronym": "VRET", "expansion": "Virtual Reality Exposure Therapy", "score": 0.9866810520834406}
+{"id": "3677117_2_0", "sentence_id": "3677117_2", "document_id": "3677117", "acronym": "VRET", "expansion": "Virtual Reality Exposure Therapy", "score": 0.9686841368675232}
+{"id": "3677117_9_0", "sentence_id": "3677117_9", "document_id": "3677117", "acronym": "tDCS", "expansion": "Transcranial Direct Current Stimulation", "score": 0.9202081379189622}
+{"id": "3677117_9_1", "sentence_id": "3677117_9", "document_id": "3677117", "acronym": "VRET", "expansion": "Virtual Reality Exposure Therapy", "score": 0.9842040538787842}
+{"id": "4754861_4_0", "sentence_id": "4754861_4", "document_id": "4754861", "acronym": "PCA", "expansion": "principal component analysis", "score": 0.9730426669120789}
+{"id": "4754861_4_1", "sentence_id": "4754861_4", "document_id": "4754861", "acronym": "ROCs", "expansion": "receiver operating curves", "score": 0.9741451183217578}
+{"id": "5052435_2_0", "sentence_id": "5052435_2", "document_id": "5052435", "acronym": "ODM", "expansion": "Online Dual Memory", "score": 0.8406724333763123}
+{"id": "4106713_2_0", "sentence_id": "4106713_2", "document_id": "4106713", "acronym": "BnF", "expansion": "Biblioth\u00e8que Nationale de France", "score": 0.8476950051262975}
+{"id": "3325733_0_0", "sentence_id": "3325733_0", "document_id": "3325733", "acronym": "SRL", "expansion": "Self-Regulated Learning", "score": 0.9753943726682337}
+{"id": "3321148_3_0", "sentence_id": "3321148_3", "document_id": "3321148", "acronym": "-LAR", "expansion": "Partially Hidden Markov Chain AutoRegressive", "score": 0.6531682942004409}
+{"id": "3321148_3_1", "sentence_id": "3321148_3", "document_id": "3321148", "acronym": "PHMC-LAR", "expansion": "Partially Hidden Markov Chain AutoRegressive", "score": 0.8456973020511214}
+{"id": "3197664_4_0", "sentence_id": "3197664_4", "document_id": "3197664", "acronym": "LDBGF", "expansion": "Lower Dimension Bipartite Graphs Framework", "score": 0.8951755166053772}
+{"id": "3284602_0_0", "sentence_id": "3284602_0", "document_id": "3284602", "acronym": "XAI", "expansion": "eXplainable Artificial Intelligence", "score": 0.9352450387959834}
+{"id": "4409451_1_0", "sentence_id": "4409451_1", "document_id": "4409451", "acronym": "VR", "expansion": "fully immersive virtual reality", "score": 0.6281566619873047}
+{"id": "4409451_2_0", "sentence_id": "4409451_2", "document_id": "4409451", "acronym": "EFs", "expansion": "executive functions", "score": 0.9173556679452304}
+{"id": "4409451_3_0", "sentence_id": "4409451_3", "document_id": "4409451", "acronym": "VR", "expansion": "fully immersive virtual reality", "score": 0.5939161777496338}
+{"id": "4409451_5_0", "sentence_id": "4409451_5", "document_id": "4409451", "acronym": "VR", "expansion": "fully immersive virtual reality", "score": 0.8210170269012451}
+{"id": "4409451_6_0", "sentence_id": "4409451_6", "document_id": "4409451", "acronym": "PRISMA", "expansion": "Preferred Reporting Items for Systematic Reviews and Meta-Analyses", "score": 0.560187175811734}
+{"id": "4409451_7_0", "sentence_id": "4409451_7", "document_id": "4409451", "acronym": "VR", "expansion": "fully immersive virtual reality", "score": 0.7396351099014282}
+{"id": "4409451_11_0", "sentence_id": "4409451_11", "document_id": "4409451", "acronym": "VEs", "expansion": "virtual environments", "score": 0.9138309353147633}
+{"id": "4409451_16_0", "sentence_id": "4409451_16", "document_id": "4409451", "acronym": "VR", "expansion": "fully immersive virtual reality", "score": 0.6457396745681763}
+{"id": "3324332_1_0", "sentence_id": "3324332_1", "document_id": "3324332", "acronym": "MT-MMHC", "expansion": "Multi-Task Max-Min Hill Climbing", "score": 0.9684187423263211}
+{"id": "3369481_4_0", "sentence_id": "3369481_4", "document_id": "3369481", "acronym": "BN", "expansion": "Bayesian network", "score": 0.5897086956101703}
+{"id": "3369481_20_0", "sentence_id": "3369481_20", "document_id": "3369481", "acronym": "BN", "expansion": "Bayesian network", "score": 0.6745286433433648}
+{"id": "3431415_1_0", "sentence_id": "3431415_1", "document_id": "3431415", "acronym": "EELS", "expansion": "electron energy loss spectroscopy", "score": 0.9718317044898868}
+{"id": "2891862_3_0", "sentence_id": "2891862_3", "document_id": "2891862", "acronym": "RT-GEM", "expansion": "Re-cursive Timescale Graphical Event Model", "score": 0.558821520069614}
+{"id": "3180284_5_0", "sentence_id": "3180284_5", "document_id": "3180284", "acronym": "MRML", "expansion": "multi-relation metric learning", "score": 0.9283049078221666}
+{"id": "3180284_5_1", "sentence_id": "3180284_5", "document_id": "3180284", "acronym": "LSCS", "expansion": "selection of relational constraints", "score": 0.9284663492871914}
+{"id": "2121417_0_0", "sentence_id": "2121417_0", "document_id": "2121417", "acronym": "MOOCs", "expansion": "Massive Open Online Courses", "score": 0.7338926956872456}
+{"id": "2143939_0_0", "sentence_id": "2143939_0", "document_id": "2143939", "acronym": "KDM", "expansion": "Knowledge Discovery and Management", "score": 0.924041748046875}
+{"id": "4818659_0_0", "sentence_id": "4818659_0", "document_id": "4818659", "acronym": "IA", "expansion": "Immersive analytics", "score": 0.9119599868718069}
+{"id": "2539003_1_0", "sentence_id": "2539003_1", "document_id": "2539003", "acronym": "GEM", "expansion": "Graphical Event Model", "score": 0.5282880833256058}
+{"id": "2539026_0_0", "sentence_id": "2539026_0", "document_id": "2539026", "acronym": "PRMs", "expansion": "Probabilistic relational models", "score": 0.8921253168518888}
+{"id": "2539021_0_0", "sentence_id": "2539021_0", "document_id": "2539021", "acronym": "GEMs", "expansion": "Graphical Event Models", "score": 0.9407592447169009}
+{"id": "2539021_1_0", "sentence_id": "2539021_1", "document_id": "2539021", "acronym": "TGEMs", "expansion": "Timescale GEMs", "score": 0.9403609278233489}
+{"id": "1983311_0_0", "sentence_id": "1983311_0", "document_id": "1983311", "acronym": "CEP", "expansion": "Complex Event Processing", "score": 0.9273715882231954}
+{"id": "1983311_3_0", "sentence_id": "1983311_3", "document_id": "1983311", "acronym": "CEP", "expansion": "Complex Event Processing", "score": 0.9757541891303845}
+{"id": "1874721_0_0", "sentence_id": "1874721_0", "document_id": "1874721", "acronym": "HEAs", "expansion": "high entropy alloys", "score": 0.9774239532416686}
+{"id": "1874721_0_1", "sentence_id": "1874721_0", "document_id": "1874721", "acronym": "CALPHAD", "expansion": "thermodynamic modelling", "score": 0.9217841714271344}
+{"id": "1874721_0_2", "sentence_id": "1874721_0", "document_id": "1874721", "acronym": "SSH", "expansion": "solid solution hardening", "score": 0.9622683525085449}
+{"id": "1874721_1_0", "sentence_id": "1874721_1", "document_id": "1874721", "acronym": "CALPHAD", "expansion": "thermodynamic modelling", "score": 0.9491168231033953}
+{"id": "1874721_1_1", "sentence_id": "1874721_1", "document_id": "1874721", "acronym": "SSH", "expansion": "solid solution hardening", "score": 0.9469904899597168}
+{"id": "1874721_2_0", "sentence_id": "1874721_2", "document_id": "1874721", "acronym": "BCC", "expansion": "Pareto-optimal base-centred cubic", "score": 0.867310750996694}
+{"id": "1912333_0_0", "sentence_id": "1912333_0", "document_id": "1912333", "acronym": "PVA", "expansion": "progressive visual analytics", "score": 0.7187384963035583}
+{"id": "1898445_3_0", "sentence_id": "1898445_3", "document_id": "1898445", "acronym": "IA", "expansion": "immersive analytics", "score": 0.876461890002247}
+{"id": "1901255_2_0", "sentence_id": "1901255_2", "document_id": "1901255", "acronym": "PRMs", "expansion": "Probabilistic Relational Models", "score": 0.7200902445183601}
+{"id": "1901255_12_0", "sentence_id": "1901255_12", "document_id": "1901255", "acronym": "MLNs", "expansion": "Markov Logic Networks", "score": 0.9586225019447738}
+{"id": "1901255_12_1", "sentence_id": "1901255_12", "document_id": "1901255", "acronym": "DAPER", "expansion": "Direct Acyclic Probabilistic Entity Relationship", "score": 0.9653179049491882}
+{"id": "1982937_3_0", "sentence_id": "1982937_3", "document_id": "1982937", "acronym": "AP", "expansion": "Affinity Propagation", "score": 0.9515995588735677}
+{"id": "1986668_0_0", "sentence_id": "1986668_0", "document_id": "1986668", "acronym": "GWAS", "expansion": "Large scale genome-wide association studies", "score": 0.5515103340148926}
+{"id": "1986668_1_0", "sentence_id": "1986668_1", "document_id": "1986668", "acronym": "SNP", "expansion": "single nucleotide polymorphism", "score": 0.9637980009429157}
+{"id": "2017253_2_0", "sentence_id": "2017253_2", "document_id": "2017253", "acronym": "ITML", "expansion": "Information Theoretic Metric Learning", "score": 0.8220669627189636}
+{"id": "2017253_2_1", "sentence_id": "2017253_2", "document_id": "2017253", "acronym": "LSML", "expansion": "Least Squares Metric Learning", "score": 0.9303783802024554}
+{"id": "2539039_3_0", "sentence_id": "2539039_3", "document_id": "2539039", "acronym": "PRMs", "expansion": "Probabilistic Relational Models", "score": 0.665299846790731}
+{"id": "2539039_4_0", "sentence_id": "2539039_4", "document_id": "2539039", "acronym": "PRMs", "expansion": "Probabilistic Relational Models", "score": 0.8128677398199216}
+{"id": "1984726_0_0", "sentence_id": "1984726_0", "document_id": "1984726", "acronym": "GWASs", "expansion": "Genome-wide association studies", "score": 0.9867522435088176}
+{"id": "1984726_2_0", "sentence_id": "1984726_2", "document_id": "1984726", "acronym": "SNPs", "expansion": "Single Nucleotide Polymorphisms", "score": 0.8896397691860329}
+{"id": "1623910_1_0", "sentence_id": "1623910_1", "document_id": "1623910", "acronym": "KDM", "expansion": "Knowledge Discovery and Management", "score": 0.9483661651611328}
+{"id": "1623910_4_0", "sentence_id": "1623910_4", "document_id": "1623910", "acronym": "KDM", "expansion": "Knowledge Discovery and Management", "score": 0.73382169008255}
+{"id": "2539057_0_0", "sentence_id": "2539057_0", "document_id": "2539057", "acronym": "PRMs", "expansion": "Probabilistic relational models", "score": 0.886496618782985}
+{"id": "2539057_3_0", "sentence_id": "2539057_3", "document_id": "2539057", "acronym": "QPNs", "expansion": "qualitative probabilistic networks", "score": 0.8279632632184075}
+{"id": "2539057_4_0", "sentence_id": "2539057_4", "document_id": "2539057", "acronym": "QPRMs", "expansion": "qualitative probabilistic relational models", "score": 0.7229661688907072}
+{"id": "2539049_0_0", "sentence_id": "2539049_0", "document_id": "2539049", "acronym": "DAPER", "expansion": "Directed Acyclic Probabilistic Entity Relationship", "score": 0.9720379237114685}
+{"id": "2539049_3_0", "sentence_id": "2539049_3", "document_id": "2539049", "acronym": "MLN", "expansion": "The Markov Logic Network", "score": 0.5149544477462769}
+{"id": "2539074_0_0", "sentence_id": "2539074_0", "document_id": "2539074", "acronym": "PRMs", "expansion": "Probabilistic Relational Models", "score": 0.5239470179658383}
+{"id": "2539074_0_1", "sentence_id": "2539074_0", "document_id": "2539074", "acronym": "DAPER", "expansion": "Directed Acyclic Probabilistic Entity Relationship", "score": 0.9047888517379761}

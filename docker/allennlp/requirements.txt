@@ -1,0 +1,5 @@
+allennlp==2.10.1
+allennlp-models==2.10.1
+transformers==4.19.2
+huggingface-hub==0.10.1
+typing-extensions==4.5.0
