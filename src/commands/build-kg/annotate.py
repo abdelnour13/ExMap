@@ -1,0 +1,146 @@
+import re
+from typing import Dict, List
+from src.shared.command_tools import Stage, BaseConfig, command
+from src.shared.file_tools import FileWriter, FileReader
+from src.helpers import load_json_file
+from pycli import Field, Model
+from dataclasses import dataclass
+from openai import OpenAI
+from instance import cli
+
+@dataclass
+class Domain:
+    domain : str
+    sub_domain : str
+    definition : str
+
+class Config(BaseConfig):
+
+    model : str = Field(
+        default="deepseek-chat",
+        description="The LLM to be used for triple extraction."
+    )
+
+    api_key : str = Field(description="The Api Key needed to use the LLM through OpenAI API.")
+
+    domains_filename : str = Field(description="The json file that holds the labels and their definitions.")
+
+MODELS = {
+    "deepseek-chat": {
+        "url": "https://api.deepseek.com",
+        "price/1m_in_tokens": 0.28,
+        "price/1m_out_tokens": 0.42,
+    }
+}
+
+class DocumentsAnnotator(Stage):
+
+    def __init__(self, 
+        reader : FileReader, 
+        writer : FileWriter, 
+        batch_size : int, 
+        buffer_size : int,
+        client : OpenAI,
+        domains : List[Domain],
+        model : str
+    ) -> None:
+        super().__init__(reader, writer, batch_size, buffer_size)
+
+        self.client = client
+        self.domains = domains
+        self.model = model
+
+    def encode_document(self, doc: Dict) -> str:
+
+        encoded_doc = [
+            f"Title : {doc['title']}",
+            f"Abstract : {doc['abstract']}",
+            f"Keywords : {' | '.join(doc['keywords'])}",
+        ]
+
+        return "\n".join(encoded_doc)
+        
+    def get_prompt(self, domain : Domain) -> str:
+
+        return (
+            f"Given the label named \" {domain.domain} \" and defined as : \" {domain.definition} \" . "
+            "Does the article in question belong to this label"
+        )
+        
+    def transform(self, doc: Dict) -> Dict:
+
+        labels = []
+
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are a binary scientific article classifier. "
+                    "You will receive one article and multiple domain labels. "
+                    "For each label, respond only with 'Yes' or 'No'. "
+                    f"The article is defined as:\n{self.encode_document(doc)}"
+                ),
+            }
+        ]
+
+        for domain in self.domains:
+            prompt = self.get_prompt(domain)
+            messages.append({"role": "user", "content": prompt})
+
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=messages,
+            stream=False,
+            temperature=0,  # No randomness
+            top_p=1,  # Disable sampling
+            seed=42,  # Seed
+        )
+
+        content = response.choices[0].message.content
+        answers = re.sub(r"(\n)+", "\n", content).split("\n")
+
+        for domain, answer in zip(self.domains, answers):
+
+            result = answer.strip().strip('"').lower()
+
+            if result == "yes":
+                labels.append(domain.domain)
+
+        return {
+            **doc, 
+            "domains": {
+                "raw": answers, 
+                "decoded": labels
+            }
+        }
+    
+
+@cli.register_command(
+    name="annotate",
+    description=(
+        "Classify using the provided LLM each document into one of the domains defined in the json file passed."
+    ),
+    model=Model(Config, spread=False),
+    add_from_conf=False,
+    add_save_to=False
+)
+@command
+def from_config(config : Config) -> 'DocumentsAnnotator':
+    
+    return DocumentsAnnotator(
+        reader=FileReader.from_filename(config.input_filename),
+        writer=FileWriter.from_filename(config.output_filename),
+        batch_size=config.batch_size,
+        buffer_size=config.buffer_size,
+        client=OpenAI(
+            api_key=config.api_key,
+            base_url=MODELS[config.model]['url']
+        ),
+        domains=list(
+            map(
+                lambda x : Domain(**x),
+                load_json_file(config.domains_filename)
+            )
+        ),
+        model=config.model
+    )

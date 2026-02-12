@@ -1,12 +1,14 @@
 import os
-from typing import Generator, Dict, Iterable, Union, List, Optional, Annotated
+from typing import Generator, Dict, Iterable, Union, List, Optional, Annotated, Callable
+from src.shared.handlers import SocketHandler, ConsoleLogger, FileLogger
+from pydantic import BaseModel
 from abc import abstractmethod
 from src.shared.file_tools import Reader, FileWriter, batched
 from src.shared.handlers import Event, EventLevel
 from src.helpers.config import assert_file_exists, makedirs
 from pycli import toml_parser
 from pydantic import BaseModel, Field, computed_field, BeforeValidator
-from collections import defaultdict
+from functools import wraps
 from .base_command import BaseCommand
 
 class Connection(BaseModel):
@@ -197,3 +199,20 @@ class Stage(BaseCommand):
             total_skipped=total_skipped,
             message=f"Job {self.__class__.__name__} has been completed."
         )
+
+def command(fn : Callable[[BaseModel], 'BaseCommand']) -> Callable[[BaseModel], None]:
+
+    @wraps(fn)
+    def __warp__(config : BaseModel) -> None:
+
+        cmd = fn(config)
+
+        if config.connection is not None:
+            cmd.add_handler(SocketHandler(host=config.connection.host, port=config.connection.port))
+
+        cmd.add_handler(ConsoleLogger(cmd.__class__.__name__))
+        cmd.add_handler(FileLogger(name=cmd.__class__.__name__, log_file=config.log_filename))
+
+        cmd.run()
+
+    return __warp__
