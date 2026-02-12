@@ -1,7 +1,7 @@
 import re
 from src.shared.file_tools import FileWriter, FileReader
-from src.shared.command_tools import Stage, BaseConfig
-from src.shared.handlers import SocketHandler, FileLogger, ConsoleLogger, Event, EventLevel
+from src.shared.command_tools import Stage, BaseConfig, command
+from src.shared.handlers import Event, EventLevel
 from src.rpc.interface import allennlp_predict, load_predictor_from_path
 from typing import Dict
 from pycli import Field, Model
@@ -113,9 +113,10 @@ class CoreferenceResolver(Stage):
     add_from_conf=False,
     add_save_to=False
 )
-def coreference_resolution(config : Config) -> None:
+@command
+def coreference_resolution(config : Config) -> Stage:
 
-    coreference_resolver =  CoreferenceResolver(
+    return CoreferenceResolver(
         reader=FileReader.from_filename(config.input_filename),
         writer=FileWriter.from_filename(config.output_filename),
         batch_size=config.batch_size,
@@ -123,11 +124,3 @@ def coreference_resolution(config : Config) -> None:
         model=config.model,
         device=config.device
     )
-
-    if config.connection is not None:
-        coreference_resolver.add_handler(SocketHandler(host=config.connection.host, port=config.connection.port))
-
-    coreference_resolver.add_handler(ConsoleLogger("CoreferenceResolution"))
-    coreference_resolver.add_handler(FileLogger(name="CoreferenceResolution", log_file=config.log_filename))
-
-    coreference_resolver.run()

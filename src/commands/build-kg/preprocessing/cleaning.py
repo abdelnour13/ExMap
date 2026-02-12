@@ -1,7 +1,6 @@
 import re
 from bs4 import BeautifulSoup
-from src.shared.handlers import ConsoleLogger, FileLogger, SocketHandler
-from src.shared.command_tools import Stage, BaseConfig
+from src.shared.command_tools import Stage, BaseConfig, command
 from src.shared.file_tools import FileReader, FileWriter
 from src.shared.language_detectors import LanguageDetector
 from typing import Dict
@@ -96,20 +95,13 @@ class CorpusCleaner(Stage):
     add_from_conf=False,
     add_save_to=False
 )
-def clean(config : BaseConfig) -> None:
+@command
+def clean(config : BaseConfig) -> Stage:
 
-    cleaner = CorpusCleaner(
+    return CorpusCleaner(
         reader=FileReader.from_filename(config.input_filename),
         writer=FileWriter.from_filename(config.output_filename),
         batch_size=config.batch_size,
         buffer_size=config.buffer_size,
         language_detector=LanguageDetector.create("lingua")
     )
-
-    if config.connection is not None:
-        cleaner.add_handler(SocketHandler(host=config.connection.host, port=config.connection.port))
-
-    cleaner.add_handler(ConsoleLogger("CorpusCleaner"))
-    cleaner.add_handler(FileLogger(name="CorpusHandler", log_file=config.log_filename))
-
-    cleaner.run()

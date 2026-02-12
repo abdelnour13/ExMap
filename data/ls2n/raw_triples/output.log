@@ -1,0 +1,176 @@
+TriplesExtractor,2026-02-12 23:31:58,INFO,0,0,0,Job TriplesExtractor has started.,None
+TriplesExtractor,2026-02-12 23:32:15,INFO,16,0,0,Chunk 0 processing completed.,1.97
+TriplesExtractor,2026-02-12 23:32:15,INFO,16,16,0,Results buffer saved to disk.,1.97
+TriplesExtractor,2026-02-12 23:32:15,INFO,16,32,0,Results buffer saved to disk.,1.97
+TriplesExtractor,2026-02-12 23:32:31,INFO,32,32,0,Chunk 1 processing completed.,3.62
+TriplesExtractor,2026-02-12 23:32:31,INFO,32,48,0,Results buffer saved to disk.,3.62
+TriplesExtractor,2026-02-12 23:32:46,INFO,48,48,0,Chunk 2 processing completed.,5.47
+TriplesExtractor,2026-02-12 23:32:46,INFO,48,64,0,Results buffer saved to disk.,5.47
+TriplesExtractor,2026-02-12 23:32:46,INFO,48,80,0,Results buffer saved to disk.,5.47
+TriplesExtractor,2026-02-12 23:32:46,INFO,48,96,0,Results buffer saved to disk.,5.47
+TriplesExtractor,2026-02-12 23:32:56,INFO,64,96,0,Chunk 3 processing completed.,7.50
+TriplesExtractor,2026-02-12 23:32:56,INFO,64,112,0,Results buffer saved to disk.,7.50
+TriplesExtractor,2026-02-12 23:32:56,INFO,64,128,0,Results buffer saved to disk.,7.50
+TriplesExtractor,2026-02-12 23:33:15,INFO,80,128,0,Chunk 4 processing completed.,10.31
+TriplesExtractor,2026-02-12 23:33:15,INFO,80,144,0,Results buffer saved to disk.,10.31
+TriplesExtractor,2026-02-12 23:33:15,INFO,80,160,0,Results buffer saved to disk.,10.31
+TriplesExtractor,2026-02-12 23:33:15,INFO,80,176,0,Results buffer saved to disk.,10.31
+TriplesExtractor,2026-02-12 23:33:31,INFO,96,176,0,Chunk 5 processing completed.,12.74
+TriplesExtractor,2026-02-12 23:33:31,INFO,96,192,0,Results buffer saved to disk.,12.74
+TriplesExtractor,2026-02-12 23:33:31,INFO,96,208,0,Results buffer saved to disk.,12.74
+TriplesExtractor,2026-02-12 23:33:31,INFO,96,224,0,Results buffer saved to disk.,12.74
+TriplesExtractor,2026-02-12 23:33:31,INFO,96,240,0,Results buffer saved to disk.,12.74
+TriplesExtractor,2026-02-12 23:34:01,INFO,112,240,0,Chunk 6 processing completed.,14.76
+TriplesExtractor,2026-02-12 23:34:01,INFO,112,256,0,Results buffer saved to disk.,14.76
+TriplesExtractor,2026-02-12 23:34:01,INFO,112,272,0,Results buffer saved to disk.,14.76
+TriplesExtractor,2026-02-12 23:34:12,INFO,128,272,0,Chunk 7 processing completed.,16.64
+TriplesExtractor,2026-02-12 23:34:12,INFO,128,288,0,Results buffer saved to disk.,16.64
+TriplesExtractor,2026-02-12 23:34:12,INFO,128,304,0,Results buffer saved to disk.,16.64
+TriplesExtractor,2026-02-12 23:34:23,INFO,144,304,0,Chunk 8 processing completed.,18.31
+TriplesExtractor,2026-02-12 23:34:23,INFO,144,320,0,Results buffer saved to disk.,18.31
+TriplesExtractor,2026-02-12 23:34:39,INFO,160,320,0,Chunk 9 processing completed.,20.24
+TriplesExtractor,2026-02-12 23:34:39,INFO,160,336,0,Results buffer saved to disk.,20.24
+TriplesExtractor,2026-02-12 23:34:39,INFO,160,352,0,Results buffer saved to disk.,20.24
+TriplesExtractor,2026-02-12 23:34:39,INFO,160,368,0,Results buffer saved to disk.,20.24
+TriplesExtractor,2026-02-12 23:34:39,INFO,160,384,0,Results buffer saved to disk.,20.24
+TriplesExtractor,2026-02-12 23:34:45,INFO,176,384,0,Chunk 10 processing completed.,22.45
+TriplesExtractor,2026-02-12 23:34:45,INFO,176,400,0,Results buffer saved to disk.,22.45
+TriplesExtractor,2026-02-12 23:34:45,INFO,176,416,0,Results buffer saved to disk.,22.45
+TriplesExtractor,2026-02-12 23:34:51,INFO,192,416,0,Chunk 11 processing completed.,24.40
+TriplesExtractor,2026-02-12 23:34:51,INFO,192,432,0,Results buffer saved to disk.,24.40
+TriplesExtractor,2026-02-12 23:34:51,INFO,192,448,0,Results buffer saved to disk.,24.40
+TriplesExtractor,2026-02-12 23:35:03,INFO,208,448,0,Chunk 12 processing completed.,26.50
+TriplesExtractor,2026-02-12 23:35:03,INFO,208,464,0,Results buffer saved to disk.,26.50
+TriplesExtractor,2026-02-12 23:35:03,INFO,208,480,0,Results buffer saved to disk.,26.50
+TriplesExtractor,2026-02-12 23:35:03,INFO,208,496,0,Results buffer saved to disk.,26.50
+TriplesExtractor,2026-02-12 23:35:26,INFO,224,496,0,Chunk 13 processing completed.,28.28
+TriplesExtractor,2026-02-12 23:35:26,INFO,224,512,0,Results buffer saved to disk.,28.28
+TriplesExtractor,2026-02-12 23:35:31,INFO,240,512,0,Chunk 14 processing completed.,29.91
+TriplesExtractor,2026-02-12 23:35:31,INFO,240,528,0,Results buffer saved to disk.,29.91
+TriplesExtractor,2026-02-12 23:35:31,INFO,240,544,0,Results buffer saved to disk.,29.91
+TriplesExtractor,2026-02-12 23:35:43,INFO,256,544,0,Chunk 15 processing completed.,31.81
+TriplesExtractor,2026-02-12 23:35:43,INFO,256,560,0,Results buffer saved to disk.,31.81
+TriplesExtractor,2026-02-12 23:35:43,INFO,256,576,0,Results buffer saved to disk.,31.81
+TriplesExtractor,2026-02-12 23:35:43,INFO,256,592,0,Results buffer saved to disk.,31.81
+TriplesExtractor,2026-02-12 23:36:02,INFO,272,592,0,Chunk 16 processing completed.,34.14
+TriplesExtractor,2026-02-12 23:36:02,INFO,272,608,0,Results buffer saved to disk.,34.14
+TriplesExtractor,2026-02-12 23:36:02,INFO,272,624,0,Results buffer saved to disk.,34.14
+TriplesExtractor,2026-02-12 23:36:29,INFO,288,624,0,Chunk 17 processing completed.,35.98
+TriplesExtractor,2026-02-12 23:36:29,INFO,288,640,0,Results buffer saved to disk.,35.98
+TriplesExtractor,2026-02-12 23:36:29,INFO,288,656,0,Results buffer saved to disk.,35.98
+TriplesExtractor,2026-02-12 23:36:40,INFO,304,656,0,Chunk 18 processing completed.,37.74
+TriplesExtractor,2026-02-12 23:36:40,INFO,304,672,0,Results buffer saved to disk.,37.74
+TriplesExtractor,2026-02-12 23:36:40,INFO,304,688,0,Results buffer saved to disk.,37.74
+TriplesExtractor,2026-02-12 23:36:40,INFO,304,704,0,Results buffer saved to disk.,37.74
+TriplesExtractor,2026-02-12 23:36:57,INFO,320,704,0,Chunk 19 processing completed.,39.76
+TriplesExtractor,2026-02-12 23:36:57,INFO,320,720,0,Results buffer saved to disk.,39.76
+TriplesExtractor,2026-02-12 23:36:57,INFO,320,736,0,Results buffer saved to disk.,39.76
+TriplesExtractor,2026-02-12 23:37:03,INFO,336,736,0,Chunk 20 processing completed.,41.49
+TriplesExtractor,2026-02-12 23:37:03,INFO,336,752,0,Results buffer saved to disk.,41.49
+TriplesExtractor,2026-02-12 23:37:03,INFO,336,768,0,Results buffer saved to disk.,41.49
+TriplesExtractor,2026-02-12 23:37:21,INFO,352,768,0,Chunk 21 processing completed.,44.29
+TriplesExtractor,2026-02-12 23:37:21,INFO,352,784,0,Results buffer saved to disk.,44.29
+TriplesExtractor,2026-02-12 23:37:21,INFO,352,800,0,Results buffer saved to disk.,44.29
+TriplesExtractor,2026-02-12 23:37:21,INFO,352,816,0,Results buffer saved to disk.,44.29
+TriplesExtractor,2026-02-12 23:37:39,INFO,368,816,0,Chunk 22 processing completed.,46.19
+TriplesExtractor,2026-02-12 23:37:39,INFO,368,832,0,Results buffer saved to disk.,46.19
+TriplesExtractor,2026-02-12 23:37:39,INFO,368,848,0,Results buffer saved to disk.,46.19
+TriplesExtractor,2026-02-12 23:37:39,INFO,368,864,0,Results buffer saved to disk.,46.19
+TriplesExtractor,2026-02-12 23:37:45,INFO,384,864,0,Chunk 23 processing completed.,47.99
+TriplesExtractor,2026-02-12 23:37:45,INFO,384,880,0,Results buffer saved to disk.,47.99
+TriplesExtractor,2026-02-12 23:37:45,INFO,384,896,0,Results buffer saved to disk.,47.99
+TriplesExtractor,2026-02-12 23:37:56,INFO,400,896,0,Chunk 24 processing completed.,49.78
+TriplesExtractor,2026-02-12 23:37:56,INFO,400,912,0,Results buffer saved to disk.,49.78
+TriplesExtractor,2026-02-12 23:37:56,INFO,400,928,0,Results buffer saved to disk.,49.78
+TriplesExtractor,2026-02-12 23:38:08,INFO,416,928,0,Chunk 25 processing completed.,51.75
+TriplesExtractor,2026-02-12 23:38:08,INFO,416,944,0,Results buffer saved to disk.,51.75
+TriplesExtractor,2026-02-12 23:38:08,INFO,416,960,0,Results buffer saved to disk.,51.75
+TriplesExtractor,2026-02-12 23:38:08,INFO,416,976,0,Results buffer saved to disk.,51.75
+TriplesExtractor,2026-02-12 23:38:31,INFO,432,976,0,Chunk 26 processing completed.,53.54
+TriplesExtractor,2026-02-12 23:38:31,INFO,432,992,0,Results buffer saved to disk.,53.54
+TriplesExtractor,2026-02-12 23:38:31,INFO,432,1008,0,Results buffer saved to disk.,53.54
+TriplesExtractor,2026-02-12 23:38:58,INFO,448,1008,0,Chunk 27 processing completed.,55.02
+TriplesExtractor,2026-02-12 23:38:58,INFO,448,1024,0,Results buffer saved to disk.,55.02
+TriplesExtractor,2026-02-12 23:39:14,INFO,464,1024,0,Chunk 28 processing completed.,56.76
+TriplesExtractor,2026-02-12 23:39:14,INFO,464,1040,0,Results buffer saved to disk.,56.76
+TriplesExtractor,2026-02-12 23:39:14,INFO,464,1056,0,Results buffer saved to disk.,56.76
+TriplesExtractor,2026-02-12 23:39:14,INFO,464,1072,0,Results buffer saved to disk.,56.76
+TriplesExtractor,2026-02-12 23:39:42,INFO,480,1072,0,Chunk 29 processing completed.,58.82
+TriplesExtractor,2026-02-12 23:39:42,INFO,480,1088,0,Results buffer saved to disk.,58.82
+TriplesExtractor,2026-02-12 23:39:42,INFO,480,1104,0,Results buffer saved to disk.,58.82
+TriplesExtractor,2026-02-12 23:39:42,INFO,480,1120,0,Results buffer saved to disk.,58.82
+TriplesExtractor,2026-02-12 23:40:05,INFO,496,1120,0,Chunk 30 processing completed.,60.68
+TriplesExtractor,2026-02-12 23:40:05,INFO,496,1136,0,Results buffer saved to disk.,60.68
+TriplesExtractor,2026-02-12 23:40:05,INFO,496,1152,0,Results buffer saved to disk.,60.68
+TriplesExtractor,2026-02-12 23:40:11,INFO,512,1152,0,Chunk 31 processing completed.,62.53
+TriplesExtractor,2026-02-12 23:40:11,INFO,512,1168,0,Results buffer saved to disk.,62.53
+TriplesExtractor,2026-02-12 23:40:11,INFO,512,1184,0,Results buffer saved to disk.,62.53
+TriplesExtractor,2026-02-12 23:40:19,INFO,528,1184,0,Chunk 32 processing completed.,64.51
+TriplesExtractor,2026-02-12 23:40:19,INFO,528,1200,0,Results buffer saved to disk.,64.51
+TriplesExtractor,2026-02-12 23:40:19,INFO,528,1216,0,Results buffer saved to disk.,64.51
+TriplesExtractor,2026-02-12 23:40:19,INFO,528,1232,0,Results buffer saved to disk.,64.51
+TriplesExtractor,2026-02-12 23:40:19,INFO,528,1248,0,Results buffer saved to disk.,64.51
+TriplesExtractor,2026-02-12 23:40:26,INFO,544,1248,0,Chunk 33 processing completed.,66.43
+TriplesExtractor,2026-02-12 23:40:26,INFO,544,1264,0,Results buffer saved to disk.,66.43
+TriplesExtractor,2026-02-12 23:40:26,INFO,544,1280,0,Results buffer saved to disk.,66.43
+TriplesExtractor,2026-02-12 23:40:26,INFO,544,1296,0,Results buffer saved to disk.,66.43
+TriplesExtractor,2026-02-12 23:40:31,INFO,560,1296,0,Chunk 34 processing completed.,68.23
+TriplesExtractor,2026-02-12 23:40:31,INFO,560,1312,0,Results buffer saved to disk.,68.23
+TriplesExtractor,2026-02-12 23:40:31,INFO,560,1328,0,Results buffer saved to disk.,68.23
+TriplesExtractor,2026-02-12 23:40:37,INFO,576,1328,0,Chunk 35 processing completed.,70.14
+TriplesExtractor,2026-02-12 23:40:37,INFO,576,1344,0,Results buffer saved to disk.,70.14
+TriplesExtractor,2026-02-12 23:40:37,INFO,576,1360,0,Results buffer saved to disk.,70.14
+TriplesExtractor,2026-02-12 23:40:37,INFO,576,1376,0,Results buffer saved to disk.,70.14
+TriplesExtractor,2026-02-12 23:40:45,INFO,592,1376,0,Chunk 36 processing completed.,72.79
+TriplesExtractor,2026-02-12 23:40:45,INFO,592,1392,0,Results buffer saved to disk.,72.79
+TriplesExtractor,2026-02-12 23:40:45,INFO,592,1408,0,Results buffer saved to disk.,72.79
+TriplesExtractor,2026-02-12 23:40:45,INFO,592,1424,0,Results buffer saved to disk.,72.79
+TriplesExtractor,2026-02-12 23:40:58,INFO,608,1424,0,Chunk 37 processing completed.,74.99
+TriplesExtractor,2026-02-12 23:40:58,INFO,608,1440,0,Results buffer saved to disk.,74.99
+TriplesExtractor,2026-02-12 23:40:58,INFO,608,1456,0,Results buffer saved to disk.,74.99
+TriplesExtractor,2026-02-12 23:40:58,INFO,608,1472,0,Results buffer saved to disk.,74.99
+TriplesExtractor,2026-02-12 23:41:04,INFO,624,1472,0,Chunk 38 processing completed.,76.79
+TriplesExtractor,2026-02-12 23:41:04,INFO,624,1488,0,Results buffer saved to disk.,76.79
+TriplesExtractor,2026-02-12 23:41:04,INFO,624,1504,0,Results buffer saved to disk.,76.79
+TriplesExtractor,2026-02-12 23:41:10,INFO,640,1504,0,Chunk 39 processing completed.,78.35
+TriplesExtractor,2026-02-12 23:41:10,INFO,640,1520,0,Results buffer saved to disk.,78.35
+TriplesExtractor,2026-02-12 23:41:10,INFO,640,1536,0,Results buffer saved to disk.,78.35
+TriplesExtractor,2026-02-12 23:41:28,INFO,656,1536,0,Chunk 40 processing completed.,80.04
+TriplesExtractor,2026-02-12 23:41:28,INFO,656,1552,0,Results buffer saved to disk.,80.04
+TriplesExtractor,2026-02-12 23:41:28,INFO,656,1568,0,Results buffer saved to disk.,80.04
+TriplesExtractor,2026-02-12 23:41:41,INFO,672,1568,0,Chunk 41 processing completed.,82.42
+TriplesExtractor,2026-02-12 23:41:41,INFO,672,1584,0,Results buffer saved to disk.,82.42
+TriplesExtractor,2026-02-12 23:41:41,INFO,672,1600,0,Results buffer saved to disk.,82.42
+TriplesExtractor,2026-02-12 23:41:41,INFO,672,1616,0,Results buffer saved to disk.,82.42
+TriplesExtractor,2026-02-12 23:41:41,INFO,672,1632,0,Results buffer saved to disk.,82.42
+TriplesExtractor,2026-02-12 23:41:47,INFO,688,1632,0,Chunk 42 processing completed.,84.36
+TriplesExtractor,2026-02-12 23:41:47,INFO,688,1648,0,Results buffer saved to disk.,84.36
+TriplesExtractor,2026-02-12 23:41:58,INFO,704,1648,0,Chunk 43 processing completed.,86.18
+TriplesExtractor,2026-02-12 23:41:58,INFO,704,1664,0,Results buffer saved to disk.,86.18
+TriplesExtractor,2026-02-12 23:41:58,INFO,704,1680,0,Results buffer saved to disk.,86.18
+TriplesExtractor,2026-02-12 23:41:58,INFO,704,1696,0,Results buffer saved to disk.,86.18
+TriplesExtractor,2026-02-12 23:42:06,INFO,720,1696,0,Chunk 44 processing completed.,88.25
+TriplesExtractor,2026-02-12 23:42:06,INFO,720,1712,0,Results buffer saved to disk.,88.25
+TriplesExtractor,2026-02-12 23:42:06,INFO,720,1728,0,Results buffer saved to disk.,88.25
+TriplesExtractor,2026-02-12 23:42:06,INFO,720,1744,0,Results buffer saved to disk.,88.25
+TriplesExtractor,2026-02-12 23:42:06,INFO,720,1760,0,Results buffer saved to disk.,88.25
+TriplesExtractor,2026-02-12 23:42:24,INFO,736,1760,0,Chunk 45 processing completed.,90.44
+TriplesExtractor,2026-02-12 23:42:24,INFO,736,1776,0,Results buffer saved to disk.,90.44
+TriplesExtractor,2026-02-12 23:42:35,INFO,752,1776,0,Chunk 46 processing completed.,92.48
+TriplesExtractor,2026-02-12 23:42:35,INFO,752,1792,0,Results buffer saved to disk.,92.48
+TriplesExtractor,2026-02-12 23:42:35,INFO,752,1808,0,Results buffer saved to disk.,92.48
+TriplesExtractor,2026-02-12 23:42:35,INFO,752,1824,0,Results buffer saved to disk.,92.48
+TriplesExtractor,2026-02-12 23:42:47,INFO,768,1824,0,Chunk 47 processing completed.,94.51
+TriplesExtractor,2026-02-12 23:42:47,INFO,768,1840,0,Results buffer saved to disk.,94.51
+TriplesExtractor,2026-02-12 23:42:47,INFO,768,1856,0,Results buffer saved to disk.,94.51
+TriplesExtractor,2026-02-12 23:43:04,INFO,784,1856,0,Chunk 48 processing completed.,96.81
+TriplesExtractor,2026-02-12 23:43:04,INFO,784,1872,0,Results buffer saved to disk.,96.81
+TriplesExtractor,2026-02-12 23:43:04,INFO,784,1888,0,Results buffer saved to disk.,96.81
+TriplesExtractor,2026-02-12 23:43:04,INFO,784,1904,0,Results buffer saved to disk.,96.81
+TriplesExtractor,2026-02-12 23:43:10,INFO,800,1904,0,Chunk 49 processing completed.,98.54
+TriplesExtractor,2026-02-12 23:43:10,INFO,800,1920,0,Results buffer saved to disk.,98.54
+TriplesExtractor,2026-02-12 23:43:10,INFO,800,1936,0,Results buffer saved to disk.,98.54
+TriplesExtractor,2026-02-12 23:43:10,INFO,800,1952,0,Results buffer saved to disk.,98.54
+TriplesExtractor,2026-02-12 23:43:18,INFO,812,1952,0,Chunk 50 processing completed.,100.00
+TriplesExtractor,2026-02-12 23:43:18,INFO,812,1968,0,Results buffer saved to disk.,100.00
+TriplesExtractor,2026-02-12 23:43:18,INFO,812,1982,0,Job TriplesExtractor has been completed.,100.00

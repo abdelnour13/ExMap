@@ -1,7 +1,6 @@
 import re
 from src.shared.file_tools import FileWriter, FileReader
-from src.shared.command_tools import Stage, BaseConfig
-from src.shared.handlers import ConsoleLogger, FileLogger, SocketHandler
+from src.shared.command_tools import Stage, BaseConfig, command
 from pydantic import Field
 from typing import Dict, List
 from transformers import pipeline
@@ -113,15 +112,18 @@ class AcronymExtractor(Stage):
 
 @cli.register_command(
     name="extract_acronyms",
-    description=("Extract acronyms from the documents relying on a method that combines regular expressions "
-    "and QA models."),
+    description=(
+        "Extract acronyms from the documents relying on a method that combines regular expressions "
+        "and QA models."
+    ),
     model=Model(Config, spread=False),
     add_from_conf=False,
     add_save_to=False
 )
-def extract_acronyms(config : Config):
+@command
+def extract_acronyms(config : Config) -> Stage:
     
-    acronym_extractor = AcronymExtractor(
+    return AcronymExtractor(
         reader=FileReader.from_filename(config.input_filename),
         writer=FileWriter.from_filename(config.output_filename),
         batch_size=config.batch_size,
@@ -129,11 +131,3 @@ def extract_acronyms(config : Config):
         qa_model=config.qa_model,
         threshold=config.threshold
     )
-
-    if config.connection is not None:
-        acronym_extractor.add_handler(SocketHandler(host=config.connection.host, port=config.connection.port))
-
-    acronym_extractor.add_handler(ConsoleLogger("CorpusCleaner"))
-    acronym_extractor.add_handler(FileLogger(name="CorpusHandler", log_file=config.log_filename))
-
-    acronym_extractor.run()

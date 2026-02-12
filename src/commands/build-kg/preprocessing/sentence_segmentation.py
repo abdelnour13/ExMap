@@ -1,6 +1,5 @@
 from src.shared.file_tools import FileWriter, FileReader
-from src.shared.command_tools import Stage, BaseConfig
-from src.shared.handlers import SocketHandler, ConsoleLogger, FileLogger
+from src.shared.command_tools import Stage, BaseConfig, command
 from pycli import Field, Model
 from typing import Dict,List
 from stanza import Pipeline
@@ -58,20 +57,13 @@ class SentenceSegmenter(Stage):
     add_from_conf=False,
     add_save_to=False
 )
+@command
 def segment_sentences(config : Config) -> Stage:
     
-    sentence_segmenter = SentenceSegmenter(
+    return SentenceSegmenter(
         reader=FileReader.from_filename(config.input_filename),
         writer=FileWriter.from_filename(config.output_filename),
         buffer_size=config.buffer_size,
         batch_size=config.batch_size,
         use_gpu=config.use_gpu
     )
-
-    if config.connection is not None:
-        sentence_segmenter.add_handler(SocketHandler(host=config.connection.host, port=config.connection.port))
-
-    sentence_segmenter.add_handler(ConsoleLogger("CorpusCleaner"))
-    sentence_segmenter.add_handler(FileLogger(name="CorpusHandler", log_file=config.log_filename))
-
-    sentence_segmenter.run()
