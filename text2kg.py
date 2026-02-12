@@ -21,7 +21,9 @@ class Config(BaseModel):
 
 @cli.register_command(
     name="dockerize",
-    description="Generate the 'docker-compose.yml' file according to the 'config.toml' file."
+    description="Generate the 'docker-compose.yml' file according to the 'config.toml' file.",
+    add_from_conf=False,
+    add_save_to=False
 )
 def dockerize():
 
@@ -93,7 +95,9 @@ def dockerize():
 
 @cli.register_command(
     name="create-envs",
-    description="Creates the conda envirenments according to the 'config.toml' project."
+    description="Creates the conda envirenments according to the 'config.toml' project.",
+    add_from_conf=False,
+    add_save_to=False
 )
 def create_envs() -> None:
 

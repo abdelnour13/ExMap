@@ -4,7 +4,7 @@ from abc import abstractmethod
 from src.shared.file_tools import Reader, FileWriter, batched
 from src.shared.handlers import Event, EventLevel
 from src.helpers.config import assert_file_exists, makedirs
-from pycli import Parsable, toml_parser
+from pycli import toml_parser
 from pydantic import BaseModel, Field, computed_field, BeforeValidator
 from .base_command import BaseCommand
 
@@ -14,7 +14,7 @@ class Connection(BaseModel):
 
 class BaseConfig(BaseModel):
 
-    connection : Optional[Parsable[Connection, toml_parser]] = Field(
+    connection : Optional[Annotated[Connection, BeforeValidator(toml_parser)]] = Field(
         default=None, 
         description="The socket connection used to send updates through."
     )

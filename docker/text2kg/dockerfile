@@ -2,9 +2,11 @@ FROM python:3.12.12-slim
 
 WORKDIR /text2kg
 
+RUN apt-get update && apt-get install -y curl
+
 # Install Python Packages
-COPY requirements.txt .
-RUN RUN pip install --no-cache-dir -r requirements.txt 
+COPY setup.sh .
+RUN chmod +x setup.sh && bash setup.sh
 
 # To prevent container from exiting
 CMD ["tail", "-f", "/dev/null"]

@@ -7,6 +7,7 @@ from typing import Dict, List
 from transformers import pipeline
 from pycli import Model
 from instance import cli
+from definitions import hf_model_dir
 
 class Config(BaseConfig):
 
@@ -17,7 +18,7 @@ class Config(BaseConfig):
 
     threshold : float = Field(
         default=0.5,
-        help="The minimum threshold to retain the acronym expansion."
+        description="The minimum threshold to retain the acronym expansion."
     )
 
 class AcronymExtractor(Stage):
@@ -34,7 +35,7 @@ class AcronymExtractor(Stage):
 
         self.qa_model = qa_model
         self.threshold = threshold
-        self.pipeline = pipeline("question-answering", qa_model)
+        self.pipeline = pipeline("question-answering", hf_model_dir(qa_model))
 
         self.expansion_pattern = r"\([^()]*\b\w+\b[^()]*\b\w+\b[^()]*\)"
 
@@ -112,9 +113,8 @@ class AcronymExtractor(Stage):
 
 @cli.register_command(
     name="extract_acronyms",
-    description=("Performs an initial cleaning on the corpus, including : removing HTML tags and links, filtering non-english "
-        "documents and keywords."
-    ),
+    description=("Extract acronyms from the documents relying on a method that combines regular expressions "
+    "and QA models."),
     model=Model(Config, spread=False),
     add_from_conf=False,
     add_save_to=False
@@ -122,8 +122,8 @@ class AcronymExtractor(Stage):
 def extract_acronyms(config : Config):
     
     acronym_extractor = AcronymExtractor(
-        reader=FileReader.from_filename(config.output_filename),
-        writer=FileWriter.from_filename(config.input_filename),
+        reader=FileReader.from_filename(config.input_filename),
+        writer=FileWriter.from_filename(config.output_filename),
         batch_size=config.batch_size,
         buffer_size=config.buffer_size,
         qa_model=config.qa_model,
