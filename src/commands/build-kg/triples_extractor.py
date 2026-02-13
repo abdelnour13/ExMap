@@ -1,10 +1,15 @@
+import dotenv
 from typing import List, Dict
 from src.shared.command_tools import Stage, BaseConfig, command
 from src.shared.file_tools import FileWriter, FileReader
 from returns.pipeline import is_successful
 from src.shared.triples_extractors import BaseTriplesExtractor, TriplesExtractorFactory
 from pycli import Field, Model
+from pydantic import computed_field
+from definitions import ENV
 from instance import cli
+
+dotenv.load_dotenv(ENV)
 
 class Config(BaseConfig):
 
@@ -15,7 +20,10 @@ class Config(BaseConfig):
 
     llm : str = Field(default="deepseek-chat",description="The LLM to be used for triple extraction.")
 
-    api_key : str = Field(description="The Api Key needed to use the LLM through OpenAI API.")
+    @computed_field
+    @property
+    def api_key(self) -> str:
+        return dotenv.get_key(f"{self.llm.upper()}_API_KEY")
 
 class TriplesExtractor(Stage):
 
@@ -60,6 +68,7 @@ class TriplesExtractor(Stage):
                 pass
 
         return records
+
 
 @cli.register_command(
     name="extract_triples",

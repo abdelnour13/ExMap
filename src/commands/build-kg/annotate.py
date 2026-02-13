@@ -1,12 +1,17 @@
 import re
+import dotenv
 from typing import Dict, List
 from src.shared.command_tools import Stage, BaseConfig, command
 from src.shared.file_tools import FileWriter, FileReader
 from src.helpers import load_json_file
+from pydantic import computed_field
 from pycli import Field, Model
 from dataclasses import dataclass
 from openai import OpenAI
+from definitions import ENV
 from instance import cli
+
+dotenv.load_dotenv(ENV)
 
 @dataclass
 class Domain:
@@ -21,9 +26,12 @@ class Config(BaseConfig):
         description="The LLM to be used for triple extraction."
     )
 
-    api_key : str = Field(description="The Api Key needed to use the LLM through OpenAI API.")
-
     domains_filename : str = Field(description="The json file that holds the labels and their definitions.")
+
+    @computed_field
+    @property
+    def api_key(self) -> str:
+        return dotenv.get_key(f"{self.model.upper()}_API_KEY")
 
 MODELS = {
     "deepseek-chat": {
