@@ -1,6 +1,7 @@
 pip install --no-cache-dir -r requirements.txt
 python -m nltk.downloader stopwords
 python -m nltk.downloader punkt 
+python -m nltk.downloader averaged_perceptron_tagger_eng
 
 pip uninstall gevent greenlet -y
 pip install --no-binary :all: gevent==1.4.0 greenlet==2.0.2
