@@ -14,6 +14,7 @@ class RPCService(BaseModel):
     enable_gpu_access : bool
 
 class Config(BaseModel):
+    add_neo4j : bool
     allennlp : RPCService
     openie6 : RPCService
 
@@ -81,6 +82,26 @@ def dockerize():
             openie6_service["deploy"] = deploy
 
         services["openie6"] = openie6_service
+
+    if config.add_neo4j:
+
+        services['neo4j'] = {
+            "image" : "neo4j:latest",
+            "container_name" : "text2kg-neo4j",
+            "ports" : [
+                "7474:7474",
+                "7687:7687"
+            ],
+            "volumes" : [
+                "./.neo4j/data:/data",
+                "./.neo4j/logs:/logs",
+                "./.neo4j/conf:/conf",
+                "./.neo4j/import:/var/lib/neo4j/import",
+                "./.neo4j/plugins:/plugins"
+            ],
+            "environment" : ["NEO4J_AUTH=neo4j/Abdelnour2003"],
+            "restart" : "always"
+        }
 
     ### Main
     text2kg_service = {

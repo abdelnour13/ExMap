@@ -1,0 +1,2456 @@
+Neo4J,2026-02-13 01:55:10,DEBUG,0,0,0,Connection to Neo4j established successfully.,None
+Neo4J,2026-02-13 01:55:10,DEBUG,0,0,0,Deleted all rows in the database.,None
+Neo4J,2026-02-13 01:55:10,INFO,0,0,0,Job Neo4J has started.,None
+Neo4J,2026-02-13 01:55:10,INFO,1,0,0,Chunk 0 processing completed.,0.06
+Neo4J,2026-02-13 01:55:10,INFO,2,0,0,Chunk 1 processing completed.,0.12
+Neo4J,2026-02-13 01:55:10,INFO,2,4,0,Results buffer saved to disk.,0.12
+Neo4J,2026-02-13 01:55:10,INFO,3,4,0,Chunk 2 processing completed.,0.18
+Neo4J,2026-02-13 01:55:10,INFO,3,8,0,Results buffer saved to disk.,0.18
+Neo4J,2026-02-13 01:55:10,INFO,4,8,0,Chunk 3 processing completed.,0.24
+Neo4J,2026-02-13 01:55:10,INFO,5,8,0,Chunk 4 processing completed.,0.32
+Neo4J,2026-02-13 01:55:10,INFO,5,12,0,Results buffer saved to disk.,0.32
+Neo4J,2026-02-13 01:55:10,INFO,6,12,0,Chunk 5 processing completed.,0.39
+Neo4J,2026-02-13 01:55:10,INFO,7,12,0,Chunk 6 processing completed.,0.47
+Neo4J,2026-02-13 01:55:10,INFO,7,16,0,Results buffer saved to disk.,0.47
+Neo4J,2026-02-13 01:55:10,INFO,8,16,0,Chunk 7 processing completed.,0.54
+Neo4J,2026-02-13 01:55:10,INFO,9,16,0,Chunk 8 processing completed.,0.62
+Neo4J,2026-02-13 01:55:10,INFO,9,20,0,Results buffer saved to disk.,0.62
+Neo4J,2026-02-13 01:55:10,INFO,10,20,0,Chunk 9 processing completed.,0.66
+Neo4J,2026-02-13 01:55:10,INFO,11,20,0,Chunk 10 processing completed.,0.71
+Neo4J,2026-02-13 01:55:10,INFO,11,24,0,Results buffer saved to disk.,0.71
+Neo4J,2026-02-13 01:55:10,INFO,12,24,0,Chunk 11 processing completed.,0.76
+Neo4J,2026-02-13 01:55:10,INFO,12,28,0,Results buffer saved to disk.,0.76
+Neo4J,2026-02-13 01:55:11,INFO,13,28,0,Chunk 12 processing completed.,0.81
+Neo4J,2026-02-13 01:55:11,INFO,14,28,0,Chunk 13 processing completed.,0.87
+Neo4J,2026-02-13 01:55:11,INFO,14,32,0,Results buffer saved to disk.,0.87
+Neo4J,2026-02-13 01:55:11,INFO,15,32,0,Chunk 14 processing completed.,0.93
+Neo4J,2026-02-13 01:55:11,INFO,16,32,0,Chunk 15 processing completed.,0.99
+Neo4J,2026-02-13 01:55:11,INFO,16,36,0,Results buffer saved to disk.,0.99
+Neo4J,2026-02-13 01:55:11,INFO,17,36,0,Chunk 16 processing completed.,1.05
+Neo4J,2026-02-13 01:55:11,INFO,18,36,0,Chunk 17 processing completed.,1.11
+Neo4J,2026-02-13 01:55:11,INFO,19,36,0,Chunk 18 processing completed.,1.18
+Neo4J,2026-02-13 01:55:11,INFO,19,40,0,Results buffer saved to disk.,1.18
+Neo4J,2026-02-13 01:55:11,INFO,20,40,0,Chunk 19 processing completed.,1.24
+Neo4J,2026-02-13 01:55:11,INFO,21,40,0,Chunk 20 processing completed.,1.30
+Neo4J,2026-02-13 01:55:11,INFO,21,44,0,Results buffer saved to disk.,1.30
+Neo4J,2026-02-13 01:55:11,INFO,22,44,0,Chunk 21 processing completed.,1.34
+Neo4J,2026-02-13 01:55:11,INFO,23,44,0,Chunk 22 processing completed.,1.39
+Neo4J,2026-02-13 01:55:11,INFO,23,48,0,Results buffer saved to disk.,1.39
+Neo4J,2026-02-13 01:55:11,INFO,24,48,0,Chunk 23 processing completed.,1.45
+Neo4J,2026-02-13 01:55:11,INFO,25,48,0,Chunk 24 processing completed.,1.51
+Neo4J,2026-02-13 01:55:11,INFO,25,52,0,Results buffer saved to disk.,1.51
+Neo4J,2026-02-13 01:55:11,INFO,26,52,0,Chunk 25 processing completed.,1.55
+Neo4J,2026-02-13 01:55:11,INFO,26,56,0,Results buffer saved to disk.,1.55
+Neo4J,2026-02-13 01:55:11,INFO,27,56,0,Chunk 26 processing completed.,1.60
+Neo4J,2026-02-13 01:55:11,INFO,28,56,0,Chunk 27 processing completed.,1.66
+Neo4J,2026-02-13 01:55:11,INFO,28,60,0,Results buffer saved to disk.,1.66
+Neo4J,2026-02-13 01:55:11,INFO,29,60,0,Chunk 28 processing completed.,1.72
+Neo4J,2026-02-13 01:55:11,INFO,29,64,0,Results buffer saved to disk.,1.72
+Neo4J,2026-02-13 01:55:11,INFO,30,64,0,Chunk 29 processing completed.,1.78
+Neo4J,2026-02-13 01:55:11,INFO,31,64,0,Chunk 30 processing completed.,1.84
+Neo4J,2026-02-13 01:55:11,INFO,32,64,0,Chunk 31 processing completed.,1.90
+Neo4J,2026-02-13 01:55:11,INFO,32,68,0,Results buffer saved to disk.,1.90
+Neo4J,2026-02-13 01:55:11,INFO,33,68,0,Chunk 32 processing completed.,1.96
+Neo4J,2026-02-13 01:55:11,INFO,34,68,0,Chunk 33 processing completed.,2.01
+Neo4J,2026-02-13 01:55:11,INFO,34,72,0,Results buffer saved to disk.,2.01
+Neo4J,2026-02-13 01:55:11,INFO,35,72,0,Chunk 34 processing completed.,2.07
+Neo4J,2026-02-13 01:55:11,INFO,36,72,0,Chunk 35 processing completed.,2.11
+Neo4J,2026-02-13 01:55:11,INFO,36,76,0,Results buffer saved to disk.,2.11
+Neo4J,2026-02-13 01:55:11,INFO,37,76,0,Chunk 36 processing completed.,2.16
+Neo4J,2026-02-13 01:55:11,INFO,38,76,0,Chunk 37 processing completed.,2.21
+Neo4J,2026-02-13 01:55:11,INFO,38,80,0,Results buffer saved to disk.,2.21
+Neo4J,2026-02-13 01:55:11,INFO,39,80,0,Chunk 38 processing completed.,2.27
+Neo4J,2026-02-13 01:55:11,INFO,39,84,0,Results buffer saved to disk.,2.27
+Neo4J,2026-02-13 01:55:11,INFO,40,84,0,Chunk 39 processing completed.,2.34
+Neo4J,2026-02-13 01:55:11,INFO,41,84,0,Chunk 40 processing completed.,2.39
+Neo4J,2026-02-13 01:55:11,INFO,41,88,0,Results buffer saved to disk.,2.39
+Neo4J,2026-02-13 01:55:11,INFO,42,88,0,Chunk 41 processing completed.,2.45
+Neo4J,2026-02-13 01:55:11,INFO,43,88,0,Chunk 42 processing completed.,2.50
+Neo4J,2026-02-13 01:55:11,INFO,43,92,0,Results buffer saved to disk.,2.50
+Neo4J,2026-02-13 01:55:11,INFO,44,92,0,Chunk 43 processing completed.,2.54
+Neo4J,2026-02-13 01:55:11,INFO,44,96,0,Results buffer saved to disk.,2.54
+Neo4J,2026-02-13 01:55:12,INFO,45,96,0,Chunk 44 processing completed.,2.59
+Neo4J,2026-02-13 01:55:12,INFO,46,96,0,Chunk 45 processing completed.,2.64
+Neo4J,2026-02-13 01:55:12,INFO,46,100,0,Results buffer saved to disk.,2.64
+Neo4J,2026-02-13 01:55:12,INFO,47,100,0,Chunk 46 processing completed.,2.69
+Neo4J,2026-02-13 01:55:12,INFO,47,104,0,Results buffer saved to disk.,2.69
+Neo4J,2026-02-13 01:55:12,INFO,48,104,0,Chunk 47 processing completed.,2.73
+Neo4J,2026-02-13 01:55:12,INFO,49,104,0,Chunk 48 processing completed.,2.79
+Neo4J,2026-02-13 01:55:12,INFO,49,108,0,Results buffer saved to disk.,2.79
+Neo4J,2026-02-13 01:55:12,INFO,50,108,0,Chunk 49 processing completed.,2.83
+Neo4J,2026-02-13 01:55:12,INFO,51,108,0,Chunk 50 processing completed.,2.89
+Neo4J,2026-02-13 01:55:12,INFO,51,112,0,Results buffer saved to disk.,2.89
+Neo4J,2026-02-13 01:55:12,INFO,52,112,0,Chunk 51 processing completed.,2.94
+Neo4J,2026-02-13 01:55:12,INFO,53,112,0,Chunk 52 processing completed.,3.00
+Neo4J,2026-02-13 01:55:12,INFO,53,116,0,Results buffer saved to disk.,3.00
+Neo4J,2026-02-13 01:55:12,INFO,54,116,0,Chunk 53 processing completed.,3.06
+Neo4J,2026-02-13 01:55:12,INFO,55,116,0,Chunk 54 processing completed.,3.12
+Neo4J,2026-02-13 01:55:12,INFO,56,116,0,Chunk 55 processing completed.,3.17
+Neo4J,2026-02-13 01:55:12,INFO,56,120,0,Results buffer saved to disk.,3.17
+Neo4J,2026-02-13 01:55:12,INFO,57,120,0,Chunk 56 processing completed.,3.22
+Neo4J,2026-02-13 01:55:12,INFO,57,124,0,Results buffer saved to disk.,3.22
+Neo4J,2026-02-13 01:55:12,INFO,58,124,0,Chunk 57 processing completed.,3.27
+Neo4J,2026-02-13 01:55:12,INFO,59,124,0,Chunk 58 processing completed.,3.31
+Neo4J,2026-02-13 01:55:12,INFO,59,128,0,Results buffer saved to disk.,3.31
+Neo4J,2026-02-13 01:55:12,INFO,60,128,0,Chunk 59 processing completed.,3.36
+Neo4J,2026-02-13 01:55:12,INFO,61,128,0,Chunk 60 processing completed.,3.42
+Neo4J,2026-02-13 01:55:12,INFO,61,132,0,Results buffer saved to disk.,3.42
+Neo4J,2026-02-13 01:55:12,INFO,62,132,0,Chunk 61 processing completed.,3.46
+Neo4J,2026-02-13 01:55:12,INFO,62,136,0,Results buffer saved to disk.,3.46
+Neo4J,2026-02-13 01:55:12,INFO,63,136,0,Chunk 62 processing completed.,3.51
+Neo4J,2026-02-13 01:55:12,INFO,64,136,0,Chunk 63 processing completed.,3.56
+Neo4J,2026-02-13 01:55:12,INFO,64,140,0,Results buffer saved to disk.,3.56
+Neo4J,2026-02-13 01:55:12,INFO,65,140,0,Chunk 64 processing completed.,3.61
+Neo4J,2026-02-13 01:55:12,INFO,66,140,0,Chunk 65 processing completed.,3.66
+Neo4J,2026-02-13 01:55:12,INFO,66,144,0,Results buffer saved to disk.,3.66
+Neo4J,2026-02-13 01:55:12,INFO,67,144,0,Chunk 66 processing completed.,3.71
+Neo4J,2026-02-13 01:55:12,INFO,68,144,0,Chunk 67 processing completed.,3.75
+Neo4J,2026-02-13 01:55:12,INFO,69,144,0,Chunk 68 processing completed.,3.80
+Neo4J,2026-02-13 01:55:12,INFO,69,148,0,Results buffer saved to disk.,3.80
+Neo4J,2026-02-13 01:55:12,INFO,70,148,0,Chunk 69 processing completed.,3.85
+Neo4J,2026-02-13 01:55:12,INFO,71,148,0,Chunk 70 processing completed.,3.90
+Neo4J,2026-02-13 01:55:12,INFO,71,152,0,Results buffer saved to disk.,3.90
+Neo4J,2026-02-13 01:55:12,INFO,72,152,0,Chunk 71 processing completed.,3.94
+Neo4J,2026-02-13 01:55:12,INFO,72,156,0,Results buffer saved to disk.,3.94
+Neo4J,2026-02-13 01:55:12,INFO,73,156,0,Chunk 72 processing completed.,3.98
+Neo4J,2026-02-13 01:55:12,INFO,74,156,0,Chunk 73 processing completed.,4.03
+Neo4J,2026-02-13 01:55:12,INFO,74,160,0,Results buffer saved to disk.,4.03
+Neo4J,2026-02-13 01:55:12,INFO,75,160,0,Chunk 74 processing completed.,4.08
+Neo4J,2026-02-13 01:55:12,INFO,75,164,0,Results buffer saved to disk.,4.08
+Neo4J,2026-02-13 01:55:12,INFO,76,164,0,Chunk 75 processing completed.,4.13
+Neo4J,2026-02-13 01:55:12,INFO,77,164,0,Chunk 76 processing completed.,4.19
+Neo4J,2026-02-13 01:55:12,INFO,77,168,0,Results buffer saved to disk.,4.19
+Neo4J,2026-02-13 01:55:12,INFO,78,168,0,Chunk 77 processing completed.,4.24
+Neo4J,2026-02-13 01:55:12,INFO,79,168,0,Chunk 78 processing completed.,4.30
+Neo4J,2026-02-13 01:55:12,INFO,80,168,0,Chunk 79 processing completed.,4.35
+Neo4J,2026-02-13 01:55:12,INFO,80,172,0,Results buffer saved to disk.,4.35
+Neo4J,2026-02-13 01:55:12,INFO,81,172,0,Chunk 80 processing completed.,4.41
+Neo4J,2026-02-13 01:55:12,INFO,82,172,0,Chunk 81 processing completed.,4.48
+Neo4J,2026-02-13 01:55:12,INFO,82,176,0,Results buffer saved to disk.,4.48
+Neo4J,2026-02-13 01:55:12,INFO,83,176,0,Chunk 82 processing completed.,4.53
+Neo4J,2026-02-13 01:55:12,INFO,83,180,0,Results buffer saved to disk.,4.53
+Neo4J,2026-02-13 01:55:12,INFO,84,180,0,Chunk 83 processing completed.,4.60
+Neo4J,2026-02-13 01:55:12,INFO,85,180,0,Chunk 84 processing completed.,4.65
+Neo4J,2026-02-13 01:55:12,INFO,85,184,0,Results buffer saved to disk.,4.65
+Neo4J,2026-02-13 01:55:13,INFO,86,184,0,Chunk 85 processing completed.,4.70
+Neo4J,2026-02-13 01:55:13,INFO,87,184,0,Chunk 86 processing completed.,4.76
+Neo4J,2026-02-13 01:55:13,INFO,87,188,0,Results buffer saved to disk.,4.76
+Neo4J,2026-02-13 01:55:13,INFO,88,188,0,Chunk 87 processing completed.,4.83
+Neo4J,2026-02-13 01:55:13,INFO,88,192,0,Results buffer saved to disk.,4.83
+Neo4J,2026-02-13 01:55:13,INFO,89,192,0,Chunk 88 processing completed.,4.89
+Neo4J,2026-02-13 01:55:13,INFO,90,192,0,Chunk 89 processing completed.,4.95
+Neo4J,2026-02-13 01:55:13,INFO,90,196,0,Results buffer saved to disk.,4.95
+Neo4J,2026-02-13 01:55:13,INFO,91,196,0,Chunk 90 processing completed.,5.02
+Neo4J,2026-02-13 01:55:13,INFO,92,196,0,Chunk 91 processing completed.,5.09
+Neo4J,2026-02-13 01:55:13,INFO,92,200,0,Results buffer saved to disk.,5.09
+Neo4J,2026-02-13 01:55:13,INFO,93,200,0,Chunk 92 processing completed.,5.16
+Neo4J,2026-02-13 01:55:13,INFO,94,200,0,Chunk 93 processing completed.,5.22
+Neo4J,2026-02-13 01:55:13,INFO,94,204,0,Results buffer saved to disk.,5.22
+Neo4J,2026-02-13 01:55:13,INFO,95,204,0,Chunk 94 processing completed.,5.28
+Neo4J,2026-02-13 01:55:13,INFO,96,204,0,Chunk 95 processing completed.,5.32
+Neo4J,2026-02-13 01:55:13,INFO,96,208,0,Results buffer saved to disk.,5.32
+Neo4J,2026-02-13 01:55:13,INFO,97,208,0,Chunk 96 processing completed.,5.37
+Neo4J,2026-02-13 01:55:13,INFO,97,212,0,Results buffer saved to disk.,5.37
+Neo4J,2026-02-13 01:55:13,INFO,98,212,0,Chunk 97 processing completed.,5.41
+Neo4J,2026-02-13 01:55:13,INFO,99,212,0,Chunk 98 processing completed.,5.46
+Neo4J,2026-02-13 01:55:13,INFO,99,216,0,Results buffer saved to disk.,5.46
+Neo4J,2026-02-13 01:55:13,INFO,100,216,0,Chunk 99 processing completed.,5.51
+Neo4J,2026-02-13 01:55:13,INFO,101,216,0,Chunk 100 processing completed.,5.59
+Neo4J,2026-02-13 01:55:13,INFO,101,220,0,Results buffer saved to disk.,5.59
+Neo4J,2026-02-13 01:55:13,INFO,102,220,0,Chunk 101 processing completed.,5.66
+Neo4J,2026-02-13 01:55:13,INFO,102,224,0,Results buffer saved to disk.,5.66
+Neo4J,2026-02-13 01:55:13,INFO,103,224,0,Chunk 102 processing completed.,5.71
+Neo4J,2026-02-13 01:55:13,INFO,104,224,0,Chunk 103 processing completed.,5.78
+Neo4J,2026-02-13 01:55:13,INFO,104,228,0,Results buffer saved to disk.,5.78
+Neo4J,2026-02-13 01:55:13,INFO,105,228,0,Chunk 104 processing completed.,5.85
+Neo4J,2026-02-13 01:55:13,INFO,106,228,0,Chunk 105 processing completed.,5.91
+Neo4J,2026-02-13 01:55:13,INFO,106,232,0,Results buffer saved to disk.,5.91
+Neo4J,2026-02-13 01:55:13,INFO,107,232,0,Chunk 106 processing completed.,5.97
+Neo4J,2026-02-13 01:55:13,INFO,108,232,0,Chunk 107 processing completed.,6.03
+Neo4J,2026-02-13 01:55:13,INFO,108,236,0,Results buffer saved to disk.,6.03
+Neo4J,2026-02-13 01:55:13,INFO,109,236,0,Chunk 108 processing completed.,6.09
+Neo4J,2026-02-13 01:55:13,INFO,110,236,0,Chunk 109 processing completed.,6.14
+Neo4J,2026-02-13 01:55:13,INFO,111,236,0,Chunk 110 processing completed.,6.21
+Neo4J,2026-02-13 01:55:13,INFO,111,240,0,Results buffer saved to disk.,6.21
+Neo4J,2026-02-13 01:55:13,INFO,112,240,0,Chunk 111 processing completed.,6.27
+Neo4J,2026-02-13 01:55:13,INFO,113,240,0,Chunk 112 processing completed.,6.34
+Neo4J,2026-02-13 01:55:13,INFO,113,244,0,Results buffer saved to disk.,6.34
+Neo4J,2026-02-13 01:55:13,INFO,114,244,0,Chunk 113 processing completed.,6.41
+Neo4J,2026-02-13 01:55:13,INFO,115,244,0,Chunk 114 processing completed.,6.46
+Neo4J,2026-02-13 01:55:13,INFO,115,248,0,Results buffer saved to disk.,6.46
+Neo4J,2026-02-13 01:55:13,INFO,116,248,0,Chunk 115 processing completed.,6.52
+Neo4J,2026-02-13 01:55:13,INFO,116,252,0,Results buffer saved to disk.,6.52
+Neo4J,2026-02-13 01:55:13,INFO,117,252,0,Chunk 116 processing completed.,6.57
+Neo4J,2026-02-13 01:55:13,INFO,118,252,0,Chunk 117 processing completed.,6.63
+Neo4J,2026-02-13 01:55:13,INFO,118,256,0,Results buffer saved to disk.,6.63
+Neo4J,2026-02-13 01:55:13,INFO,119,256,0,Chunk 118 processing completed.,6.68
+Neo4J,2026-02-13 01:55:13,INFO,120,256,0,Chunk 119 processing completed.,6.73
+Neo4J,2026-02-13 01:55:13,INFO,120,260,0,Results buffer saved to disk.,6.73
+Neo4J,2026-02-13 01:55:13,INFO,121,260,0,Chunk 120 processing completed.,6.78
+Neo4J,2026-02-13 01:55:13,INFO,122,260,0,Chunk 121 processing completed.,6.82
+Neo4J,2026-02-13 01:55:13,INFO,122,264,0,Results buffer saved to disk.,6.82
+Neo4J,2026-02-13 01:55:13,INFO,123,264,0,Chunk 122 processing completed.,6.87
+Neo4J,2026-02-13 01:55:13,INFO,123,268,0,Results buffer saved to disk.,6.87
+Neo4J,2026-02-13 01:55:13,INFO,124,268,0,Chunk 123 processing completed.,6.92
+Neo4J,2026-02-13 01:55:13,INFO,125,268,0,Chunk 124 processing completed.,6.97
+Neo4J,2026-02-13 01:55:13,INFO,125,272,0,Results buffer saved to disk.,6.97
+Neo4J,2026-02-13 01:55:13,INFO,126,272,0,Chunk 125 processing completed.,7.02
+Neo4J,2026-02-13 01:55:13,INFO,127,272,0,Chunk 126 processing completed.,7.07
+Neo4J,2026-02-13 01:55:13,INFO,127,276,0,Results buffer saved to disk.,7.07
+Neo4J,2026-02-13 01:55:14,INFO,128,276,0,Chunk 127 processing completed.,7.11
+Neo4J,2026-02-13 01:55:14,INFO,129,276,0,Chunk 128 processing completed.,7.15
+Neo4J,2026-02-13 01:55:14,INFO,129,280,0,Results buffer saved to disk.,7.15
+Neo4J,2026-02-13 01:55:14,INFO,130,280,0,Chunk 129 processing completed.,7.21
+Neo4J,2026-02-13 01:55:14,INFO,130,284,0,Results buffer saved to disk.,7.21
+Neo4J,2026-02-13 01:55:14,INFO,131,284,0,Chunk 130 processing completed.,7.27
+Neo4J,2026-02-13 01:55:14,INFO,132,284,0,Chunk 131 processing completed.,7.33
+Neo4J,2026-02-13 01:55:14,INFO,132,288,0,Results buffer saved to disk.,7.33
+Neo4J,2026-02-13 01:55:14,INFO,133,288,0,Chunk 132 processing completed.,7.40
+Neo4J,2026-02-13 01:55:14,INFO,134,288,0,Chunk 133 processing completed.,7.47
+Neo4J,2026-02-13 01:55:14,INFO,134,292,0,Results buffer saved to disk.,7.47
+Neo4J,2026-02-13 01:55:14,INFO,135,292,0,Chunk 134 processing completed.,7.66
+Neo4J,2026-02-13 01:55:14,INFO,136,292,0,Chunk 135 processing completed.,7.86
+Neo4J,2026-02-13 01:55:14,INFO,136,296,0,Results buffer saved to disk.,7.86
+Neo4J,2026-02-13 01:55:14,INFO,137,296,0,Chunk 136 processing completed.,8.05
+Neo4J,2026-02-13 01:55:14,INFO,138,296,0,Chunk 137 processing completed.,8.24
+Neo4J,2026-02-13 01:55:14,INFO,138,300,0,Results buffer saved to disk.,8.24
+Neo4J,2026-02-13 01:55:14,INFO,139,300,0,Chunk 138 processing completed.,8.43
+Neo4J,2026-02-13 01:55:14,INFO,140,300,0,Chunk 139 processing completed.,8.62
+Neo4J,2026-02-13 01:55:14,INFO,140,304,0,Results buffer saved to disk.,8.62
+Neo4J,2026-02-13 01:55:14,INFO,141,304,0,Chunk 140 processing completed.,8.81
+Neo4J,2026-02-13 01:55:14,INFO,142,304,0,Chunk 141 processing completed.,9.00
+Neo4J,2026-02-13 01:55:14,INFO,142,308,0,Results buffer saved to disk.,9.00
+Neo4J,2026-02-13 01:55:14,INFO,143,308,0,Chunk 142 processing completed.,9.20
+Neo4J,2026-02-13 01:55:14,INFO,144,308,0,Chunk 143 processing completed.,9.39
+Neo4J,2026-02-13 01:55:14,INFO,144,312,0,Results buffer saved to disk.,9.39
+Neo4J,2026-02-13 01:55:14,INFO,145,312,0,Chunk 144 processing completed.,9.58
+Neo4J,2026-02-13 01:55:14,INFO,146,312,0,Chunk 145 processing completed.,9.77
+Neo4J,2026-02-13 01:55:14,INFO,146,316,0,Results buffer saved to disk.,9.77
+Neo4J,2026-02-13 01:55:14,INFO,147,316,0,Chunk 146 processing completed.,9.96
+Neo4J,2026-02-13 01:55:14,INFO,148,316,0,Chunk 147 processing completed.,10.00
+Neo4J,2026-02-13 01:55:14,INFO,148,320,0,Results buffer saved to disk.,10.00
+Neo4J,2026-02-13 01:55:14,INFO,149,320,0,Chunk 148 processing completed.,10.04
+Neo4J,2026-02-13 01:55:14,INFO,150,320,0,Chunk 149 processing completed.,10.08
+Neo4J,2026-02-13 01:55:14,INFO,150,324,0,Results buffer saved to disk.,10.08
+Neo4J,2026-02-13 01:55:14,INFO,151,324,0,Chunk 150 processing completed.,10.12
+Neo4J,2026-02-13 01:55:14,INFO,152,324,0,Chunk 151 processing completed.,10.16
+Neo4J,2026-02-13 01:55:14,INFO,152,328,0,Results buffer saved to disk.,10.16
+Neo4J,2026-02-13 01:55:14,INFO,153,328,0,Chunk 152 processing completed.,10.22
+Neo4J,2026-02-13 01:55:14,INFO,154,328,0,Chunk 153 processing completed.,10.27
+Neo4J,2026-02-13 01:55:14,INFO,154,332,0,Results buffer saved to disk.,10.27
+Neo4J,2026-02-13 01:55:14,INFO,155,332,0,Chunk 154 processing completed.,10.46
+Neo4J,2026-02-13 01:55:14,INFO,155,336,0,Results buffer saved to disk.,10.46
+Neo4J,2026-02-13 01:55:14,INFO,156,336,0,Chunk 155 processing completed.,10.50
+Neo4J,2026-02-13 01:55:14,INFO,157,336,0,Chunk 156 processing completed.,10.55
+Neo4J,2026-02-13 01:55:14,INFO,157,340,0,Results buffer saved to disk.,10.55
+Neo4J,2026-02-13 01:55:14,INFO,158,340,0,Chunk 157 processing completed.,10.60
+Neo4J,2026-02-13 01:55:14,INFO,159,340,0,Chunk 158 processing completed.,10.66
+Neo4J,2026-02-13 01:55:14,INFO,159,344,0,Results buffer saved to disk.,10.66
+Neo4J,2026-02-13 01:55:14,INFO,160,344,0,Chunk 159 processing completed.,10.72
+Neo4J,2026-02-13 01:55:14,INFO,161,344,0,Chunk 160 processing completed.,10.77
+Neo4J,2026-02-13 01:55:14,INFO,161,348,0,Results buffer saved to disk.,10.77
+Neo4J,2026-02-13 01:55:14,INFO,162,348,0,Chunk 161 processing completed.,10.82
+Neo4J,2026-02-13 01:55:14,INFO,163,348,0,Chunk 162 processing completed.,10.87
+Neo4J,2026-02-13 01:55:14,INFO,163,352,0,Results buffer saved to disk.,10.87
+Neo4J,2026-02-13 01:55:14,INFO,164,352,0,Chunk 163 processing completed.,10.93
+Neo4J,2026-02-13 01:55:14,INFO,165,352,0,Chunk 164 processing completed.,10.97
+Neo4J,2026-02-13 01:55:14,INFO,165,356,0,Results buffer saved to disk.,10.97
+Neo4J,2026-02-13 01:55:14,INFO,166,356,0,Chunk 165 processing completed.,11.02
+Neo4J,2026-02-13 01:55:14,INFO,166,360,0,Results buffer saved to disk.,11.02
+Neo4J,2026-02-13 01:55:14,INFO,167,360,0,Chunk 166 processing completed.,11.07
+Neo4J,2026-02-13 01:55:14,INFO,168,360,0,Chunk 167 processing completed.,11.12
+Neo4J,2026-02-13 01:55:14,INFO,168,364,0,Results buffer saved to disk.,11.12
+Neo4J,2026-02-13 01:55:14,INFO,169,364,0,Chunk 168 processing completed.,11.18
+Neo4J,2026-02-13 01:55:14,INFO,170,364,0,Chunk 169 processing completed.,11.23
+Neo4J,2026-02-13 01:55:14,INFO,170,368,0,Results buffer saved to disk.,11.23
+Neo4J,2026-02-13 01:55:14,INFO,171,368,0,Chunk 170 processing completed.,11.28
+Neo4J,2026-02-13 01:55:14,INFO,172,368,0,Chunk 171 processing completed.,11.33
+Neo4J,2026-02-13 01:55:14,INFO,172,372,0,Results buffer saved to disk.,11.33
+Neo4J,2026-02-13 01:55:14,INFO,173,372,0,Chunk 172 processing completed.,11.38
+Neo4J,2026-02-13 01:55:14,INFO,173,376,0,Results buffer saved to disk.,11.38
+Neo4J,2026-02-13 01:55:14,INFO,174,376,0,Chunk 173 processing completed.,11.43
+Neo4J,2026-02-13 01:55:14,INFO,175,376,0,Chunk 174 processing completed.,11.47
+Neo4J,2026-02-13 01:55:15,INFO,175,380,0,Results buffer saved to disk.,11.47
+Neo4J,2026-02-13 01:55:15,INFO,176,380,0,Chunk 175 processing completed.,11.52
+Neo4J,2026-02-13 01:55:15,INFO,177,380,0,Chunk 176 processing completed.,11.57
+Neo4J,2026-02-13 01:55:15,INFO,178,380,0,Chunk 177 processing completed.,11.63
+Neo4J,2026-02-13 01:55:15,INFO,178,384,0,Results buffer saved to disk.,11.63
+Neo4J,2026-02-13 01:55:15,INFO,179,384,0,Chunk 178 processing completed.,11.69
+Neo4J,2026-02-13 01:55:15,INFO,180,384,0,Chunk 179 processing completed.,11.74
+Neo4J,2026-02-13 01:55:15,INFO,180,388,0,Results buffer saved to disk.,11.74
+Neo4J,2026-02-13 01:55:15,INFO,181,388,0,Chunk 180 processing completed.,11.79
+Neo4J,2026-02-13 01:55:15,INFO,182,388,0,Chunk 181 processing completed.,11.85
+Neo4J,2026-02-13 01:55:15,INFO,182,392,0,Results buffer saved to disk.,11.85
+Neo4J,2026-02-13 01:55:15,INFO,183,392,0,Chunk 182 processing completed.,11.90
+Neo4J,2026-02-13 01:55:15,INFO,184,392,0,Chunk 183 processing completed.,11.95
+Neo4J,2026-02-13 01:55:15,INFO,184,396,0,Results buffer saved to disk.,11.95
+Neo4J,2026-02-13 01:55:15,INFO,185,396,0,Chunk 184 processing completed.,12.02
+Neo4J,2026-02-13 01:55:15,INFO,186,396,0,Chunk 185 processing completed.,12.08
+Neo4J,2026-02-13 01:55:15,INFO,187,396,0,Chunk 186 processing completed.,12.15
+Neo4J,2026-02-13 01:55:15,INFO,187,400,0,Results buffer saved to disk.,12.15
+Neo4J,2026-02-13 01:55:15,INFO,188,400,0,Chunk 187 processing completed.,12.21
+Neo4J,2026-02-13 01:55:15,INFO,188,404,0,Results buffer saved to disk.,12.21
+Neo4J,2026-02-13 01:55:15,INFO,189,404,0,Chunk 188 processing completed.,12.28
+Neo4J,2026-02-13 01:55:15,INFO,190,404,0,Chunk 189 processing completed.,12.35
+Neo4J,2026-02-13 01:55:15,INFO,190,408,0,Results buffer saved to disk.,12.35
+Neo4J,2026-02-13 01:55:15,INFO,191,408,0,Chunk 190 processing completed.,12.42
+Neo4J,2026-02-13 01:55:15,INFO,192,408,0,Chunk 191 processing completed.,12.46
+Neo4J,2026-02-13 01:55:15,INFO,192,412,0,Results buffer saved to disk.,12.46
+Neo4J,2026-02-13 01:55:15,INFO,193,412,0,Chunk 192 processing completed.,12.52
+Neo4J,2026-02-13 01:55:15,INFO,193,416,0,Results buffer saved to disk.,12.52
+Neo4J,2026-02-13 01:55:15,INFO,194,416,0,Chunk 193 processing completed.,12.58
+Neo4J,2026-02-13 01:55:15,INFO,195,416,0,Chunk 194 processing completed.,12.64
+Neo4J,2026-02-13 01:55:15,INFO,195,420,0,Results buffer saved to disk.,12.64
+Neo4J,2026-02-13 01:55:15,INFO,196,420,0,Chunk 195 processing completed.,12.68
+Neo4J,2026-02-13 01:55:15,INFO,196,424,0,Results buffer saved to disk.,12.68
+Neo4J,2026-02-13 01:55:15,INFO,197,424,0,Chunk 196 processing completed.,12.73
+Neo4J,2026-02-13 01:55:15,INFO,198,424,0,Chunk 197 processing completed.,12.79
+Neo4J,2026-02-13 01:55:15,INFO,198,428,0,Results buffer saved to disk.,12.79
+Neo4J,2026-02-13 01:55:15,INFO,199,428,0,Chunk 198 processing completed.,12.85
+Neo4J,2026-02-13 01:55:15,INFO,200,428,0,Chunk 199 processing completed.,12.91
+Neo4J,2026-02-13 01:55:15,INFO,200,432,0,Results buffer saved to disk.,12.91
+Neo4J,2026-02-13 01:55:15,INFO,201,432,0,Chunk 200 processing completed.,12.98
+Neo4J,2026-02-13 01:55:15,INFO,202,432,0,Chunk 201 processing completed.,13.04
+Neo4J,2026-02-13 01:55:15,INFO,202,436,0,Results buffer saved to disk.,13.04
+Neo4J,2026-02-13 01:55:15,INFO,203,436,0,Chunk 202 processing completed.,13.21
+Neo4J,2026-02-13 01:55:15,INFO,203,440,0,Results buffer saved to disk.,13.21
+Neo4J,2026-02-13 01:55:15,INFO,204,440,0,Chunk 203 processing completed.,13.39
+Neo4J,2026-02-13 01:55:15,INFO,205,440,0,Chunk 204 processing completed.,13.57
+Neo4J,2026-02-13 01:55:15,INFO,205,444,0,Results buffer saved to disk.,13.57
+Neo4J,2026-02-13 01:55:15,INFO,206,444,0,Chunk 205 processing completed.,13.75
+Neo4J,2026-02-13 01:55:15,INFO,207,444,0,Chunk 206 processing completed.,13.93
+Neo4J,2026-02-13 01:55:15,INFO,207,448,0,Results buffer saved to disk.,13.93
+Neo4J,2026-02-13 01:55:15,INFO,208,448,0,Chunk 207 processing completed.,14.10
+Neo4J,2026-02-13 01:55:15,INFO,209,448,0,Chunk 208 processing completed.,14.28
+Neo4J,2026-02-13 01:55:15,INFO,209,452,0,Results buffer saved to disk.,14.28
+Neo4J,2026-02-13 01:55:15,INFO,210,452,0,Chunk 209 processing completed.,14.33
+Neo4J,2026-02-13 01:55:15,INFO,211,452,0,Chunk 210 processing completed.,14.39
+Neo4J,2026-02-13 01:55:15,INFO,211,456,0,Results buffer saved to disk.,14.39
+Neo4J,2026-02-13 01:55:15,INFO,212,456,0,Chunk 211 processing completed.,14.46
+Neo4J,2026-02-13 01:55:15,INFO,213,456,0,Chunk 212 processing completed.,14.53
+Neo4J,2026-02-13 01:55:15,INFO,213,460,0,Results buffer saved to disk.,14.53
+Neo4J,2026-02-13 01:55:15,INFO,214,460,0,Chunk 213 processing completed.,14.59
+Neo4J,2026-02-13 01:55:15,INFO,215,460,0,Chunk 214 processing completed.,14.64
+Neo4J,2026-02-13 01:55:15,INFO,215,464,0,Results buffer saved to disk.,14.64
+Neo4J,2026-02-13 01:55:15,INFO,216,464,0,Chunk 215 processing completed.,14.70
+Neo4J,2026-02-13 01:55:15,INFO,216,468,0,Results buffer saved to disk.,14.70
+Neo4J,2026-02-13 01:55:15,INFO,217,468,0,Chunk 216 processing completed.,14.76
+Neo4J,2026-02-13 01:55:15,INFO,218,468,0,Chunk 217 processing completed.,14.82
+Neo4J,2026-02-13 01:55:15,INFO,218,472,0,Results buffer saved to disk.,14.82
+Neo4J,2026-02-13 01:55:15,INFO,219,472,0,Chunk 218 processing completed.,14.87
+Neo4J,2026-02-13 01:55:15,INFO,219,476,0,Results buffer saved to disk.,14.87
+Neo4J,2026-02-13 01:55:15,INFO,220,476,0,Chunk 219 processing completed.,14.91
+Neo4J,2026-02-13 01:55:15,INFO,220,480,0,Results buffer saved to disk.,14.91
+Neo4J,2026-02-13 01:55:15,INFO,221,480,0,Chunk 220 processing completed.,14.99
+Neo4J,2026-02-13 01:55:15,INFO,222,480,0,Chunk 221 processing completed.,15.07
+Neo4J,2026-02-13 01:55:15,INFO,222,484,0,Results buffer saved to disk.,15.07
+Neo4J,2026-02-13 01:55:15,INFO,223,484,0,Chunk 222 processing completed.,15.14
+Neo4J,2026-02-13 01:55:15,INFO,224,484,0,Chunk 223 processing completed.,15.20
+Neo4J,2026-02-13 01:55:15,INFO,224,488,0,Results buffer saved to disk.,15.20
+Neo4J,2026-02-13 01:55:15,INFO,225,488,0,Chunk 224 processing completed.,15.24
+Neo4J,2026-02-13 01:55:16,INFO,226,488,0,Chunk 225 processing completed.,15.30
+Neo4J,2026-02-13 01:55:16,INFO,226,492,0,Results buffer saved to disk.,15.30
+Neo4J,2026-02-13 01:55:16,INFO,227,492,0,Chunk 226 processing completed.,15.34
+Neo4J,2026-02-13 01:55:16,INFO,227,496,0,Results buffer saved to disk.,15.34
+Neo4J,2026-02-13 01:55:16,INFO,228,496,0,Chunk 227 processing completed.,15.38
+Neo4J,2026-02-13 01:55:16,INFO,229,496,0,Chunk 228 processing completed.,15.43
+Neo4J,2026-02-13 01:55:16,INFO,229,500,0,Results buffer saved to disk.,15.43
+Neo4J,2026-02-13 01:55:16,INFO,230,500,0,Chunk 229 processing completed.,15.47
+Neo4J,2026-02-13 01:55:16,INFO,231,500,0,Chunk 230 processing completed.,15.54
+Neo4J,2026-02-13 01:55:16,INFO,231,504,0,Results buffer saved to disk.,15.54
+Neo4J,2026-02-13 01:55:16,INFO,232,504,0,Chunk 231 processing completed.,15.59
+Neo4J,2026-02-13 01:55:16,INFO,233,504,0,Chunk 232 processing completed.,15.63
+Neo4J,2026-02-13 01:55:16,INFO,233,508,0,Results buffer saved to disk.,15.63
+Neo4J,2026-02-13 01:55:16,INFO,234,508,0,Chunk 233 processing completed.,15.70
+Neo4J,2026-02-13 01:55:16,INFO,234,512,0,Results buffer saved to disk.,15.70
+Neo4J,2026-02-13 01:55:16,INFO,235,512,0,Chunk 234 processing completed.,15.76
+Neo4J,2026-02-13 01:55:16,INFO,236,512,0,Chunk 235 processing completed.,15.83
+Neo4J,2026-02-13 01:55:16,INFO,236,516,0,Results buffer saved to disk.,15.83
+Neo4J,2026-02-13 01:55:16,INFO,237,516,0,Chunk 236 processing completed.,15.89
+Neo4J,2026-02-13 01:55:16,INFO,238,516,0,Chunk 237 processing completed.,15.96
+Neo4J,2026-02-13 01:55:16,INFO,239,516,0,Chunk 238 processing completed.,16.03
+Neo4J,2026-02-13 01:55:16,INFO,239,520,0,Results buffer saved to disk.,16.03
+Neo4J,2026-02-13 01:55:16,INFO,240,520,0,Chunk 239 processing completed.,16.10
+Neo4J,2026-02-13 01:55:16,INFO,241,520,0,Chunk 240 processing completed.,16.18
+Neo4J,2026-02-13 01:55:16,INFO,242,520,0,Chunk 241 processing completed.,16.25
+Neo4J,2026-02-13 01:55:16,INFO,242,524,0,Results buffer saved to disk.,16.25
+Neo4J,2026-02-13 01:55:16,INFO,243,524,0,Chunk 242 processing completed.,16.32
+Neo4J,2026-02-13 01:55:16,INFO,244,524,0,Chunk 243 processing completed.,16.38
+Neo4J,2026-02-13 01:55:16,INFO,244,528,0,Results buffer saved to disk.,16.38
+Neo4J,2026-02-13 01:55:16,INFO,245,528,0,Chunk 244 processing completed.,16.43
+Neo4J,2026-02-13 01:55:16,INFO,246,528,0,Chunk 245 processing completed.,16.48
+Neo4J,2026-02-13 01:55:16,INFO,246,532,0,Results buffer saved to disk.,16.48
+Neo4J,2026-02-13 01:55:16,INFO,247,532,0,Chunk 246 processing completed.,16.54
+Neo4J,2026-02-13 01:55:16,INFO,247,536,0,Results buffer saved to disk.,16.54
+Neo4J,2026-02-13 01:55:16,INFO,248,536,0,Chunk 247 processing completed.,16.59
+Neo4J,2026-02-13 01:55:16,INFO,249,536,0,Chunk 248 processing completed.,16.65
+Neo4J,2026-02-13 01:55:16,INFO,249,540,0,Results buffer saved to disk.,16.65
+Neo4J,2026-02-13 01:55:16,INFO,250,540,0,Chunk 249 processing completed.,16.69
+Neo4J,2026-02-13 01:55:16,INFO,251,540,0,Chunk 250 processing completed.,16.75
+Neo4J,2026-02-13 01:55:16,INFO,251,544,0,Results buffer saved to disk.,16.75
+Neo4J,2026-02-13 01:55:16,INFO,252,544,0,Chunk 251 processing completed.,16.81
+Neo4J,2026-02-13 01:55:16,INFO,253,544,0,Chunk 252 processing completed.,16.87
+Neo4J,2026-02-13 01:55:16,INFO,253,548,0,Results buffer saved to disk.,16.87
+Neo4J,2026-02-13 01:55:16,INFO,254,548,0,Chunk 253 processing completed.,16.91
+Neo4J,2026-02-13 01:55:16,INFO,255,548,0,Chunk 254 processing completed.,16.95
+Neo4J,2026-02-13 01:55:16,INFO,255,552,0,Results buffer saved to disk.,16.95
+Neo4J,2026-02-13 01:55:16,INFO,256,552,0,Chunk 255 processing completed.,17.00
+Neo4J,2026-02-13 01:55:16,INFO,256,556,0,Results buffer saved to disk.,17.00
+Neo4J,2026-02-13 01:55:16,INFO,257,556,0,Chunk 256 processing completed.,17.05
+Neo4J,2026-02-13 01:55:16,INFO,258,556,0,Chunk 257 processing completed.,17.10
+Neo4J,2026-02-13 01:55:16,INFO,258,560,0,Results buffer saved to disk.,17.10
+Neo4J,2026-02-13 01:55:16,INFO,259,560,0,Chunk 258 processing completed.,17.16
+Neo4J,2026-02-13 01:55:16,INFO,260,560,0,Chunk 259 processing completed.,17.21
+Neo4J,2026-02-13 01:55:16,INFO,260,564,0,Results buffer saved to disk.,17.21
+Neo4J,2026-02-13 01:55:16,INFO,261,564,0,Chunk 260 processing completed.,17.25
+Neo4J,2026-02-13 01:55:16,INFO,261,568,0,Results buffer saved to disk.,17.25
+Neo4J,2026-02-13 01:55:16,INFO,262,568,0,Chunk 261 processing completed.,17.30
+Neo4J,2026-02-13 01:55:16,INFO,263,568,0,Chunk 262 processing completed.,17.35
+Neo4J,2026-02-13 01:55:16,INFO,263,572,0,Results buffer saved to disk.,17.35
+Neo4J,2026-02-13 01:55:16,INFO,264,572,0,Chunk 263 processing completed.,17.40
+Neo4J,2026-02-13 01:55:16,INFO,265,572,0,Chunk 264 processing completed.,17.46
+Neo4J,2026-02-13 01:55:16,INFO,265,576,0,Results buffer saved to disk.,17.46
+Neo4J,2026-02-13 01:55:16,INFO,266,576,0,Chunk 265 processing completed.,17.50
+Neo4J,2026-02-13 01:55:16,INFO,267,576,0,Chunk 266 processing completed.,17.54
+Neo4J,2026-02-13 01:55:16,INFO,267,580,0,Results buffer saved to disk.,17.54
+Neo4J,2026-02-13 01:55:16,INFO,268,580,0,Chunk 267 processing completed.,17.59
+Neo4J,2026-02-13 01:55:16,INFO,269,580,0,Chunk 268 processing completed.,17.64
+Neo4J,2026-02-13 01:55:16,INFO,269,584,0,Results buffer saved to disk.,17.64
+Neo4J,2026-02-13 01:55:16,INFO,270,584,0,Chunk 269 processing completed.,17.69
+Neo4J,2026-02-13 01:55:16,INFO,271,584,0,Chunk 270 processing completed.,17.78
+Neo4J,2026-02-13 01:55:16,INFO,271,588,0,Results buffer saved to disk.,17.78
+Neo4J,2026-02-13 01:55:16,INFO,272,588,0,Chunk 271 processing completed.,17.86
+Neo4J,2026-02-13 01:55:16,INFO,272,592,0,Results buffer saved to disk.,17.86
+Neo4J,2026-02-13 01:55:16,INFO,273,592,0,Chunk 272 processing completed.,17.96
+Neo4J,2026-02-13 01:55:16,INFO,274,592,0,Chunk 273 processing completed.,18.05
+Neo4J,2026-02-13 01:55:16,INFO,274,596,0,Results buffer saved to disk.,18.05
+Neo4J,2026-02-13 01:55:16,INFO,275,596,0,Chunk 274 processing completed.,18.10
+Neo4J,2026-02-13 01:55:16,INFO,276,596,0,Chunk 275 processing completed.,18.15
+Neo4J,2026-02-13 01:55:16,INFO,276,600,0,Results buffer saved to disk.,18.15
+Neo4J,2026-02-13 01:55:17,INFO,277,600,0,Chunk 276 processing completed.,18.20
+Neo4J,2026-02-13 01:55:17,INFO,278,600,0,Chunk 277 processing completed.,18.25
+Neo4J,2026-02-13 01:55:17,INFO,278,604,0,Results buffer saved to disk.,18.25
+Neo4J,2026-02-13 01:55:17,INFO,279,604,0,Chunk 278 processing completed.,18.29
+Neo4J,2026-02-13 01:55:17,INFO,280,604,0,Chunk 279 processing completed.,18.34
+Neo4J,2026-02-13 01:55:17,INFO,280,608,0,Results buffer saved to disk.,18.34
+Neo4J,2026-02-13 01:55:17,INFO,281,608,0,Chunk 280 processing completed.,18.38
+Neo4J,2026-02-13 01:55:17,INFO,281,612,0,Results buffer saved to disk.,18.38
+Neo4J,2026-02-13 01:55:17,INFO,282,612,0,Chunk 281 processing completed.,18.42
+Neo4J,2026-02-13 01:55:17,INFO,283,612,0,Chunk 282 processing completed.,18.46
+Neo4J,2026-02-13 01:55:17,INFO,283,616,0,Results buffer saved to disk.,18.46
+Neo4J,2026-02-13 01:55:17,INFO,284,616,0,Chunk 283 processing completed.,18.51
+Neo4J,2026-02-13 01:55:17,INFO,285,616,0,Chunk 284 processing completed.,18.56
+Neo4J,2026-02-13 01:55:17,INFO,285,620,0,Results buffer saved to disk.,18.56
+Neo4J,2026-02-13 01:55:17,INFO,286,620,0,Chunk 285 processing completed.,18.62
+Neo4J,2026-02-13 01:55:17,INFO,286,624,0,Results buffer saved to disk.,18.62
+Neo4J,2026-02-13 01:55:17,INFO,287,624,0,Chunk 286 processing completed.,18.67
+Neo4J,2026-02-13 01:55:17,INFO,288,624,0,Chunk 287 processing completed.,18.72
+Neo4J,2026-02-13 01:55:17,INFO,288,628,0,Results buffer saved to disk.,18.72
+Neo4J,2026-02-13 01:55:17,INFO,289,628,0,Chunk 288 processing completed.,18.78
+Neo4J,2026-02-13 01:55:17,INFO,290,628,0,Chunk 289 processing completed.,18.83
+Neo4J,2026-02-13 01:55:17,INFO,290,632,0,Results buffer saved to disk.,18.83
+Neo4J,2026-02-13 01:55:17,INFO,291,632,0,Chunk 290 processing completed.,18.90
+Neo4J,2026-02-13 01:55:17,INFO,292,632,0,Chunk 291 processing completed.,18.97
+Neo4J,2026-02-13 01:55:17,INFO,293,632,0,Chunk 292 processing completed.,19.03
+Neo4J,2026-02-13 01:55:17,INFO,294,632,0,Chunk 293 processing completed.,19.10
+Neo4J,2026-02-13 01:55:17,INFO,294,636,0,Results buffer saved to disk.,19.10
+Neo4J,2026-02-13 01:55:17,INFO,295,636,0,Chunk 294 processing completed.,19.17
+Neo4J,2026-02-13 01:55:17,INFO,296,636,0,Chunk 295 processing completed.,19.21
+Neo4J,2026-02-13 01:55:17,INFO,296,640,0,Results buffer saved to disk.,19.21
+Neo4J,2026-02-13 01:55:17,INFO,297,640,0,Chunk 296 processing completed.,19.25
+Neo4J,2026-02-13 01:55:17,INFO,298,640,0,Chunk 297 processing completed.,19.30
+Neo4J,2026-02-13 01:55:17,INFO,298,644,0,Results buffer saved to disk.,19.30
+Neo4J,2026-02-13 01:55:17,INFO,299,644,0,Chunk 298 processing completed.,19.35
+Neo4J,2026-02-13 01:55:17,INFO,300,644,0,Chunk 299 processing completed.,19.40
+Neo4J,2026-02-13 01:55:17,INFO,300,648,0,Results buffer saved to disk.,19.40
+Neo4J,2026-02-13 01:55:17,INFO,301,648,0,Chunk 300 processing completed.,19.45
+Neo4J,2026-02-13 01:55:17,INFO,302,648,0,Chunk 301 processing completed.,19.51
+Neo4J,2026-02-13 01:55:17,INFO,302,652,0,Results buffer saved to disk.,19.51
+Neo4J,2026-02-13 01:55:17,INFO,303,652,0,Chunk 302 processing completed.,19.56
+Neo4J,2026-02-13 01:55:17,INFO,303,656,0,Results buffer saved to disk.,19.56
+Neo4J,2026-02-13 01:55:17,INFO,304,656,0,Chunk 303 processing completed.,19.67
+Neo4J,2026-02-13 01:55:17,INFO,305,656,0,Chunk 304 processing completed.,19.77
+Neo4J,2026-02-13 01:55:17,INFO,306,656,0,Chunk 305 processing completed.,19.88
+Neo4J,2026-02-13 01:55:17,INFO,306,660,0,Results buffer saved to disk.,19.88
+Neo4J,2026-02-13 01:55:17,INFO,307,660,0,Chunk 306 processing completed.,19.99
+Neo4J,2026-02-13 01:55:17,INFO,308,660,0,Chunk 307 processing completed.,20.05
+Neo4J,2026-02-13 01:55:17,INFO,309,660,0,Chunk 308 processing completed.,20.11
+Neo4J,2026-02-13 01:55:17,INFO,309,664,0,Results buffer saved to disk.,20.11
+Neo4J,2026-02-13 01:55:17,INFO,310,664,0,Chunk 309 processing completed.,20.18
+Neo4J,2026-02-13 01:55:17,INFO,311,664,0,Chunk 310 processing completed.,20.24
+Neo4J,2026-02-13 01:55:17,INFO,311,668,0,Results buffer saved to disk.,20.24
+Neo4J,2026-02-13 01:55:17,INFO,312,668,0,Chunk 311 processing completed.,20.27
+Neo4J,2026-02-13 01:55:17,INFO,312,672,0,Results buffer saved to disk.,20.27
+Neo4J,2026-02-13 01:55:17,INFO,313,672,0,Chunk 312 processing completed.,20.31
+Neo4J,2026-02-13 01:55:17,INFO,314,672,0,Chunk 313 processing completed.,20.35
+Neo4J,2026-02-13 01:55:17,INFO,314,676,0,Results buffer saved to disk.,20.35
+Neo4J,2026-02-13 01:55:17,INFO,315,676,0,Chunk 314 processing completed.,20.40
+Neo4J,2026-02-13 01:55:17,INFO,316,676,0,Chunk 315 processing completed.,20.45
+Neo4J,2026-02-13 01:55:17,INFO,316,680,0,Results buffer saved to disk.,20.45
+Neo4J,2026-02-13 01:55:17,INFO,317,680,0,Chunk 316 processing completed.,20.50
+Neo4J,2026-02-13 01:55:17,INFO,318,680,0,Chunk 317 processing completed.,20.55
+Neo4J,2026-02-13 01:55:17,INFO,318,684,0,Results buffer saved to disk.,20.55
+Neo4J,2026-02-13 01:55:17,INFO,319,684,0,Chunk 318 processing completed.,20.61
+Neo4J,2026-02-13 01:55:17,INFO,320,684,0,Chunk 319 processing completed.,20.67
+Neo4J,2026-02-13 01:55:17,INFO,321,684,0,Chunk 320 processing completed.,20.73
+Neo4J,2026-02-13 01:55:17,INFO,321,688,0,Results buffer saved to disk.,20.73
+Neo4J,2026-02-13 01:55:17,INFO,322,688,0,Chunk 321 processing completed.,20.80
+Neo4J,2026-02-13 01:55:17,INFO,323,688,0,Chunk 322 processing completed.,20.86
+Neo4J,2026-02-13 01:55:17,INFO,323,692,0,Results buffer saved to disk.,20.86
+Neo4J,2026-02-13 01:55:17,INFO,324,692,0,Chunk 323 processing completed.,20.92
+Neo4J,2026-02-13 01:55:17,INFO,325,692,0,Chunk 324 processing completed.,20.97
+Neo4J,2026-02-13 01:55:17,INFO,326,692,0,Chunk 325 processing completed.,21.03
+Neo4J,2026-02-13 01:55:17,INFO,326,696,0,Results buffer saved to disk.,21.03
+Neo4J,2026-02-13 01:55:17,INFO,327,696,0,Chunk 326 processing completed.,21.08
+Neo4J,2026-02-13 01:55:17,INFO,328,696,0,Chunk 327 processing completed.,21.13
+Neo4J,2026-02-13 01:55:17,INFO,329,696,0,Chunk 328 processing completed.,21.18
+Neo4J,2026-02-13 01:55:17,INFO,329,700,0,Results buffer saved to disk.,21.18
+Neo4J,2026-02-13 01:55:17,INFO,330,700,0,Chunk 329 processing completed.,21.23
+Neo4J,2026-02-13 01:55:17,INFO,330,704,0,Results buffer saved to disk.,21.23
+Neo4J,2026-02-13 01:55:17,INFO,331,704,0,Chunk 330 processing completed.,21.27
+Neo4J,2026-02-13 01:55:17,INFO,332,704,0,Chunk 331 processing completed.,21.32
+Neo4J,2026-02-13 01:55:17,INFO,332,708,0,Results buffer saved to disk.,21.32
+Neo4J,2026-02-13 01:55:17,INFO,333,708,0,Chunk 332 processing completed.,21.38
+Neo4J,2026-02-13 01:55:17,INFO,334,708,0,Chunk 333 processing completed.,21.43
+Neo4J,2026-02-13 01:55:17,INFO,334,712,0,Results buffer saved to disk.,21.43
+Neo4J,2026-02-13 01:55:17,INFO,335,712,0,Chunk 334 processing completed.,21.50
+Neo4J,2026-02-13 01:55:17,INFO,335,716,0,Results buffer saved to disk.,21.50
+Neo4J,2026-02-13 01:55:17,INFO,336,716,0,Chunk 335 processing completed.,21.56
+Neo4J,2026-02-13 01:55:18,INFO,337,716,0,Chunk 336 processing completed.,21.62
+Neo4J,2026-02-13 01:55:18,INFO,337,720,0,Results buffer saved to disk.,21.62
+Neo4J,2026-02-13 01:55:18,INFO,338,720,0,Chunk 337 processing completed.,21.68
+Neo4J,2026-02-13 01:55:18,INFO,339,720,0,Chunk 338 processing completed.,21.74
+Neo4J,2026-02-13 01:55:18,INFO,339,724,0,Results buffer saved to disk.,21.74
+Neo4J,2026-02-13 01:55:18,INFO,340,724,0,Chunk 339 processing completed.,21.79
+Neo4J,2026-02-13 01:55:18,INFO,341,724,0,Chunk 340 processing completed.,21.85
+Neo4J,2026-02-13 01:55:18,INFO,341,728,0,Results buffer saved to disk.,21.85
+Neo4J,2026-02-13 01:55:18,INFO,342,728,0,Chunk 341 processing completed.,21.90
+Neo4J,2026-02-13 01:55:18,INFO,343,728,0,Chunk 342 processing completed.,21.96
+Neo4J,2026-02-13 01:55:18,INFO,343,732,0,Results buffer saved to disk.,21.96
+Neo4J,2026-02-13 01:55:18,INFO,344,732,0,Chunk 343 processing completed.,22.01
+Neo4J,2026-02-13 01:55:18,INFO,345,732,0,Chunk 344 processing completed.,22.06
+Neo4J,2026-02-13 01:55:18,INFO,346,732,0,Chunk 345 processing completed.,22.11
+Neo4J,2026-02-13 01:55:18,INFO,346,736,0,Results buffer saved to disk.,22.11
+Neo4J,2026-02-13 01:55:18,INFO,347,736,0,Chunk 346 processing completed.,22.20
+Neo4J,2026-02-13 01:55:18,INFO,347,740,0,Results buffer saved to disk.,22.20
+Neo4J,2026-02-13 01:55:18,INFO,348,740,0,Chunk 347 processing completed.,22.26
+Neo4J,2026-02-13 01:55:18,INFO,349,740,0,Chunk 348 processing completed.,22.32
+Neo4J,2026-02-13 01:55:18,INFO,350,740,0,Chunk 349 processing completed.,22.38
+Neo4J,2026-02-13 01:55:18,INFO,350,744,0,Results buffer saved to disk.,22.38
+Neo4J,2026-02-13 01:55:18,INFO,351,744,0,Chunk 350 processing completed.,22.43
+Neo4J,2026-02-13 01:55:18,INFO,352,744,0,Chunk 351 processing completed.,22.48
+Neo4J,2026-02-13 01:55:18,INFO,352,748,0,Results buffer saved to disk.,22.48
+Neo4J,2026-02-13 01:55:18,INFO,353,748,0,Chunk 352 processing completed.,22.54
+Neo4J,2026-02-13 01:55:18,INFO,353,752,0,Results buffer saved to disk.,22.54
+Neo4J,2026-02-13 01:55:18,INFO,354,752,0,Chunk 353 processing completed.,22.59
+Neo4J,2026-02-13 01:55:18,INFO,355,752,0,Chunk 354 processing completed.,22.65
+Neo4J,2026-02-13 01:55:18,INFO,355,756,0,Results buffer saved to disk.,22.65
+Neo4J,2026-02-13 01:55:18,INFO,356,756,0,Chunk 355 processing completed.,22.70
+Neo4J,2026-02-13 01:55:18,INFO,357,756,0,Chunk 356 processing completed.,22.75
+Neo4J,2026-02-13 01:55:18,INFO,357,760,0,Results buffer saved to disk.,22.75
+Neo4J,2026-02-13 01:55:18,INFO,358,760,0,Chunk 357 processing completed.,22.80
+Neo4J,2026-02-13 01:55:18,INFO,358,764,0,Results buffer saved to disk.,22.80
+Neo4J,2026-02-13 01:55:18,INFO,359,764,0,Chunk 358 processing completed.,22.85
+Neo4J,2026-02-13 01:55:18,INFO,360,764,0,Chunk 359 processing completed.,22.90
+Neo4J,2026-02-13 01:55:18,INFO,360,768,0,Results buffer saved to disk.,22.90
+Neo4J,2026-02-13 01:55:18,INFO,361,768,0,Chunk 360 processing completed.,22.94
+Neo4J,2026-02-13 01:55:18,INFO,362,768,0,Chunk 361 processing completed.,22.97
+Neo4J,2026-02-13 01:55:18,INFO,362,772,0,Results buffer saved to disk.,22.97
+Neo4J,2026-02-13 01:55:18,INFO,363,772,0,Chunk 362 processing completed.,23.03
+Neo4J,2026-02-13 01:55:18,INFO,363,776,0,Results buffer saved to disk.,23.03
+Neo4J,2026-02-13 01:55:18,INFO,364,776,0,Chunk 363 processing completed.,23.08
+Neo4J,2026-02-13 01:55:18,INFO,365,776,0,Chunk 364 processing completed.,23.12
+Neo4J,2026-02-13 01:55:18,INFO,366,776,0,Chunk 365 processing completed.,23.17
+Neo4J,2026-02-13 01:55:18,INFO,366,780,0,Results buffer saved to disk.,23.17
+Neo4J,2026-02-13 01:55:18,INFO,367,780,0,Chunk 366 processing completed.,23.22
+Neo4J,2026-02-13 01:55:18,INFO,368,780,0,Chunk 367 processing completed.,23.27
+Neo4J,2026-02-13 01:55:18,INFO,369,780,0,Chunk 368 processing completed.,23.32
+Neo4J,2026-02-13 01:55:18,INFO,370,780,0,Chunk 369 processing completed.,23.39
+Neo4J,2026-02-13 01:55:18,INFO,370,784,0,Results buffer saved to disk.,23.39
+Neo4J,2026-02-13 01:55:18,INFO,371,784,0,Chunk 370 processing completed.,23.46
+Neo4J,2026-02-13 01:55:18,INFO,372,784,0,Chunk 371 processing completed.,23.53
+Neo4J,2026-02-13 01:55:18,INFO,372,788,0,Results buffer saved to disk.,23.53
+Neo4J,2026-02-13 01:55:18,INFO,373,788,0,Chunk 372 processing completed.,23.60
+Neo4J,2026-02-13 01:55:18,INFO,374,788,0,Chunk 373 processing completed.,23.68
+Neo4J,2026-02-13 01:55:18,INFO,374,792,0,Results buffer saved to disk.,23.68
+Neo4J,2026-02-13 01:55:18,INFO,375,792,0,Chunk 374 processing completed.,23.75
+Neo4J,2026-02-13 01:55:18,INFO,376,792,0,Chunk 375 processing completed.,23.80
+Neo4J,2026-02-13 01:55:18,INFO,376,796,0,Results buffer saved to disk.,23.80
+Neo4J,2026-02-13 01:55:18,INFO,377,796,0,Chunk 376 processing completed.,23.86
+Neo4J,2026-02-13 01:55:18,INFO,377,800,0,Results buffer saved to disk.,23.86
+Neo4J,2026-02-13 01:55:18,INFO,378,800,0,Chunk 377 processing completed.,23.93
+Neo4J,2026-02-13 01:55:18,INFO,379,800,0,Chunk 378 processing completed.,23.99
+Neo4J,2026-02-13 01:55:18,INFO,379,804,0,Results buffer saved to disk.,23.99
+Neo4J,2026-02-13 01:55:18,INFO,380,804,0,Chunk 379 processing completed.,24.04
+Neo4J,2026-02-13 01:55:18,INFO,381,804,0,Chunk 380 processing completed.,24.09
+Neo4J,2026-02-13 01:55:18,INFO,382,804,0,Chunk 381 processing completed.,24.18
+Neo4J,2026-02-13 01:55:18,INFO,382,808,0,Results buffer saved to disk.,24.18
+Neo4J,2026-02-13 01:55:18,INFO,383,808,0,Chunk 382 processing completed.,24.27
+Neo4J,2026-02-13 01:55:18,INFO,383,812,0,Results buffer saved to disk.,24.27
+Neo4J,2026-02-13 01:55:18,INFO,384,812,0,Chunk 383 processing completed.,24.36
+Neo4J,2026-02-13 01:55:18,INFO,385,812,0,Chunk 384 processing completed.,24.42
+Neo4J,2026-02-13 01:55:18,INFO,386,812,0,Chunk 385 processing completed.,24.48
+Neo4J,2026-02-13 01:55:18,INFO,386,816,0,Results buffer saved to disk.,24.48
+Neo4J,2026-02-13 01:55:18,INFO,387,816,0,Chunk 386 processing completed.,24.53
+Neo4J,2026-02-13 01:55:18,INFO,388,816,0,Chunk 387 processing completed.,24.59
+Neo4J,2026-02-13 01:55:18,INFO,388,820,0,Results buffer saved to disk.,24.59
+Neo4J,2026-02-13 01:55:18,INFO,389,820,0,Chunk 388 processing completed.,24.63
+Neo4J,2026-02-13 01:55:18,INFO,389,824,0,Results buffer saved to disk.,24.63
+Neo4J,2026-02-13 01:55:18,INFO,390,824,0,Chunk 389 processing completed.,24.68
+Neo4J,2026-02-13 01:55:18,INFO,391,824,0,Chunk 390 processing completed.,24.74
+Neo4J,2026-02-13 01:55:18,INFO,391,828,0,Results buffer saved to disk.,24.74
+Neo4J,2026-02-13 01:55:19,INFO,392,828,0,Chunk 391 processing completed.,24.79
+Neo4J,2026-02-13 01:55:19,INFO,393,828,0,Chunk 392 processing completed.,24.84
+Neo4J,2026-02-13 01:55:19,INFO,393,832,0,Results buffer saved to disk.,24.84
+Neo4J,2026-02-13 01:55:19,INFO,394,832,0,Chunk 393 processing completed.,24.89
+Neo4J,2026-02-13 01:55:19,INFO,395,832,0,Chunk 394 processing completed.,24.95
+Neo4J,2026-02-13 01:55:19,INFO,396,832,0,Chunk 395 processing completed.,25.00
+Neo4J,2026-02-13 01:55:19,INFO,396,836,0,Results buffer saved to disk.,25.00
+Neo4J,2026-02-13 01:55:19,INFO,397,836,0,Chunk 396 processing completed.,25.06
+Neo4J,2026-02-13 01:55:19,INFO,398,836,0,Chunk 397 processing completed.,25.12
+Neo4J,2026-02-13 01:55:19,INFO,398,840,0,Results buffer saved to disk.,25.12
+Neo4J,2026-02-13 01:55:19,INFO,399,840,0,Chunk 398 processing completed.,25.18
+Neo4J,2026-02-13 01:55:19,INFO,400,840,0,Chunk 399 processing completed.,25.25
+Neo4J,2026-02-13 01:55:19,INFO,400,844,0,Results buffer saved to disk.,25.25
+Neo4J,2026-02-13 01:55:19,INFO,401,844,0,Chunk 400 processing completed.,25.31
+Neo4J,2026-02-13 01:55:19,INFO,402,844,0,Chunk 401 processing completed.,25.36
+Neo4J,2026-02-13 01:55:19,INFO,403,844,0,Chunk 402 processing completed.,25.42
+Neo4J,2026-02-13 01:55:19,INFO,403,848,0,Results buffer saved to disk.,25.42
+Neo4J,2026-02-13 01:55:19,INFO,404,848,0,Chunk 403 processing completed.,25.48
+Neo4J,2026-02-13 01:55:19,INFO,404,852,0,Results buffer saved to disk.,25.48
+Neo4J,2026-02-13 01:55:19,INFO,405,852,0,Chunk 404 processing completed.,25.54
+Neo4J,2026-02-13 01:55:19,INFO,406,852,0,Chunk 405 processing completed.,25.61
+Neo4J,2026-02-13 01:55:19,INFO,406,856,0,Results buffer saved to disk.,25.61
+Neo4J,2026-02-13 01:55:19,INFO,407,856,0,Chunk 406 processing completed.,25.67
+Neo4J,2026-02-13 01:55:19,INFO,408,856,0,Chunk 407 processing completed.,25.73
+Neo4J,2026-02-13 01:55:19,INFO,408,860,0,Results buffer saved to disk.,25.73
+Neo4J,2026-02-13 01:55:19,INFO,409,860,0,Chunk 408 processing completed.,25.79
+Neo4J,2026-02-13 01:55:19,INFO,410,860,0,Chunk 409 processing completed.,25.85
+Neo4J,2026-02-13 01:55:19,INFO,411,860,0,Chunk 410 processing completed.,25.91
+Neo4J,2026-02-13 01:55:19,INFO,411,864,0,Results buffer saved to disk.,25.91
+Neo4J,2026-02-13 01:55:19,INFO,412,864,0,Chunk 411 processing completed.,25.97
+Neo4J,2026-02-13 01:55:19,INFO,413,864,0,Chunk 412 processing completed.,26.03
+Neo4J,2026-02-13 01:55:19,INFO,413,868,0,Results buffer saved to disk.,26.03
+Neo4J,2026-02-13 01:55:19,INFO,414,868,0,Chunk 413 processing completed.,26.09
+Neo4J,2026-02-13 01:55:19,INFO,415,868,0,Chunk 414 processing completed.,26.15
+Neo4J,2026-02-13 01:55:19,INFO,416,868,0,Chunk 415 processing completed.,26.20
+Neo4J,2026-02-13 01:55:19,INFO,416,872,0,Results buffer saved to disk.,26.20
+Neo4J,2026-02-13 01:55:19,INFO,417,872,0,Chunk 416 processing completed.,26.25
+Neo4J,2026-02-13 01:55:19,INFO,418,872,0,Chunk 417 processing completed.,26.30
+Neo4J,2026-02-13 01:55:19,INFO,418,876,0,Results buffer saved to disk.,26.30
+Neo4J,2026-02-13 01:55:19,INFO,419,876,0,Chunk 418 processing completed.,26.35
+Neo4J,2026-02-13 01:55:19,INFO,420,876,0,Chunk 419 processing completed.,26.40
+Neo4J,2026-02-13 01:55:19,INFO,420,880,0,Results buffer saved to disk.,26.40
+Neo4J,2026-02-13 01:55:19,INFO,421,880,0,Chunk 420 processing completed.,26.44
+Neo4J,2026-02-13 01:55:19,INFO,422,880,0,Chunk 421 processing completed.,26.49
+Neo4J,2026-02-13 01:55:19,INFO,422,884,0,Results buffer saved to disk.,26.49
+Neo4J,2026-02-13 01:55:19,INFO,423,884,0,Chunk 422 processing completed.,26.54
+Neo4J,2026-02-13 01:55:19,INFO,424,884,0,Chunk 423 processing completed.,26.59
+Neo4J,2026-02-13 01:55:19,INFO,424,888,0,Results buffer saved to disk.,26.59
+Neo4J,2026-02-13 01:55:19,INFO,425,888,0,Chunk 424 processing completed.,26.64
+Neo4J,2026-02-13 01:55:19,INFO,426,888,0,Chunk 425 processing completed.,26.70
+Neo4J,2026-02-13 01:55:19,INFO,427,888,0,Chunk 426 processing completed.,26.75
+Neo4J,2026-02-13 01:55:19,INFO,427,892,0,Results buffer saved to disk.,26.75
+Neo4J,2026-02-13 01:55:19,INFO,428,892,0,Chunk 427 processing completed.,26.80
+Neo4J,2026-02-13 01:55:19,INFO,429,892,0,Chunk 428 processing completed.,26.85
+Neo4J,2026-02-13 01:55:19,INFO,430,892,0,Chunk 429 processing completed.,26.90
+Neo4J,2026-02-13 01:55:19,INFO,430,896,0,Results buffer saved to disk.,26.90
+Neo4J,2026-02-13 01:55:19,INFO,431,896,0,Chunk 430 processing completed.,26.95
+Neo4J,2026-02-13 01:55:19,INFO,432,896,0,Chunk 431 processing completed.,27.01
+Neo4J,2026-02-13 01:55:19,INFO,432,900,0,Results buffer saved to disk.,27.01
+Neo4J,2026-02-13 01:55:19,INFO,433,900,0,Chunk 432 processing completed.,27.08
+Neo4J,2026-02-13 01:55:19,INFO,434,900,0,Chunk 433 processing completed.,27.15
+Neo4J,2026-02-13 01:55:19,INFO,435,900,0,Chunk 434 processing completed.,27.22
+Neo4J,2026-02-13 01:55:19,INFO,436,900,0,Chunk 435 processing completed.,27.27
+Neo4J,2026-02-13 01:55:19,INFO,436,904,0,Results buffer saved to disk.,27.27
+Neo4J,2026-02-13 01:55:19,INFO,437,904,0,Chunk 436 processing completed.,27.31
+Neo4J,2026-02-13 01:55:19,INFO,437,908,0,Results buffer saved to disk.,27.31
+Neo4J,2026-02-13 01:55:19,INFO,438,908,0,Chunk 437 processing completed.,27.36
+Neo4J,2026-02-13 01:55:19,INFO,439,908,0,Chunk 438 processing completed.,27.40
+Neo4J,2026-02-13 01:55:19,INFO,439,912,0,Results buffer saved to disk.,27.40
+Neo4J,2026-02-13 01:55:19,INFO,440,912,0,Chunk 439 processing completed.,27.44
+Neo4J,2026-02-13 01:55:19,INFO,440,916,0,Results buffer saved to disk.,27.44
+Neo4J,2026-02-13 01:55:19,INFO,441,916,0,Chunk 440 processing completed.,27.48
+Neo4J,2026-02-13 01:55:19,INFO,442,916,0,Chunk 441 processing completed.,27.52
+Neo4J,2026-02-13 01:55:19,INFO,442,920,0,Results buffer saved to disk.,27.52
+Neo4J,2026-02-13 01:55:19,INFO,443,920,0,Chunk 442 processing completed.,27.57
+Neo4J,2026-02-13 01:55:19,INFO,443,924,0,Results buffer saved to disk.,27.57
+Neo4J,2026-02-13 01:55:19,INFO,444,924,0,Chunk 443 processing completed.,27.63
+Neo4J,2026-02-13 01:55:19,INFO,445,924,0,Chunk 444 processing completed.,27.69
+Neo4J,2026-02-13 01:55:19,INFO,446,924,0,Chunk 445 processing completed.,27.75
+Neo4J,2026-02-13 01:55:19,INFO,446,928,0,Results buffer saved to disk.,27.75
+Neo4J,2026-02-13 01:55:19,INFO,447,928,0,Chunk 446 processing completed.,27.82
+Neo4J,2026-02-13 01:55:19,INFO,448,928,0,Chunk 447 processing completed.,27.86
+Neo4J,2026-02-13 01:55:19,INFO,448,932,0,Results buffer saved to disk.,27.86
+Neo4J,2026-02-13 01:55:19,INFO,449,932,0,Chunk 448 processing completed.,27.92
+Neo4J,2026-02-13 01:55:19,INFO,450,932,0,Chunk 449 processing completed.,27.96
+Neo4J,2026-02-13 01:55:19,INFO,450,936,0,Results buffer saved to disk.,27.96
+Neo4J,2026-02-13 01:55:19,INFO,451,936,0,Chunk 450 processing completed.,28.01
+Neo4J,2026-02-13 01:55:19,INFO,452,936,0,Chunk 451 processing completed.,28.05
+Neo4J,2026-02-13 01:55:19,INFO,452,940,0,Results buffer saved to disk.,28.05
+Neo4J,2026-02-13 01:55:20,INFO,453,940,0,Chunk 452 processing completed.,28.09
+Neo4J,2026-02-13 01:55:20,INFO,454,940,0,Chunk 453 processing completed.,28.13
+Neo4J,2026-02-13 01:55:20,INFO,454,944,0,Results buffer saved to disk.,28.13
+Neo4J,2026-02-13 01:55:20,INFO,455,944,0,Chunk 454 processing completed.,28.20
+Neo4J,2026-02-13 01:55:20,INFO,456,944,0,Chunk 455 processing completed.,28.26
+Neo4J,2026-02-13 01:55:20,INFO,456,948,0,Results buffer saved to disk.,28.26
+Neo4J,2026-02-13 01:55:20,INFO,457,948,0,Chunk 456 processing completed.,28.33
+Neo4J,2026-02-13 01:55:20,INFO,458,948,0,Chunk 457 processing completed.,28.37
+Neo4J,2026-02-13 01:55:20,INFO,458,952,0,Results buffer saved to disk.,28.37
+Neo4J,2026-02-13 01:55:20,INFO,459,952,0,Chunk 458 processing completed.,28.42
+Neo4J,2026-02-13 01:55:20,INFO,459,956,0,Results buffer saved to disk.,28.42
+Neo4J,2026-02-13 01:55:20,INFO,460,956,0,Chunk 459 processing completed.,28.46
+Neo4J,2026-02-13 01:55:20,INFO,461,956,0,Chunk 460 processing completed.,28.51
+Neo4J,2026-02-13 01:55:20,INFO,461,960,0,Results buffer saved to disk.,28.51
+Neo4J,2026-02-13 01:55:20,INFO,462,960,0,Chunk 461 processing completed.,28.56
+Neo4J,2026-02-13 01:55:20,INFO,462,964,0,Results buffer saved to disk.,28.56
+Neo4J,2026-02-13 01:55:20,INFO,463,964,0,Chunk 462 processing completed.,28.65
+Neo4J,2026-02-13 01:55:20,INFO,464,964,0,Chunk 463 processing completed.,28.73
+Neo4J,2026-02-13 01:55:20,INFO,464,968,0,Results buffer saved to disk.,28.73
+Neo4J,2026-02-13 01:55:20,INFO,465,968,0,Chunk 464 processing completed.,28.81
+Neo4J,2026-02-13 01:55:20,INFO,466,968,0,Chunk 465 processing completed.,28.90
+Neo4J,2026-02-13 01:55:20,INFO,467,968,0,Chunk 466 processing completed.,28.95
+Neo4J,2026-02-13 01:55:20,INFO,467,972,0,Results buffer saved to disk.,28.95
+Neo4J,2026-02-13 01:55:20,INFO,468,972,0,Chunk 467 processing completed.,29.00
+Neo4J,2026-02-13 01:55:20,INFO,469,972,0,Chunk 468 processing completed.,29.06
+Neo4J,2026-02-13 01:55:20,INFO,469,976,0,Results buffer saved to disk.,29.06
+Neo4J,2026-02-13 01:55:20,INFO,470,976,0,Chunk 469 processing completed.,29.15
+Neo4J,2026-02-13 01:55:20,INFO,470,980,0,Results buffer saved to disk.,29.15
+Neo4J,2026-02-13 01:55:20,INFO,471,980,0,Chunk 470 processing completed.,29.20
+Neo4J,2026-02-13 01:55:20,INFO,472,980,0,Chunk 471 processing completed.,29.25
+Neo4J,2026-02-13 01:55:20,INFO,472,984,0,Results buffer saved to disk.,29.25
+Neo4J,2026-02-13 01:55:20,INFO,473,984,0,Chunk 472 processing completed.,29.30
+Neo4J,2026-02-13 01:55:20,INFO,473,988,0,Results buffer saved to disk.,29.30
+Neo4J,2026-02-13 01:55:20,INFO,474,988,0,Chunk 473 processing completed.,29.35
+Neo4J,2026-02-13 01:55:20,INFO,475,988,0,Chunk 474 processing completed.,29.41
+Neo4J,2026-02-13 01:55:20,INFO,476,988,0,Chunk 475 processing completed.,29.46
+Neo4J,2026-02-13 01:55:20,INFO,476,992,0,Results buffer saved to disk.,29.46
+Neo4J,2026-02-13 01:55:20,INFO,477,992,0,Chunk 476 processing completed.,29.51
+Neo4J,2026-02-13 01:55:20,INFO,477,996,0,Results buffer saved to disk.,29.51
+Neo4J,2026-02-13 01:55:20,INFO,478,996,0,Chunk 477 processing completed.,29.54
+Neo4J,2026-02-13 01:55:20,INFO,479,996,0,Chunk 478 processing completed.,29.58
+Neo4J,2026-02-13 01:55:20,INFO,479,1000,0,Results buffer saved to disk.,29.58
+Neo4J,2026-02-13 01:55:20,INFO,480,1000,0,Chunk 479 processing completed.,29.62
+Neo4J,2026-02-13 01:55:20,INFO,480,1004,0,Results buffer saved to disk.,29.62
+Neo4J,2026-02-13 01:55:20,INFO,481,1004,0,Chunk 480 processing completed.,29.66
+Neo4J,2026-02-13 01:55:20,INFO,482,1004,0,Chunk 481 processing completed.,29.69
+Neo4J,2026-02-13 01:55:20,INFO,483,1004,0,Chunk 482 processing completed.,29.74
+Neo4J,2026-02-13 01:55:20,INFO,483,1008,0,Results buffer saved to disk.,29.74
+Neo4J,2026-02-13 01:55:20,INFO,484,1008,0,Chunk 483 processing completed.,29.78
+Neo4J,2026-02-13 01:55:20,INFO,485,1008,0,Chunk 484 processing completed.,29.83
+Neo4J,2026-02-13 01:55:20,INFO,485,1012,0,Results buffer saved to disk.,29.83
+Neo4J,2026-02-13 01:55:20,INFO,486,1012,0,Chunk 485 processing completed.,29.87
+Neo4J,2026-02-13 01:55:20,INFO,487,1012,0,Chunk 486 processing completed.,29.92
+Neo4J,2026-02-13 01:55:20,INFO,488,1012,0,Chunk 487 processing completed.,29.97
+Neo4J,2026-02-13 01:55:20,INFO,488,1016,0,Results buffer saved to disk.,29.97
+Neo4J,2026-02-13 01:55:20,INFO,489,1016,0,Chunk 488 processing completed.,30.02
+Neo4J,2026-02-13 01:55:20,INFO,490,1016,0,Chunk 489 processing completed.,30.07
+Neo4J,2026-02-13 01:55:20,INFO,490,1020,0,Results buffer saved to disk.,30.07
+Neo4J,2026-02-13 01:55:20,INFO,491,1020,0,Chunk 490 processing completed.,30.13
+Neo4J,2026-02-13 01:55:20,INFO,492,1020,0,Chunk 491 processing completed.,30.19
+Neo4J,2026-02-13 01:55:20,INFO,493,1020,0,Chunk 492 processing completed.,30.24
+Neo4J,2026-02-13 01:55:20,INFO,493,1024,0,Results buffer saved to disk.,30.24
+Neo4J,2026-02-13 01:55:20,INFO,494,1024,0,Chunk 493 processing completed.,30.29
+Neo4J,2026-02-13 01:55:20,INFO,495,1024,0,Chunk 494 processing completed.,30.34
+Neo4J,2026-02-13 01:55:20,INFO,495,1028,0,Results buffer saved to disk.,30.34
+Neo4J,2026-02-13 01:55:20,INFO,496,1028,0,Chunk 495 processing completed.,30.40
+Neo4J,2026-02-13 01:55:20,INFO,497,1028,0,Chunk 496 processing completed.,30.47
+Neo4J,2026-02-13 01:55:20,INFO,497,1032,0,Results buffer saved to disk.,30.47
+Neo4J,2026-02-13 01:55:20,INFO,498,1032,0,Chunk 497 processing completed.,30.53
+Neo4J,2026-02-13 01:55:20,INFO,499,1032,0,Chunk 498 processing completed.,30.58
+Neo4J,2026-02-13 01:55:20,INFO,499,1036,0,Results buffer saved to disk.,30.58
+Neo4J,2026-02-13 01:55:20,INFO,500,1036,0,Chunk 499 processing completed.,30.63
+Neo4J,2026-02-13 01:55:20,INFO,501,1036,0,Chunk 500 processing completed.,30.67
+Neo4J,2026-02-13 01:55:20,INFO,501,1040,0,Results buffer saved to disk.,30.67
+Neo4J,2026-02-13 01:55:20,INFO,502,1040,0,Chunk 501 processing completed.,30.72
+Neo4J,2026-02-13 01:55:20,INFO,503,1040,0,Chunk 502 processing completed.,30.77
+Neo4J,2026-02-13 01:55:20,INFO,503,1044,0,Results buffer saved to disk.,30.77
+Neo4J,2026-02-13 01:55:20,INFO,504,1044,0,Chunk 503 processing completed.,30.83
+Neo4J,2026-02-13 01:55:20,INFO,505,1044,0,Chunk 504 processing completed.,30.88
+Neo4J,2026-02-13 01:55:20,INFO,505,1048,0,Results buffer saved to disk.,30.88
+Neo4J,2026-02-13 01:55:21,INFO,506,1048,0,Chunk 505 processing completed.,30.93
+Neo4J,2026-02-13 01:55:21,INFO,507,1048,0,Chunk 506 processing completed.,31.04
+Neo4J,2026-02-13 01:55:21,INFO,507,1052,0,Results buffer saved to disk.,31.04
+Neo4J,2026-02-13 01:55:21,INFO,508,1052,0,Chunk 507 processing completed.,31.15
+Neo4J,2026-02-13 01:55:21,INFO,509,1052,0,Chunk 508 processing completed.,31.26
+Neo4J,2026-02-13 01:55:21,INFO,510,1052,0,Chunk 509 processing completed.,31.37
+Neo4J,2026-02-13 01:55:21,INFO,510,1056,0,Results buffer saved to disk.,31.37
+Neo4J,2026-02-13 01:55:21,INFO,511,1056,0,Chunk 510 processing completed.,31.42
+Neo4J,2026-02-13 01:55:21,INFO,512,1056,0,Chunk 511 processing completed.,31.48
+Neo4J,2026-02-13 01:55:21,INFO,512,1060,0,Results buffer saved to disk.,31.48
+Neo4J,2026-02-13 01:55:21,INFO,513,1060,0,Chunk 512 processing completed.,31.53
+Neo4J,2026-02-13 01:55:21,INFO,514,1060,0,Chunk 513 processing completed.,31.61
+Neo4J,2026-02-13 01:55:21,INFO,514,1064,0,Results buffer saved to disk.,31.61
+Neo4J,2026-02-13 01:55:21,INFO,515,1064,0,Chunk 514 processing completed.,31.69
+Neo4J,2026-02-13 01:55:21,INFO,516,1064,0,Chunk 515 processing completed.,31.77
+Neo4J,2026-02-13 01:55:21,INFO,516,1068,0,Results buffer saved to disk.,31.77
+Neo4J,2026-02-13 01:55:21,INFO,517,1068,0,Chunk 516 processing completed.,31.84
+Neo4J,2026-02-13 01:55:21,INFO,518,1068,0,Chunk 517 processing completed.,31.92
+Neo4J,2026-02-13 01:55:21,INFO,518,1072,0,Results buffer saved to disk.,31.92
+Neo4J,2026-02-13 01:55:21,INFO,519,1072,0,Chunk 518 processing completed.,32.00
+Neo4J,2026-02-13 01:55:21,INFO,520,1072,0,Chunk 519 processing completed.,32.08
+Neo4J,2026-02-13 01:55:21,INFO,521,1072,0,Chunk 520 processing completed.,32.12
+Neo4J,2026-02-13 01:55:21,INFO,521,1076,0,Results buffer saved to disk.,32.12
+Neo4J,2026-02-13 01:55:21,INFO,522,1076,0,Chunk 521 processing completed.,32.18
+Neo4J,2026-02-13 01:55:21,INFO,522,1080,0,Results buffer saved to disk.,32.18
+Neo4J,2026-02-13 01:55:21,INFO,523,1080,0,Chunk 522 processing completed.,32.23
+Neo4J,2026-02-13 01:55:21,INFO,524,1080,0,Chunk 523 processing completed.,32.29
+Neo4J,2026-02-13 01:55:21,INFO,524,1084,0,Results buffer saved to disk.,32.29
+Neo4J,2026-02-13 01:55:21,INFO,525,1084,0,Chunk 524 processing completed.,32.34
+Neo4J,2026-02-13 01:55:21,INFO,526,1084,0,Chunk 525 processing completed.,32.40
+Neo4J,2026-02-13 01:55:21,INFO,526,1088,0,Results buffer saved to disk.,32.40
+Neo4J,2026-02-13 01:55:21,INFO,527,1088,0,Chunk 526 processing completed.,32.45
+Neo4J,2026-02-13 01:55:21,INFO,528,1088,0,Chunk 527 processing completed.,32.51
+Neo4J,2026-02-13 01:55:21,INFO,529,1088,0,Chunk 528 processing completed.,32.57
+Neo4J,2026-02-13 01:55:21,INFO,529,1092,0,Results buffer saved to disk.,32.57
+Neo4J,2026-02-13 01:55:21,INFO,530,1092,0,Chunk 529 processing completed.,32.64
+Neo4J,2026-02-13 01:55:21,INFO,531,1092,0,Chunk 530 processing completed.,32.72
+Neo4J,2026-02-13 01:55:21,INFO,531,1096,0,Results buffer saved to disk.,32.72
+Neo4J,2026-02-13 01:55:21,INFO,532,1096,0,Chunk 531 processing completed.,32.80
+Neo4J,2026-02-13 01:55:21,INFO,533,1096,0,Chunk 532 processing completed.,32.88
+Neo4J,2026-02-13 01:55:21,INFO,533,1100,0,Results buffer saved to disk.,32.88
+Neo4J,2026-02-13 01:55:21,INFO,534,1100,0,Chunk 533 processing completed.,32.96
+Neo4J,2026-02-13 01:55:21,INFO,535,1100,0,Chunk 534 processing completed.,33.04
+Neo4J,2026-02-13 01:55:21,INFO,535,1104,0,Results buffer saved to disk.,33.04
+Neo4J,2026-02-13 01:55:21,INFO,536,1104,0,Chunk 535 processing completed.,33.09
+Neo4J,2026-02-13 01:55:21,INFO,537,1104,0,Chunk 536 processing completed.,33.14
+Neo4J,2026-02-13 01:55:21,INFO,537,1108,0,Results buffer saved to disk.,33.14
+Neo4J,2026-02-13 01:55:21,INFO,538,1108,0,Chunk 537 processing completed.,33.18
+Neo4J,2026-02-13 01:55:21,INFO,539,1108,0,Chunk 538 processing completed.,33.25
+Neo4J,2026-02-13 01:55:21,INFO,539,1112,0,Results buffer saved to disk.,33.25
+Neo4J,2026-02-13 01:55:21,INFO,540,1112,0,Chunk 539 processing completed.,33.32
+Neo4J,2026-02-13 01:55:21,INFO,540,1116,0,Results buffer saved to disk.,33.32
+Neo4J,2026-02-13 01:55:21,INFO,541,1116,0,Chunk 540 processing completed.,33.40
+Neo4J,2026-02-13 01:55:21,INFO,542,1116,0,Chunk 541 processing completed.,33.44
+Neo4J,2026-02-13 01:55:21,INFO,542,1120,0,Results buffer saved to disk.,33.44
+Neo4J,2026-02-13 01:55:21,INFO,543,1120,0,Chunk 542 processing completed.,33.49
+Neo4J,2026-02-13 01:55:21,INFO,543,1124,0,Results buffer saved to disk.,33.49
+Neo4J,2026-02-13 01:55:21,INFO,544,1124,0,Chunk 543 processing completed.,33.54
+Neo4J,2026-02-13 01:55:21,INFO,545,1124,0,Chunk 544 processing completed.,33.59
+Neo4J,2026-02-13 01:55:21,INFO,545,1128,0,Results buffer saved to disk.,33.59
+Neo4J,2026-02-13 01:55:21,INFO,546,1128,0,Chunk 545 processing completed.,33.64
+Neo4J,2026-02-13 01:55:21,INFO,547,1128,0,Chunk 546 processing completed.,33.70
+Neo4J,2026-02-13 01:55:21,INFO,547,1132,0,Results buffer saved to disk.,33.70
+Neo4J,2026-02-13 01:55:21,INFO,548,1132,0,Chunk 547 processing completed.,33.76
+Neo4J,2026-02-13 01:55:21,INFO,549,1132,0,Chunk 548 processing completed.,33.81
+Neo4J,2026-02-13 01:55:21,INFO,549,1136,0,Results buffer saved to disk.,33.81
+Neo4J,2026-02-13 01:55:21,INFO,550,1136,0,Chunk 549 processing completed.,33.86
+Neo4J,2026-02-13 01:55:21,INFO,550,1140,0,Results buffer saved to disk.,33.86
+Neo4J,2026-02-13 01:55:21,INFO,551,1140,0,Chunk 550 processing completed.,33.91
+Neo4J,2026-02-13 01:55:21,INFO,552,1140,0,Chunk 551 processing completed.,33.96
+Neo4J,2026-02-13 01:55:21,INFO,553,1140,0,Chunk 552 processing completed.,34.02
+Neo4J,2026-02-13 01:55:21,INFO,553,1144,0,Results buffer saved to disk.,34.02
+Neo4J,2026-02-13 01:55:21,INFO,554,1144,0,Chunk 553 processing completed.,34.08
+Neo4J,2026-02-13 01:55:21,INFO,555,1144,0,Chunk 554 processing completed.,34.12
+Neo4J,2026-02-13 01:55:21,INFO,555,1148,0,Results buffer saved to disk.,34.12
+Neo4J,2026-02-13 01:55:21,INFO,556,1148,0,Chunk 555 processing completed.,34.17
+Neo4J,2026-02-13 01:55:21,INFO,556,1152,0,Results buffer saved to disk.,34.17
+Neo4J,2026-02-13 01:55:21,INFO,557,1152,0,Chunk 556 processing completed.,34.22
+Neo4J,2026-02-13 01:55:21,INFO,558,1152,0,Chunk 557 processing completed.,34.27
+Neo4J,2026-02-13 01:55:21,INFO,558,1156,0,Results buffer saved to disk.,34.27
+Neo4J,2026-02-13 01:55:21,INFO,559,1156,0,Chunk 558 processing completed.,34.33
+Neo4J,2026-02-13 01:55:21,INFO,560,1156,0,Chunk 559 processing completed.,34.38
+Neo4J,2026-02-13 01:55:21,INFO,560,1160,0,Results buffer saved to disk.,34.38
+Neo4J,2026-02-13 01:55:21,INFO,561,1160,0,Chunk 560 processing completed.,34.42
+Neo4J,2026-02-13 01:55:21,INFO,561,1164,0,Results buffer saved to disk.,34.42
+Neo4J,2026-02-13 01:55:22,INFO,562,1164,0,Chunk 561 processing completed.,34.47
+Neo4J,2026-02-13 01:55:22,INFO,563,1164,0,Chunk 562 processing completed.,34.52
+Neo4J,2026-02-13 01:55:22,INFO,563,1168,0,Results buffer saved to disk.,34.52
+Neo4J,2026-02-13 01:55:22,INFO,564,1168,0,Chunk 563 processing completed.,34.57
+Neo4J,2026-02-13 01:55:22,INFO,565,1168,0,Chunk 564 processing completed.,34.62
+Neo4J,2026-02-13 01:55:22,INFO,565,1172,0,Results buffer saved to disk.,34.62
+Neo4J,2026-02-13 01:55:22,INFO,566,1172,0,Chunk 565 processing completed.,34.68
+Neo4J,2026-02-13 01:55:22,INFO,567,1172,0,Chunk 566 processing completed.,34.72
+Neo4J,2026-02-13 01:55:22,INFO,567,1176,0,Results buffer saved to disk.,34.72
+Neo4J,2026-02-13 01:55:22,INFO,568,1176,0,Chunk 567 processing completed.,34.76
+Neo4J,2026-02-13 01:55:22,INFO,568,1180,0,Results buffer saved to disk.,34.76
+Neo4J,2026-02-13 01:55:22,INFO,569,1180,0,Chunk 568 processing completed.,34.81
+Neo4J,2026-02-13 01:55:22,INFO,570,1180,0,Chunk 569 processing completed.,34.85
+Neo4J,2026-02-13 01:55:22,INFO,570,1184,0,Results buffer saved to disk.,34.85
+Neo4J,2026-02-13 01:55:22,INFO,571,1184,0,Chunk 570 processing completed.,34.91
+Neo4J,2026-02-13 01:55:22,INFO,572,1184,0,Chunk 571 processing completed.,34.97
+Neo4J,2026-02-13 01:55:22,INFO,573,1184,0,Chunk 572 processing completed.,35.02
+Neo4J,2026-02-13 01:55:22,INFO,573,1188,0,Results buffer saved to disk.,35.02
+Neo4J,2026-02-13 01:55:22,INFO,574,1188,0,Chunk 573 processing completed.,35.08
+Neo4J,2026-02-13 01:55:22,INFO,575,1188,0,Chunk 574 processing completed.,35.13
+Neo4J,2026-02-13 01:55:22,INFO,575,1192,0,Results buffer saved to disk.,35.13
+Neo4J,2026-02-13 01:55:22,INFO,576,1192,0,Chunk 575 processing completed.,35.18
+Neo4J,2026-02-13 01:55:22,INFO,577,1192,0,Chunk 576 processing completed.,35.22
+Neo4J,2026-02-13 01:55:22,INFO,577,1196,0,Results buffer saved to disk.,35.22
+Neo4J,2026-02-13 01:55:22,INFO,578,1196,0,Chunk 577 processing completed.,35.26
+Neo4J,2026-02-13 01:55:22,INFO,578,1200,0,Results buffer saved to disk.,35.26
+Neo4J,2026-02-13 01:55:22,INFO,579,1200,0,Chunk 578 processing completed.,35.30
+Neo4J,2026-02-13 01:55:22,INFO,580,1200,0,Chunk 579 processing completed.,35.35
+Neo4J,2026-02-13 01:55:22,INFO,581,1200,0,Chunk 580 processing completed.,35.42
+Neo4J,2026-02-13 01:55:22,INFO,581,1204,0,Results buffer saved to disk.,35.42
+Neo4J,2026-02-13 01:55:22,INFO,582,1204,0,Chunk 581 processing completed.,35.48
+Neo4J,2026-02-13 01:55:22,INFO,583,1204,0,Chunk 582 processing completed.,35.54
+Neo4J,2026-02-13 01:55:22,INFO,583,1208,0,Results buffer saved to disk.,35.54
+Neo4J,2026-02-13 01:55:22,INFO,584,1208,0,Chunk 583 processing completed.,35.60
+Neo4J,2026-02-13 01:55:22,INFO,585,1208,0,Chunk 584 processing completed.,35.66
+Neo4J,2026-02-13 01:55:22,INFO,585,1212,0,Results buffer saved to disk.,35.66
+Neo4J,2026-02-13 01:55:22,INFO,586,1212,0,Chunk 585 processing completed.,35.70
+Neo4J,2026-02-13 01:55:22,INFO,587,1212,0,Chunk 586 processing completed.,35.75
+Neo4J,2026-02-13 01:55:22,INFO,587,1216,0,Results buffer saved to disk.,35.75
+Neo4J,2026-02-13 01:55:22,INFO,588,1216,0,Chunk 587 processing completed.,35.80
+Neo4J,2026-02-13 01:55:22,INFO,588,1220,0,Results buffer saved to disk.,35.80
+Neo4J,2026-02-13 01:55:22,INFO,589,1220,0,Chunk 588 processing completed.,35.86
+Neo4J,2026-02-13 01:55:22,INFO,590,1220,0,Chunk 589 processing completed.,35.93
+Neo4J,2026-02-13 01:55:22,INFO,590,1224,0,Results buffer saved to disk.,35.93
+Neo4J,2026-02-13 01:55:22,INFO,591,1224,0,Chunk 590 processing completed.,35.99
+Neo4J,2026-02-13 01:55:22,INFO,592,1224,0,Chunk 591 processing completed.,36.06
+Neo4J,2026-02-13 01:55:22,INFO,592,1228,0,Results buffer saved to disk.,36.06
+Neo4J,2026-02-13 01:55:22,INFO,593,1228,0,Chunk 592 processing completed.,36.13
+Neo4J,2026-02-13 01:55:22,INFO,594,1228,0,Chunk 593 processing completed.,36.20
+Neo4J,2026-02-13 01:55:22,INFO,594,1232,0,Results buffer saved to disk.,36.20
+Neo4J,2026-02-13 01:55:22,INFO,595,1232,0,Chunk 594 processing completed.,36.25
+Neo4J,2026-02-13 01:55:22,INFO,595,1236,0,Results buffer saved to disk.,36.25
+Neo4J,2026-02-13 01:55:22,INFO,596,1236,0,Chunk 595 processing completed.,36.30
+Neo4J,2026-02-13 01:55:22,INFO,597,1236,0,Chunk 596 processing completed.,36.35
+Neo4J,2026-02-13 01:55:22,INFO,597,1240,0,Results buffer saved to disk.,36.35
+Neo4J,2026-02-13 01:55:22,INFO,598,1240,0,Chunk 597 processing completed.,36.40
+Neo4J,2026-02-13 01:55:22,INFO,599,1240,0,Chunk 598 processing completed.,36.44
+Neo4J,2026-02-13 01:55:22,INFO,599,1244,0,Results buffer saved to disk.,36.44
+Neo4J,2026-02-13 01:55:22,INFO,600,1244,0,Chunk 599 processing completed.,36.49
+Neo4J,2026-02-13 01:55:22,INFO,601,1244,0,Chunk 600 processing completed.,36.54
+Neo4J,2026-02-13 01:55:22,INFO,601,1248,0,Results buffer saved to disk.,36.54
+Neo4J,2026-02-13 01:55:22,INFO,602,1248,0,Chunk 601 processing completed.,36.59
+Neo4J,2026-02-13 01:55:22,INFO,603,1248,0,Chunk 602 processing completed.,36.64
+Neo4J,2026-02-13 01:55:22,INFO,603,1252,0,Results buffer saved to disk.,36.64
+Neo4J,2026-02-13 01:55:22,INFO,604,1252,0,Chunk 603 processing completed.,36.69
+Neo4J,2026-02-13 01:55:22,INFO,605,1252,0,Chunk 604 processing completed.,36.76
+Neo4J,2026-02-13 01:55:22,INFO,605,1256,0,Results buffer saved to disk.,36.76
+Neo4J,2026-02-13 01:55:22,INFO,606,1256,0,Chunk 605 processing completed.,36.84
+Neo4J,2026-02-13 01:55:22,INFO,606,1260,0,Results buffer saved to disk.,36.84
+Neo4J,2026-02-13 01:55:22,INFO,607,1260,0,Chunk 606 processing completed.,36.91
+Neo4J,2026-02-13 01:55:22,INFO,608,1260,0,Chunk 607 processing completed.,36.98
+Neo4J,2026-02-13 01:55:22,INFO,608,1264,0,Results buffer saved to disk.,36.98
+Neo4J,2026-02-13 01:55:22,INFO,609,1264,0,Chunk 608 processing completed.,37.05
+Neo4J,2026-02-13 01:55:22,INFO,610,1264,0,Chunk 609 processing completed.,37.11
+Neo4J,2026-02-13 01:55:22,INFO,610,1268,0,Results buffer saved to disk.,37.11
+Neo4J,2026-02-13 01:55:22,INFO,611,1268,0,Chunk 610 processing completed.,37.23
+Neo4J,2026-02-13 01:55:22,INFO,611,1272,0,Results buffer saved to disk.,37.23
+Neo4J,2026-02-13 01:55:22,INFO,612,1272,0,Chunk 611 processing completed.,37.35
+Neo4J,2026-02-13 01:55:22,INFO,613,1272,0,Chunk 612 processing completed.,37.39
+Neo4J,2026-02-13 01:55:22,INFO,613,1276,0,Results buffer saved to disk.,37.39
+Neo4J,2026-02-13 01:55:22,INFO,614,1276,0,Chunk 613 processing completed.,37.44
+Neo4J,2026-02-13 01:55:22,INFO,615,1276,0,Chunk 614 processing completed.,37.48
+Neo4J,2026-02-13 01:55:22,INFO,615,1280,0,Results buffer saved to disk.,37.48
+Neo4J,2026-02-13 01:55:22,INFO,616,1280,0,Chunk 615 processing completed.,37.52
+Neo4J,2026-02-13 01:55:22,INFO,617,1280,0,Chunk 616 processing completed.,37.57
+Neo4J,2026-02-13 01:55:22,INFO,617,1284,0,Results buffer saved to disk.,37.57
+Neo4J,2026-02-13 01:55:22,INFO,618,1284,0,Chunk 617 processing completed.,37.61
+Neo4J,2026-02-13 01:55:22,INFO,618,1288,0,Results buffer saved to disk.,37.61
+Neo4J,2026-02-13 01:55:22,INFO,619,1288,0,Chunk 618 processing completed.,37.66
+Neo4J,2026-02-13 01:55:23,INFO,620,1288,0,Chunk 619 processing completed.,37.71
+Neo4J,2026-02-13 01:55:23,INFO,620,1292,0,Results buffer saved to disk.,37.71
+Neo4J,2026-02-13 01:55:23,INFO,621,1292,0,Chunk 620 processing completed.,37.75
+Neo4J,2026-02-13 01:55:23,INFO,622,1292,0,Chunk 621 processing completed.,37.80
+Neo4J,2026-02-13 01:55:23,INFO,622,1296,0,Results buffer saved to disk.,37.80
+Neo4J,2026-02-13 01:55:23,INFO,623,1296,0,Chunk 622 processing completed.,37.84
+Neo4J,2026-02-13 01:55:23,INFO,624,1296,0,Chunk 623 processing completed.,37.88
+Neo4J,2026-02-13 01:55:23,INFO,624,1300,0,Results buffer saved to disk.,37.88
+Neo4J,2026-02-13 01:55:23,INFO,625,1300,0,Chunk 624 processing completed.,37.98
+Neo4J,2026-02-13 01:55:23,INFO,626,1300,0,Chunk 625 processing completed.,38.09
+Neo4J,2026-02-13 01:55:23,INFO,626,1304,0,Results buffer saved to disk.,38.09
+Neo4J,2026-02-13 01:55:23,INFO,627,1304,0,Chunk 626 processing completed.,38.19
+Neo4J,2026-02-13 01:55:23,INFO,628,1304,0,Chunk 627 processing completed.,38.30
+Neo4J,2026-02-13 01:55:23,INFO,628,1308,0,Results buffer saved to disk.,38.30
+Neo4J,2026-02-13 01:55:23,INFO,629,1308,0,Chunk 628 processing completed.,38.40
+Neo4J,2026-02-13 01:55:23,INFO,630,1308,0,Chunk 629 processing completed.,38.51
+Neo4J,2026-02-13 01:55:23,INFO,631,1308,0,Chunk 630 processing completed.,38.61
+Neo4J,2026-02-13 01:55:23,INFO,631,1312,0,Results buffer saved to disk.,38.61
+Neo4J,2026-02-13 01:55:23,INFO,632,1312,0,Chunk 631 processing completed.,38.65
+Neo4J,2026-02-13 01:55:23,INFO,632,1316,0,Results buffer saved to disk.,38.65
+Neo4J,2026-02-13 01:55:23,INFO,633,1316,0,Chunk 632 processing completed.,38.69
+Neo4J,2026-02-13 01:55:23,INFO,634,1316,0,Chunk 633 processing completed.,38.72
+Neo4J,2026-02-13 01:55:23,INFO,634,1320,0,Results buffer saved to disk.,38.72
+Neo4J,2026-02-13 01:55:23,INFO,635,1320,0,Chunk 634 processing completed.,38.76
+Neo4J,2026-02-13 01:55:23,INFO,636,1320,0,Chunk 635 processing completed.,38.79
+Neo4J,2026-02-13 01:55:23,INFO,636,1324,0,Results buffer saved to disk.,38.79
+Neo4J,2026-02-13 01:55:23,INFO,637,1324,0,Chunk 636 processing completed.,38.84
+Neo4J,2026-02-13 01:55:23,INFO,638,1324,0,Chunk 637 processing completed.,38.93
+Neo4J,2026-02-13 01:55:23,INFO,638,1328,0,Results buffer saved to disk.,38.93
+Neo4J,2026-02-13 01:55:23,INFO,639,1328,0,Chunk 638 processing completed.,39.02
+Neo4J,2026-02-13 01:55:23,INFO,639,1332,0,Results buffer saved to disk.,39.02
+Neo4J,2026-02-13 01:55:23,INFO,640,1332,0,Chunk 639 processing completed.,39.11
+Neo4J,2026-02-13 01:55:23,INFO,641,1332,0,Chunk 640 processing completed.,39.20
+Neo4J,2026-02-13 01:55:23,INFO,641,1336,0,Results buffer saved to disk.,39.20
+Neo4J,2026-02-13 01:55:23,INFO,642,1336,0,Chunk 641 processing completed.,39.29
+Neo4J,2026-02-13 01:55:23,INFO,643,1336,0,Chunk 642 processing completed.,39.33
+Neo4J,2026-02-13 01:55:23,INFO,643,1340,0,Results buffer saved to disk.,39.33
+Neo4J,2026-02-13 01:55:23,INFO,644,1340,0,Chunk 643 processing completed.,39.37
+Neo4J,2026-02-13 01:55:23,INFO,645,1340,0,Chunk 644 processing completed.,39.42
+Neo4J,2026-02-13 01:55:23,INFO,645,1344,0,Results buffer saved to disk.,39.42
+Neo4J,2026-02-13 01:55:23,INFO,646,1344,0,Chunk 645 processing completed.,39.46
+Neo4J,2026-02-13 01:55:23,INFO,646,1348,0,Results buffer saved to disk.,39.46
+Neo4J,2026-02-13 01:55:23,INFO,647,1348,0,Chunk 646 processing completed.,39.50
+Neo4J,2026-02-13 01:55:23,INFO,648,1348,0,Chunk 647 processing completed.,39.54
+Neo4J,2026-02-13 01:55:23,INFO,649,1348,0,Chunk 648 processing completed.,39.57
+Neo4J,2026-02-13 01:55:23,INFO,649,1352,0,Results buffer saved to disk.,39.57
+Neo4J,2026-02-13 01:55:23,INFO,650,1352,0,Chunk 649 processing completed.,39.65
+Neo4J,2026-02-13 01:55:23,INFO,650,1356,0,Results buffer saved to disk.,39.65
+Neo4J,2026-02-13 01:55:23,INFO,651,1356,0,Chunk 650 processing completed.,39.73
+Neo4J,2026-02-13 01:55:23,INFO,652,1356,0,Chunk 651 processing completed.,39.81
+Neo4J,2026-02-13 01:55:23,INFO,653,1356,0,Chunk 652 processing completed.,39.88
+Neo4J,2026-02-13 01:55:23,INFO,653,1360,0,Results buffer saved to disk.,39.88
+Neo4J,2026-02-13 01:55:23,INFO,654,1360,0,Chunk 653 processing completed.,39.96
+Neo4J,2026-02-13 01:55:23,INFO,655,1360,0,Chunk 654 processing completed.,40.04
+Neo4J,2026-02-13 01:55:23,INFO,655,1364,0,Results buffer saved to disk.,40.04
+Neo4J,2026-02-13 01:55:23,INFO,656,1364,0,Chunk 655 processing completed.,40.12
+Neo4J,2026-02-13 01:55:23,INFO,657,1364,0,Chunk 656 processing completed.,40.19
+Neo4J,2026-02-13 01:55:23,INFO,657,1368,0,Results buffer saved to disk.,40.19
+Neo4J,2026-02-13 01:55:23,INFO,658,1368,0,Chunk 657 processing completed.,40.27
+Neo4J,2026-02-13 01:55:23,INFO,659,1368,0,Chunk 658 processing completed.,40.35
+Neo4J,2026-02-13 01:55:23,INFO,659,1372,0,Results buffer saved to disk.,40.35
+Neo4J,2026-02-13 01:55:23,INFO,660,1372,0,Chunk 659 processing completed.,40.43
+Neo4J,2026-02-13 01:55:23,INFO,661,1372,0,Chunk 660 processing completed.,40.50
+Neo4J,2026-02-13 01:55:23,INFO,661,1376,0,Results buffer saved to disk.,40.50
+Neo4J,2026-02-13 01:55:23,INFO,662,1376,0,Chunk 661 processing completed.,40.56
+Neo4J,2026-02-13 01:55:23,INFO,662,1380,0,Results buffer saved to disk.,40.56
+Neo4J,2026-02-13 01:55:23,INFO,663,1380,0,Chunk 662 processing completed.,40.61
+Neo4J,2026-02-13 01:55:23,INFO,664,1380,0,Chunk 663 processing completed.,40.66
+Neo4J,2026-02-13 01:55:23,INFO,664,1384,0,Results buffer saved to disk.,40.66
+Neo4J,2026-02-13 01:55:23,INFO,665,1384,0,Chunk 664 processing completed.,40.77
+Neo4J,2026-02-13 01:55:23,INFO,665,1388,0,Results buffer saved to disk.,40.77
+Neo4J,2026-02-13 01:55:23,INFO,666,1388,0,Chunk 665 processing completed.,40.88
+Neo4J,2026-02-13 01:55:23,INFO,667,1388,0,Chunk 666 processing completed.,40.99
+Neo4J,2026-02-13 01:55:23,INFO,668,1388,0,Chunk 667 processing completed.,41.10
+Neo4J,2026-02-13 01:55:23,INFO,668,1392,0,Results buffer saved to disk.,41.10
+Neo4J,2026-02-13 01:55:23,INFO,669,1392,0,Chunk 668 processing completed.,41.21
+Neo4J,2026-02-13 01:55:23,INFO,670,1392,0,Chunk 669 processing completed.,41.32
+Neo4J,2026-02-13 01:55:23,INFO,670,1396,0,Results buffer saved to disk.,41.32
+Neo4J,2026-02-13 01:55:23,INFO,671,1396,0,Chunk 670 processing completed.,41.44
+Neo4J,2026-02-13 01:55:23,INFO,672,1396,0,Chunk 671 processing completed.,41.55
+Neo4J,2026-02-13 01:55:23,INFO,672,1400,0,Results buffer saved to disk.,41.55
+Neo4J,2026-02-13 01:55:23,INFO,673,1400,0,Chunk 672 processing completed.,41.67
+Neo4J,2026-02-13 01:55:23,INFO,674,1400,0,Chunk 673 processing completed.,41.78
+Neo4J,2026-02-13 01:55:23,INFO,674,1404,0,Results buffer saved to disk.,41.78
+Neo4J,2026-02-13 01:55:23,INFO,675,1404,0,Chunk 674 processing completed.,41.83
+Neo4J,2026-02-13 01:55:23,INFO,676,1404,0,Chunk 675 processing completed.,41.88
+Neo4J,2026-02-13 01:55:23,INFO,676,1408,0,Results buffer saved to disk.,41.88
+Neo4J,2026-02-13 01:55:24,INFO,677,1408,0,Chunk 676 processing completed.,42.02
+Neo4J,2026-02-13 01:55:24,INFO,677,1412,0,Results buffer saved to disk.,42.02
+Neo4J,2026-02-13 01:55:24,INFO,678,1412,0,Chunk 677 processing completed.,42.15
+Neo4J,2026-02-13 01:55:24,INFO,679,1412,0,Chunk 678 processing completed.,42.22
+Neo4J,2026-02-13 01:55:24,INFO,679,1416,0,Results buffer saved to disk.,42.22
+Neo4J,2026-02-13 01:55:24,INFO,680,1416,0,Chunk 679 processing completed.,42.28
+Neo4J,2026-02-13 01:55:24,INFO,680,1420,0,Results buffer saved to disk.,42.28
+Neo4J,2026-02-13 01:55:24,INFO,681,1420,0,Chunk 680 processing completed.,42.37
+Neo4J,2026-02-13 01:55:24,INFO,682,1420,0,Chunk 681 processing completed.,42.42
+Neo4J,2026-02-13 01:55:24,INFO,682,1424,0,Results buffer saved to disk.,42.42
+Neo4J,2026-02-13 01:55:24,INFO,683,1424,0,Chunk 682 processing completed.,42.48
+Neo4J,2026-02-13 01:55:24,INFO,683,1428,0,Results buffer saved to disk.,42.48
+Neo4J,2026-02-13 01:55:24,INFO,684,1428,0,Chunk 683 processing completed.,42.55
+Neo4J,2026-02-13 01:55:24,INFO,685,1428,0,Chunk 684 processing completed.,42.61
+Neo4J,2026-02-13 01:55:24,INFO,685,1432,0,Results buffer saved to disk.,42.61
+Neo4J,2026-02-13 01:55:24,INFO,686,1432,0,Chunk 685 processing completed.,42.67
+Neo4J,2026-02-13 01:55:24,INFO,687,1432,0,Chunk 686 processing completed.,42.72
+Neo4J,2026-02-13 01:55:24,INFO,687,1436,0,Results buffer saved to disk.,42.72
+Neo4J,2026-02-13 01:55:24,INFO,688,1436,0,Chunk 687 processing completed.,42.77
+Neo4J,2026-02-13 01:55:24,INFO,689,1436,0,Chunk 688 processing completed.,42.82
+Neo4J,2026-02-13 01:55:24,INFO,689,1440,0,Results buffer saved to disk.,42.82
+Neo4J,2026-02-13 01:55:24,INFO,690,1440,0,Chunk 689 processing completed.,42.88
+Neo4J,2026-02-13 01:55:24,INFO,691,1440,0,Chunk 690 processing completed.,42.93
+Neo4J,2026-02-13 01:55:24,INFO,691,1444,0,Results buffer saved to disk.,42.93
+Neo4J,2026-02-13 01:55:24,INFO,692,1444,0,Chunk 691 processing completed.,42.99
+Neo4J,2026-02-13 01:55:24,INFO,693,1444,0,Chunk 692 processing completed.,43.05
+Neo4J,2026-02-13 01:55:24,INFO,694,1444,0,Chunk 693 processing completed.,43.11
+Neo4J,2026-02-13 01:55:24,INFO,694,1448,0,Results buffer saved to disk.,43.11
+Neo4J,2026-02-13 01:55:24,INFO,695,1448,0,Chunk 694 processing completed.,43.15
+Neo4J,2026-02-13 01:55:24,INFO,695,1452,0,Results buffer saved to disk.,43.15
+Neo4J,2026-02-13 01:55:24,INFO,696,1452,0,Chunk 695 processing completed.,43.19
+Neo4J,2026-02-13 01:55:24,INFO,697,1452,0,Chunk 696 processing completed.,43.25
+Neo4J,2026-02-13 01:55:24,INFO,697,1456,0,Results buffer saved to disk.,43.25
+Neo4J,2026-02-13 01:55:24,INFO,698,1456,0,Chunk 697 processing completed.,43.32
+Neo4J,2026-02-13 01:55:24,INFO,699,1456,0,Chunk 698 processing completed.,43.38
+Neo4J,2026-02-13 01:55:24,INFO,699,1460,0,Results buffer saved to disk.,43.38
+Neo4J,2026-02-13 01:55:24,INFO,700,1460,0,Chunk 699 processing completed.,43.44
+Neo4J,2026-02-13 01:55:24,INFO,701,1460,0,Chunk 700 processing completed.,43.51
+Neo4J,2026-02-13 01:55:24,INFO,702,1460,0,Chunk 701 processing completed.,43.58
+Neo4J,2026-02-13 01:55:24,INFO,702,1464,0,Results buffer saved to disk.,43.58
+Neo4J,2026-02-13 01:55:24,INFO,703,1464,0,Chunk 702 processing completed.,43.66
+Neo4J,2026-02-13 01:55:24,INFO,704,1464,0,Chunk 703 processing completed.,43.71
+Neo4J,2026-02-13 01:55:24,INFO,704,1468,0,Results buffer saved to disk.,43.71
+Neo4J,2026-02-13 01:55:24,INFO,705,1468,0,Chunk 704 processing completed.,43.76
+Neo4J,2026-02-13 01:55:24,INFO,706,1468,0,Chunk 705 processing completed.,43.80
+Neo4J,2026-02-13 01:55:24,INFO,706,1472,0,Results buffer saved to disk.,43.80
+Neo4J,2026-02-13 01:55:24,INFO,707,1472,0,Chunk 706 processing completed.,43.85
+Neo4J,2026-02-13 01:55:24,INFO,708,1472,0,Chunk 707 processing completed.,43.89
+Neo4J,2026-02-13 01:55:24,INFO,708,1476,0,Results buffer saved to disk.,43.89
+Neo4J,2026-02-13 01:55:24,INFO,709,1476,0,Chunk 708 processing completed.,43.97
+Neo4J,2026-02-13 01:55:24,INFO,710,1476,0,Chunk 709 processing completed.,44.04
+Neo4J,2026-02-13 01:55:24,INFO,710,1480,0,Results buffer saved to disk.,44.04
+Neo4J,2026-02-13 01:55:24,INFO,711,1480,0,Chunk 710 processing completed.,44.13
+Neo4J,2026-02-13 01:55:24,INFO,712,1480,0,Chunk 711 processing completed.,44.21
+Neo4J,2026-02-13 01:55:24,INFO,712,1484,0,Results buffer saved to disk.,44.21
+Neo4J,2026-02-13 01:55:24,INFO,713,1484,0,Chunk 712 processing completed.,44.28
+Neo4J,2026-02-13 01:55:24,INFO,714,1484,0,Chunk 713 processing completed.,44.37
+Neo4J,2026-02-13 01:55:24,INFO,714,1488,0,Results buffer saved to disk.,44.37
+Neo4J,2026-02-13 01:55:24,INFO,715,1488,0,Chunk 714 processing completed.,44.41
+Neo4J,2026-02-13 01:55:24,INFO,715,1492,0,Results buffer saved to disk.,44.41
+Neo4J,2026-02-13 01:55:24,INFO,716,1492,0,Chunk 715 processing completed.,44.46
+Neo4J,2026-02-13 01:55:24,INFO,717,1492,0,Chunk 716 processing completed.,44.51
+Neo4J,2026-02-13 01:55:24,INFO,717,1496,0,Results buffer saved to disk.,44.51
+Neo4J,2026-02-13 01:55:24,INFO,718,1496,0,Chunk 717 processing completed.,44.56
+Neo4J,2026-02-13 01:55:24,INFO,719,1496,0,Chunk 718 processing completed.,44.61
+Neo4J,2026-02-13 01:55:24,INFO,719,1500,0,Results buffer saved to disk.,44.61
+Neo4J,2026-02-13 01:55:24,INFO,720,1500,0,Chunk 719 processing completed.,44.66
+Neo4J,2026-02-13 01:55:24,INFO,721,1500,0,Chunk 720 processing completed.,44.72
+Neo4J,2026-02-13 01:55:24,INFO,721,1504,0,Results buffer saved to disk.,44.72
+Neo4J,2026-02-13 01:55:24,INFO,722,1504,0,Chunk 721 processing completed.,44.78
+Neo4J,2026-02-13 01:55:24,INFO,722,1508,0,Results buffer saved to disk.,44.78
+Neo4J,2026-02-13 01:55:24,INFO,723,1508,0,Chunk 722 processing completed.,44.84
+Neo4J,2026-02-13 01:55:24,INFO,724,1508,0,Chunk 723 processing completed.,44.91
+Neo4J,2026-02-13 01:55:24,INFO,725,1508,0,Chunk 724 processing completed.,44.97
+Neo4J,2026-02-13 01:55:24,INFO,725,1512,0,Results buffer saved to disk.,44.97
+Neo4J,2026-02-13 01:55:24,INFO,726,1512,0,Chunk 725 processing completed.,45.04
+Neo4J,2026-02-13 01:55:24,INFO,727,1512,0,Chunk 726 processing completed.,45.10
+Neo4J,2026-02-13 01:55:24,INFO,728,1512,0,Chunk 727 processing completed.,45.15
+Neo4J,2026-02-13 01:55:24,INFO,728,1516,0,Results buffer saved to disk.,45.15
+Neo4J,2026-02-13 01:55:24,INFO,729,1516,0,Chunk 728 processing completed.,45.20
+Neo4J,2026-02-13 01:55:24,INFO,729,1520,0,Results buffer saved to disk.,45.20
+Neo4J,2026-02-13 01:55:24,INFO,730,1520,0,Chunk 729 processing completed.,45.26
+Neo4J,2026-02-13 01:55:24,INFO,731,1520,0,Chunk 730 processing completed.,45.31
+Neo4J,2026-02-13 01:55:24,INFO,731,1524,0,Results buffer saved to disk.,45.31
+Neo4J,2026-02-13 01:55:24,INFO,732,1524,0,Chunk 731 processing completed.,45.36
+Neo4J,2026-02-13 01:55:24,INFO,733,1524,0,Chunk 732 processing completed.,45.42
+Neo4J,2026-02-13 01:55:24,INFO,733,1528,0,Results buffer saved to disk.,45.42
+Neo4J,2026-02-13 01:55:25,INFO,734,1528,0,Chunk 733 processing completed.,45.47
+Neo4J,2026-02-13 01:55:25,INFO,735,1528,0,Chunk 734 processing completed.,45.51
+Neo4J,2026-02-13 01:55:25,INFO,735,1532,0,Results buffer saved to disk.,45.51
+Neo4J,2026-02-13 01:55:25,INFO,736,1532,0,Chunk 735 processing completed.,45.56
+Neo4J,2026-02-13 01:55:25,INFO,737,1532,0,Chunk 736 processing completed.,45.65
+Neo4J,2026-02-13 01:55:25,INFO,737,1536,0,Results buffer saved to disk.,45.65
+Neo4J,2026-02-13 01:55:25,INFO,738,1536,0,Chunk 737 processing completed.,45.74
+Neo4J,2026-02-13 01:55:25,INFO,739,1536,0,Chunk 738 processing completed.,45.82
+Neo4J,2026-02-13 01:55:25,INFO,739,1540,0,Results buffer saved to disk.,45.82
+Neo4J,2026-02-13 01:55:25,INFO,740,1540,0,Chunk 739 processing completed.,45.91
+Neo4J,2026-02-13 01:55:25,INFO,741,1540,0,Chunk 740 processing completed.,45.96
+Neo4J,2026-02-13 01:55:25,INFO,741,1544,0,Results buffer saved to disk.,45.96
+Neo4J,2026-02-13 01:55:25,INFO,742,1544,0,Chunk 741 processing completed.,46.01
+Neo4J,2026-02-13 01:55:25,INFO,742,1548,0,Results buffer saved to disk.,46.01
+Neo4J,2026-02-13 01:55:25,INFO,743,1548,0,Chunk 742 processing completed.,46.06
+Neo4J,2026-02-13 01:55:25,INFO,744,1548,0,Chunk 743 processing completed.,46.11
+Neo4J,2026-02-13 01:55:25,INFO,744,1552,0,Results buffer saved to disk.,46.11
+Neo4J,2026-02-13 01:55:25,INFO,745,1552,0,Chunk 744 processing completed.,46.16
+Neo4J,2026-02-13 01:55:25,INFO,746,1552,0,Chunk 745 processing completed.,46.21
+Neo4J,2026-02-13 01:55:25,INFO,746,1556,0,Results buffer saved to disk.,46.21
+Neo4J,2026-02-13 01:55:25,INFO,747,1556,0,Chunk 746 processing completed.,46.26
+Neo4J,2026-02-13 01:55:25,INFO,748,1556,0,Chunk 747 processing completed.,46.32
+Neo4J,2026-02-13 01:55:25,INFO,748,1560,0,Results buffer saved to disk.,46.32
+Neo4J,2026-02-13 01:55:25,INFO,749,1560,0,Chunk 748 processing completed.,46.38
+Neo4J,2026-02-13 01:55:25,INFO,750,1560,0,Chunk 749 processing completed.,46.43
+Neo4J,2026-02-13 01:55:25,INFO,750,1564,0,Results buffer saved to disk.,46.43
+Neo4J,2026-02-13 01:55:25,INFO,751,1564,0,Chunk 750 processing completed.,46.48
+Neo4J,2026-02-13 01:55:25,INFO,752,1564,0,Chunk 751 processing completed.,46.54
+Neo4J,2026-02-13 01:55:25,INFO,752,1568,0,Results buffer saved to disk.,46.54
+Neo4J,2026-02-13 01:55:25,INFO,753,1568,0,Chunk 752 processing completed.,46.61
+Neo4J,2026-02-13 01:55:25,INFO,753,1572,0,Results buffer saved to disk.,46.61
+Neo4J,2026-02-13 01:55:25,INFO,754,1572,0,Chunk 753 processing completed.,46.68
+Neo4J,2026-02-13 01:55:25,INFO,755,1572,0,Chunk 754 processing completed.,46.75
+Neo4J,2026-02-13 01:55:25,INFO,756,1572,0,Chunk 755 processing completed.,46.81
+Neo4J,2026-02-13 01:55:25,INFO,757,1572,0,Chunk 756 processing completed.,46.88
+Neo4J,2026-02-13 01:55:25,INFO,757,1576,0,Results buffer saved to disk.,46.88
+Neo4J,2026-02-13 01:55:25,INFO,758,1576,0,Chunk 757 processing completed.,46.93
+Neo4J,2026-02-13 01:55:25,INFO,758,1580,0,Results buffer saved to disk.,46.93
+Neo4J,2026-02-13 01:55:25,INFO,759,1580,0,Chunk 758 processing completed.,46.97
+Neo4J,2026-02-13 01:55:25,INFO,760,1580,0,Chunk 759 processing completed.,47.01
+Neo4J,2026-02-13 01:55:25,INFO,760,1584,0,Results buffer saved to disk.,47.01
+Neo4J,2026-02-13 01:55:25,INFO,761,1584,0,Chunk 760 processing completed.,47.05
+Neo4J,2026-02-13 01:55:25,INFO,762,1584,0,Chunk 761 processing completed.,47.09
+Neo4J,2026-02-13 01:55:25,INFO,762,1588,0,Results buffer saved to disk.,47.09
+Neo4J,2026-02-13 01:55:25,INFO,763,1588,0,Chunk 762 processing completed.,47.14
+Neo4J,2026-02-13 01:55:25,INFO,763,1592,0,Results buffer saved to disk.,47.14
+Neo4J,2026-02-13 01:55:25,INFO,764,1592,0,Chunk 763 processing completed.,47.19
+Neo4J,2026-02-13 01:55:25,INFO,765,1592,0,Chunk 764 processing completed.,47.23
+Neo4J,2026-02-13 01:55:25,INFO,765,1596,0,Results buffer saved to disk.,47.23
+Neo4J,2026-02-13 01:55:25,INFO,766,1596,0,Chunk 765 processing completed.,47.29
+Neo4J,2026-02-13 01:55:25,INFO,766,1600,0,Results buffer saved to disk.,47.29
+Neo4J,2026-02-13 01:55:25,INFO,767,1600,0,Chunk 766 processing completed.,47.36
+Neo4J,2026-02-13 01:55:25,INFO,768,1600,0,Chunk 767 processing completed.,47.42
+Neo4J,2026-02-13 01:55:25,INFO,768,1604,0,Results buffer saved to disk.,47.42
+Neo4J,2026-02-13 01:55:25,INFO,769,1604,0,Chunk 768 processing completed.,47.47
+Neo4J,2026-02-13 01:55:25,INFO,770,1604,0,Chunk 769 processing completed.,47.52
+Neo4J,2026-02-13 01:55:25,INFO,770,1608,0,Results buffer saved to disk.,47.52
+Neo4J,2026-02-13 01:55:25,INFO,771,1608,0,Chunk 770 processing completed.,47.57
+Neo4J,2026-02-13 01:55:25,INFO,772,1608,0,Chunk 771 processing completed.,47.62
+Neo4J,2026-02-13 01:55:25,INFO,772,1612,0,Results buffer saved to disk.,47.62
+Neo4J,2026-02-13 01:55:25,INFO,773,1612,0,Chunk 772 processing completed.,47.66
+Neo4J,2026-02-13 01:55:25,INFO,773,1616,0,Results buffer saved to disk.,47.66
+Neo4J,2026-02-13 01:55:25,INFO,774,1616,0,Chunk 773 processing completed.,47.71
+Neo4J,2026-02-13 01:55:25,INFO,775,1616,0,Chunk 774 processing completed.,47.76
+Neo4J,2026-02-13 01:55:25,INFO,775,1620,0,Results buffer saved to disk.,47.76
+Neo4J,2026-02-13 01:55:25,INFO,776,1620,0,Chunk 775 processing completed.,47.81
+Neo4J,2026-02-13 01:55:25,INFO,776,1624,0,Results buffer saved to disk.,47.81
+Neo4J,2026-02-13 01:55:25,INFO,777,1624,0,Chunk 776 processing completed.,47.86
+Neo4J,2026-02-13 01:55:25,INFO,778,1624,0,Chunk 777 processing completed.,47.91
+Neo4J,2026-02-13 01:55:25,INFO,779,1624,0,Chunk 778 processing completed.,47.97
+Neo4J,2026-02-13 01:55:25,INFO,779,1628,0,Results buffer saved to disk.,47.97
+Neo4J,2026-02-13 01:55:25,INFO,780,1628,0,Chunk 779 processing completed.,48.02
+Neo4J,2026-02-13 01:55:25,INFO,780,1632,0,Results buffer saved to disk.,48.02
+Neo4J,2026-02-13 01:55:25,INFO,781,1632,0,Chunk 780 processing completed.,48.08
+Neo4J,2026-02-13 01:55:25,INFO,782,1632,0,Chunk 781 processing completed.,48.14
+Neo4J,2026-02-13 01:55:25,INFO,782,1636,0,Results buffer saved to disk.,48.14
+Neo4J,2026-02-13 01:55:25,INFO,783,1636,0,Chunk 782 processing completed.,48.20
+Neo4J,2026-02-13 01:55:25,INFO,784,1636,0,Chunk 783 processing completed.,48.26
+Neo4J,2026-02-13 01:55:25,INFO,784,1640,0,Results buffer saved to disk.,48.26
+Neo4J,2026-02-13 01:55:25,INFO,785,1640,0,Chunk 784 processing completed.,48.30
+Neo4J,2026-02-13 01:55:25,INFO,786,1640,0,Chunk 785 processing completed.,48.36
+Neo4J,2026-02-13 01:55:25,INFO,787,1640,0,Chunk 786 processing completed.,48.43
+Neo4J,2026-02-13 01:55:25,INFO,787,1644,0,Results buffer saved to disk.,48.43
+Neo4J,2026-02-13 01:55:25,INFO,788,1644,0,Chunk 787 processing completed.,48.49
+Neo4J,2026-02-13 01:55:25,INFO,789,1644,0,Chunk 788 processing completed.,48.55
+Neo4J,2026-02-13 01:55:25,INFO,790,1644,0,Chunk 789 processing completed.,48.62
+Neo4J,2026-02-13 01:55:25,INFO,791,1644,0,Chunk 790 processing completed.,48.70
+Neo4J,2026-02-13 01:55:25,INFO,791,1648,0,Results buffer saved to disk.,48.70
+Neo4J,2026-02-13 01:55:25,INFO,792,1648,0,Chunk 791 processing completed.,48.78
+Neo4J,2026-02-13 01:55:25,INFO,792,1652,0,Results buffer saved to disk.,48.78
+Neo4J,2026-02-13 01:55:25,INFO,793,1652,0,Chunk 792 processing completed.,48.86
+Neo4J,2026-02-13 01:55:25,INFO,794,1652,0,Chunk 793 processing completed.,48.95
+Neo4J,2026-02-13 01:55:25,INFO,794,1656,0,Results buffer saved to disk.,48.95
+Neo4J,2026-02-13 01:55:25,INFO,795,1656,0,Chunk 794 processing completed.,49.03
+Neo4J,2026-02-13 01:55:25,INFO,796,1656,0,Chunk 795 processing completed.,49.11
+Neo4J,2026-02-13 01:55:25,INFO,796,1660,0,Results buffer saved to disk.,49.11
+Neo4J,2026-02-13 01:55:26,INFO,797,1660,0,Chunk 796 processing completed.,49.20
+Neo4J,2026-02-13 01:55:26,INFO,798,1660,0,Chunk 797 processing completed.,49.24
+Neo4J,2026-02-13 01:55:26,INFO,798,1664,0,Results buffer saved to disk.,49.24
+Neo4J,2026-02-13 01:55:26,INFO,799,1664,0,Chunk 798 processing completed.,49.28
+Neo4J,2026-02-13 01:55:26,INFO,799,1668,0,Results buffer saved to disk.,49.28
+Neo4J,2026-02-13 01:55:26,INFO,800,1668,0,Chunk 799 processing completed.,49.36
+Neo4J,2026-02-13 01:55:26,INFO,800,1672,0,Results buffer saved to disk.,49.36
+Neo4J,2026-02-13 01:55:26,INFO,801,1672,0,Chunk 800 processing completed.,49.43
+Neo4J,2026-02-13 01:55:26,INFO,802,1672,0,Chunk 801 processing completed.,49.51
+Neo4J,2026-02-13 01:55:26,INFO,802,1676,0,Results buffer saved to disk.,49.51
+Neo4J,2026-02-13 01:55:26,INFO,803,1676,0,Chunk 802 processing completed.,49.56
+Neo4J,2026-02-13 01:55:26,INFO,804,1676,0,Chunk 803 processing completed.,49.62
+Neo4J,2026-02-13 01:55:26,INFO,804,1680,0,Results buffer saved to disk.,49.62
+Neo4J,2026-02-13 01:55:26,INFO,805,1680,0,Chunk 804 processing completed.,49.69
+Neo4J,2026-02-13 01:55:26,INFO,806,1680,0,Chunk 805 processing completed.,49.75
+Neo4J,2026-02-13 01:55:26,INFO,806,1684,0,Results buffer saved to disk.,49.75
+Neo4J,2026-02-13 01:55:26,INFO,807,1684,0,Chunk 806 processing completed.,49.81
+Neo4J,2026-02-13 01:55:26,INFO,808,1684,0,Chunk 807 processing completed.,49.87
+Neo4J,2026-02-13 01:55:26,INFO,808,1688,0,Results buffer saved to disk.,49.87
+Neo4J,2026-02-13 01:55:26,INFO,809,1688,0,Chunk 808 processing completed.,49.93
+Neo4J,2026-02-13 01:55:26,INFO,810,1688,0,Chunk 809 processing completed.,49.98
+Neo4J,2026-02-13 01:55:26,INFO,810,1692,0,Results buffer saved to disk.,49.98
+Neo4J,2026-02-13 01:55:26,INFO,811,1692,0,Chunk 810 processing completed.,50.03
+Neo4J,2026-02-13 01:55:26,INFO,812,1692,0,Chunk 811 processing completed.,50.08
+Neo4J,2026-02-13 01:55:26,INFO,813,1692,0,Chunk 812 processing completed.,50.13
+Neo4J,2026-02-13 01:55:26,INFO,813,1696,0,Results buffer saved to disk.,50.13
+Neo4J,2026-02-13 01:55:26,INFO,814,1696,0,Chunk 813 processing completed.,50.18
+Neo4J,2026-02-13 01:55:26,INFO,814,1700,0,Results buffer saved to disk.,50.18
+Neo4J,2026-02-13 01:55:26,INFO,815,1700,0,Chunk 814 processing completed.,50.23
+Neo4J,2026-02-13 01:55:26,INFO,816,1700,0,Chunk 815 processing completed.,50.30
+Neo4J,2026-02-13 01:55:26,INFO,816,1704,0,Results buffer saved to disk.,50.30
+Neo4J,2026-02-13 01:55:26,INFO,817,1704,0,Chunk 816 processing completed.,50.38
+Neo4J,2026-02-13 01:55:26,INFO,818,1704,0,Chunk 817 processing completed.,50.45
+Neo4J,2026-02-13 01:55:26,INFO,818,1708,0,Results buffer saved to disk.,50.45
+Neo4J,2026-02-13 01:55:26,INFO,819,1708,0,Chunk 818 processing completed.,50.52
+Neo4J,2026-02-13 01:55:26,INFO,820,1708,0,Chunk 819 processing completed.,50.58
+Neo4J,2026-02-13 01:55:26,INFO,821,1708,0,Chunk 820 processing completed.,50.65
+Neo4J,2026-02-13 01:55:26,INFO,821,1712,0,Results buffer saved to disk.,50.65
+Neo4J,2026-02-13 01:55:26,INFO,822,1712,0,Chunk 821 processing completed.,50.71
+Neo4J,2026-02-13 01:55:26,INFO,823,1712,0,Chunk 822 processing completed.,50.77
+Neo4J,2026-02-13 01:55:26,INFO,823,1716,0,Results buffer saved to disk.,50.77
+Neo4J,2026-02-13 01:55:26,INFO,824,1716,0,Chunk 823 processing completed.,50.83
+Neo4J,2026-02-13 01:55:26,INFO,825,1716,0,Chunk 824 processing completed.,50.88
+Neo4J,2026-02-13 01:55:26,INFO,825,1720,0,Results buffer saved to disk.,50.88
+Neo4J,2026-02-13 01:55:26,INFO,826,1720,0,Chunk 825 processing completed.,50.95
+Neo4J,2026-02-13 01:55:26,INFO,827,1720,0,Chunk 826 processing completed.,51.01
+Neo4J,2026-02-13 01:55:26,INFO,827,1724,0,Results buffer saved to disk.,51.01
+Neo4J,2026-02-13 01:55:26,INFO,828,1724,0,Chunk 827 processing completed.,51.07
+Neo4J,2026-02-13 01:55:26,INFO,829,1724,0,Chunk 828 processing completed.,51.12
+Neo4J,2026-02-13 01:55:26,INFO,829,1728,0,Results buffer saved to disk.,51.12
+Neo4J,2026-02-13 01:55:26,INFO,830,1728,0,Chunk 829 processing completed.,51.18
+Neo4J,2026-02-13 01:55:26,INFO,831,1728,0,Chunk 830 processing completed.,51.23
+Neo4J,2026-02-13 01:55:26,INFO,831,1732,0,Results buffer saved to disk.,51.23
+Neo4J,2026-02-13 01:55:26,INFO,832,1732,0,Chunk 831 processing completed.,51.28
+Neo4J,2026-02-13 01:55:26,INFO,833,1732,0,Chunk 832 processing completed.,51.33
+Neo4J,2026-02-13 01:55:26,INFO,833,1736,0,Results buffer saved to disk.,51.33
+Neo4J,2026-02-13 01:55:26,INFO,834,1736,0,Chunk 833 processing completed.,51.37
+Neo4J,2026-02-13 01:55:26,INFO,834,1740,0,Results buffer saved to disk.,51.37
+Neo4J,2026-02-13 01:55:26,INFO,835,1740,0,Chunk 834 processing completed.,51.42
+Neo4J,2026-02-13 01:55:26,INFO,836,1740,0,Chunk 835 processing completed.,51.47
+Neo4J,2026-02-13 01:55:26,INFO,837,1740,0,Chunk 836 processing completed.,51.51
+Neo4J,2026-02-13 01:55:26,INFO,837,1744,0,Results buffer saved to disk.,51.51
+Neo4J,2026-02-13 01:55:26,INFO,838,1744,0,Chunk 837 processing completed.,51.56
+Neo4J,2026-02-13 01:55:26,INFO,838,1748,0,Results buffer saved to disk.,51.56
+Neo4J,2026-02-13 01:55:26,INFO,839,1748,0,Chunk 838 processing completed.,51.61
+Neo4J,2026-02-13 01:55:26,INFO,840,1748,0,Chunk 839 processing completed.,51.67
+Neo4J,2026-02-13 01:55:26,INFO,841,1748,0,Chunk 840 processing completed.,51.72
+Neo4J,2026-02-13 01:55:26,INFO,841,1752,0,Results buffer saved to disk.,51.72
+Neo4J,2026-02-13 01:55:26,INFO,842,1752,0,Chunk 841 processing completed.,51.78
+Neo4J,2026-02-13 01:55:26,INFO,843,1752,0,Chunk 842 processing completed.,51.83
+Neo4J,2026-02-13 01:55:26,INFO,843,1756,0,Results buffer saved to disk.,51.83
+Neo4J,2026-02-13 01:55:26,INFO,844,1756,0,Chunk 843 processing completed.,51.87
+Neo4J,2026-02-13 01:55:26,INFO,844,1760,0,Results buffer saved to disk.,51.87
+Neo4J,2026-02-13 01:55:26,INFO,845,1760,0,Chunk 844 processing completed.,51.92
+Neo4J,2026-02-13 01:55:26,INFO,846,1760,0,Chunk 845 processing completed.,51.96
+Neo4J,2026-02-13 01:55:26,INFO,846,1764,0,Results buffer saved to disk.,51.96
+Neo4J,2026-02-13 01:55:26,INFO,847,1764,0,Chunk 846 processing completed.,52.01
+Neo4J,2026-02-13 01:55:26,INFO,848,1764,0,Chunk 847 processing completed.,52.06
+Neo4J,2026-02-13 01:55:26,INFO,848,1768,0,Results buffer saved to disk.,52.06
+Neo4J,2026-02-13 01:55:26,INFO,849,1768,0,Chunk 848 processing completed.,52.11
+Neo4J,2026-02-13 01:55:26,INFO,850,1768,0,Chunk 849 processing completed.,52.15
+Neo4J,2026-02-13 01:55:26,INFO,850,1772,0,Results buffer saved to disk.,52.15
+Neo4J,2026-02-13 01:55:26,INFO,851,1772,0,Chunk 850 processing completed.,52.20
+Neo4J,2026-02-13 01:55:26,INFO,852,1772,0,Chunk 851 processing completed.,52.25
+Neo4J,2026-02-13 01:55:26,INFO,852,1776,0,Results buffer saved to disk.,52.25
+Neo4J,2026-02-13 01:55:26,INFO,853,1776,0,Chunk 852 processing completed.,52.30
+Neo4J,2026-02-13 01:55:26,INFO,853,1780,0,Results buffer saved to disk.,52.30
+Neo4J,2026-02-13 01:55:26,INFO,854,1780,0,Chunk 853 processing completed.,52.35
+Neo4J,2026-02-13 01:55:26,INFO,855,1780,0,Chunk 854 processing completed.,52.40
+Neo4J,2026-02-13 01:55:26,INFO,855,1784,0,Results buffer saved to disk.,52.40
+Neo4J,2026-02-13 01:55:26,INFO,856,1784,0,Chunk 855 processing completed.,52.45
+Neo4J,2026-02-13 01:55:27,INFO,857,1784,0,Chunk 856 processing completed.,52.53
+Neo4J,2026-02-13 01:55:27,INFO,857,1788,0,Results buffer saved to disk.,52.53
+Neo4J,2026-02-13 01:55:27,INFO,858,1788,0,Chunk 857 processing completed.,52.61
+Neo4J,2026-02-13 01:55:27,INFO,859,1788,0,Chunk 858 processing completed.,52.68
+Neo4J,2026-02-13 01:55:27,INFO,859,1792,0,Results buffer saved to disk.,52.68
+Neo4J,2026-02-13 01:55:27,INFO,860,1792,0,Chunk 859 processing completed.,52.76
+Neo4J,2026-02-13 01:55:27,INFO,861,1792,0,Chunk 860 processing completed.,52.81
+Neo4J,2026-02-13 01:55:27,INFO,861,1796,0,Results buffer saved to disk.,52.81
+Neo4J,2026-02-13 01:55:27,INFO,862,1796,0,Chunk 861 processing completed.,52.85
+Neo4J,2026-02-13 01:55:27,INFO,863,1796,0,Chunk 862 processing completed.,52.92
+Neo4J,2026-02-13 01:55:27,INFO,863,1800,0,Results buffer saved to disk.,52.92
+Neo4J,2026-02-13 01:55:27,INFO,864,1800,0,Chunk 863 processing completed.,52.98
+Neo4J,2026-02-13 01:55:27,INFO,864,1804,0,Results buffer saved to disk.,52.98
+Neo4J,2026-02-13 01:55:27,INFO,865,1804,0,Chunk 864 processing completed.,53.02
+Neo4J,2026-02-13 01:55:27,INFO,866,1804,0,Chunk 865 processing completed.,53.06
+Neo4J,2026-02-13 01:55:27,INFO,866,1808,0,Results buffer saved to disk.,53.06
+Neo4J,2026-02-13 01:55:27,INFO,867,1808,0,Chunk 866 processing completed.,53.12
+Neo4J,2026-02-13 01:55:27,INFO,867,1812,0,Results buffer saved to disk.,53.12
+Neo4J,2026-02-13 01:55:27,INFO,868,1812,0,Chunk 867 processing completed.,53.17
+Neo4J,2026-02-13 01:55:27,INFO,869,1812,0,Chunk 868 processing completed.,53.23
+Neo4J,2026-02-13 01:55:27,INFO,869,1816,0,Results buffer saved to disk.,53.23
+Neo4J,2026-02-13 01:55:27,INFO,870,1816,0,Chunk 869 processing completed.,53.28
+Neo4J,2026-02-13 01:55:27,INFO,871,1816,0,Chunk 870 processing completed.,53.33
+Neo4J,2026-02-13 01:55:27,INFO,871,1820,0,Results buffer saved to disk.,53.33
+Neo4J,2026-02-13 01:55:27,INFO,872,1820,0,Chunk 871 processing completed.,53.38
+Neo4J,2026-02-13 01:55:27,INFO,873,1820,0,Chunk 872 processing completed.,53.44
+Neo4J,2026-02-13 01:55:27,INFO,873,1824,0,Results buffer saved to disk.,53.44
+Neo4J,2026-02-13 01:55:27,INFO,874,1824,0,Chunk 873 processing completed.,53.50
+Neo4J,2026-02-13 01:55:27,INFO,875,1824,0,Chunk 874 processing completed.,53.55
+Neo4J,2026-02-13 01:55:27,INFO,875,1828,0,Results buffer saved to disk.,53.55
+Neo4J,2026-02-13 01:55:27,INFO,876,1828,0,Chunk 875 processing completed.,53.61
+Neo4J,2026-02-13 01:55:27,INFO,876,1832,0,Results buffer saved to disk.,53.61
+Neo4J,2026-02-13 01:55:27,INFO,877,1832,0,Chunk 876 processing completed.,53.67
+Neo4J,2026-02-13 01:55:27,INFO,878,1832,0,Chunk 877 processing completed.,53.74
+Neo4J,2026-02-13 01:55:27,INFO,878,1836,0,Results buffer saved to disk.,53.74
+Neo4J,2026-02-13 01:55:27,INFO,879,1836,0,Chunk 878 processing completed.,53.80
+Neo4J,2026-02-13 01:55:27,INFO,880,1836,0,Chunk 879 processing completed.,53.84
+Neo4J,2026-02-13 01:55:27,INFO,880,1840,0,Results buffer saved to disk.,53.84
+Neo4J,2026-02-13 01:55:27,INFO,881,1840,0,Chunk 880 processing completed.,53.89
+Neo4J,2026-02-13 01:55:27,INFO,882,1840,0,Chunk 881 processing completed.,53.93
+Neo4J,2026-02-13 01:55:27,INFO,882,1844,0,Results buffer saved to disk.,53.93
+Neo4J,2026-02-13 01:55:27,INFO,883,1844,0,Chunk 882 processing completed.,53.97
+Neo4J,2026-02-13 01:55:27,INFO,884,1844,0,Chunk 883 processing completed.,54.01
+Neo4J,2026-02-13 01:55:27,INFO,884,1848,0,Results buffer saved to disk.,54.01
+Neo4J,2026-02-13 01:55:27,INFO,885,1848,0,Chunk 884 processing completed.,54.06
+Neo4J,2026-02-13 01:55:27,INFO,885,1852,0,Results buffer saved to disk.,54.06
+Neo4J,2026-02-13 01:55:27,INFO,886,1852,0,Chunk 885 processing completed.,54.11
+Neo4J,2026-02-13 01:55:27,INFO,887,1852,0,Chunk 886 processing completed.,54.15
+Neo4J,2026-02-13 01:55:27,INFO,887,1856,0,Results buffer saved to disk.,54.15
+Neo4J,2026-02-13 01:55:27,INFO,888,1856,0,Chunk 887 processing completed.,54.20
+Neo4J,2026-02-13 01:55:27,INFO,889,1856,0,Chunk 888 processing completed.,54.25
+Neo4J,2026-02-13 01:55:27,INFO,889,1860,0,Results buffer saved to disk.,54.25
+Neo4J,2026-02-13 01:55:27,INFO,890,1860,0,Chunk 889 processing completed.,54.30
+Neo4J,2026-02-13 01:55:27,INFO,891,1860,0,Chunk 890 processing completed.,54.36
+Neo4J,2026-02-13 01:55:27,INFO,891,1864,0,Results buffer saved to disk.,54.36
+Neo4J,2026-02-13 01:55:27,INFO,892,1864,0,Chunk 891 processing completed.,54.42
+Neo4J,2026-02-13 01:55:27,INFO,893,1864,0,Chunk 892 processing completed.,54.47
+Neo4J,2026-02-13 01:55:27,INFO,894,1864,0,Chunk 893 processing completed.,54.51
+Neo4J,2026-02-13 01:55:27,INFO,894,1868,0,Results buffer saved to disk.,54.51
+Neo4J,2026-02-13 01:55:27,INFO,895,1868,0,Chunk 894 processing completed.,54.56
+Neo4J,2026-02-13 01:55:27,INFO,896,1868,0,Chunk 895 processing completed.,54.60
+Neo4J,2026-02-13 01:55:27,INFO,896,1872,0,Results buffer saved to disk.,54.60
+Neo4J,2026-02-13 01:55:27,INFO,897,1872,0,Chunk 896 processing completed.,54.65
+Neo4J,2026-02-13 01:55:27,INFO,898,1872,0,Chunk 897 processing completed.,54.68
+Neo4J,2026-02-13 01:55:27,INFO,898,1876,0,Results buffer saved to disk.,54.68
+Neo4J,2026-02-13 01:55:27,INFO,899,1876,0,Chunk 898 processing completed.,54.73
+Neo4J,2026-02-13 01:55:27,INFO,899,1880,0,Results buffer saved to disk.,54.73
+Neo4J,2026-02-13 01:55:27,INFO,900,1880,0,Chunk 899 processing completed.,54.77
+Neo4J,2026-02-13 01:55:27,INFO,901,1880,0,Chunk 900 processing completed.,54.82
+Neo4J,2026-02-13 01:55:27,INFO,901,1884,0,Results buffer saved to disk.,54.82
+Neo4J,2026-02-13 01:55:27,INFO,902,1884,0,Chunk 901 processing completed.,54.86
+Neo4J,2026-02-13 01:55:27,INFO,903,1884,0,Chunk 902 processing completed.,54.89
+Neo4J,2026-02-13 01:55:27,INFO,903,1888,0,Results buffer saved to disk.,54.89
+Neo4J,2026-02-13 01:55:27,INFO,904,1888,0,Chunk 903 processing completed.,54.94
+Neo4J,2026-02-13 01:55:27,INFO,905,1888,0,Chunk 904 processing completed.,55.05
+Neo4J,2026-02-13 01:55:27,INFO,905,1892,0,Results buffer saved to disk.,55.05
+Neo4J,2026-02-13 01:55:27,INFO,906,1892,0,Chunk 905 processing completed.,55.16
+Neo4J,2026-02-13 01:55:27,INFO,906,1896,0,Results buffer saved to disk.,55.16
+Neo4J,2026-02-13 01:55:27,INFO,907,1896,0,Chunk 906 processing completed.,55.28
+Neo4J,2026-02-13 01:55:27,INFO,908,1896,0,Chunk 907 processing completed.,55.40
+Neo4J,2026-02-13 01:55:27,INFO,908,1900,0,Results buffer saved to disk.,55.40
+Neo4J,2026-02-13 01:55:27,INFO,909,1900,0,Chunk 908 processing completed.,55.51
+Neo4J,2026-02-13 01:55:27,INFO,910,1900,0,Chunk 909 processing completed.,55.63
+Neo4J,2026-02-13 01:55:27,INFO,910,1904,0,Results buffer saved to disk.,55.63
+Neo4J,2026-02-13 01:55:27,INFO,911,1904,0,Chunk 910 processing completed.,55.75
+Neo4J,2026-02-13 01:55:27,INFO,912,1904,0,Chunk 911 processing completed.,55.86
+Neo4J,2026-02-13 01:55:27,INFO,912,1908,0,Results buffer saved to disk.,55.86
+Neo4J,2026-02-13 01:55:27,INFO,913,1908,0,Chunk 912 processing completed.,55.98
+Neo4J,2026-02-13 01:55:27,INFO,914,1908,0,Chunk 913 processing completed.,56.09
+Neo4J,2026-02-13 01:55:27,INFO,914,1912,0,Results buffer saved to disk.,56.09
+Neo4J,2026-02-13 01:55:27,INFO,915,1912,0,Chunk 914 processing completed.,56.21
+Neo4J,2026-02-13 01:55:27,INFO,916,1912,0,Chunk 915 processing completed.,56.33
+Neo4J,2026-02-13 01:55:28,INFO,917,1912,0,Chunk 916 processing completed.,56.44
+Neo4J,2026-02-13 01:55:28,INFO,918,1912,0,Chunk 917 processing completed.,56.56
+Neo4J,2026-02-13 01:55:28,INFO,918,1916,0,Results buffer saved to disk.,56.56
+Neo4J,2026-02-13 01:55:28,INFO,919,1916,0,Chunk 918 processing completed.,56.68
+Neo4J,2026-02-13 01:55:28,INFO,920,1916,0,Chunk 919 processing completed.,56.79
+Neo4J,2026-02-13 01:55:28,INFO,921,1916,0,Chunk 920 processing completed.,56.91
+Neo4J,2026-02-13 01:55:28,INFO,922,1916,0,Chunk 921 processing completed.,57.02
+Neo4J,2026-02-13 01:55:28,INFO,922,1920,0,Results buffer saved to disk.,57.02
+Neo4J,2026-02-13 01:55:28,INFO,923,1920,0,Chunk 922 processing completed.,57.14
+Neo4J,2026-02-13 01:55:28,INFO,924,1920,0,Chunk 923 processing completed.,57.26
+Neo4J,2026-02-13 01:55:28,INFO,925,1920,0,Chunk 924 processing completed.,57.38
+Neo4J,2026-02-13 01:55:28,INFO,926,1920,0,Chunk 925 processing completed.,57.49
+Neo4J,2026-02-13 01:55:28,INFO,926,1924,0,Results buffer saved to disk.,57.49
+Neo4J,2026-02-13 01:55:28,INFO,927,1924,0,Chunk 926 processing completed.,57.61
+Neo4J,2026-02-13 01:55:28,INFO,928,1924,0,Chunk 927 processing completed.,57.73
+Neo4J,2026-02-13 01:55:28,INFO,928,1928,0,Results buffer saved to disk.,57.73
+Neo4J,2026-02-13 01:55:28,INFO,929,1928,0,Chunk 928 processing completed.,57.85
+Neo4J,2026-02-13 01:55:28,INFO,929,1932,0,Results buffer saved to disk.,57.85
+Neo4J,2026-02-13 01:55:28,INFO,930,1932,0,Chunk 929 processing completed.,57.92
+Neo4J,2026-02-13 01:55:28,INFO,931,1932,0,Chunk 930 processing completed.,57.99
+Neo4J,2026-02-13 01:55:28,INFO,931,1936,0,Results buffer saved to disk.,57.99
+Neo4J,2026-02-13 01:55:28,INFO,932,1936,0,Chunk 931 processing completed.,58.07
+Neo4J,2026-02-13 01:55:28,INFO,933,1936,0,Chunk 932 processing completed.,58.10
+Neo4J,2026-02-13 01:55:28,INFO,933,1940,0,Results buffer saved to disk.,58.10
+Neo4J,2026-02-13 01:55:28,INFO,934,1940,0,Chunk 933 processing completed.,58.14
+Neo4J,2026-02-13 01:55:28,INFO,935,1940,0,Chunk 934 processing completed.,58.18
+Neo4J,2026-02-13 01:55:28,INFO,936,1940,0,Chunk 935 processing completed.,58.25
+Neo4J,2026-02-13 01:55:28,INFO,936,1944,0,Results buffer saved to disk.,58.25
+Neo4J,2026-02-13 01:55:28,INFO,937,1944,0,Chunk 936 processing completed.,58.31
+Neo4J,2026-02-13 01:55:28,INFO,938,1944,0,Chunk 937 processing completed.,58.38
+Neo4J,2026-02-13 01:55:28,INFO,939,1944,0,Chunk 938 processing completed.,58.42
+Neo4J,2026-02-13 01:55:28,INFO,939,1948,0,Results buffer saved to disk.,58.42
+Neo4J,2026-02-13 01:55:28,INFO,940,1948,0,Chunk 939 processing completed.,58.48
+Neo4J,2026-02-13 01:55:28,INFO,941,1948,0,Chunk 940 processing completed.,58.53
+Neo4J,2026-02-13 01:55:28,INFO,942,1948,0,Chunk 941 processing completed.,58.59
+Neo4J,2026-02-13 01:55:28,INFO,942,1952,0,Results buffer saved to disk.,58.59
+Neo4J,2026-02-13 01:55:28,INFO,943,1952,0,Chunk 942 processing completed.,58.65
+Neo4J,2026-02-13 01:55:28,INFO,944,1952,0,Chunk 943 processing completed.,58.70
+Neo4J,2026-02-13 01:55:28,INFO,945,1952,0,Chunk 944 processing completed.,58.75
+Neo4J,2026-02-13 01:55:28,INFO,946,1952,0,Chunk 945 processing completed.,58.79
+Neo4J,2026-02-13 01:55:28,INFO,946,1956,0,Results buffer saved to disk.,58.79
+Neo4J,2026-02-13 01:55:28,INFO,947,1956,0,Chunk 946 processing completed.,58.84
+Neo4J,2026-02-13 01:55:28,INFO,948,1956,0,Chunk 947 processing completed.,58.90
+Neo4J,2026-02-13 01:55:28,INFO,949,1956,0,Chunk 948 processing completed.,58.96
+Neo4J,2026-02-13 01:55:28,INFO,949,1960,0,Results buffer saved to disk.,58.96
+Neo4J,2026-02-13 01:55:28,INFO,950,1960,0,Chunk 949 processing completed.,59.01
+Neo4J,2026-02-13 01:55:28,INFO,951,1960,0,Chunk 950 processing completed.,59.08
+Neo4J,2026-02-13 01:55:28,INFO,952,1960,0,Chunk 951 processing completed.,59.15
+Neo4J,2026-02-13 01:55:28,INFO,953,1960,0,Chunk 952 processing completed.,59.20
+Neo4J,2026-02-13 01:55:28,INFO,953,1964,0,Results buffer saved to disk.,59.20
+Neo4J,2026-02-13 01:55:28,INFO,954,1964,0,Chunk 953 processing completed.,59.24
+Neo4J,2026-02-13 01:55:28,INFO,954,1968,0,Results buffer saved to disk.,59.24
+Neo4J,2026-02-13 01:55:28,INFO,955,1968,0,Chunk 954 processing completed.,59.29
+Neo4J,2026-02-13 01:55:28,INFO,956,1968,0,Chunk 955 processing completed.,59.33
+Neo4J,2026-02-13 01:55:28,INFO,956,1972,0,Results buffer saved to disk.,59.33
+Neo4J,2026-02-13 01:55:28,INFO,957,1972,0,Chunk 956 processing completed.,59.40
+Neo4J,2026-02-13 01:55:28,INFO,958,1972,0,Chunk 957 processing completed.,59.46
+Neo4J,2026-02-13 01:55:28,INFO,958,1976,0,Results buffer saved to disk.,59.46
+Neo4J,2026-02-13 01:55:28,INFO,959,1976,0,Chunk 958 processing completed.,59.51
+Neo4J,2026-02-13 01:55:28,INFO,960,1976,0,Chunk 959 processing completed.,59.56
+Neo4J,2026-02-13 01:55:28,INFO,960,1980,0,Results buffer saved to disk.,59.56
+Neo4J,2026-02-13 01:55:28,INFO,961,1980,0,Chunk 960 processing completed.,59.60
+Neo4J,2026-02-13 01:55:28,INFO,962,1980,0,Chunk 961 processing completed.,59.66
+Neo4J,2026-02-13 01:55:28,INFO,962,1984,0,Results buffer saved to disk.,59.66
+Neo4J,2026-02-13 01:55:28,INFO,963,1984,0,Chunk 962 processing completed.,59.72
+Neo4J,2026-02-13 01:55:28,INFO,964,1984,0,Chunk 963 processing completed.,59.78
+Neo4J,2026-02-13 01:55:28,INFO,964,1988,0,Results buffer saved to disk.,59.78
+Neo4J,2026-02-13 01:55:28,INFO,965,1988,0,Chunk 964 processing completed.,59.83
+Neo4J,2026-02-13 01:55:28,INFO,965,1992,0,Results buffer saved to disk.,59.83
+Neo4J,2026-02-13 01:55:28,INFO,966,1992,0,Chunk 965 processing completed.,59.88
+Neo4J,2026-02-13 01:55:28,INFO,967,1992,0,Chunk 966 processing completed.,59.93
+Neo4J,2026-02-13 01:55:28,INFO,967,1996,0,Results buffer saved to disk.,59.93
+Neo4J,2026-02-13 01:55:28,INFO,968,1996,0,Chunk 967 processing completed.,59.97
+Neo4J,2026-02-13 01:55:28,INFO,969,1996,0,Chunk 968 processing completed.,60.01
+Neo4J,2026-02-13 01:55:28,INFO,969,2000,0,Results buffer saved to disk.,60.01
+Neo4J,2026-02-13 01:55:28,INFO,970,2000,0,Chunk 969 processing completed.,60.05
+Neo4J,2026-02-13 01:55:28,INFO,971,2000,0,Chunk 970 processing completed.,60.11
+Neo4J,2026-02-13 01:55:28,INFO,971,2004,0,Results buffer saved to disk.,60.11
+Neo4J,2026-02-13 01:55:28,INFO,972,2004,0,Chunk 971 processing completed.,60.16
+Neo4J,2026-02-13 01:55:28,INFO,973,2004,0,Chunk 972 processing completed.,60.21
+Neo4J,2026-02-13 01:55:28,INFO,974,2004,0,Chunk 973 processing completed.,60.26
+Neo4J,2026-02-13 01:55:28,INFO,974,2008,0,Results buffer saved to disk.,60.26
+Neo4J,2026-02-13 01:55:28,INFO,975,2008,0,Chunk 974 processing completed.,60.31
+Neo4J,2026-02-13 01:55:28,INFO,975,2012,0,Results buffer saved to disk.,60.31
+Neo4J,2026-02-13 01:55:28,INFO,976,2012,0,Chunk 975 processing completed.,60.36
+Neo4J,2026-02-13 01:55:28,INFO,977,2012,0,Chunk 976 processing completed.,60.42
+Neo4J,2026-02-13 01:55:28,INFO,977,2016,0,Results buffer saved to disk.,60.42
+Neo4J,2026-02-13 01:55:28,INFO,978,2016,0,Chunk 977 processing completed.,60.48
+Neo4J,2026-02-13 01:55:28,INFO,978,2020,0,Results buffer saved to disk.,60.48
+Neo4J,2026-02-13 01:55:28,INFO,979,2020,0,Chunk 978 processing completed.,60.54
+Neo4J,2026-02-13 01:55:28,INFO,980,2020,0,Chunk 979 processing completed.,60.59
+Neo4J,2026-02-13 01:55:28,INFO,980,2024,0,Results buffer saved to disk.,60.59
+Neo4J,2026-02-13 01:55:28,INFO,981,2024,0,Chunk 980 processing completed.,60.65
+Neo4J,2026-02-13 01:55:28,INFO,982,2024,0,Chunk 981 processing completed.,60.71
+Neo4J,2026-02-13 01:55:28,INFO,982,2028,0,Results buffer saved to disk.,60.71
+Neo4J,2026-02-13 01:55:28,INFO,983,2028,0,Chunk 982 processing completed.,60.75
+Neo4J,2026-02-13 01:55:28,INFO,984,2028,0,Chunk 983 processing completed.,60.80
+Neo4J,2026-02-13 01:55:28,INFO,984,2032,0,Results buffer saved to disk.,60.80
+Neo4J,2026-02-13 01:55:28,INFO,985,2032,0,Chunk 984 processing completed.,60.88
+Neo4J,2026-02-13 01:55:29,INFO,985,2036,0,Results buffer saved to disk.,60.88
+Neo4J,2026-02-13 01:55:29,INFO,986,2036,0,Chunk 985 processing completed.,60.95
+Neo4J,2026-02-13 01:55:29,INFO,987,2036,0,Chunk 986 processing completed.,61.00
+Neo4J,2026-02-13 01:55:29,INFO,987,2040,0,Results buffer saved to disk.,61.00
+Neo4J,2026-02-13 01:55:29,INFO,988,2040,0,Chunk 987 processing completed.,61.04
+Neo4J,2026-02-13 01:55:29,INFO,989,2040,0,Chunk 988 processing completed.,61.11
+Neo4J,2026-02-13 01:55:29,INFO,989,2044,0,Results buffer saved to disk.,61.11
+Neo4J,2026-02-13 01:55:29,INFO,990,2044,0,Chunk 989 processing completed.,61.17
+Neo4J,2026-02-13 01:55:29,INFO,991,2044,0,Chunk 990 processing completed.,61.24
+Neo4J,2026-02-13 01:55:29,INFO,992,2044,0,Chunk 991 processing completed.,61.30
+Neo4J,2026-02-13 01:55:29,INFO,992,2048,0,Results buffer saved to disk.,61.30
+Neo4J,2026-02-13 01:55:29,INFO,993,2048,0,Chunk 992 processing completed.,61.35
+Neo4J,2026-02-13 01:55:29,INFO,994,2048,0,Chunk 993 processing completed.,61.43
+Neo4J,2026-02-13 01:55:29,INFO,994,2052,0,Results buffer saved to disk.,61.43
+Neo4J,2026-02-13 01:55:29,INFO,995,2052,0,Chunk 994 processing completed.,61.51
+Neo4J,2026-02-13 01:55:29,INFO,996,2052,0,Chunk 995 processing completed.,61.59
+Neo4J,2026-02-13 01:55:29,INFO,996,2056,0,Results buffer saved to disk.,61.59
+Neo4J,2026-02-13 01:55:29,INFO,997,2056,0,Chunk 996 processing completed.,61.67
+Neo4J,2026-02-13 01:55:29,INFO,998,2056,0,Chunk 997 processing completed.,61.75
+Neo4J,2026-02-13 01:55:29,INFO,999,2056,0,Chunk 998 processing completed.,61.83
+Neo4J,2026-02-13 01:55:29,INFO,999,2060,0,Results buffer saved to disk.,61.83
+Neo4J,2026-02-13 01:55:29,INFO,1000,2060,0,Chunk 999 processing completed.,61.91
+Neo4J,2026-02-13 01:55:29,INFO,1001,2060,0,Chunk 1000 processing completed.,61.98
+Neo4J,2026-02-13 01:55:29,INFO,1001,2064,0,Results buffer saved to disk.,61.98
+Neo4J,2026-02-13 01:55:29,INFO,1002,2064,0,Chunk 1001 processing completed.,62.03
+Neo4J,2026-02-13 01:55:29,INFO,1002,2068,0,Results buffer saved to disk.,62.03
+Neo4J,2026-02-13 01:55:29,INFO,1003,2068,0,Chunk 1002 processing completed.,62.07
+Neo4J,2026-02-13 01:55:29,INFO,1004,2068,0,Chunk 1003 processing completed.,62.11
+Neo4J,2026-02-13 01:55:29,INFO,1005,2068,0,Chunk 1004 processing completed.,62.17
+Neo4J,2026-02-13 01:55:29,INFO,1005,2072,0,Results buffer saved to disk.,62.17
+Neo4J,2026-02-13 01:55:29,INFO,1006,2072,0,Chunk 1005 processing completed.,62.22
+Neo4J,2026-02-13 01:55:29,INFO,1006,2076,0,Results buffer saved to disk.,62.22
+Neo4J,2026-02-13 01:55:29,INFO,1007,2076,0,Chunk 1006 processing completed.,62.27
+Neo4J,2026-02-13 01:55:29,INFO,1008,2076,0,Chunk 1007 processing completed.,62.31
+Neo4J,2026-02-13 01:55:29,INFO,1008,2080,0,Results buffer saved to disk.,62.31
+Neo4J,2026-02-13 01:55:29,INFO,1009,2080,0,Chunk 1008 processing completed.,62.36
+Neo4J,2026-02-13 01:55:29,INFO,1010,2080,0,Chunk 1009 processing completed.,62.40
+Neo4J,2026-02-13 01:55:29,INFO,1010,2084,0,Results buffer saved to disk.,62.40
+Neo4J,2026-02-13 01:55:29,INFO,1011,2084,0,Chunk 1010 processing completed.,62.45
+Neo4J,2026-02-13 01:55:29,INFO,1012,2084,0,Chunk 1011 processing completed.,62.49
+Neo4J,2026-02-13 01:55:29,INFO,1013,2084,0,Chunk 1012 processing completed.,62.54
+Neo4J,2026-02-13 01:55:29,INFO,1013,2088,0,Results buffer saved to disk.,62.54
+Neo4J,2026-02-13 01:55:29,INFO,1014,2088,0,Chunk 1013 processing completed.,62.60
+Neo4J,2026-02-13 01:55:29,INFO,1015,2088,0,Chunk 1014 processing completed.,62.65
+Neo4J,2026-02-13 01:55:29,INFO,1015,2092,0,Results buffer saved to disk.,62.65
+Neo4J,2026-02-13 01:55:29,INFO,1016,2092,0,Chunk 1015 processing completed.,62.71
+Neo4J,2026-02-13 01:55:29,INFO,1017,2092,0,Chunk 1016 processing completed.,62.76
+Neo4J,2026-02-13 01:55:29,INFO,1017,2096,0,Results buffer saved to disk.,62.76
+Neo4J,2026-02-13 01:55:29,INFO,1018,2096,0,Chunk 1017 processing completed.,62.82
+Neo4J,2026-02-13 01:55:29,INFO,1019,2096,0,Chunk 1018 processing completed.,62.87
+Neo4J,2026-02-13 01:55:29,INFO,1019,2100,0,Results buffer saved to disk.,62.87
+Neo4J,2026-02-13 01:55:29,INFO,1020,2100,0,Chunk 1019 processing completed.,62.92
+Neo4J,2026-02-13 01:55:29,INFO,1021,2100,0,Chunk 1020 processing completed.,62.98
+Neo4J,2026-02-13 01:55:29,INFO,1021,2104,0,Results buffer saved to disk.,62.98
+Neo4J,2026-02-13 01:55:29,INFO,1022,2104,0,Chunk 1021 processing completed.,63.02
+Neo4J,2026-02-13 01:55:29,INFO,1023,2104,0,Chunk 1022 processing completed.,63.07
+Neo4J,2026-02-13 01:55:29,INFO,1023,2108,0,Results buffer saved to disk.,63.07
+Neo4J,2026-02-13 01:55:29,INFO,1024,2108,0,Chunk 1023 processing completed.,63.12
+Neo4J,2026-02-13 01:55:29,INFO,1025,2108,0,Chunk 1024 processing completed.,63.18
+Neo4J,2026-02-13 01:55:29,INFO,1025,2112,0,Results buffer saved to disk.,63.18
+Neo4J,2026-02-13 01:55:29,INFO,1026,2112,0,Chunk 1025 processing completed.,63.23
+Neo4J,2026-02-13 01:55:29,INFO,1027,2112,0,Chunk 1026 processing completed.,63.28
+Neo4J,2026-02-13 01:55:29,INFO,1027,2116,0,Results buffer saved to disk.,63.28
+Neo4J,2026-02-13 01:55:29,INFO,1028,2116,0,Chunk 1027 processing completed.,63.33
+Neo4J,2026-02-13 01:55:29,INFO,1029,2116,0,Chunk 1028 processing completed.,63.39
+Neo4J,2026-02-13 01:55:29,INFO,1029,2120,0,Results buffer saved to disk.,63.39
+Neo4J,2026-02-13 01:55:29,INFO,1030,2120,0,Chunk 1029 processing completed.,63.44
+Neo4J,2026-02-13 01:55:29,INFO,1031,2120,0,Chunk 1030 processing completed.,63.50
+Neo4J,2026-02-13 01:55:29,INFO,1031,2124,0,Results buffer saved to disk.,63.50
+Neo4J,2026-02-13 01:55:29,INFO,1032,2124,0,Chunk 1031 processing completed.,63.56
+Neo4J,2026-02-13 01:55:29,INFO,1033,2124,0,Chunk 1032 processing completed.,63.62
+Neo4J,2026-02-13 01:55:29,INFO,1033,2128,0,Results buffer saved to disk.,63.62
+Neo4J,2026-02-13 01:55:29,INFO,1034,2128,0,Chunk 1033 processing completed.,63.68
+Neo4J,2026-02-13 01:55:29,INFO,1035,2128,0,Chunk 1034 processing completed.,63.74
+Neo4J,2026-02-13 01:55:29,INFO,1035,2132,0,Results buffer saved to disk.,63.74
+Neo4J,2026-02-13 01:55:29,INFO,1036,2132,0,Chunk 1035 processing completed.,63.78
+Neo4J,2026-02-13 01:55:29,INFO,1037,2132,0,Chunk 1036 processing completed.,63.84
+Neo4J,2026-02-13 01:55:29,INFO,1037,2136,0,Results buffer saved to disk.,63.84
+Neo4J,2026-02-13 01:55:29,INFO,1038,2136,0,Chunk 1037 processing completed.,63.89
+Neo4J,2026-02-13 01:55:29,INFO,1039,2136,0,Chunk 1038 processing completed.,63.95
+Neo4J,2026-02-13 01:55:29,INFO,1039,2140,0,Results buffer saved to disk.,63.95
+Neo4J,2026-02-13 01:55:29,INFO,1040,2140,0,Chunk 1039 processing completed.,64.01
+Neo4J,2026-02-13 01:55:29,INFO,1041,2140,0,Chunk 1040 processing completed.,64.06
+Neo4J,2026-02-13 01:55:29,INFO,1041,2144,0,Results buffer saved to disk.,64.06
+Neo4J,2026-02-13 01:55:29,INFO,1042,2144,0,Chunk 1041 processing completed.,64.12
+Neo4J,2026-02-13 01:55:29,INFO,1043,2144,0,Chunk 1042 processing completed.,64.18
+Neo4J,2026-02-13 01:55:29,INFO,1044,2144,0,Chunk 1043 processing completed.,64.23
+Neo4J,2026-02-13 01:55:29,INFO,1045,2144,0,Chunk 1044 processing completed.,64.29
+Neo4J,2026-02-13 01:55:29,INFO,1045,2148,0,Results buffer saved to disk.,64.29
+Neo4J,2026-02-13 01:55:29,INFO,1046,2148,0,Chunk 1045 processing completed.,64.35
+Neo4J,2026-02-13 01:55:29,INFO,1047,2148,0,Chunk 1046 processing completed.,64.39
+Neo4J,2026-02-13 01:55:29,INFO,1048,2148,0,Chunk 1047 processing completed.,64.44
+Neo4J,2026-02-13 01:55:29,INFO,1048,2152,0,Results buffer saved to disk.,64.44
+Neo4J,2026-02-13 01:55:29,INFO,1049,2152,0,Chunk 1048 processing completed.,64.49
+Neo4J,2026-02-13 01:55:29,INFO,1049,2156,0,Results buffer saved to disk.,64.49
+Neo4J,2026-02-13 01:55:29,INFO,1050,2156,0,Chunk 1049 processing completed.,64.54
+Neo4J,2026-02-13 01:55:30,INFO,1051,2156,0,Chunk 1050 processing completed.,64.58
+Neo4J,2026-02-13 01:55:30,INFO,1051,2160,0,Results buffer saved to disk.,64.58
+Neo4J,2026-02-13 01:55:30,INFO,1052,2160,0,Chunk 1051 processing completed.,64.65
+Neo4J,2026-02-13 01:55:30,INFO,1053,2160,0,Chunk 1052 processing completed.,64.72
+Neo4J,2026-02-13 01:55:30,INFO,1053,2164,0,Results buffer saved to disk.,64.72
+Neo4J,2026-02-13 01:55:30,INFO,1054,2164,0,Chunk 1053 processing completed.,64.78
+Neo4J,2026-02-13 01:55:30,INFO,1055,2164,0,Chunk 1054 processing completed.,64.85
+Neo4J,2026-02-13 01:55:30,INFO,1055,2168,0,Results buffer saved to disk.,64.85
+Neo4J,2026-02-13 01:55:30,INFO,1056,2168,0,Chunk 1055 processing completed.,64.91
+Neo4J,2026-02-13 01:55:30,INFO,1057,2168,0,Chunk 1056 processing completed.,64.98
+Neo4J,2026-02-13 01:55:30,INFO,1057,2172,0,Results buffer saved to disk.,64.98
+Neo4J,2026-02-13 01:55:30,INFO,1058,2172,0,Chunk 1057 processing completed.,65.03
+Neo4J,2026-02-13 01:55:30,INFO,1059,2172,0,Chunk 1058 processing completed.,65.09
+Neo4J,2026-02-13 01:55:30,INFO,1059,2176,0,Results buffer saved to disk.,65.09
+Neo4J,2026-02-13 01:55:30,INFO,1060,2176,0,Chunk 1059 processing completed.,65.15
+Neo4J,2026-02-13 01:55:30,INFO,1060,2180,0,Results buffer saved to disk.,65.15
+Neo4J,2026-02-13 01:55:30,INFO,1061,2180,0,Chunk 1060 processing completed.,65.21
+Neo4J,2026-02-13 01:55:30,INFO,1062,2180,0,Chunk 1061 processing completed.,65.27
+Neo4J,2026-02-13 01:55:30,INFO,1063,2180,0,Chunk 1062 processing completed.,65.33
+Neo4J,2026-02-13 01:55:30,INFO,1063,2184,0,Results buffer saved to disk.,65.33
+Neo4J,2026-02-13 01:55:30,INFO,1064,2184,0,Chunk 1063 processing completed.,65.39
+Neo4J,2026-02-13 01:55:30,INFO,1065,2184,0,Chunk 1064 processing completed.,65.43
+Neo4J,2026-02-13 01:55:30,INFO,1065,2188,0,Results buffer saved to disk.,65.43
+Neo4J,2026-02-13 01:55:30,INFO,1066,2188,0,Chunk 1065 processing completed.,65.48
+Neo4J,2026-02-13 01:55:30,INFO,1067,2188,0,Chunk 1066 processing completed.,65.53
+Neo4J,2026-02-13 01:55:30,INFO,1067,2192,0,Results buffer saved to disk.,65.53
+Neo4J,2026-02-13 01:55:30,INFO,1068,2192,0,Chunk 1067 processing completed.,65.57
+Neo4J,2026-02-13 01:55:30,INFO,1069,2192,0,Chunk 1068 processing completed.,65.61
+Neo4J,2026-02-13 01:55:30,INFO,1069,2196,0,Results buffer saved to disk.,65.61
+Neo4J,2026-02-13 01:55:30,INFO,1070,2196,0,Chunk 1069 processing completed.,65.65
+Neo4J,2026-02-13 01:55:30,INFO,1070,2200,0,Results buffer saved to disk.,65.65
+Neo4J,2026-02-13 01:55:30,INFO,1071,2200,0,Chunk 1070 processing completed.,65.69
+Neo4J,2026-02-13 01:55:30,INFO,1072,2200,0,Chunk 1071 processing completed.,65.75
+Neo4J,2026-02-13 01:55:30,INFO,1072,2204,0,Results buffer saved to disk.,65.75
+Neo4J,2026-02-13 01:55:30,INFO,1073,2204,0,Chunk 1072 processing completed.,65.80
+Neo4J,2026-02-13 01:55:30,INFO,1074,2204,0,Chunk 1073 processing completed.,65.85
+Neo4J,2026-02-13 01:55:30,INFO,1074,2208,0,Results buffer saved to disk.,65.85
+Neo4J,2026-02-13 01:55:30,INFO,1075,2208,0,Chunk 1074 processing completed.,65.90
+Neo4J,2026-02-13 01:55:30,INFO,1075,2212,0,Results buffer saved to disk.,65.90
+Neo4J,2026-02-13 01:55:30,INFO,1076,2212,0,Chunk 1075 processing completed.,65.95
+Neo4J,2026-02-13 01:55:30,INFO,1077,2212,0,Chunk 1076 processing completed.,66.01
+Neo4J,2026-02-13 01:55:30,INFO,1077,2216,0,Results buffer saved to disk.,66.01
+Neo4J,2026-02-13 01:55:30,INFO,1078,2216,0,Chunk 1077 processing completed.,66.06
+Neo4J,2026-02-13 01:55:30,INFO,1079,2216,0,Chunk 1078 processing completed.,66.11
+Neo4J,2026-02-13 01:55:30,INFO,1079,2220,0,Results buffer saved to disk.,66.11
+Neo4J,2026-02-13 01:55:30,INFO,1080,2220,0,Chunk 1079 processing completed.,66.16
+Neo4J,2026-02-13 01:55:30,INFO,1081,2220,0,Chunk 1080 processing completed.,66.21
+Neo4J,2026-02-13 01:55:30,INFO,1081,2224,0,Results buffer saved to disk.,66.21
+Neo4J,2026-02-13 01:55:30,INFO,1082,2224,0,Chunk 1081 processing completed.,66.27
+Neo4J,2026-02-13 01:55:30,INFO,1083,2224,0,Chunk 1082 processing completed.,66.32
+Neo4J,2026-02-13 01:55:30,INFO,1084,2224,0,Chunk 1083 processing completed.,66.37
+Neo4J,2026-02-13 01:55:30,INFO,1084,2228,0,Results buffer saved to disk.,66.37
+Neo4J,2026-02-13 01:55:30,INFO,1085,2228,0,Chunk 1084 processing completed.,66.43
+Neo4J,2026-02-13 01:55:30,INFO,1086,2228,0,Chunk 1085 processing completed.,66.48
+Neo4J,2026-02-13 01:55:30,INFO,1087,2228,0,Chunk 1086 processing completed.,66.53
+Neo4J,2026-02-13 01:55:30,INFO,1087,2232,0,Results buffer saved to disk.,66.53
+Neo4J,2026-02-13 01:55:30,INFO,1088,2232,0,Chunk 1087 processing completed.,66.57
+Neo4J,2026-02-13 01:55:30,INFO,1089,2232,0,Chunk 1088 processing completed.,66.63
+Neo4J,2026-02-13 01:55:30,INFO,1089,2236,0,Results buffer saved to disk.,66.63
+Neo4J,2026-02-13 01:55:30,INFO,1090,2236,0,Chunk 1089 processing completed.,66.68
+Neo4J,2026-02-13 01:55:30,INFO,1090,2240,0,Results buffer saved to disk.,66.68
+Neo4J,2026-02-13 01:55:30,INFO,1091,2240,0,Chunk 1090 processing completed.,66.74
+Neo4J,2026-02-13 01:55:30,INFO,1092,2240,0,Chunk 1091 processing completed.,66.80
+Neo4J,2026-02-13 01:55:30,INFO,1092,2244,0,Results buffer saved to disk.,66.80
+Neo4J,2026-02-13 01:55:30,INFO,1093,2244,0,Chunk 1092 processing completed.,66.86
+Neo4J,2026-02-13 01:55:30,INFO,1094,2244,0,Chunk 1093 processing completed.,66.92
+Neo4J,2026-02-13 01:55:30,INFO,1094,2248,0,Results buffer saved to disk.,66.92
+Neo4J,2026-02-13 01:55:30,INFO,1095,2248,0,Chunk 1094 processing completed.,66.98
+Neo4J,2026-02-13 01:55:30,INFO,1096,2248,0,Chunk 1095 processing completed.,67.03
+Neo4J,2026-02-13 01:55:30,INFO,1096,2252,0,Results buffer saved to disk.,67.03
+Neo4J,2026-02-13 01:55:30,INFO,1097,2252,0,Chunk 1096 processing completed.,67.09
+Neo4J,2026-02-13 01:55:30,INFO,1097,2256,0,Results buffer saved to disk.,67.09
+Neo4J,2026-02-13 01:55:30,INFO,1098,2256,0,Chunk 1097 processing completed.,67.14
+Neo4J,2026-02-13 01:55:30,INFO,1099,2256,0,Chunk 1098 processing completed.,67.19
+Neo4J,2026-02-13 01:55:30,INFO,1100,2256,0,Chunk 1099 processing completed.,67.24
+Neo4J,2026-02-13 01:55:30,INFO,1100,2260,0,Results buffer saved to disk.,67.24
+Neo4J,2026-02-13 01:55:30,INFO,1101,2260,0,Chunk 1100 processing completed.,67.30
+Neo4J,2026-02-13 01:55:30,INFO,1102,2260,0,Chunk 1101 processing completed.,67.35
+Neo4J,2026-02-13 01:55:30,INFO,1102,2264,0,Results buffer saved to disk.,67.35
+Neo4J,2026-02-13 01:55:30,INFO,1103,2264,0,Chunk 1102 processing completed.,67.40
+Neo4J,2026-02-13 01:55:30,INFO,1104,2264,0,Chunk 1103 processing completed.,67.44
+Neo4J,2026-02-13 01:55:30,INFO,1104,2268,0,Results buffer saved to disk.,67.44
+Neo4J,2026-02-13 01:55:30,INFO,1105,2268,0,Chunk 1104 processing completed.,67.48
+Neo4J,2026-02-13 01:55:30,INFO,1106,2268,0,Chunk 1105 processing completed.,67.52
+Neo4J,2026-02-13 01:55:30,INFO,1107,2268,0,Chunk 1106 processing completed.,67.58
+Neo4J,2026-02-13 01:55:30,INFO,1107,2272,0,Results buffer saved to disk.,67.58
+Neo4J,2026-02-13 01:55:30,INFO,1108,2272,0,Chunk 1107 processing completed.,67.64
+Neo4J,2026-02-13 01:55:30,INFO,1109,2272,0,Chunk 1108 processing completed.,67.70
+Neo4J,2026-02-13 01:55:30,INFO,1109,2276,0,Results buffer saved to disk.,67.70
+Neo4J,2026-02-13 01:55:30,INFO,1110,2276,0,Chunk 1109 processing completed.,67.78
+Neo4J,2026-02-13 01:55:30,INFO,1111,2276,0,Chunk 1110 processing completed.,67.85
+Neo4J,2026-02-13 01:55:30,INFO,1111,2280,0,Results buffer saved to disk.,67.85
+Neo4J,2026-02-13 01:55:30,INFO,1112,2280,0,Chunk 1111 processing completed.,67.92
+Neo4J,2026-02-13 01:55:30,INFO,1113,2280,0,Chunk 1112 processing completed.,68.00
+Neo4J,2026-02-13 01:55:30,INFO,1114,2280,0,Chunk 1113 processing completed.,68.04
+Neo4J,2026-02-13 01:55:30,INFO,1114,2284,0,Results buffer saved to disk.,68.04
+Neo4J,2026-02-13 01:55:31,INFO,1115,2284,0,Chunk 1114 processing completed.,68.09
+Neo4J,2026-02-13 01:55:31,INFO,1115,2288,0,Results buffer saved to disk.,68.09
+Neo4J,2026-02-13 01:55:31,INFO,1116,2288,0,Chunk 1115 processing completed.,68.14
+Neo4J,2026-02-13 01:55:31,INFO,1117,2288,0,Chunk 1116 processing completed.,68.19
+Neo4J,2026-02-13 01:55:31,INFO,1117,2292,0,Results buffer saved to disk.,68.19
+Neo4J,2026-02-13 01:55:31,INFO,1118,2292,0,Chunk 1117 processing completed.,68.23
+Neo4J,2026-02-13 01:55:31,INFO,1119,2292,0,Chunk 1118 processing completed.,68.28
+Neo4J,2026-02-13 01:55:31,INFO,1120,2292,0,Chunk 1119 processing completed.,68.33
+Neo4J,2026-02-13 01:55:31,INFO,1120,2296,0,Results buffer saved to disk.,68.33
+Neo4J,2026-02-13 01:55:31,INFO,1121,2296,0,Chunk 1120 processing completed.,68.37
+Neo4J,2026-02-13 01:55:31,INFO,1122,2296,0,Chunk 1121 processing completed.,68.41
+Neo4J,2026-02-13 01:55:31,INFO,1122,2300,0,Results buffer saved to disk.,68.41
+Neo4J,2026-02-13 01:55:31,INFO,1123,2300,0,Chunk 1122 processing completed.,68.45
+Neo4J,2026-02-13 01:55:31,INFO,1124,2300,0,Chunk 1123 processing completed.,68.50
+Neo4J,2026-02-13 01:55:31,INFO,1124,2304,0,Results buffer saved to disk.,68.50
+Neo4J,2026-02-13 01:55:31,INFO,1125,2304,0,Chunk 1124 processing completed.,68.54
+Neo4J,2026-02-13 01:55:31,INFO,1126,2304,0,Chunk 1125 processing completed.,68.58
+Neo4J,2026-02-13 01:55:31,INFO,1126,2308,0,Results buffer saved to disk.,68.58
+Neo4J,2026-02-13 01:55:31,INFO,1127,2308,0,Chunk 1126 processing completed.,68.62
+Neo4J,2026-02-13 01:55:31,INFO,1128,2308,0,Chunk 1127 processing completed.,68.68
+Neo4J,2026-02-13 01:55:31,INFO,1128,2312,0,Results buffer saved to disk.,68.68
+Neo4J,2026-02-13 01:55:31,INFO,1129,2312,0,Chunk 1128 processing completed.,68.74
+Neo4J,2026-02-13 01:55:31,INFO,1130,2312,0,Chunk 1129 processing completed.,68.81
+Neo4J,2026-02-13 01:55:31,INFO,1130,2316,0,Results buffer saved to disk.,68.81
+Neo4J,2026-02-13 01:55:31,INFO,1131,2316,0,Chunk 1130 processing completed.,68.87
+Neo4J,2026-02-13 01:55:31,INFO,1132,2316,0,Chunk 1131 processing completed.,68.94
+Neo4J,2026-02-13 01:55:31,INFO,1132,2320,0,Results buffer saved to disk.,68.94
+Neo4J,2026-02-13 01:55:31,INFO,1133,2320,0,Chunk 1132 processing completed.,69.01
+Neo4J,2026-02-13 01:55:31,INFO,1134,2320,0,Chunk 1133 processing completed.,69.07
+Neo4J,2026-02-13 01:55:31,INFO,1134,2324,0,Results buffer saved to disk.,69.07
+Neo4J,2026-02-13 01:55:31,INFO,1135,2324,0,Chunk 1134 processing completed.,69.13
+Neo4J,2026-02-13 01:55:31,INFO,1136,2324,0,Chunk 1135 processing completed.,69.19
+Neo4J,2026-02-13 01:55:31,INFO,1136,2328,0,Results buffer saved to disk.,69.19
+Neo4J,2026-02-13 01:55:31,INFO,1137,2328,0,Chunk 1136 processing completed.,69.25
+Neo4J,2026-02-13 01:55:31,INFO,1138,2328,0,Chunk 1137 processing completed.,69.37
+Neo4J,2026-02-13 01:55:31,INFO,1138,2332,0,Results buffer saved to disk.,69.37
+Neo4J,2026-02-13 01:55:31,INFO,1139,2332,0,Chunk 1138 processing completed.,69.49
+Neo4J,2026-02-13 01:55:31,INFO,1140,2332,0,Chunk 1139 processing completed.,69.60
+Neo4J,2026-02-13 01:55:31,INFO,1140,2336,0,Results buffer saved to disk.,69.60
+Neo4J,2026-02-13 01:55:31,INFO,1141,2336,0,Chunk 1140 processing completed.,69.72
+Neo4J,2026-02-13 01:55:31,INFO,1142,2336,0,Chunk 1141 processing completed.,69.83
+Neo4J,2026-02-13 01:55:31,INFO,1142,2340,0,Results buffer saved to disk.,69.83
+Neo4J,2026-02-13 01:55:31,INFO,1143,2340,0,Chunk 1142 processing completed.,69.91
+Neo4J,2026-02-13 01:55:31,INFO,1143,2344,0,Results buffer saved to disk.,69.91
+Neo4J,2026-02-13 01:55:31,INFO,1144,2344,0,Chunk 1143 processing completed.,70.00
+Neo4J,2026-02-13 01:55:31,INFO,1145,2344,0,Chunk 1144 processing completed.,70.08
+Neo4J,2026-02-13 01:55:31,INFO,1146,2344,0,Chunk 1145 processing completed.,70.16
+Neo4J,2026-02-13 01:55:31,INFO,1147,2344,0,Chunk 1146 processing completed.,70.23
+Neo4J,2026-02-13 01:55:31,INFO,1147,2348,0,Results buffer saved to disk.,70.23
+Neo4J,2026-02-13 01:55:31,INFO,1148,2348,0,Chunk 1147 processing completed.,70.31
+Neo4J,2026-02-13 01:55:31,INFO,1149,2348,0,Chunk 1148 processing completed.,70.38
+Neo4J,2026-02-13 01:55:31,INFO,1149,2352,0,Results buffer saved to disk.,70.38
+Neo4J,2026-02-13 01:55:31,INFO,1150,2352,0,Chunk 1149 processing completed.,70.44
+Neo4J,2026-02-13 01:55:31,INFO,1151,2352,0,Chunk 1150 processing completed.,70.51
+Neo4J,2026-02-13 01:55:31,INFO,1152,2352,0,Chunk 1151 processing completed.,70.56
+Neo4J,2026-02-13 01:55:31,INFO,1152,2356,0,Results buffer saved to disk.,70.56
+Neo4J,2026-02-13 01:55:31,INFO,1153,2356,0,Chunk 1152 processing completed.,70.61
+Neo4J,2026-02-13 01:55:31,INFO,1154,2356,0,Chunk 1153 processing completed.,70.67
+Neo4J,2026-02-13 01:55:31,INFO,1154,2360,0,Results buffer saved to disk.,70.67
+Neo4J,2026-02-13 01:55:31,INFO,1155,2360,0,Chunk 1154 processing completed.,70.73
+Neo4J,2026-02-13 01:55:31,INFO,1155,2364,0,Results buffer saved to disk.,70.73
+Neo4J,2026-02-13 01:55:31,INFO,1156,2364,0,Chunk 1155 processing completed.,70.80
+Neo4J,2026-02-13 01:55:31,INFO,1157,2364,0,Chunk 1156 processing completed.,70.86
+Neo4J,2026-02-13 01:55:31,INFO,1157,2368,0,Results buffer saved to disk.,70.86
+Neo4J,2026-02-13 01:55:31,INFO,1158,2368,0,Chunk 1157 processing completed.,70.92
+Neo4J,2026-02-13 01:55:31,INFO,1159,2368,0,Chunk 1158 processing completed.,71.06
+Neo4J,2026-02-13 01:55:31,INFO,1159,2372,0,Results buffer saved to disk.,71.06
+Neo4J,2026-02-13 01:55:31,INFO,1160,2372,0,Chunk 1159 processing completed.,71.19
+Neo4J,2026-02-13 01:55:31,INFO,1161,2372,0,Chunk 1160 processing completed.,71.32
+Neo4J,2026-02-13 01:55:31,INFO,1161,2376,0,Results buffer saved to disk.,71.32
+Neo4J,2026-02-13 01:55:31,INFO,1162,2376,0,Chunk 1161 processing completed.,71.45
+Neo4J,2026-02-13 01:55:31,INFO,1163,2376,0,Chunk 1162 processing completed.,71.59
+Neo4J,2026-02-13 01:55:31,INFO,1163,2380,0,Results buffer saved to disk.,71.59
+Neo4J,2026-02-13 01:55:31,INFO,1164,2380,0,Chunk 1163 processing completed.,71.72
+Neo4J,2026-02-13 01:55:31,INFO,1165,2380,0,Chunk 1164 processing completed.,71.85
+Neo4J,2026-02-13 01:55:31,INFO,1165,2384,0,Results buffer saved to disk.,71.85
+Neo4J,2026-02-13 01:55:31,INFO,1166,2384,0,Chunk 1165 processing completed.,71.98
+Neo4J,2026-02-13 01:55:31,INFO,1167,2384,0,Chunk 1166 processing completed.,72.11
+Neo4J,2026-02-13 01:55:31,INFO,1167,2388,0,Results buffer saved to disk.,72.11
+Neo4J,2026-02-13 01:55:31,INFO,1168,2388,0,Chunk 1167 processing completed.,72.16
+Neo4J,2026-02-13 01:55:31,INFO,1169,2388,0,Chunk 1168 processing completed.,72.22
+Neo4J,2026-02-13 01:55:31,INFO,1169,2392,0,Results buffer saved to disk.,72.22
+Neo4J,2026-02-13 01:55:31,INFO,1170,2392,0,Chunk 1169 processing completed.,72.27
+Neo4J,2026-02-13 01:55:31,INFO,1171,2392,0,Chunk 1170 processing completed.,72.32
+Neo4J,2026-02-13 01:55:31,INFO,1172,2392,0,Chunk 1171 processing completed.,72.37
+Neo4J,2026-02-13 01:55:31,INFO,1172,2396,0,Results buffer saved to disk.,72.37
+Neo4J,2026-02-13 01:55:31,INFO,1173,2396,0,Chunk 1172 processing completed.,72.42
+Neo4J,2026-02-13 01:55:31,INFO,1174,2396,0,Chunk 1173 processing completed.,72.47
+Neo4J,2026-02-13 01:55:31,INFO,1174,2400,0,Results buffer saved to disk.,72.47
+Neo4J,2026-02-13 01:55:31,INFO,1175,2400,0,Chunk 1174 processing completed.,72.52
+Neo4J,2026-02-13 01:55:31,INFO,1176,2400,0,Chunk 1175 processing completed.,72.58
+Neo4J,2026-02-13 01:55:31,INFO,1176,2404,0,Results buffer saved to disk.,72.58
+Neo4J,2026-02-13 01:55:31,INFO,1177,2404,0,Chunk 1176 processing completed.,72.63
+Neo4J,2026-02-13 01:55:31,INFO,1178,2404,0,Chunk 1177 processing completed.,72.68
+Neo4J,2026-02-13 01:55:31,INFO,1178,2408,0,Results buffer saved to disk.,72.68
+Neo4J,2026-02-13 01:55:31,INFO,1179,2408,0,Chunk 1178 processing completed.,72.73
+Neo4J,2026-02-13 01:55:31,INFO,1180,2408,0,Chunk 1179 processing completed.,72.78
+Neo4J,2026-02-13 01:55:31,INFO,1180,2412,0,Results buffer saved to disk.,72.78
+Neo4J,2026-02-13 01:55:31,INFO,1181,2412,0,Chunk 1180 processing completed.,72.83
+Neo4J,2026-02-13 01:55:31,INFO,1182,2412,0,Chunk 1181 processing completed.,72.91
+Neo4J,2026-02-13 01:55:32,INFO,1182,2416,0,Results buffer saved to disk.,72.91
+Neo4J,2026-02-13 01:55:32,INFO,1183,2416,0,Chunk 1182 processing completed.,72.98
+Neo4J,2026-02-13 01:55:32,INFO,1183,2420,0,Results buffer saved to disk.,72.98
+Neo4J,2026-02-13 01:55:32,INFO,1184,2420,0,Chunk 1183 processing completed.,73.06
+Neo4J,2026-02-13 01:55:32,INFO,1185,2420,0,Chunk 1184 processing completed.,73.13
+Neo4J,2026-02-13 01:55:32,INFO,1185,2424,0,Results buffer saved to disk.,73.13
+Neo4J,2026-02-13 01:55:32,INFO,1186,2424,0,Chunk 1185 processing completed.,73.18
+Neo4J,2026-02-13 01:55:32,INFO,1187,2424,0,Chunk 1186 processing completed.,73.22
+Neo4J,2026-02-13 01:55:32,INFO,1187,2428,0,Results buffer saved to disk.,73.22
+Neo4J,2026-02-13 01:55:32,INFO,1188,2428,0,Chunk 1187 processing completed.,73.28
+Neo4J,2026-02-13 01:55:32,INFO,1189,2428,0,Chunk 1188 processing completed.,73.33
+Neo4J,2026-02-13 01:55:32,INFO,1189,2432,0,Results buffer saved to disk.,73.33
+Neo4J,2026-02-13 01:55:32,INFO,1190,2432,0,Chunk 1189 processing completed.,73.40
+Neo4J,2026-02-13 01:55:32,INFO,1190,2436,0,Results buffer saved to disk.,73.40
+Neo4J,2026-02-13 01:55:32,INFO,1191,2436,0,Chunk 1190 processing completed.,73.46
+Neo4J,2026-02-13 01:55:32,INFO,1192,2436,0,Chunk 1191 processing completed.,73.52
+Neo4J,2026-02-13 01:55:32,INFO,1192,2440,0,Results buffer saved to disk.,73.52
+Neo4J,2026-02-13 01:55:32,INFO,1193,2440,0,Chunk 1192 processing completed.,73.58
+Neo4J,2026-02-13 01:55:32,INFO,1194,2440,0,Chunk 1193 processing completed.,73.64
+Neo4J,2026-02-13 01:55:32,INFO,1194,2444,0,Results buffer saved to disk.,73.64
+Neo4J,2026-02-13 01:55:32,INFO,1195,2444,0,Chunk 1194 processing completed.,73.70
+Neo4J,2026-02-13 01:55:32,INFO,1196,2444,0,Chunk 1195 processing completed.,73.75
+Neo4J,2026-02-13 01:55:32,INFO,1196,2448,0,Results buffer saved to disk.,73.75
+Neo4J,2026-02-13 01:55:32,INFO,1197,2448,0,Chunk 1196 processing completed.,73.81
+Neo4J,2026-02-13 01:55:32,INFO,1198,2448,0,Chunk 1197 processing completed.,73.87
+Neo4J,2026-02-13 01:55:32,INFO,1198,2452,0,Results buffer saved to disk.,73.87
+Neo4J,2026-02-13 01:55:32,INFO,1199,2452,0,Chunk 1198 processing completed.,73.98
+Neo4J,2026-02-13 01:55:32,INFO,1199,2456,0,Results buffer saved to disk.,73.98
+Neo4J,2026-02-13 01:55:32,INFO,1200,2456,0,Chunk 1199 processing completed.,74.10
+Neo4J,2026-02-13 01:55:32,INFO,1201,2456,0,Chunk 1200 processing completed.,74.21
+Neo4J,2026-02-13 01:55:32,INFO,1201,2460,0,Results buffer saved to disk.,74.21
+Neo4J,2026-02-13 01:55:32,INFO,1202,2460,0,Chunk 1201 processing completed.,74.32
+Neo4J,2026-02-13 01:55:32,INFO,1203,2460,0,Chunk 1202 processing completed.,74.44
+Neo4J,2026-02-13 01:55:32,INFO,1203,2464,0,Results buffer saved to disk.,74.44
+Neo4J,2026-02-13 01:55:32,INFO,1204,2464,0,Chunk 1203 processing completed.,74.55
+Neo4J,2026-02-13 01:55:32,INFO,1205,2464,0,Chunk 1204 processing completed.,74.67
+Neo4J,2026-02-13 01:55:32,INFO,1205,2468,0,Results buffer saved to disk.,74.67
+Neo4J,2026-02-13 01:55:32,INFO,1206,2468,0,Chunk 1205 processing completed.,74.78
+Neo4J,2026-02-13 01:55:32,INFO,1207,2468,0,Chunk 1206 processing completed.,74.89
+Neo4J,2026-02-13 01:55:32,INFO,1208,2468,0,Chunk 1207 processing completed.,75.00
+Neo4J,2026-02-13 01:55:32,INFO,1208,2472,0,Results buffer saved to disk.,75.00
+Neo4J,2026-02-13 01:55:32,INFO,1209,2472,0,Chunk 1208 processing completed.,75.12
+Neo4J,2026-02-13 01:55:32,INFO,1209,2476,0,Results buffer saved to disk.,75.12
+Neo4J,2026-02-13 01:55:32,INFO,1210,2476,0,Chunk 1209 processing completed.,75.23
+Neo4J,2026-02-13 01:55:32,INFO,1211,2476,0,Chunk 1210 processing completed.,75.27
+Neo4J,2026-02-13 01:55:32,INFO,1211,2480,0,Results buffer saved to disk.,75.27
+Neo4J,2026-02-13 01:55:32,INFO,1212,2480,0,Chunk 1211 processing completed.,75.32
+Neo4J,2026-02-13 01:55:32,INFO,1213,2480,0,Chunk 1212 processing completed.,75.37
+Neo4J,2026-02-13 01:55:32,INFO,1213,2484,0,Results buffer saved to disk.,75.37
+Neo4J,2026-02-13 01:55:32,INFO,1214,2484,0,Chunk 1213 processing completed.,75.43
+Neo4J,2026-02-13 01:55:32,INFO,1214,2488,0,Results buffer saved to disk.,75.43
+Neo4J,2026-02-13 01:55:32,INFO,1215,2488,0,Chunk 1214 processing completed.,75.49
+Neo4J,2026-02-13 01:55:32,INFO,1216,2488,0,Chunk 1215 processing completed.,75.53
+Neo4J,2026-02-13 01:55:32,INFO,1216,2492,0,Results buffer saved to disk.,75.53
+Neo4J,2026-02-13 01:55:32,INFO,1217,2492,0,Chunk 1216 processing completed.,75.58
+Neo4J,2026-02-13 01:55:32,INFO,1218,2492,0,Chunk 1217 processing completed.,75.61
+Neo4J,2026-02-13 01:55:32,INFO,1218,2496,0,Results buffer saved to disk.,75.61
+Neo4J,2026-02-13 01:55:32,INFO,1219,2496,0,Chunk 1218 processing completed.,75.68
+Neo4J,2026-02-13 01:55:32,INFO,1219,2500,0,Results buffer saved to disk.,75.68
+Neo4J,2026-02-13 01:55:32,INFO,1220,2500,0,Chunk 1219 processing completed.,75.74
+Neo4J,2026-02-13 01:55:32,INFO,1221,2500,0,Chunk 1220 processing completed.,75.81
+Neo4J,2026-02-13 01:55:32,INFO,1221,2504,0,Results buffer saved to disk.,75.81
+Neo4J,2026-02-13 01:55:32,INFO,1222,2504,0,Chunk 1221 processing completed.,75.87
+Neo4J,2026-02-13 01:55:32,INFO,1223,2504,0,Chunk 1222 processing completed.,75.93
+Neo4J,2026-02-13 01:55:32,INFO,1223,2508,0,Results buffer saved to disk.,75.93
+Neo4J,2026-02-13 01:55:32,INFO,1224,2508,0,Chunk 1223 processing completed.,75.99
+Neo4J,2026-02-13 01:55:32,INFO,1224,2512,0,Results buffer saved to disk.,75.99
+Neo4J,2026-02-13 01:55:32,INFO,1225,2512,0,Chunk 1224 processing completed.,76.06
+Neo4J,2026-02-13 01:55:32,INFO,1226,2512,0,Chunk 1225 processing completed.,76.12
+Neo4J,2026-02-13 01:55:32,INFO,1226,2516,0,Results buffer saved to disk.,76.12
+Neo4J,2026-02-13 01:55:32,INFO,1227,2516,0,Chunk 1226 processing completed.,76.19
+Neo4J,2026-02-13 01:55:32,INFO,1227,2520,0,Results buffer saved to disk.,76.19
+Neo4J,2026-02-13 01:55:32,INFO,1228,2520,0,Chunk 1227 processing completed.,76.26
+Neo4J,2026-02-13 01:55:32,INFO,1229,2520,0,Chunk 1228 processing completed.,76.31
+Neo4J,2026-02-13 01:55:32,INFO,1229,2524,0,Results buffer saved to disk.,76.31
+Neo4J,2026-02-13 01:55:32,INFO,1230,2524,0,Chunk 1229 processing completed.,76.36
+Neo4J,2026-02-13 01:55:32,INFO,1231,2524,0,Chunk 1230 processing completed.,76.41
+Neo4J,2026-02-13 01:55:32,INFO,1231,2528,0,Results buffer saved to disk.,76.41
+Neo4J,2026-02-13 01:55:32,INFO,1232,2528,0,Chunk 1231 processing completed.,76.47
+Neo4J,2026-02-13 01:55:32,INFO,1233,2528,0,Chunk 1232 processing completed.,76.53
+Neo4J,2026-02-13 01:55:32,INFO,1233,2532,0,Results buffer saved to disk.,76.53
+Neo4J,2026-02-13 01:55:32,INFO,1234,2532,0,Chunk 1233 processing completed.,76.59
+Neo4J,2026-02-13 01:55:32,INFO,1234,2536,0,Results buffer saved to disk.,76.59
+Neo4J,2026-02-13 01:55:32,INFO,1235,2536,0,Chunk 1234 processing completed.,76.65
+Neo4J,2026-02-13 01:55:32,INFO,1236,2536,0,Chunk 1235 processing completed.,76.70
+Neo4J,2026-02-13 01:55:32,INFO,1236,2540,0,Results buffer saved to disk.,76.70
+Neo4J,2026-02-13 01:55:32,INFO,1237,2540,0,Chunk 1236 processing completed.,76.74
+Neo4J,2026-02-13 01:55:32,INFO,1237,2544,0,Results buffer saved to disk.,76.74
+Neo4J,2026-02-13 01:55:32,INFO,1238,2544,0,Chunk 1237 processing completed.,76.79
+Neo4J,2026-02-13 01:55:32,INFO,1239,2544,0,Chunk 1238 processing completed.,76.83
+Neo4J,2026-02-13 01:55:32,INFO,1239,2548,0,Results buffer saved to disk.,76.83
+Neo4J,2026-02-13 01:55:32,INFO,1240,2548,0,Chunk 1239 processing completed.,76.87
+Neo4J,2026-02-13 01:55:32,INFO,1240,2552,0,Results buffer saved to disk.,76.87
+Neo4J,2026-02-13 01:55:32,INFO,1241,2552,0,Chunk 1240 processing completed.,76.91
+Neo4J,2026-02-13 01:55:32,INFO,1242,2552,0,Chunk 1241 processing completed.,76.96
+Neo4J,2026-02-13 01:55:32,INFO,1242,2556,0,Results buffer saved to disk.,76.96
+Neo4J,2026-02-13 01:55:33,INFO,1243,2556,0,Chunk 1242 processing completed.,77.01
+Neo4J,2026-02-13 01:55:33,INFO,1244,2556,0,Chunk 1243 processing completed.,77.06
+Neo4J,2026-02-13 01:55:33,INFO,1244,2560,0,Results buffer saved to disk.,77.06
+Neo4J,2026-02-13 01:55:33,INFO,1245,2560,0,Chunk 1244 processing completed.,77.11
+Neo4J,2026-02-13 01:55:33,INFO,1246,2560,0,Chunk 1245 processing completed.,77.18
+Neo4J,2026-02-13 01:55:33,INFO,1246,2564,0,Results buffer saved to disk.,77.18
+Neo4J,2026-02-13 01:55:33,INFO,1247,2564,0,Chunk 1246 processing completed.,77.24
+Neo4J,2026-02-13 01:55:33,INFO,1248,2564,0,Chunk 1247 processing completed.,77.31
+Neo4J,2026-02-13 01:55:33,INFO,1248,2568,0,Results buffer saved to disk.,77.31
+Neo4J,2026-02-13 01:55:33,INFO,1249,2568,0,Chunk 1248 processing completed.,77.36
+Neo4J,2026-02-13 01:55:33,INFO,1250,2568,0,Chunk 1249 processing completed.,77.42
+Neo4J,2026-02-13 01:55:33,INFO,1250,2572,0,Results buffer saved to disk.,77.42
+Neo4J,2026-02-13 01:55:33,INFO,1251,2572,0,Chunk 1250 processing completed.,77.47
+Neo4J,2026-02-13 01:55:33,INFO,1252,2572,0,Chunk 1251 processing completed.,77.52
+Neo4J,2026-02-13 01:55:33,INFO,1252,2576,0,Results buffer saved to disk.,77.52
+Neo4J,2026-02-13 01:55:33,INFO,1253,2576,0,Chunk 1252 processing completed.,77.58
+Neo4J,2026-02-13 01:55:33,INFO,1254,2576,0,Chunk 1253 processing completed.,77.63
+Neo4J,2026-02-13 01:55:33,INFO,1255,2576,0,Chunk 1254 processing completed.,77.68
+Neo4J,2026-02-13 01:55:33,INFO,1255,2580,0,Results buffer saved to disk.,77.68
+Neo4J,2026-02-13 01:55:33,INFO,1256,2580,0,Chunk 1255 processing completed.,77.73
+Neo4J,2026-02-13 01:55:33,INFO,1257,2580,0,Chunk 1256 processing completed.,77.78
+Neo4J,2026-02-13 01:55:33,INFO,1257,2584,0,Results buffer saved to disk.,77.78
+Neo4J,2026-02-13 01:55:33,INFO,1258,2584,0,Chunk 1257 processing completed.,77.83
+Neo4J,2026-02-13 01:55:33,INFO,1259,2584,0,Chunk 1258 processing completed.,77.87
+Neo4J,2026-02-13 01:55:33,INFO,1260,2584,0,Chunk 1259 processing completed.,77.92
+Neo4J,2026-02-13 01:55:33,INFO,1260,2588,0,Results buffer saved to disk.,77.92
+Neo4J,2026-02-13 01:55:33,INFO,1261,2588,0,Chunk 1260 processing completed.,77.97
+Neo4J,2026-02-13 01:55:33,INFO,1261,2592,0,Results buffer saved to disk.,77.97
+Neo4J,2026-02-13 01:55:33,INFO,1262,2592,0,Chunk 1261 processing completed.,78.01
+Neo4J,2026-02-13 01:55:33,INFO,1263,2592,0,Chunk 1262 processing completed.,78.05
+Neo4J,2026-02-13 01:55:33,INFO,1264,2592,0,Chunk 1263 processing completed.,78.09
+Neo4J,2026-02-13 01:55:33,INFO,1264,2596,0,Results buffer saved to disk.,78.09
+Neo4J,2026-02-13 01:55:33,INFO,1265,2596,0,Chunk 1264 processing completed.,78.12
+Neo4J,2026-02-13 01:55:33,INFO,1266,2596,0,Chunk 1265 processing completed.,78.16
+Neo4J,2026-02-13 01:55:33,INFO,1266,2600,0,Results buffer saved to disk.,78.16
+Neo4J,2026-02-13 01:55:33,INFO,1267,2600,0,Chunk 1266 processing completed.,78.21
+Neo4J,2026-02-13 01:55:33,INFO,1267,2604,0,Results buffer saved to disk.,78.21
+Neo4J,2026-02-13 01:55:33,INFO,1268,2604,0,Chunk 1267 processing completed.,78.26
+Neo4J,2026-02-13 01:55:33,INFO,1269,2604,0,Chunk 1268 processing completed.,78.31
+Neo4J,2026-02-13 01:55:33,INFO,1269,2608,0,Results buffer saved to disk.,78.31
+Neo4J,2026-02-13 01:55:33,INFO,1270,2608,0,Chunk 1269 processing completed.,78.36
+Neo4J,2026-02-13 01:55:33,INFO,1270,2612,0,Results buffer saved to disk.,78.36
+Neo4J,2026-02-13 01:55:33,INFO,1271,2612,0,Chunk 1270 processing completed.,78.40
+Neo4J,2026-02-13 01:55:33,INFO,1272,2612,0,Chunk 1271 processing completed.,78.44
+Neo4J,2026-02-13 01:55:33,INFO,1272,2616,0,Results buffer saved to disk.,78.44
+Neo4J,2026-02-13 01:55:33,INFO,1273,2616,0,Chunk 1272 processing completed.,78.49
+Neo4J,2026-02-13 01:55:33,INFO,1274,2616,0,Chunk 1273 processing completed.,78.54
+Neo4J,2026-02-13 01:55:33,INFO,1275,2616,0,Chunk 1274 processing completed.,78.59
+Neo4J,2026-02-13 01:55:33,INFO,1275,2620,0,Results buffer saved to disk.,78.59
+Neo4J,2026-02-13 01:55:33,INFO,1276,2620,0,Chunk 1275 processing completed.,78.64
+Neo4J,2026-02-13 01:55:33,INFO,1277,2620,0,Chunk 1276 processing completed.,78.70
+Neo4J,2026-02-13 01:55:33,INFO,1278,2620,0,Chunk 1277 processing completed.,78.75
+Neo4J,2026-02-13 01:55:33,INFO,1279,2620,0,Chunk 1278 processing completed.,78.81
+Neo4J,2026-02-13 01:55:33,INFO,1279,2624,0,Results buffer saved to disk.,78.81
+Neo4J,2026-02-13 01:55:33,INFO,1280,2624,0,Chunk 1279 processing completed.,78.87
+Neo4J,2026-02-13 01:55:33,INFO,1281,2624,0,Chunk 1280 processing completed.,78.92
+Neo4J,2026-02-13 01:55:33,INFO,1282,2624,0,Chunk 1281 processing completed.,78.98
+Neo4J,2026-02-13 01:55:33,INFO,1283,2624,0,Chunk 1282 processing completed.,79.04
+Neo4J,2026-02-13 01:55:33,INFO,1283,2628,0,Results buffer saved to disk.,79.04
+Neo4J,2026-02-13 01:55:33,INFO,1284,2628,0,Chunk 1283 processing completed.,79.10
+Neo4J,2026-02-13 01:55:33,INFO,1285,2628,0,Chunk 1284 processing completed.,79.18
+Neo4J,2026-02-13 01:55:33,INFO,1286,2628,0,Chunk 1285 processing completed.,79.25
+Neo4J,2026-02-13 01:55:33,INFO,1287,2628,0,Chunk 1286 processing completed.,79.32
+Neo4J,2026-02-13 01:55:33,INFO,1287,2632,0,Results buffer saved to disk.,79.32
+Neo4J,2026-02-13 01:55:33,INFO,1288,2632,0,Chunk 1287 processing completed.,79.39
+Neo4J,2026-02-13 01:55:33,INFO,1289,2632,0,Chunk 1288 processing completed.,79.47
+Neo4J,2026-02-13 01:55:33,INFO,1290,2632,0,Chunk 1289 processing completed.,79.54
+Neo4J,2026-02-13 01:55:33,INFO,1290,2636,0,Results buffer saved to disk.,79.54
+Neo4J,2026-02-13 01:55:33,INFO,1291,2636,0,Chunk 1290 processing completed.,79.61
+Neo4J,2026-02-13 01:55:33,INFO,1292,2636,0,Chunk 1291 processing completed.,79.69
+Neo4J,2026-02-13 01:55:33,INFO,1293,2636,0,Chunk 1292 processing completed.,79.76
+Neo4J,2026-02-13 01:55:33,INFO,1294,2636,0,Chunk 1293 processing completed.,79.83
+Neo4J,2026-02-13 01:55:33,INFO,1294,2640,0,Results buffer saved to disk.,79.83
+Neo4J,2026-02-13 01:55:33,INFO,1295,2640,0,Chunk 1294 processing completed.,79.90
+Neo4J,2026-02-13 01:55:33,INFO,1296,2640,0,Chunk 1295 processing completed.,79.95
+Neo4J,2026-02-13 01:55:33,INFO,1296,2644,0,Results buffer saved to disk.,79.95
+Neo4J,2026-02-13 01:55:33,INFO,1297,2644,0,Chunk 1296 processing completed.,80.00
+Neo4J,2026-02-13 01:55:33,INFO,1298,2644,0,Chunk 1297 processing completed.,80.06
+Neo4J,2026-02-13 01:55:33,INFO,1298,2648,0,Results buffer saved to disk.,80.06
+Neo4J,2026-02-13 01:55:33,INFO,1299,2648,0,Chunk 1298 processing completed.,80.11
+Neo4J,2026-02-13 01:55:33,INFO,1300,2648,0,Chunk 1299 processing completed.,80.15
+Neo4J,2026-02-13 01:55:33,INFO,1300,2652,0,Results buffer saved to disk.,80.15
+Neo4J,2026-02-13 01:55:33,INFO,1301,2652,0,Chunk 1300 processing completed.,80.20
+Neo4J,2026-02-13 01:55:33,INFO,1301,2656,0,Results buffer saved to disk.,80.20
+Neo4J,2026-02-13 01:55:33,INFO,1302,2656,0,Chunk 1301 processing completed.,80.25
+Neo4J,2026-02-13 01:55:33,INFO,1303,2656,0,Chunk 1302 processing completed.,80.29
+Neo4J,2026-02-13 01:55:33,INFO,1303,2660,0,Results buffer saved to disk.,80.29
+Neo4J,2026-02-13 01:55:33,INFO,1304,2660,0,Chunk 1303 processing completed.,80.33
+Neo4J,2026-02-13 01:55:33,INFO,1304,2664,0,Results buffer saved to disk.,80.33
+Neo4J,2026-02-13 01:55:33,INFO,1305,2664,0,Chunk 1304 processing completed.,80.45
+Neo4J,2026-02-13 01:55:33,INFO,1306,2664,0,Chunk 1305 processing completed.,80.56
+Neo4J,2026-02-13 01:55:33,INFO,1307,2664,0,Chunk 1306 processing completed.,80.67
+Neo4J,2026-02-13 01:55:33,INFO,1307,2668,0,Results buffer saved to disk.,80.67
+Neo4J,2026-02-13 01:55:33,INFO,1308,2668,0,Chunk 1307 processing completed.,80.79
+Neo4J,2026-02-13 01:55:33,INFO,1309,2668,0,Chunk 1308 processing completed.,80.90
+Neo4J,2026-02-13 01:55:33,INFO,1310,2668,0,Chunk 1309 processing completed.,81.02
+Neo4J,2026-02-13 01:55:33,INFO,1310,2672,0,Results buffer saved to disk.,81.02
+Neo4J,2026-02-13 01:55:33,INFO,1311,2672,0,Chunk 1310 processing completed.,81.13
+Neo4J,2026-02-13 01:55:33,INFO,1312,2672,0,Chunk 1311 processing completed.,81.25
+Neo4J,2026-02-13 01:55:33,INFO,1312,2676,0,Results buffer saved to disk.,81.25
+Neo4J,2026-02-13 01:55:33,INFO,1313,2676,0,Chunk 1312 processing completed.,81.37
+Neo4J,2026-02-13 01:55:33,INFO,1314,2676,0,Chunk 1313 processing completed.,81.41
+Neo4J,2026-02-13 01:55:34,INFO,1314,2680,0,Results buffer saved to disk.,81.41
+Neo4J,2026-02-13 01:55:34,INFO,1315,2680,0,Chunk 1314 processing completed.,81.46
+Neo4J,2026-02-13 01:55:34,INFO,1315,2684,0,Results buffer saved to disk.,81.46
+Neo4J,2026-02-13 01:55:34,INFO,1316,2684,0,Chunk 1315 processing completed.,81.51
+Neo4J,2026-02-13 01:55:34,INFO,1317,2684,0,Chunk 1316 processing completed.,81.56
+Neo4J,2026-02-13 01:55:34,INFO,1317,2688,0,Results buffer saved to disk.,81.56
+Neo4J,2026-02-13 01:55:34,INFO,1318,2688,0,Chunk 1317 processing completed.,81.63
+Neo4J,2026-02-13 01:55:34,INFO,1319,2688,0,Chunk 1318 processing completed.,81.70
+Neo4J,2026-02-13 01:55:34,INFO,1319,2692,0,Results buffer saved to disk.,81.70
+Neo4J,2026-02-13 01:55:34,INFO,1320,2692,0,Chunk 1319 processing completed.,81.77
+Neo4J,2026-02-13 01:55:34,INFO,1321,2692,0,Chunk 1320 processing completed.,81.87
+Neo4J,2026-02-13 01:55:34,INFO,1321,2696,0,Results buffer saved to disk.,81.87
+Neo4J,2026-02-13 01:55:34,INFO,1322,2696,0,Chunk 1321 processing completed.,81.97
+Neo4J,2026-02-13 01:55:34,INFO,1323,2696,0,Chunk 1322 processing completed.,82.07
+Neo4J,2026-02-13 01:55:34,INFO,1323,2700,0,Results buffer saved to disk.,82.07
+Neo4J,2026-02-13 01:55:34,INFO,1324,2700,0,Chunk 1323 processing completed.,82.17
+Neo4J,2026-02-13 01:55:34,INFO,1325,2700,0,Chunk 1324 processing completed.,82.22
+Neo4J,2026-02-13 01:55:34,INFO,1325,2704,0,Results buffer saved to disk.,82.22
+Neo4J,2026-02-13 01:55:34,INFO,1326,2704,0,Chunk 1325 processing completed.,82.26
+Neo4J,2026-02-13 01:55:34,INFO,1326,2708,0,Results buffer saved to disk.,82.26
+Neo4J,2026-02-13 01:55:34,INFO,1327,2708,0,Chunk 1326 processing completed.,82.31
+Neo4J,2026-02-13 01:55:34,INFO,1328,2708,0,Chunk 1327 processing completed.,82.35
+Neo4J,2026-02-13 01:55:34,INFO,1329,2708,0,Chunk 1328 processing completed.,82.41
+Neo4J,2026-02-13 01:55:34,INFO,1329,2712,0,Results buffer saved to disk.,82.41
+Neo4J,2026-02-13 01:55:34,INFO,1330,2712,0,Chunk 1329 processing completed.,82.47
+Neo4J,2026-02-13 01:55:34,INFO,1331,2712,0,Chunk 1330 processing completed.,82.53
+Neo4J,2026-02-13 01:55:34,INFO,1331,2716,0,Results buffer saved to disk.,82.53
+Neo4J,2026-02-13 01:55:34,INFO,1332,2716,0,Chunk 1331 processing completed.,82.59
+Neo4J,2026-02-13 01:55:34,INFO,1333,2716,0,Chunk 1332 processing completed.,82.64
+Neo4J,2026-02-13 01:55:34,INFO,1333,2720,0,Results buffer saved to disk.,82.64
+Neo4J,2026-02-13 01:55:34,INFO,1334,2720,0,Chunk 1333 processing completed.,82.70
+Neo4J,2026-02-13 01:55:34,INFO,1334,2724,0,Results buffer saved to disk.,82.70
+Neo4J,2026-02-13 01:55:34,INFO,1335,2724,0,Chunk 1334 processing completed.,82.76
+Neo4J,2026-02-13 01:55:34,INFO,1336,2724,0,Chunk 1335 processing completed.,82.80
+Neo4J,2026-02-13 01:55:34,INFO,1336,2728,0,Results buffer saved to disk.,82.80
+Neo4J,2026-02-13 01:55:34,INFO,1337,2728,0,Chunk 1336 processing completed.,82.84
+Neo4J,2026-02-13 01:55:34,INFO,1338,2728,0,Chunk 1337 processing completed.,82.91
+Neo4J,2026-02-13 01:55:34,INFO,1338,2732,0,Results buffer saved to disk.,82.91
+Neo4J,2026-02-13 01:55:34,INFO,1339,2732,0,Chunk 1338 processing completed.,82.97
+Neo4J,2026-02-13 01:55:34,INFO,1340,2732,0,Chunk 1339 processing completed.,83.04
+Neo4J,2026-02-13 01:55:34,INFO,1340,2736,0,Results buffer saved to disk.,83.04
+Neo4J,2026-02-13 01:55:34,INFO,1341,2736,0,Chunk 1340 processing completed.,83.11
+Neo4J,2026-02-13 01:55:34,INFO,1342,2736,0,Chunk 1341 processing completed.,83.18
+Neo4J,2026-02-13 01:55:34,INFO,1343,2736,0,Chunk 1342 processing completed.,83.25
+Neo4J,2026-02-13 01:55:34,INFO,1343,2740,0,Results buffer saved to disk.,83.25
+Neo4J,2026-02-13 01:55:34,INFO,1344,2740,0,Chunk 1343 processing completed.,83.31
+Neo4J,2026-02-13 01:55:34,INFO,1345,2740,0,Chunk 1344 processing completed.,83.37
+Neo4J,2026-02-13 01:55:34,INFO,1345,2744,0,Results buffer saved to disk.,83.37
+Neo4J,2026-02-13 01:55:34,INFO,1346,2744,0,Chunk 1345 processing completed.,83.43
+Neo4J,2026-02-13 01:55:34,INFO,1347,2744,0,Chunk 1346 processing completed.,83.50
+Neo4J,2026-02-13 01:55:34,INFO,1347,2748,0,Results buffer saved to disk.,83.50
+Neo4J,2026-02-13 01:55:34,INFO,1348,2748,0,Chunk 1347 processing completed.,83.56
+Neo4J,2026-02-13 01:55:34,INFO,1348,2752,0,Results buffer saved to disk.,83.56
+Neo4J,2026-02-13 01:55:34,INFO,1349,2752,0,Chunk 1348 processing completed.,83.61
+Neo4J,2026-02-13 01:55:34,INFO,1350,2752,0,Chunk 1349 processing completed.,83.66
+Neo4J,2026-02-13 01:55:34,INFO,1350,2756,0,Results buffer saved to disk.,83.66
+Neo4J,2026-02-13 01:55:34,INFO,1351,2756,0,Chunk 1350 processing completed.,83.70
+Neo4J,2026-02-13 01:55:34,INFO,1352,2756,0,Chunk 1351 processing completed.,83.74
+Neo4J,2026-02-13 01:55:34,INFO,1352,2760,0,Results buffer saved to disk.,83.74
+Neo4J,2026-02-13 01:55:34,INFO,1353,2760,0,Chunk 1352 processing completed.,83.79
+Neo4J,2026-02-13 01:55:34,INFO,1354,2760,0,Chunk 1353 processing completed.,83.85
+Neo4J,2026-02-13 01:55:34,INFO,1354,2764,0,Results buffer saved to disk.,83.85
+Neo4J,2026-02-13 01:55:34,INFO,1355,2764,0,Chunk 1354 processing completed.,83.92
+Neo4J,2026-02-13 01:55:34,INFO,1356,2764,0,Chunk 1355 processing completed.,83.97
+Neo4J,2026-02-13 01:55:34,INFO,1356,2768,0,Results buffer saved to disk.,83.97
+Neo4J,2026-02-13 01:55:34,INFO,1357,2768,0,Chunk 1356 processing completed.,84.08
+Neo4J,2026-02-13 01:55:34,INFO,1358,2768,0,Chunk 1357 processing completed.,84.19
+Neo4J,2026-02-13 01:55:34,INFO,1358,2772,0,Results buffer saved to disk.,84.19
+Neo4J,2026-02-13 01:55:34,INFO,1359,2772,0,Chunk 1358 processing completed.,84.25
+Neo4J,2026-02-13 01:55:34,INFO,1360,2772,0,Chunk 1359 processing completed.,84.29
+Neo4J,2026-02-13 01:55:34,INFO,1360,2776,0,Results buffer saved to disk.,84.29
+Neo4J,2026-02-13 01:55:34,INFO,1361,2776,0,Chunk 1360 processing completed.,84.33
+Neo4J,2026-02-13 01:55:34,INFO,1361,2780,0,Results buffer saved to disk.,84.33
+Neo4J,2026-02-13 01:55:34,INFO,1362,2780,0,Chunk 1361 processing completed.,84.39
+Neo4J,2026-02-13 01:55:34,INFO,1363,2780,0,Chunk 1362 processing completed.,84.46
+Neo4J,2026-02-13 01:55:34,INFO,1364,2780,0,Chunk 1363 processing completed.,84.51
+Neo4J,2026-02-13 01:55:34,INFO,1364,2784,0,Results buffer saved to disk.,84.51
+Neo4J,2026-02-13 01:55:34,INFO,1365,2784,0,Chunk 1364 processing completed.,84.56
+Neo4J,2026-02-13 01:55:34,INFO,1366,2784,0,Chunk 1365 processing completed.,84.61
+Neo4J,2026-02-13 01:55:34,INFO,1366,2788,0,Results buffer saved to disk.,84.61
+Neo4J,2026-02-13 01:55:34,INFO,1367,2788,0,Chunk 1366 processing completed.,84.65
+Neo4J,2026-02-13 01:55:34,INFO,1367,2792,0,Results buffer saved to disk.,84.65
+Neo4J,2026-02-13 01:55:34,INFO,1368,2792,0,Chunk 1367 processing completed.,84.69
+Neo4J,2026-02-13 01:55:34,INFO,1369,2792,0,Chunk 1368 processing completed.,84.75
+Neo4J,2026-02-13 01:55:34,INFO,1369,2796,0,Results buffer saved to disk.,84.75
+Neo4J,2026-02-13 01:55:34,INFO,1370,2796,0,Chunk 1369 processing completed.,84.81
+Neo4J,2026-02-13 01:55:34,INFO,1371,2796,0,Chunk 1370 processing completed.,84.85
+Neo4J,2026-02-13 01:55:34,INFO,1371,2800,0,Results buffer saved to disk.,84.85
+Neo4J,2026-02-13 01:55:34,INFO,1372,2800,0,Chunk 1371 processing completed.,84.89
+Neo4J,2026-02-13 01:55:34,INFO,1373,2800,0,Chunk 1372 processing completed.,84.95
+Neo4J,2026-02-13 01:55:34,INFO,1373,2804,0,Results buffer saved to disk.,84.95
+Neo4J,2026-02-13 01:55:34,INFO,1374,2804,0,Chunk 1373 processing completed.,85.01
+Neo4J,2026-02-13 01:55:34,INFO,1375,2804,0,Chunk 1374 processing completed.,85.08
+Neo4J,2026-02-13 01:55:34,INFO,1375,2808,0,Results buffer saved to disk.,85.08
+Neo4J,2026-02-13 01:55:34,INFO,1376,2808,0,Chunk 1375 processing completed.,85.14
+Neo4J,2026-02-13 01:55:34,INFO,1377,2808,0,Chunk 1376 processing completed.,85.18
+Neo4J,2026-02-13 01:55:34,INFO,1377,2812,0,Results buffer saved to disk.,85.18
+Neo4J,2026-02-13 01:55:34,INFO,1378,2812,0,Chunk 1377 processing completed.,85.23
+Neo4J,2026-02-13 01:55:34,INFO,1379,2812,0,Chunk 1378 processing completed.,85.29
+Neo4J,2026-02-13 01:55:34,INFO,1380,2812,0,Chunk 1379 processing completed.,85.35
+Neo4J,2026-02-13 01:55:35,INFO,1380,2816,0,Results buffer saved to disk.,85.35
+Neo4J,2026-02-13 01:55:35,INFO,1381,2816,0,Chunk 1380 processing completed.,85.41
+Neo4J,2026-02-13 01:55:35,INFO,1382,2816,0,Chunk 1381 processing completed.,85.48
+Neo4J,2026-02-13 01:55:35,INFO,1382,2820,0,Results buffer saved to disk.,85.48
+Neo4J,2026-02-13 01:55:35,INFO,1383,2820,0,Chunk 1382 processing completed.,85.52
+Neo4J,2026-02-13 01:55:35,INFO,1384,2820,0,Chunk 1383 processing completed.,85.57
+Neo4J,2026-02-13 01:55:35,INFO,1385,2820,0,Chunk 1384 processing completed.,85.63
+Neo4J,2026-02-13 01:55:35,INFO,1385,2824,0,Results buffer saved to disk.,85.63
+Neo4J,2026-02-13 01:55:35,INFO,1386,2824,0,Chunk 1385 processing completed.,85.69
+Neo4J,2026-02-13 01:55:35,INFO,1387,2824,0,Chunk 1386 processing completed.,85.75
+Neo4J,2026-02-13 01:55:35,INFO,1387,2828,0,Results buffer saved to disk.,85.75
+Neo4J,2026-02-13 01:55:35,INFO,1388,2828,0,Chunk 1387 processing completed.,85.81
+Neo4J,2026-02-13 01:55:35,INFO,1389,2828,0,Chunk 1388 processing completed.,85.86
+Neo4J,2026-02-13 01:55:35,INFO,1390,2828,0,Chunk 1389 processing completed.,85.91
+Neo4J,2026-02-13 01:55:35,INFO,1390,2832,0,Results buffer saved to disk.,85.91
+Neo4J,2026-02-13 01:55:35,INFO,1391,2832,0,Chunk 1390 processing completed.,85.96
+Neo4J,2026-02-13 01:55:35,INFO,1392,2832,0,Chunk 1391 processing completed.,86.00
+Neo4J,2026-02-13 01:55:35,INFO,1393,2832,0,Chunk 1392 processing completed.,86.05
+Neo4J,2026-02-13 01:55:35,INFO,1393,2836,0,Results buffer saved to disk.,86.05
+Neo4J,2026-02-13 01:55:35,INFO,1394,2836,0,Chunk 1393 processing completed.,86.10
+Neo4J,2026-02-13 01:55:35,INFO,1395,2836,0,Chunk 1394 processing completed.,86.14
+Neo4J,2026-02-13 01:55:35,INFO,1396,2836,0,Chunk 1395 processing completed.,86.20
+Neo4J,2026-02-13 01:55:35,INFO,1397,2836,0,Chunk 1396 processing completed.,86.26
+Neo4J,2026-02-13 01:55:35,INFO,1397,2840,0,Results buffer saved to disk.,86.26
+Neo4J,2026-02-13 01:55:35,INFO,1398,2840,0,Chunk 1397 processing completed.,86.31
+Neo4J,2026-02-13 01:55:35,INFO,1399,2840,0,Chunk 1398 processing completed.,86.39
+Neo4J,2026-02-13 01:55:35,INFO,1399,2844,0,Results buffer saved to disk.,86.39
+Neo4J,2026-02-13 01:55:35,INFO,1400,2844,0,Chunk 1399 processing completed.,86.47
+Neo4J,2026-02-13 01:55:35,INFO,1401,2844,0,Chunk 1400 processing completed.,86.56
+Neo4J,2026-02-13 01:55:35,INFO,1402,2844,0,Chunk 1401 processing completed.,86.64
+Neo4J,2026-02-13 01:55:35,INFO,1403,2844,0,Chunk 1402 processing completed.,86.73
+Neo4J,2026-02-13 01:55:35,INFO,1403,2848,0,Results buffer saved to disk.,86.73
+Neo4J,2026-02-13 01:55:35,INFO,1404,2848,0,Chunk 1403 processing completed.,86.82
+Neo4J,2026-02-13 01:55:35,INFO,1405,2848,0,Chunk 1404 processing completed.,86.91
+Neo4J,2026-02-13 01:55:35,INFO,1405,2852,0,Results buffer saved to disk.,86.91
+Neo4J,2026-02-13 01:55:35,INFO,1406,2852,0,Chunk 1405 processing completed.,87.00
+Neo4J,2026-02-13 01:55:35,INFO,1407,2852,0,Chunk 1406 processing completed.,87.08
+Neo4J,2026-02-13 01:55:35,INFO,1408,2852,0,Chunk 1407 processing completed.,87.17
+Neo4J,2026-02-13 01:55:35,INFO,1408,2856,0,Results buffer saved to disk.,87.17
+Neo4J,2026-02-13 01:55:35,INFO,1409,2856,0,Chunk 1408 processing completed.,87.25
+Neo4J,2026-02-13 01:55:35,INFO,1410,2856,0,Chunk 1409 processing completed.,87.34
+Neo4J,2026-02-13 01:55:35,INFO,1411,2856,0,Chunk 1410 processing completed.,87.37
+Neo4J,2026-02-13 01:55:35,INFO,1412,2856,0,Chunk 1411 processing completed.,87.43
+Neo4J,2026-02-13 01:55:35,INFO,1412,2860,0,Results buffer saved to disk.,87.43
+Neo4J,2026-02-13 01:55:35,INFO,1413,2860,0,Chunk 1412 processing completed.,87.48
+Neo4J,2026-02-13 01:55:35,INFO,1414,2860,0,Chunk 1413 processing completed.,87.53
+Neo4J,2026-02-13 01:55:35,INFO,1415,2860,0,Chunk 1414 processing completed.,87.58
+Neo4J,2026-02-13 01:55:35,INFO,1415,2864,0,Results buffer saved to disk.,87.58
+Neo4J,2026-02-13 01:55:35,INFO,1416,2864,0,Chunk 1415 processing completed.,87.63
+Neo4J,2026-02-13 01:55:35,INFO,1417,2864,0,Chunk 1416 processing completed.,87.68
+Neo4J,2026-02-13 01:55:35,INFO,1418,2864,0,Chunk 1417 processing completed.,87.73
+Neo4J,2026-02-13 01:55:35,INFO,1418,2868,0,Results buffer saved to disk.,87.73
+Neo4J,2026-02-13 01:55:35,INFO,1419,2868,0,Chunk 1418 processing completed.,87.78
+Neo4J,2026-02-13 01:55:35,INFO,1420,2868,0,Chunk 1419 processing completed.,87.83
+Neo4J,2026-02-13 01:55:35,INFO,1420,2872,0,Results buffer saved to disk.,87.83
+Neo4J,2026-02-13 01:55:35,INFO,1421,2872,0,Chunk 1420 processing completed.,87.89
+Neo4J,2026-02-13 01:55:35,INFO,1421,2876,0,Results buffer saved to disk.,87.89
+Neo4J,2026-02-13 01:55:35,INFO,1422,2876,0,Chunk 1421 processing completed.,87.95
+Neo4J,2026-02-13 01:55:35,INFO,1423,2876,0,Chunk 1422 processing completed.,88.01
+Neo4J,2026-02-13 01:55:35,INFO,1423,2880,0,Results buffer saved to disk.,88.01
+Neo4J,2026-02-13 01:55:35,INFO,1424,2880,0,Chunk 1423 processing completed.,88.07
+Neo4J,2026-02-13 01:55:35,INFO,1425,2880,0,Chunk 1424 processing completed.,88.14
+Neo4J,2026-02-13 01:55:35,INFO,1425,2884,0,Results buffer saved to disk.,88.14
+Neo4J,2026-02-13 01:55:35,INFO,1426,2884,0,Chunk 1425 processing completed.,88.20
+Neo4J,2026-02-13 01:55:35,INFO,1427,2884,0,Chunk 1426 processing completed.,88.26
+Neo4J,2026-02-13 01:55:35,INFO,1427,2888,0,Results buffer saved to disk.,88.26
+Neo4J,2026-02-13 01:55:35,INFO,1428,2888,0,Chunk 1427 processing completed.,88.33
+Neo4J,2026-02-13 01:55:35,INFO,1429,2888,0,Chunk 1428 processing completed.,88.39
+Neo4J,2026-02-13 01:55:35,INFO,1429,2892,0,Results buffer saved to disk.,88.39
+Neo4J,2026-02-13 01:55:35,INFO,1430,2892,0,Chunk 1429 processing completed.,88.46
+Neo4J,2026-02-13 01:55:35,INFO,1431,2892,0,Chunk 1430 processing completed.,88.50
+Neo4J,2026-02-13 01:55:35,INFO,1431,2896,0,Results buffer saved to disk.,88.50
+Neo4J,2026-02-13 01:55:35,INFO,1432,2896,0,Chunk 1431 processing completed.,88.55
+Neo4J,2026-02-13 01:55:35,INFO,1432,2900,0,Results buffer saved to disk.,88.55
+Neo4J,2026-02-13 01:55:35,INFO,1433,2900,0,Chunk 1432 processing completed.,88.60
+Neo4J,2026-02-13 01:55:35,INFO,1434,2900,0,Chunk 1433 processing completed.,88.65
+Neo4J,2026-02-13 01:55:35,INFO,1434,2904,0,Results buffer saved to disk.,88.65
+Neo4J,2026-02-13 01:55:35,INFO,1435,2904,0,Chunk 1434 processing completed.,88.70
+Neo4J,2026-02-13 01:55:35,INFO,1436,2904,0,Chunk 1435 processing completed.,88.75
+Neo4J,2026-02-13 01:55:35,INFO,1436,2908,0,Results buffer saved to disk.,88.75
+Neo4J,2026-02-13 01:55:35,INFO,1437,2908,0,Chunk 1436 processing completed.,88.81
+Neo4J,2026-02-13 01:55:35,INFO,1438,2908,0,Chunk 1437 processing completed.,88.87
+Neo4J,2026-02-13 01:55:35,INFO,1439,2908,0,Chunk 1438 processing completed.,88.93
+Neo4J,2026-02-13 01:55:35,INFO,1439,2912,0,Results buffer saved to disk.,88.93
+Neo4J,2026-02-13 01:55:35,INFO,1440,2912,0,Chunk 1439 processing completed.,88.99
+Neo4J,2026-02-13 01:55:35,INFO,1441,2912,0,Chunk 1440 processing completed.,89.05
+Neo4J,2026-02-13 01:55:35,INFO,1441,2916,0,Results buffer saved to disk.,89.05
+Neo4J,2026-02-13 01:55:35,INFO,1442,2916,0,Chunk 1441 processing completed.,89.11
+Neo4J,2026-02-13 01:55:35,INFO,1443,2916,0,Chunk 1442 processing completed.,89.18
+Neo4J,2026-02-13 01:55:35,INFO,1444,2916,0,Chunk 1443 processing completed.,89.24
+Neo4J,2026-02-13 01:55:35,INFO,1444,2920,0,Results buffer saved to disk.,89.24
+Neo4J,2026-02-13 01:55:35,INFO,1445,2920,0,Chunk 1444 processing completed.,89.34
+Neo4J,2026-02-13 01:55:35,INFO,1445,2924,0,Results buffer saved to disk.,89.34
+Neo4J,2026-02-13 01:55:35,INFO,1446,2924,0,Chunk 1445 processing completed.,89.43
+Neo4J,2026-02-13 01:55:35,INFO,1447,2924,0,Chunk 1446 processing completed.,89.53
+Neo4J,2026-02-13 01:55:35,INFO,1447,2928,0,Results buffer saved to disk.,89.53
+Neo4J,2026-02-13 01:55:35,INFO,1448,2928,0,Chunk 1447 processing completed.,89.62
+Neo4J,2026-02-13 01:55:35,INFO,1449,2928,0,Chunk 1448 processing completed.,89.67
+Neo4J,2026-02-13 01:55:35,INFO,1449,2932,0,Results buffer saved to disk.,89.67
+Neo4J,2026-02-13 01:55:35,INFO,1450,2932,0,Chunk 1449 processing completed.,89.71
+Neo4J,2026-02-13 01:55:35,INFO,1451,2932,0,Chunk 1450 processing completed.,89.76
+Neo4J,2026-02-13 01:55:35,INFO,1451,2936,0,Results buffer saved to disk.,89.76
+Neo4J,2026-02-13 01:55:35,INFO,1452,2936,0,Chunk 1451 processing completed.,89.83
+Neo4J,2026-02-13 01:55:35,INFO,1453,2936,0,Chunk 1452 processing completed.,89.89
+Neo4J,2026-02-13 01:55:35,INFO,1454,2936,0,Chunk 1453 processing completed.,89.96
+Neo4J,2026-02-13 01:55:35,INFO,1454,2940,0,Results buffer saved to disk.,89.96
+Neo4J,2026-02-13 01:55:36,INFO,1455,2940,0,Chunk 1454 processing completed.,90.02
+Neo4J,2026-02-13 01:55:36,INFO,1455,2944,0,Results buffer saved to disk.,90.02
+Neo4J,2026-02-13 01:55:36,INFO,1456,2944,0,Chunk 1455 processing completed.,90.09
+Neo4J,2026-02-13 01:55:36,INFO,1457,2944,0,Chunk 1456 processing completed.,90.13
+Neo4J,2026-02-13 01:55:36,INFO,1458,2944,0,Chunk 1457 processing completed.,90.17
+Neo4J,2026-02-13 01:55:36,INFO,1458,2948,0,Results buffer saved to disk.,90.17
+Neo4J,2026-02-13 01:55:36,INFO,1459,2948,0,Chunk 1458 processing completed.,90.21
+Neo4J,2026-02-13 01:55:36,INFO,1459,2952,0,Results buffer saved to disk.,90.21
+Neo4J,2026-02-13 01:55:36,INFO,1460,2952,0,Chunk 1459 processing completed.,90.30
+Neo4J,2026-02-13 01:55:36,INFO,1461,2952,0,Chunk 1460 processing completed.,90.38
+Neo4J,2026-02-13 01:55:36,INFO,1461,2956,0,Results buffer saved to disk.,90.38
+Neo4J,2026-02-13 01:55:36,INFO,1462,2956,0,Chunk 1461 processing completed.,90.47
+Neo4J,2026-02-13 01:55:36,INFO,1463,2956,0,Chunk 1462 processing completed.,90.55
+Neo4J,2026-02-13 01:55:36,INFO,1463,2960,0,Results buffer saved to disk.,90.55
+Neo4J,2026-02-13 01:55:36,INFO,1464,2960,0,Chunk 1463 processing completed.,90.59
+Neo4J,2026-02-13 01:55:36,INFO,1464,2964,0,Results buffer saved to disk.,90.59
+Neo4J,2026-02-13 01:55:36,INFO,1465,2964,0,Chunk 1464 processing completed.,90.64
+Neo4J,2026-02-13 01:55:36,INFO,1466,2964,0,Chunk 1465 processing completed.,90.68
+Neo4J,2026-02-13 01:55:36,INFO,1466,2968,0,Results buffer saved to disk.,90.68
+Neo4J,2026-02-13 01:55:36,INFO,1467,2968,0,Chunk 1466 processing completed.,90.72
+Neo4J,2026-02-13 01:55:36,INFO,1468,2968,0,Chunk 1467 processing completed.,90.77
+Neo4J,2026-02-13 01:55:36,INFO,1468,2972,0,Results buffer saved to disk.,90.77
+Neo4J,2026-02-13 01:55:36,INFO,1469,2972,0,Chunk 1468 processing completed.,90.82
+Neo4J,2026-02-13 01:55:36,INFO,1469,2976,0,Results buffer saved to disk.,90.82
+Neo4J,2026-02-13 01:55:36,INFO,1470,2976,0,Chunk 1469 processing completed.,90.87
+Neo4J,2026-02-13 01:55:36,INFO,1471,2976,0,Chunk 1470 processing completed.,90.92
+Neo4J,2026-02-13 01:55:36,INFO,1471,2980,0,Results buffer saved to disk.,90.92
+Neo4J,2026-02-13 01:55:36,INFO,1472,2980,0,Chunk 1471 processing completed.,90.96
+Neo4J,2026-02-13 01:55:36,INFO,1473,2980,0,Chunk 1472 processing completed.,91.01
+Neo4J,2026-02-13 01:55:36,INFO,1473,2984,0,Results buffer saved to disk.,91.01
+Neo4J,2026-02-13 01:55:36,INFO,1474,2984,0,Chunk 1473 processing completed.,91.08
+Neo4J,2026-02-13 01:55:36,INFO,1475,2984,0,Chunk 1474 processing completed.,91.14
+Neo4J,2026-02-13 01:55:36,INFO,1475,2988,0,Results buffer saved to disk.,91.14
+Neo4J,2026-02-13 01:55:36,INFO,1476,2988,0,Chunk 1475 processing completed.,91.21
+Neo4J,2026-02-13 01:55:36,INFO,1477,2988,0,Chunk 1476 processing completed.,91.28
+Neo4J,2026-02-13 01:55:36,INFO,1477,2992,0,Results buffer saved to disk.,91.28
+Neo4J,2026-02-13 01:55:36,INFO,1478,2992,0,Chunk 1477 processing completed.,91.32
+Neo4J,2026-02-13 01:55:36,INFO,1479,2992,0,Chunk 1478 processing completed.,91.36
+Neo4J,2026-02-13 01:55:36,INFO,1479,2996,0,Results buffer saved to disk.,91.36
+Neo4J,2026-02-13 01:55:36,INFO,1480,2996,0,Chunk 1479 processing completed.,91.42
+Neo4J,2026-02-13 01:55:36,INFO,1481,2996,0,Chunk 1480 processing completed.,91.47
+Neo4J,2026-02-13 01:55:36,INFO,1481,3000,0,Results buffer saved to disk.,91.47
+Neo4J,2026-02-13 01:55:36,INFO,1482,3000,0,Chunk 1481 processing completed.,91.53
+Neo4J,2026-02-13 01:55:36,INFO,1483,3000,0,Chunk 1482 processing completed.,91.60
+Neo4J,2026-02-13 01:55:36,INFO,1483,3004,0,Results buffer saved to disk.,91.60
+Neo4J,2026-02-13 01:55:36,INFO,1484,3004,0,Chunk 1483 processing completed.,91.68
+Neo4J,2026-02-13 01:55:36,INFO,1485,3004,0,Chunk 1484 processing completed.,91.75
+Neo4J,2026-02-13 01:55:36,INFO,1486,3004,0,Chunk 1485 processing completed.,91.82
+Neo4J,2026-02-13 01:55:36,INFO,1486,3008,0,Results buffer saved to disk.,91.82
+Neo4J,2026-02-13 01:55:36,INFO,1487,3008,0,Chunk 1486 processing completed.,91.90
+Neo4J,2026-02-13 01:55:36,INFO,1488,3008,0,Chunk 1487 processing completed.,91.97
+Neo4J,2026-02-13 01:55:36,INFO,1489,3008,0,Chunk 1488 processing completed.,92.04
+Neo4J,2026-02-13 01:55:36,INFO,1489,3012,0,Results buffer saved to disk.,92.04
+Neo4J,2026-02-13 01:55:36,INFO,1490,3012,0,Chunk 1489 processing completed.,92.12
+Neo4J,2026-02-13 01:55:36,INFO,1491,3012,0,Chunk 1490 processing completed.,92.19
+Neo4J,2026-02-13 01:55:36,INFO,1491,3016,0,Results buffer saved to disk.,92.19
+Neo4J,2026-02-13 01:55:36,INFO,1492,3016,0,Chunk 1491 processing completed.,92.24
+Neo4J,2026-02-13 01:55:36,INFO,1492,3020,0,Results buffer saved to disk.,92.24
+Neo4J,2026-02-13 01:55:36,INFO,1493,3020,0,Chunk 1492 processing completed.,92.30
+Neo4J,2026-02-13 01:55:36,INFO,1494,3020,0,Chunk 1493 processing completed.,92.36
+Neo4J,2026-02-13 01:55:36,INFO,1494,3024,0,Results buffer saved to disk.,92.36
+Neo4J,2026-02-13 01:55:36,INFO,1495,3024,0,Chunk 1494 processing completed.,92.41
+Neo4J,2026-02-13 01:55:36,INFO,1496,3024,0,Chunk 1495 processing completed.,92.46
+Neo4J,2026-02-13 01:55:36,INFO,1496,3028,0,Results buffer saved to disk.,92.46
+Neo4J,2026-02-13 01:55:36,INFO,1497,3028,0,Chunk 1496 processing completed.,92.54
+Neo4J,2026-02-13 01:55:36,INFO,1498,3028,0,Chunk 1497 processing completed.,92.62
+Neo4J,2026-02-13 01:55:36,INFO,1498,3032,0,Results buffer saved to disk.,92.62
+Neo4J,2026-02-13 01:55:36,INFO,1499,3032,0,Chunk 1498 processing completed.,92.67
+Neo4J,2026-02-13 01:55:36,INFO,1500,3032,0,Chunk 1499 processing completed.,92.73
+Neo4J,2026-02-13 01:55:36,INFO,1500,3036,0,Results buffer saved to disk.,92.73
+Neo4J,2026-02-13 01:55:36,INFO,1501,3036,0,Chunk 1500 processing completed.,92.77
+Neo4J,2026-02-13 01:55:36,INFO,1501,3040,0,Results buffer saved to disk.,92.77
+Neo4J,2026-02-13 01:55:36,INFO,1502,3040,0,Chunk 1501 processing completed.,92.80
+Neo4J,2026-02-13 01:55:36,INFO,1503,3040,0,Chunk 1502 processing completed.,92.85
+Neo4J,2026-02-13 01:55:36,INFO,1503,3044,0,Results buffer saved to disk.,92.85
+Neo4J,2026-02-13 01:55:36,INFO,1504,3044,0,Chunk 1503 processing completed.,92.89
+Neo4J,2026-02-13 01:55:36,INFO,1505,3044,0,Chunk 1504 processing completed.,92.93
+Neo4J,2026-02-13 01:55:36,INFO,1506,3044,0,Chunk 1505 processing completed.,92.98
+Neo4J,2026-02-13 01:55:36,INFO,1506,3048,0,Results buffer saved to disk.,92.98
+Neo4J,2026-02-13 01:55:36,INFO,1507,3048,0,Chunk 1506 processing completed.,93.02
+Neo4J,2026-02-13 01:55:36,INFO,1508,3048,0,Chunk 1507 processing completed.,93.07
+Neo4J,2026-02-13 01:55:36,INFO,1508,3052,0,Results buffer saved to disk.,93.07
+Neo4J,2026-02-13 01:55:36,INFO,1509,3052,0,Chunk 1508 processing completed.,93.12
+Neo4J,2026-02-13 01:55:36,INFO,1510,3052,0,Chunk 1509 processing completed.,93.18
+Neo4J,2026-02-13 01:55:36,INFO,1511,3052,0,Chunk 1510 processing completed.,93.24
+Neo4J,2026-02-13 01:55:36,INFO,1511,3056,0,Results buffer saved to disk.,93.24
+Neo4J,2026-02-13 01:55:36,INFO,1512,3056,0,Chunk 1511 processing completed.,93.30
+Neo4J,2026-02-13 01:55:36,INFO,1513,3056,0,Chunk 1512 processing completed.,93.36
+Neo4J,2026-02-13 01:55:36,INFO,1514,3056,0,Chunk 1513 processing completed.,93.42
+Neo4J,2026-02-13 01:55:36,INFO,1514,3060,0,Results buffer saved to disk.,93.42
+Neo4J,2026-02-13 01:55:36,INFO,1515,3060,0,Chunk 1514 processing completed.,93.48
+Neo4J,2026-02-13 01:55:36,INFO,1516,3060,0,Chunk 1515 processing completed.,93.54
+Neo4J,2026-02-13 01:55:36,INFO,1517,3060,0,Chunk 1516 processing completed.,93.60
+Neo4J,2026-02-13 01:55:36,INFO,1517,3064,0,Results buffer saved to disk.,93.60
+Neo4J,2026-02-13 01:55:36,INFO,1518,3064,0,Chunk 1517 processing completed.,93.66
+Neo4J,2026-02-13 01:55:36,INFO,1518,3068,0,Results buffer saved to disk.,93.66
+Neo4J,2026-02-13 01:55:36,INFO,1519,3068,0,Chunk 1518 processing completed.,93.72
+Neo4J,2026-02-13 01:55:36,INFO,1520,3068,0,Chunk 1519 processing completed.,93.78
+Neo4J,2026-02-13 01:55:36,INFO,1520,3072,0,Results buffer saved to disk.,93.78
+Neo4J,2026-02-13 01:55:36,INFO,1521,3072,0,Chunk 1520 processing completed.,93.84
+Neo4J,2026-02-13 01:55:36,INFO,1522,3072,0,Chunk 1521 processing completed.,93.91
+Neo4J,2026-02-13 01:55:36,INFO,1522,3076,0,Results buffer saved to disk.,93.91
+Neo4J,2026-02-13 01:55:36,INFO,1523,3076,0,Chunk 1522 processing completed.,93.98
+Neo4J,2026-02-13 01:55:36,INFO,1524,3076,0,Chunk 1523 processing completed.,94.04
+Neo4J,2026-02-13 01:55:37,INFO,1525,3076,0,Chunk 1524 processing completed.,94.11
+Neo4J,2026-02-13 01:55:37,INFO,1525,3080,0,Results buffer saved to disk.,94.11
+Neo4J,2026-02-13 01:55:37,INFO,1526,3080,0,Chunk 1525 processing completed.,94.16
+Neo4J,2026-02-13 01:55:37,INFO,1527,3080,0,Chunk 1526 processing completed.,94.22
+Neo4J,2026-02-13 01:55:37,INFO,1527,3084,0,Results buffer saved to disk.,94.22
+Neo4J,2026-02-13 01:55:37,INFO,1528,3084,0,Chunk 1527 processing completed.,94.27
+Neo4J,2026-02-13 01:55:37,INFO,1529,3084,0,Chunk 1528 processing completed.,94.33
+Neo4J,2026-02-13 01:55:37,INFO,1529,3088,0,Results buffer saved to disk.,94.33
+Neo4J,2026-02-13 01:55:37,INFO,1530,3088,0,Chunk 1529 processing completed.,94.39
+Neo4J,2026-02-13 01:55:37,INFO,1530,3092,0,Results buffer saved to disk.,94.39
+Neo4J,2026-02-13 01:55:37,INFO,1531,3092,0,Chunk 1530 processing completed.,94.44
+Neo4J,2026-02-13 01:55:37,INFO,1532,3092,0,Chunk 1531 processing completed.,94.49
+Neo4J,2026-02-13 01:55:37,INFO,1532,3096,0,Results buffer saved to disk.,94.49
+Neo4J,2026-02-13 01:55:37,INFO,1533,3096,0,Chunk 1532 processing completed.,94.53
+Neo4J,2026-02-13 01:55:37,INFO,1534,3096,0,Chunk 1533 processing completed.,94.60
+Neo4J,2026-02-13 01:55:37,INFO,1534,3100,0,Results buffer saved to disk.,94.60
+Neo4J,2026-02-13 01:55:37,INFO,1535,3100,0,Chunk 1534 processing completed.,94.66
+Neo4J,2026-02-13 01:55:37,INFO,1536,3100,0,Chunk 1535 processing completed.,94.74
+Neo4J,2026-02-13 01:55:37,INFO,1536,3104,0,Results buffer saved to disk.,94.74
+Neo4J,2026-02-13 01:55:37,INFO,1537,3104,0,Chunk 1536 processing completed.,94.81
+Neo4J,2026-02-13 01:55:37,INFO,1537,3108,0,Results buffer saved to disk.,94.81
+Neo4J,2026-02-13 01:55:37,INFO,1538,3108,0,Chunk 1537 processing completed.,94.89
+Neo4J,2026-02-13 01:55:37,INFO,1539,3108,0,Chunk 1538 processing completed.,94.96
+Neo4J,2026-02-13 01:55:37,INFO,1539,3112,0,Results buffer saved to disk.,94.96
+Neo4J,2026-02-13 01:55:37,INFO,1540,3112,0,Chunk 1539 processing completed.,95.04
+Neo4J,2026-02-13 01:55:37,INFO,1541,3112,0,Chunk 1540 processing completed.,95.14
+Neo4J,2026-02-13 01:55:37,INFO,1541,3116,0,Results buffer saved to disk.,95.14
+Neo4J,2026-02-13 01:55:37,INFO,1542,3116,0,Chunk 1541 processing completed.,95.25
+Neo4J,2026-02-13 01:55:37,INFO,1543,3116,0,Chunk 1542 processing completed.,95.35
+Neo4J,2026-02-13 01:55:37,INFO,1544,3116,0,Chunk 1543 processing completed.,95.41
+Neo4J,2026-02-13 01:55:37,INFO,1544,3120,0,Results buffer saved to disk.,95.41
+Neo4J,2026-02-13 01:55:37,INFO,1545,3120,0,Chunk 1544 processing completed.,95.46
+Neo4J,2026-02-13 01:55:37,INFO,1546,3120,0,Chunk 1545 processing completed.,95.53
+Neo4J,2026-02-13 01:55:37,INFO,1546,3124,0,Results buffer saved to disk.,95.53
+Neo4J,2026-02-13 01:55:37,INFO,1547,3124,0,Chunk 1546 processing completed.,95.60
+Neo4J,2026-02-13 01:55:37,INFO,1548,3124,0,Chunk 1547 processing completed.,95.67
+Neo4J,2026-02-13 01:55:37,INFO,1548,3128,0,Results buffer saved to disk.,95.67
+Neo4J,2026-02-13 01:55:37,INFO,1549,3128,0,Chunk 1548 processing completed.,95.74
+Neo4J,2026-02-13 01:55:37,INFO,1550,3128,0,Chunk 1549 processing completed.,95.78
+Neo4J,2026-02-13 01:55:37,INFO,1550,3132,0,Results buffer saved to disk.,95.78
+Neo4J,2026-02-13 01:55:37,INFO,1551,3132,0,Chunk 1550 processing completed.,95.82
+Neo4J,2026-02-13 01:55:37,INFO,1552,3132,0,Chunk 1551 processing completed.,95.86
+Neo4J,2026-02-13 01:55:37,INFO,1552,3136,0,Results buffer saved to disk.,95.86
+Neo4J,2026-02-13 01:55:37,INFO,1553,3136,0,Chunk 1552 processing completed.,95.91
+Neo4J,2026-02-13 01:55:37,INFO,1553,3140,0,Results buffer saved to disk.,95.91
+Neo4J,2026-02-13 01:55:37,INFO,1554,3140,0,Chunk 1553 processing completed.,95.95
+Neo4J,2026-02-13 01:55:37,INFO,1555,3140,0,Chunk 1554 processing completed.,96.00
+Neo4J,2026-02-13 01:55:37,INFO,1555,3144,0,Results buffer saved to disk.,96.00
+Neo4J,2026-02-13 01:55:37,INFO,1556,3144,0,Chunk 1555 processing completed.,96.05
+Neo4J,2026-02-13 01:55:37,INFO,1557,3144,0,Chunk 1556 processing completed.,96.11
+Neo4J,2026-02-13 01:55:37,INFO,1557,3148,0,Results buffer saved to disk.,96.11
+Neo4J,2026-02-13 01:55:37,INFO,1558,3148,0,Chunk 1557 processing completed.,96.17
+Neo4J,2026-02-13 01:55:37,INFO,1559,3148,0,Chunk 1558 processing completed.,96.23
+Neo4J,2026-02-13 01:55:37,INFO,1559,3152,0,Results buffer saved to disk.,96.23
+Neo4J,2026-02-13 01:55:37,INFO,1560,3152,0,Chunk 1559 processing completed.,96.29
+Neo4J,2026-02-13 01:55:37,INFO,1561,3152,0,Chunk 1560 processing completed.,96.36
+Neo4J,2026-02-13 01:55:37,INFO,1561,3156,0,Results buffer saved to disk.,96.36
+Neo4J,2026-02-13 01:55:37,INFO,1562,3156,0,Chunk 1561 processing completed.,96.42
+Neo4J,2026-02-13 01:55:37,INFO,1563,3156,0,Chunk 1562 processing completed.,96.48
+Neo4J,2026-02-13 01:55:37,INFO,1563,3160,0,Results buffer saved to disk.,96.48
+Neo4J,2026-02-13 01:55:37,INFO,1564,3160,0,Chunk 1563 processing completed.,96.54
+Neo4J,2026-02-13 01:55:37,INFO,1565,3160,0,Chunk 1564 processing completed.,96.60
+Neo4J,2026-02-13 01:55:37,INFO,1565,3164,0,Results buffer saved to disk.,96.60
+Neo4J,2026-02-13 01:55:37,INFO,1566,3164,0,Chunk 1565 processing completed.,96.64
+Neo4J,2026-02-13 01:55:37,INFO,1567,3164,0,Chunk 1566 processing completed.,96.68
+Neo4J,2026-02-13 01:55:37,INFO,1567,3168,0,Results buffer saved to disk.,96.68
+Neo4J,2026-02-13 01:55:37,INFO,1568,3168,0,Chunk 1567 processing completed.,96.72
+Neo4J,2026-02-13 01:55:37,INFO,1569,3168,0,Chunk 1568 processing completed.,96.76
+Neo4J,2026-02-13 01:55:37,INFO,1569,3172,0,Results buffer saved to disk.,96.76
+Neo4J,2026-02-13 01:55:37,INFO,1570,3172,0,Chunk 1569 processing completed.,96.83
+Neo4J,2026-02-13 01:55:37,INFO,1571,3172,0,Chunk 1570 processing completed.,96.90
+Neo4J,2026-02-13 01:55:37,INFO,1571,3176,0,Results buffer saved to disk.,96.90
+Neo4J,2026-02-13 01:55:37,INFO,1572,3176,0,Chunk 1571 processing completed.,96.97
+Neo4J,2026-02-13 01:55:37,INFO,1573,3176,0,Chunk 1572 processing completed.,97.03
+Neo4J,2026-02-13 01:55:37,INFO,1573,3180,0,Results buffer saved to disk.,97.03
+Neo4J,2026-02-13 01:55:37,INFO,1574,3180,0,Chunk 1573 processing completed.,97.10
+Neo4J,2026-02-13 01:55:37,INFO,1575,3180,0,Chunk 1574 processing completed.,97.16
+Neo4J,2026-02-13 01:55:37,INFO,1575,3184,0,Results buffer saved to disk.,97.16
+Neo4J,2026-02-13 01:55:37,INFO,1576,3184,0,Chunk 1575 processing completed.,97.23
+Neo4J,2026-02-13 01:55:37,INFO,1577,3184,0,Chunk 1576 processing completed.,97.29
+Neo4J,2026-02-13 01:55:37,INFO,1577,3188,0,Results buffer saved to disk.,97.29
+Neo4J,2026-02-13 01:55:37,INFO,1578,3188,0,Chunk 1577 processing completed.,97.35
+Neo4J,2026-02-13 01:55:37,INFO,1579,3188,0,Chunk 1578 processing completed.,97.39
+Neo4J,2026-02-13 01:55:37,INFO,1579,3192,0,Results buffer saved to disk.,97.39
+Neo4J,2026-02-13 01:55:37,INFO,1580,3192,0,Chunk 1579 processing completed.,97.43
+Neo4J,2026-02-13 01:55:37,INFO,1581,3192,0,Chunk 1580 processing completed.,97.47
+Neo4J,2026-02-13 01:55:37,INFO,1581,3196,0,Results buffer saved to disk.,97.47
+Neo4J,2026-02-13 01:55:37,INFO,1582,3196,0,Chunk 1581 processing completed.,97.51
+Neo4J,2026-02-13 01:55:37,INFO,1582,3200,0,Results buffer saved to disk.,97.51
+Neo4J,2026-02-13 01:55:37,INFO,1583,3200,0,Chunk 1582 processing completed.,97.54
+Neo4J,2026-02-13 01:55:37,INFO,1584,3200,0,Chunk 1583 processing completed.,97.58
+Neo4J,2026-02-13 01:55:37,INFO,1585,3200,0,Chunk 1584 processing completed.,97.62
+Neo4J,2026-02-13 01:55:37,INFO,1586,3200,0,Chunk 1585 processing completed.,97.67
+Neo4J,2026-02-13 01:55:37,INFO,1586,3204,0,Results buffer saved to disk.,97.67
+Neo4J,2026-02-13 01:55:37,INFO,1587,3204,0,Chunk 1586 processing completed.,97.72
+Neo4J,2026-02-13 01:55:37,INFO,1588,3204,0,Chunk 1587 processing completed.,97.77
+Neo4J,2026-02-13 01:55:37,INFO,1589,3204,0,Chunk 1588 processing completed.,97.81
+Neo4J,2026-02-13 01:55:37,INFO,1590,3204,0,Chunk 1589 processing completed.,97.85
+Neo4J,2026-02-13 01:55:37,INFO,1590,3208,0,Results buffer saved to disk.,97.85
+Neo4J,2026-02-13 01:55:37,INFO,1591,3208,0,Chunk 1590 processing completed.,97.89
+Neo4J,2026-02-13 01:55:37,INFO,1592,3208,0,Chunk 1591 processing completed.,97.94
+Neo4J,2026-02-13 01:55:37,INFO,1592,3212,0,Results buffer saved to disk.,97.94
+Neo4J,2026-02-13 01:55:37,INFO,1593,3212,0,Chunk 1592 processing completed.,97.99
+Neo4J,2026-02-13 01:55:38,INFO,1594,3212,0,Chunk 1593 processing completed.,98.03
+Neo4J,2026-02-13 01:55:38,INFO,1594,3216,0,Results buffer saved to disk.,98.03
+Neo4J,2026-02-13 01:55:38,INFO,1595,3216,0,Chunk 1594 processing completed.,98.08
+Neo4J,2026-02-13 01:55:38,INFO,1596,3216,0,Chunk 1595 processing completed.,98.13
+Neo4J,2026-02-13 01:55:38,INFO,1596,3220,0,Results buffer saved to disk.,98.13
+Neo4J,2026-02-13 01:55:38,INFO,1597,3220,0,Chunk 1596 processing completed.,98.17
+Neo4J,2026-02-13 01:55:38,INFO,1598,3220,0,Chunk 1597 processing completed.,98.24
+Neo4J,2026-02-13 01:55:38,INFO,1598,3224,0,Results buffer saved to disk.,98.24
+Neo4J,2026-02-13 01:55:38,INFO,1599,3224,0,Chunk 1598 processing completed.,98.31
+Neo4J,2026-02-13 01:55:38,INFO,1600,3224,0,Chunk 1599 processing completed.,98.37
+Neo4J,2026-02-13 01:55:38,INFO,1601,3224,0,Chunk 1600 processing completed.,98.44
+Neo4J,2026-02-13 01:55:38,INFO,1601,3228,0,Results buffer saved to disk.,98.44
+Neo4J,2026-02-13 01:55:38,INFO,1602,3228,0,Chunk 1601 processing completed.,98.49
+Neo4J,2026-02-13 01:55:38,INFO,1602,3232,0,Results buffer saved to disk.,98.49
+Neo4J,2026-02-13 01:55:38,INFO,1603,3232,0,Chunk 1602 processing completed.,98.53
+Neo4J,2026-02-13 01:55:38,INFO,1604,3232,0,Chunk 1603 processing completed.,98.58
+Neo4J,2026-02-13 01:55:38,INFO,1604,3236,0,Results buffer saved to disk.,98.58
+Neo4J,2026-02-13 01:55:38,INFO,1605,3236,0,Chunk 1604 processing completed.,98.62
+Neo4J,2026-02-13 01:55:38,INFO,1606,3236,0,Chunk 1605 processing completed.,98.67
+Neo4J,2026-02-13 01:55:38,INFO,1606,3240,0,Results buffer saved to disk.,98.67
+Neo4J,2026-02-13 01:55:38,INFO,1607,3240,0,Chunk 1606 processing completed.,98.72
+Neo4J,2026-02-13 01:55:38,INFO,1608,3240,0,Chunk 1607 processing completed.,98.77
+Neo4J,2026-02-13 01:55:38,INFO,1609,3240,0,Chunk 1608 processing completed.,98.81
+Neo4J,2026-02-13 01:55:38,INFO,1609,3244,0,Results buffer saved to disk.,98.81
+Neo4J,2026-02-13 01:55:38,INFO,1610,3244,0,Chunk 1609 processing completed.,98.86
+Neo4J,2026-02-13 01:55:38,INFO,1610,3248,0,Results buffer saved to disk.,98.86
+Neo4J,2026-02-13 01:55:38,INFO,1611,3248,0,Chunk 1610 processing completed.,98.91
+Neo4J,2026-02-13 01:55:38,INFO,1612,3248,0,Chunk 1611 processing completed.,98.97
+Neo4J,2026-02-13 01:55:38,INFO,1612,3252,0,Results buffer saved to disk.,98.97
+Neo4J,2026-02-13 01:55:38,INFO,1613,3252,0,Chunk 1612 processing completed.,99.03
+Neo4J,2026-02-13 01:55:38,INFO,1614,3252,0,Chunk 1613 processing completed.,99.08
+Neo4J,2026-02-13 01:55:38,INFO,1614,3256,0,Results buffer saved to disk.,99.08
+Neo4J,2026-02-13 01:55:38,INFO,1615,3256,0,Chunk 1614 processing completed.,99.13
+Neo4J,2026-02-13 01:55:38,INFO,1616,3256,0,Chunk 1615 processing completed.,99.19
+Neo4J,2026-02-13 01:55:38,INFO,1616,3260,0,Results buffer saved to disk.,99.19
+Neo4J,2026-02-13 01:55:38,INFO,1617,3260,0,Chunk 1616 processing completed.,99.25
+Neo4J,2026-02-13 01:55:38,INFO,1618,3260,0,Chunk 1617 processing completed.,99.31
+Neo4J,2026-02-13 01:55:38,INFO,1619,3260,0,Chunk 1618 processing completed.,99.36
+Neo4J,2026-02-13 01:55:38,INFO,1619,3264,0,Results buffer saved to disk.,99.36
+Neo4J,2026-02-13 01:55:38,INFO,1620,3264,0,Chunk 1619 processing completed.,99.42
+Neo4J,2026-02-13 01:55:38,INFO,1621,3264,0,Chunk 1620 processing completed.,99.46
+Neo4J,2026-02-13 01:55:38,INFO,1622,3264,0,Chunk 1621 processing completed.,99.50
+Neo4J,2026-02-13 01:55:38,INFO,1622,3268,0,Results buffer saved to disk.,99.50
+Neo4J,2026-02-13 01:55:38,INFO,1623,3268,0,Chunk 1622 processing completed.,99.54
+Neo4J,2026-02-13 01:55:38,INFO,1624,3268,0,Chunk 1623 processing completed.,99.59
+Neo4J,2026-02-13 01:55:38,INFO,1625,3268,0,Chunk 1624 processing completed.,99.64
+Neo4J,2026-02-13 01:55:38,INFO,1625,3272,0,Results buffer saved to disk.,99.64
+Neo4J,2026-02-13 01:55:38,INFO,1626,3272,0,Chunk 1625 processing completed.,99.68
+Neo4J,2026-02-13 01:55:38,INFO,1627,3272,0,Chunk 1626 processing completed.,99.73
+Neo4J,2026-02-13 01:55:38,INFO,1627,3276,0,Results buffer saved to disk.,99.73
+Neo4J,2026-02-13 01:55:38,INFO,1628,3276,0,Chunk 1627 processing completed.,99.77
+Neo4J,2026-02-13 01:55:38,INFO,1629,3276,0,Chunk 1628 processing completed.,99.82
+Neo4J,2026-02-13 01:55:38,INFO,1629,3280,0,Results buffer saved to disk.,99.82
+Neo4J,2026-02-13 01:55:38,INFO,1630,3280,0,Chunk 1629 processing completed.,99.88
+Neo4J,2026-02-13 01:55:38,INFO,1631,3280,0,Chunk 1630 processing completed.,100.00
+Neo4J,2026-02-13 01:55:38,INFO,1631,3284,0,Results buffer saved to disk.,100.00
+Neo4J,2026-02-13 01:55:38,INFO,1631,3284,0,Job Neo4J has been completed.,100.00
