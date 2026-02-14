@@ -1,149 +1,149 @@
-CorpusHandler,2026-02-10 18:32:21,INFO,0,0,0,Job CorpusCleaner has started.,None
-CorpusHandler,2026-02-10 18:32:21,INFO,1,0,0,Chunk 0 processing completed.,1.05
-CorpusHandler,2026-02-10 18:32:22,INFO,2,0,0,Chunk 1 processing completed.,1.76
-CorpusHandler,2026-02-10 18:32:22,INFO,3,0,0,Chunk 2 processing completed.,2.44
-CorpusHandler,2026-02-10 18:32:22,INFO,4,0,0,Chunk 3 processing completed.,3.03
-CorpusHandler,2026-02-10 18:32:22,INFO,4,4,0,Results buffer saved to disk.,3.03
-CorpusHandler,2026-02-10 18:32:22,INFO,5,4,0,Chunk 4 processing completed.,3.86
-CorpusHandler,2026-02-10 18:32:22,INFO,6,4,0,Chunk 5 processing completed.,4.74
-CorpusHandler,2026-02-10 18:32:22,INFO,7,4,0,Chunk 6 processing completed.,5.93
-CorpusHandler,2026-02-10 18:32:22,INFO,8,4,0,Chunk 7 processing completed.,6.92
-CorpusHandler,2026-02-10 18:32:22,INFO,8,8,0,Results buffer saved to disk.,6.92
-CorpusHandler,2026-02-10 18:32:22,INFO,9,8,0,Chunk 8 processing completed.,7.74
-CorpusHandler,2026-02-10 18:32:22,INFO,10,8,0,Chunk 9 processing completed.,9.86
-CorpusHandler,2026-02-10 18:32:22,INFO,11,8,0,Chunk 10 processing completed.,10.72
-CorpusHandler,2026-02-10 18:32:22,INFO,12,8,0,Chunk 11 processing completed.,11.22
-CorpusHandler,2026-02-10 18:32:22,INFO,12,12,0,Results buffer saved to disk.,11.22
-CorpusHandler,2026-02-10 18:32:22,INFO,13,12,0,Chunk 12 processing completed.,12.23
-CorpusHandler,2026-02-10 18:32:22,INFO,14,12,0,Chunk 13 processing completed.,12.97
-CorpusHandler,2026-02-10 18:32:22,INFO,15,12,0,Chunk 14 processing completed.,13.99
-CorpusHandler,2026-02-10 18:32:22,INFO,16,12,0,Chunk 15 processing completed.,14.77
-CorpusHandler,2026-02-10 18:32:22,INFO,16,16,0,Results buffer saved to disk.,14.77
-CorpusHandler,2026-02-10 18:32:22,INFO,17,16,0,Chunk 16 processing completed.,15.63
-CorpusHandler,2026-02-10 18:32:22,INFO,18,16,0,Chunk 17 processing completed.,16.36
-CorpusHandler,2026-02-10 18:32:22,INFO,19,16,0,Chunk 18 processing completed.,17.07
-CorpusHandler,2026-02-10 18:32:22,INFO,20,16,0,Chunk 19 processing completed.,17.63
-CorpusHandler,2026-02-10 18:32:22,INFO,20,20,0,Results buffer saved to disk.,17.63
-CorpusHandler,2026-02-10 18:32:22,INFO,21,20,0,Chunk 20 processing completed.,18.65
-CorpusHandler,2026-02-10 18:32:22,INFO,22,20,0,Chunk 21 processing completed.,19.36
-CorpusHandler,2026-02-10 18:32:22,INFO,23,20,0,Chunk 22 processing completed.,20.15
-CorpusHandler,2026-02-10 18:32:22,INFO,24,20,0,Chunk 23 processing completed.,21.48
-CorpusHandler,2026-02-10 18:32:22,INFO,24,24,0,Results buffer saved to disk.,21.48
-CorpusHandler,2026-02-10 18:32:22,INFO,25,24,0,Chunk 24 processing completed.,22.31
-CorpusHandler,2026-02-10 18:32:22,INFO,26,24,0,Chunk 25 processing completed.,23.10
-CorpusHandler,2026-02-10 18:32:22,INFO,27,24,0,Chunk 26 processing completed.,24.12
-CorpusHandler,2026-02-10 18:32:22,INFO,28,24,0,Chunk 27 processing completed.,25.16
-CorpusHandler,2026-02-10 18:32:22,INFO,28,28,0,Results buffer saved to disk.,25.16
-CorpusHandler,2026-02-10 18:32:22,INFO,29,28,0,Chunk 28 processing completed.,26.11
-CorpusHandler,2026-02-10 18:32:22,INFO,30,28,0,Chunk 29 processing completed.,27.23
-CorpusHandler,2026-02-10 18:32:22,INFO,31,28,0,Chunk 30 processing completed.,28.38
-CorpusHandler,2026-02-10 18:32:22,INFO,32,28,0,Chunk 31 processing completed.,29.09
-CorpusHandler,2026-02-10 18:32:22,INFO,32,32,0,Results buffer saved to disk.,29.09
-CorpusHandler,2026-02-10 18:32:22,INFO,33,32,0,Chunk 32 processing completed.,30.13
-CorpusHandler,2026-02-10 18:32:22,INFO,34,32,0,Chunk 33 processing completed.,30.69
-CorpusHandler,2026-02-10 18:32:22,INFO,35,32,0,Chunk 34 processing completed.,32.19
-CorpusHandler,2026-02-10 18:32:22,INFO,36,32,0,Chunk 35 processing completed.,33.06
-CorpusHandler,2026-02-10 18:32:22,INFO,36,36,0,Results buffer saved to disk.,33.06
-CorpusHandler,2026-02-10 18:32:22,INFO,37,36,0,Chunk 36 processing completed.,33.84
-CorpusHandler,2026-02-10 18:32:22,INFO,38,36,0,Chunk 37 processing completed.,34.24
-CorpusHandler,2026-02-10 18:32:22,INFO,39,36,0,Chunk 38 processing completed.,35.58
-CorpusHandler,2026-02-10 18:32:22,INFO,40,36,0,Chunk 39 processing completed.,36.46
-CorpusHandler,2026-02-10 18:32:22,INFO,40,40,0,Results buffer saved to disk.,36.46
-CorpusHandler,2026-02-10 18:32:22,INFO,41,40,0,Chunk 40 processing completed.,37.24
-CorpusHandler,2026-02-10 18:32:22,INFO,42,40,0,Chunk 41 processing completed.,37.83
-CorpusHandler,2026-02-10 18:32:22,INFO,43,40,0,Chunk 42 processing completed.,38.67
-CorpusHandler,2026-02-10 18:32:22,INFO,44,40,0,Chunk 43 processing completed.,39.32
-CorpusHandler,2026-02-10 18:32:22,INFO,44,44,0,Results buffer saved to disk.,39.32
-CorpusHandler,2026-02-10 18:32:22,INFO,45,44,0,Chunk 44 processing completed.,40.33
-CorpusHandler,2026-02-10 18:32:22,INFO,46,44,0,Chunk 45 processing completed.,41.21
-CorpusHandler,2026-02-10 18:32:22,INFO,47,44,0,Chunk 46 processing completed.,42.69
-CorpusHandler,2026-02-10 18:32:22,INFO,48,44,0,Chunk 47 processing completed.,43.50
-CorpusHandler,2026-02-10 18:32:22,INFO,48,48,0,Results buffer saved to disk.,43.50
-CorpusHandler,2026-02-10 18:32:22,INFO,49,48,0,Chunk 48 processing completed.,44.19
-CorpusHandler,2026-02-10 18:32:22,INFO,50,48,0,Chunk 49 processing completed.,44.80
-CorpusHandler,2026-02-10 18:32:22,INFO,51,48,0,Chunk 50 processing completed.,45.94
-CorpusHandler,2026-02-10 18:32:22,INFO,52,48,0,Chunk 51 processing completed.,46.72
-CorpusHandler,2026-02-10 18:32:22,INFO,52,52,0,Results buffer saved to disk.,46.72
-CorpusHandler,2026-02-10 18:32:22,INFO,53,52,0,Chunk 52 processing completed.,47.31
-CorpusHandler,2026-02-10 18:32:22,INFO,54,52,0,Chunk 53 processing completed.,47.97
-CorpusHandler,2026-02-10 18:32:22,INFO,55,52,0,Chunk 54 processing completed.,48.72
-CorpusHandler,2026-02-10 18:32:22,INFO,56,52,0,Chunk 55 processing completed.,50.14
-CorpusHandler,2026-02-10 18:32:22,INFO,56,56,0,Results buffer saved to disk.,50.14
-CorpusHandler,2026-02-10 18:32:22,INFO,57,56,0,Chunk 56 processing completed.,51.01
-CorpusHandler,2026-02-10 18:32:22,INFO,58,56,0,Chunk 57 processing completed.,51.52
-CorpusHandler,2026-02-10 18:32:22,INFO,59,56,0,Chunk 58 processing completed.,53.06
-CorpusHandler,2026-02-10 18:32:22,INFO,60,56,0,Chunk 59 processing completed.,53.71
-CorpusHandler,2026-02-10 18:32:22,INFO,60,60,0,Results buffer saved to disk.,53.71
-CorpusHandler,2026-02-10 18:32:22,INFO,61,60,0,Chunk 60 processing completed.,54.52
-CorpusHandler,2026-02-10 18:32:22,INFO,62,60,0,Chunk 61 processing completed.,56.48
-CorpusHandler,2026-02-10 18:32:22,INFO,63,60,0,Chunk 62 processing completed.,57.61
-CorpusHandler,2026-02-10 18:32:22,INFO,64,60,0,Chunk 63 processing completed.,58.17
-CorpusHandler,2026-02-10 18:32:22,INFO,64,64,0,Results buffer saved to disk.,58.17
-CorpusHandler,2026-02-10 18:32:22,INFO,65,64,0,Chunk 64 processing completed.,58.91
-CorpusHandler,2026-02-10 18:32:22,INFO,66,64,0,Chunk 65 processing completed.,59.80
-CorpusHandler,2026-02-10 18:32:22,INFO,67,64,0,Chunk 66 processing completed.,60.55
-CorpusHandler,2026-02-10 18:32:22,INFO,68,64,0,Chunk 67 processing completed.,61.63
-CorpusHandler,2026-02-10 18:32:22,INFO,68,68,0,Results buffer saved to disk.,61.63
-CorpusHandler,2026-02-10 18:32:22,INFO,69,68,0,Chunk 68 processing completed.,62.50
-CorpusHandler,2026-02-10 18:32:22,INFO,70,68,0,Chunk 69 processing completed.,63.38
-CorpusHandler,2026-02-10 18:32:22,INFO,71,68,0,Chunk 70 processing completed.,64.29
-CorpusHandler,2026-02-10 18:32:22,INFO,72,68,0,Chunk 71 processing completed.,65.03
-CorpusHandler,2026-02-10 18:32:22,INFO,72,72,0,Results buffer saved to disk.,65.03
-CorpusHandler,2026-02-10 18:32:22,INFO,73,72,0,Chunk 72 processing completed.,65.73
-CorpusHandler,2026-02-10 18:32:22,INFO,74,72,0,Chunk 73 processing completed.,66.24
-CorpusHandler,2026-02-10 18:32:22,INFO,75,72,0,Chunk 74 processing completed.,67.11
-CorpusHandler,2026-02-10 18:32:22,INFO,76,72,0,Chunk 75 processing completed.,67.46
-CorpusHandler,2026-02-10 18:32:22,INFO,76,76,0,Results buffer saved to disk.,67.46
-CorpusHandler,2026-02-10 18:32:22,INFO,77,76,0,Chunk 76 processing completed.,68.15
-CorpusHandler,2026-02-10 18:32:22,INFO,78,76,0,Chunk 77 processing completed.,68.67
-CorpusHandler,2026-02-10 18:32:22,INFO,79,76,0,Chunk 78 processing completed.,69.27
-CorpusHandler,2026-02-10 18:32:22,INFO,80,76,0,Chunk 79 processing completed.,70.00
-CorpusHandler,2026-02-10 18:32:22,INFO,80,80,0,Results buffer saved to disk.,70.00
-CorpusHandler,2026-02-10 18:32:22,INFO,81,80,0,Chunk 80 processing completed.,70.72
-CorpusHandler,2026-02-10 18:32:22,INFO,82,80,0,Chunk 81 processing completed.,71.27
-CorpusHandler,2026-02-10 18:32:22,INFO,83,80,0,Chunk 82 processing completed.,72.01
-CorpusHandler,2026-02-10 18:32:22,INFO,84,80,0,Chunk 83 processing completed.,73.26
-CorpusHandler,2026-02-10 18:32:22,INFO,84,84,0,Results buffer saved to disk.,73.26
-CorpusHandler,2026-02-10 18:32:22,INFO,85,84,0,Chunk 84 processing completed.,74.68
-CorpusHandler,2026-02-10 18:32:22,INFO,86,84,0,Chunk 85 processing completed.,75.37
-CorpusHandler,2026-02-10 18:32:22,INFO,87,84,0,Chunk 86 processing completed.,76.15
-CorpusHandler,2026-02-10 18:32:22,INFO,88,84,0,Chunk 87 processing completed.,76.94
-CorpusHandler,2026-02-10 18:32:22,INFO,88,88,0,Results buffer saved to disk.,76.94
-CorpusHandler,2026-02-10 18:32:22,INFO,89,88,0,Chunk 88 processing completed.,78.27
-CorpusHandler,2026-02-10 18:32:22,INFO,90,88,0,Chunk 89 processing completed.,79.06
-CorpusHandler,2026-02-10 18:32:22,INFO,91,88,0,Chunk 90 processing completed.,80.09
-CorpusHandler,2026-02-10 18:32:22,INFO,92,88,0,Chunk 91 processing completed.,80.79
-CorpusHandler,2026-02-10 18:32:22,INFO,92,92,0,Results buffer saved to disk.,80.79
-CorpusHandler,2026-02-10 18:32:22,INFO,93,92,0,Chunk 92 processing completed.,81.47
-CorpusHandler,2026-02-10 18:32:22,INFO,94,92,0,Chunk 93 processing completed.,82.18
-CorpusHandler,2026-02-10 18:32:22,INFO,95,92,0,Chunk 94 processing completed.,82.95
-CorpusHandler,2026-02-10 18:32:22,INFO,96,92,0,Chunk 95 processing completed.,83.46
-CorpusHandler,2026-02-10 18:32:22,INFO,96,96,0,Results buffer saved to disk.,83.46
-CorpusHandler,2026-02-10 18:32:22,INFO,97,96,0,Chunk 96 processing completed.,85.14
-CorpusHandler,2026-02-10 18:32:22,INFO,98,96,0,Chunk 97 processing completed.,85.84
-CorpusHandler,2026-02-10 18:32:22,INFO,99,96,0,Chunk 98 processing completed.,86.43
-CorpusHandler,2026-02-10 18:32:22,INFO,100,96,0,Chunk 99 processing completed.,87.07
-CorpusHandler,2026-02-10 18:32:22,INFO,100,100,0,Results buffer saved to disk.,87.07
-CorpusHandler,2026-02-10 18:32:22,INFO,101,100,0,Chunk 100 processing completed.,87.87
-CorpusHandler,2026-02-10 18:32:22,INFO,102,100,0,Chunk 101 processing completed.,88.77
-CorpusHandler,2026-02-10 18:32:22,INFO,103,100,0,Chunk 102 processing completed.,89.61
-CorpusHandler,2026-02-10 18:32:22,INFO,104,100,0,Chunk 103 processing completed.,90.43
-CorpusHandler,2026-02-10 18:32:22,INFO,104,104,0,Results buffer saved to disk.,90.43
-CorpusHandler,2026-02-10 18:32:22,INFO,105,104,0,Chunk 104 processing completed.,91.06
-CorpusHandler,2026-02-10 18:32:22,INFO,106,104,0,Chunk 105 processing completed.,91.82
-CorpusHandler,2026-02-10 18:32:22,INFO,107,104,0,Chunk 106 processing completed.,92.46
-CorpusHandler,2026-02-10 18:32:22,INFO,108,104,0,Chunk 107 processing completed.,93.16
-CorpusHandler,2026-02-10 18:32:22,INFO,108,108,0,Results buffer saved to disk.,93.16
-CorpusHandler,2026-02-10 18:32:22,INFO,109,108,0,Chunk 108 processing completed.,93.91
-CorpusHandler,2026-02-10 18:32:22,INFO,110,108,0,Chunk 109 processing completed.,94.97
-CorpusHandler,2026-02-10 18:32:22,INFO,111,108,0,Chunk 110 processing completed.,95.56
-CorpusHandler,2026-02-10 18:32:22,INFO,112,108,0,Chunk 111 processing completed.,96.27
-CorpusHandler,2026-02-10 18:32:22,INFO,112,112,0,Results buffer saved to disk.,96.27
-CorpusHandler,2026-02-10 18:32:22,INFO,113,112,0,Chunk 112 processing completed.,96.84
-CorpusHandler,2026-02-10 18:32:22,INFO,114,112,0,Chunk 113 processing completed.,97.43
-CorpusHandler,2026-02-10 18:32:22,INFO,115,112,0,Chunk 114 processing completed.,98.00
-CorpusHandler,2026-02-10 18:32:22,INFO,116,112,0,Chunk 115 processing completed.,98.58
-CorpusHandler,2026-02-10 18:32:22,INFO,116,116,0,Results buffer saved to disk.,98.58
-CorpusHandler,2026-02-10 18:32:22,INFO,117,116,0,Chunk 116 processing completed.,99.44
-CorpusHandler,2026-02-10 18:32:22,INFO,118,116,0,Chunk 117 processing completed.,100.00
-CorpusHandler,2026-02-10 18:32:22,INFO,118,118,0,Job CorpusCleaner has been completed.,100.00
+CorpusCleaner,2026-02-14 21:21:00,INFO,0,0,0,Job CorpusCleaner has started.,None
+CorpusCleaner,2026-02-14 21:21:01,INFO,1,0,0,Chunk 0 processing completed.,0.70
+CorpusCleaner,2026-02-14 21:21:01,INFO,2,0,0,Chunk 1 processing completed.,1.76
+CorpusCleaner,2026-02-14 21:21:01,INFO,3,0,0,Chunk 2 processing completed.,2.44
+CorpusCleaner,2026-02-14 21:21:01,INFO,4,0,0,Chunk 3 processing completed.,3.03
+CorpusCleaner,2026-02-14 21:21:01,INFO,4,4,0,Results buffer saved to disk.,3.03
+CorpusCleaner,2026-02-14 21:21:01,INFO,5,4,0,Chunk 4 processing completed.,3.86
+CorpusCleaner,2026-02-14 21:21:01,INFO,6,4,0,Chunk 5 processing completed.,4.74
+CorpusCleaner,2026-02-14 21:21:01,INFO,7,4,0,Chunk 6 processing completed.,5.93
+CorpusCleaner,2026-02-14 21:21:01,INFO,8,4,0,Chunk 7 processing completed.,6.92
+CorpusCleaner,2026-02-14 21:21:01,INFO,8,8,0,Results buffer saved to disk.,6.92
+CorpusCleaner,2026-02-14 21:21:01,INFO,9,8,0,Chunk 8 processing completed.,7.74
+CorpusCleaner,2026-02-14 21:21:01,INFO,10,8,0,Chunk 9 processing completed.,9.86
+CorpusCleaner,2026-02-14 21:21:01,INFO,11,8,0,Chunk 10 processing completed.,10.72
+CorpusCleaner,2026-02-14 21:21:01,INFO,12,8,0,Chunk 11 processing completed.,11.22
+CorpusCleaner,2026-02-14 21:21:01,INFO,12,12,0,Results buffer saved to disk.,11.22
+CorpusCleaner,2026-02-14 21:21:01,INFO,13,12,0,Chunk 12 processing completed.,12.23
+CorpusCleaner,2026-02-14 21:21:01,INFO,14,12,0,Chunk 13 processing completed.,12.97
+CorpusCleaner,2026-02-14 21:21:01,INFO,15,12,0,Chunk 14 processing completed.,13.99
+CorpusCleaner,2026-02-14 21:21:01,INFO,16,12,0,Chunk 15 processing completed.,14.77
+CorpusCleaner,2026-02-14 21:21:01,INFO,16,16,0,Results buffer saved to disk.,14.77
+CorpusCleaner,2026-02-14 21:21:01,INFO,17,16,0,Chunk 16 processing completed.,15.63
+CorpusCleaner,2026-02-14 21:21:01,INFO,18,16,0,Chunk 17 processing completed.,16.36
+CorpusCleaner,2026-02-14 21:21:01,INFO,19,16,0,Chunk 18 processing completed.,17.07
+CorpusCleaner,2026-02-14 21:21:01,INFO,20,16,0,Chunk 19 processing completed.,17.63
+CorpusCleaner,2026-02-14 21:21:01,INFO,20,20,0,Results buffer saved to disk.,17.63
+CorpusCleaner,2026-02-14 21:21:01,INFO,21,20,0,Chunk 20 processing completed.,18.65
+CorpusCleaner,2026-02-14 21:21:01,INFO,22,20,0,Chunk 21 processing completed.,19.36
+CorpusCleaner,2026-02-14 21:21:01,INFO,23,20,0,Chunk 22 processing completed.,20.16
+CorpusCleaner,2026-02-14 21:21:01,INFO,24,20,0,Chunk 23 processing completed.,21.48
+CorpusCleaner,2026-02-14 21:21:01,INFO,24,24,0,Results buffer saved to disk.,21.48
+CorpusCleaner,2026-02-14 21:21:01,INFO,25,24,0,Chunk 24 processing completed.,22.31
+CorpusCleaner,2026-02-14 21:21:01,INFO,26,24,0,Chunk 25 processing completed.,23.10
+CorpusCleaner,2026-02-14 21:21:01,INFO,27,24,0,Chunk 26 processing completed.,24.12
+CorpusCleaner,2026-02-14 21:21:01,INFO,28,24,0,Chunk 27 processing completed.,25.16
+CorpusCleaner,2026-02-14 21:21:01,INFO,28,28,0,Results buffer saved to disk.,25.16
+CorpusCleaner,2026-02-14 21:21:01,INFO,29,28,0,Chunk 28 processing completed.,26.11
+CorpusCleaner,2026-02-14 21:21:01,INFO,30,28,0,Chunk 29 processing completed.,27.23
+CorpusCleaner,2026-02-14 21:21:01,INFO,31,28,0,Chunk 30 processing completed.,28.38
+CorpusCleaner,2026-02-14 21:21:01,INFO,32,28,0,Chunk 31 processing completed.,29.09
+CorpusCleaner,2026-02-14 21:21:01,INFO,32,32,0,Results buffer saved to disk.,29.09
+CorpusCleaner,2026-02-14 21:21:01,INFO,33,32,0,Chunk 32 processing completed.,30.13
+CorpusCleaner,2026-02-14 21:21:01,INFO,34,32,0,Chunk 33 processing completed.,30.69
+CorpusCleaner,2026-02-14 21:21:01,INFO,35,32,0,Chunk 34 processing completed.,32.19
+CorpusCleaner,2026-02-14 21:21:01,INFO,36,32,0,Chunk 35 processing completed.,33.53
+CorpusCleaner,2026-02-14 21:21:01,INFO,36,36,0,Results buffer saved to disk.,33.53
+CorpusCleaner,2026-02-14 21:21:01,INFO,37,36,0,Chunk 36 processing completed.,34.31
+CorpusCleaner,2026-02-14 21:21:01,INFO,38,36,0,Chunk 37 processing completed.,35.18
+CorpusCleaner,2026-02-14 21:21:01,INFO,39,36,0,Chunk 38 processing completed.,35.58
+CorpusCleaner,2026-02-14 21:21:01,INFO,40,36,0,Chunk 39 processing completed.,36.46
+CorpusCleaner,2026-02-14 21:21:01,INFO,40,40,0,Results buffer saved to disk.,36.46
+CorpusCleaner,2026-02-14 21:21:01,INFO,41,40,0,Chunk 40 processing completed.,37.24
+CorpusCleaner,2026-02-14 21:21:01,INFO,42,40,0,Chunk 41 processing completed.,37.83
+CorpusCleaner,2026-02-14 21:21:01,INFO,43,40,0,Chunk 42 processing completed.,38.67
+CorpusCleaner,2026-02-14 21:21:01,INFO,44,40,0,Chunk 43 processing completed.,39.32
+CorpusCleaner,2026-02-14 21:21:01,INFO,44,44,0,Results buffer saved to disk.,39.32
+CorpusCleaner,2026-02-14 21:21:01,INFO,45,44,0,Chunk 44 processing completed.,40.33
+CorpusCleaner,2026-02-14 21:21:01,INFO,46,44,0,Chunk 45 processing completed.,41.81
+CorpusCleaner,2026-02-14 21:21:01,INFO,47,44,0,Chunk 46 processing completed.,42.69
+CorpusCleaner,2026-02-14 21:21:01,INFO,48,44,0,Chunk 47 processing completed.,43.50
+CorpusCleaner,2026-02-14 21:21:01,INFO,48,48,0,Results buffer saved to disk.,43.50
+CorpusCleaner,2026-02-14 21:21:01,INFO,49,48,0,Chunk 48 processing completed.,44.19
+CorpusCleaner,2026-02-14 21:21:01,INFO,50,48,0,Chunk 49 processing completed.,44.80
+CorpusCleaner,2026-02-14 21:21:01,INFO,51,48,0,Chunk 50 processing completed.,45.94
+CorpusCleaner,2026-02-14 21:21:01,INFO,52,48,0,Chunk 51 processing completed.,46.72
+CorpusCleaner,2026-02-14 21:21:01,INFO,52,52,0,Results buffer saved to disk.,46.72
+CorpusCleaner,2026-02-14 21:21:01,INFO,53,52,0,Chunk 52 processing completed.,47.31
+CorpusCleaner,2026-02-14 21:21:01,INFO,54,52,0,Chunk 53 processing completed.,47.97
+CorpusCleaner,2026-02-14 21:21:01,INFO,55,52,0,Chunk 54 processing completed.,48.72
+CorpusCleaner,2026-02-14 21:21:01,INFO,56,52,0,Chunk 55 processing completed.,50.14
+CorpusCleaner,2026-02-14 21:21:01,INFO,56,56,0,Results buffer saved to disk.,50.14
+CorpusCleaner,2026-02-14 21:21:01,INFO,57,56,0,Chunk 56 processing completed.,51.01
+CorpusCleaner,2026-02-14 21:21:01,INFO,58,56,0,Chunk 57 processing completed.,51.52
+CorpusCleaner,2026-02-14 21:21:01,INFO,59,56,0,Chunk 58 processing completed.,52.17
+CorpusCleaner,2026-02-14 21:21:01,INFO,60,56,0,Chunk 59 processing completed.,53.71
+CorpusCleaner,2026-02-14 21:21:01,INFO,60,60,0,Results buffer saved to disk.,53.71
+CorpusCleaner,2026-02-14 21:21:01,INFO,61,60,0,Chunk 60 processing completed.,54.52
+CorpusCleaner,2026-02-14 21:21:01,INFO,62,60,0,Chunk 61 processing completed.,56.48
+CorpusCleaner,2026-02-14 21:21:01,INFO,63,60,0,Chunk 62 processing completed.,57.61
+CorpusCleaner,2026-02-14 21:21:01,INFO,64,60,0,Chunk 63 processing completed.,58.17
+CorpusCleaner,2026-02-14 21:21:01,INFO,64,64,0,Results buffer saved to disk.,58.17
+CorpusCleaner,2026-02-14 21:21:01,INFO,65,64,0,Chunk 64 processing completed.,58.91
+CorpusCleaner,2026-02-14 21:21:01,INFO,66,64,0,Chunk 65 processing completed.,59.80
+CorpusCleaner,2026-02-14 21:21:01,INFO,67,64,0,Chunk 66 processing completed.,60.55
+CorpusCleaner,2026-02-14 21:21:01,INFO,68,64,0,Chunk 67 processing completed.,61.63
+CorpusCleaner,2026-02-14 21:21:01,INFO,68,68,0,Results buffer saved to disk.,61.63
+CorpusCleaner,2026-02-14 21:21:01,INFO,69,68,0,Chunk 68 processing completed.,62.38
+CorpusCleaner,2026-02-14 21:21:01,INFO,70,68,0,Chunk 69 processing completed.,63.24
+CorpusCleaner,2026-02-14 21:21:01,INFO,71,68,0,Chunk 70 processing completed.,64.12
+CorpusCleaner,2026-02-14 21:21:01,INFO,72,68,0,Chunk 71 processing completed.,65.03
+CorpusCleaner,2026-02-14 21:21:01,INFO,72,72,0,Results buffer saved to disk.,65.03
+CorpusCleaner,2026-02-14 21:21:01,INFO,73,72,0,Chunk 72 processing completed.,65.73
+CorpusCleaner,2026-02-14 21:21:01,INFO,74,72,0,Chunk 73 processing completed.,66.24
+CorpusCleaner,2026-02-14 21:21:01,INFO,75,72,0,Chunk 74 processing completed.,67.11
+CorpusCleaner,2026-02-14 21:21:01,INFO,76,72,0,Chunk 75 processing completed.,67.46
+CorpusCleaner,2026-02-14 21:21:01,INFO,76,76,0,Results buffer saved to disk.,67.46
+CorpusCleaner,2026-02-14 21:21:01,INFO,77,76,0,Chunk 76 processing completed.,68.15
+CorpusCleaner,2026-02-14 21:21:01,INFO,78,76,0,Chunk 77 processing completed.,68.67
+CorpusCleaner,2026-02-14 21:21:01,INFO,79,76,0,Chunk 78 processing completed.,69.27
+CorpusCleaner,2026-02-14 21:21:01,INFO,80,76,0,Chunk 79 processing completed.,70.01
+CorpusCleaner,2026-02-14 21:21:01,INFO,80,80,0,Results buffer saved to disk.,70.01
+CorpusCleaner,2026-02-14 21:21:01,INFO,81,80,0,Chunk 80 processing completed.,70.74
+CorpusCleaner,2026-02-14 21:21:01,INFO,82,80,0,Chunk 81 processing completed.,71.47
+CorpusCleaner,2026-02-14 21:21:01,INFO,83,80,0,Chunk 82 processing completed.,72.01
+CorpusCleaner,2026-02-14 21:21:01,INFO,84,80,0,Chunk 83 processing completed.,73.26
+CorpusCleaner,2026-02-14 21:21:01,INFO,84,84,0,Results buffer saved to disk.,73.26
+CorpusCleaner,2026-02-14 21:21:01,INFO,85,84,0,Chunk 84 processing completed.,74.68
+CorpusCleaner,2026-02-14 21:21:01,INFO,86,84,0,Chunk 85 processing completed.,75.37
+CorpusCleaner,2026-02-14 21:21:01,INFO,87,84,0,Chunk 86 processing completed.,76.15
+CorpusCleaner,2026-02-14 21:21:01,INFO,88,84,0,Chunk 87 processing completed.,76.94
+CorpusCleaner,2026-02-14 21:21:01,INFO,88,88,0,Results buffer saved to disk.,76.94
+CorpusCleaner,2026-02-14 21:21:01,INFO,89,88,0,Chunk 88 processing completed.,78.27
+CorpusCleaner,2026-02-14 21:21:01,INFO,90,88,0,Chunk 89 processing completed.,79.06
+CorpusCleaner,2026-02-14 21:21:01,INFO,91,88,0,Chunk 90 processing completed.,80.09
+CorpusCleaner,2026-02-14 21:21:01,INFO,92,88,0,Chunk 91 processing completed.,80.79
+CorpusCleaner,2026-02-14 21:21:01,INFO,92,92,0,Results buffer saved to disk.,80.79
+CorpusCleaner,2026-02-14 21:21:01,INFO,93,92,0,Chunk 92 processing completed.,81.47
+CorpusCleaner,2026-02-14 21:21:01,INFO,94,92,0,Chunk 93 processing completed.,82.18
+CorpusCleaner,2026-02-14 21:21:01,INFO,95,92,0,Chunk 94 processing completed.,82.95
+CorpusCleaner,2026-02-14 21:21:01,INFO,96,92,0,Chunk 95 processing completed.,83.46
+CorpusCleaner,2026-02-14 21:21:01,INFO,96,96,0,Results buffer saved to disk.,83.46
+CorpusCleaner,2026-02-14 21:21:01,INFO,97,96,0,Chunk 96 processing completed.,85.14
+CorpusCleaner,2026-02-14 21:21:01,INFO,98,96,0,Chunk 97 processing completed.,85.84
+CorpusCleaner,2026-02-14 21:21:01,INFO,99,96,0,Chunk 98 processing completed.,86.43
+CorpusCleaner,2026-02-14 21:21:01,INFO,100,96,0,Chunk 99 processing completed.,87.07
+CorpusCleaner,2026-02-14 21:21:01,INFO,100,100,0,Results buffer saved to disk.,87.07
+CorpusCleaner,2026-02-14 21:21:01,INFO,101,100,0,Chunk 100 processing completed.,87.87
+CorpusCleaner,2026-02-14 21:21:01,INFO,102,100,0,Chunk 101 processing completed.,88.77
+CorpusCleaner,2026-02-14 21:21:01,INFO,103,100,0,Chunk 102 processing completed.,89.61
+CorpusCleaner,2026-02-14 21:21:01,INFO,104,100,0,Chunk 103 processing completed.,90.43
+CorpusCleaner,2026-02-14 21:21:01,INFO,104,104,0,Results buffer saved to disk.,90.43
+CorpusCleaner,2026-02-14 21:21:01,INFO,105,104,0,Chunk 104 processing completed.,91.06
+CorpusCleaner,2026-02-14 21:21:01,INFO,106,104,0,Chunk 105 processing completed.,91.82
+CorpusCleaner,2026-02-14 21:21:01,INFO,107,104,0,Chunk 106 processing completed.,92.46
+CorpusCleaner,2026-02-14 21:21:01,INFO,108,104,0,Chunk 107 processing completed.,93.16
+CorpusCleaner,2026-02-14 21:21:01,INFO,108,108,0,Results buffer saved to disk.,93.16
+CorpusCleaner,2026-02-14 21:21:01,INFO,109,108,0,Chunk 108 processing completed.,93.91
+CorpusCleaner,2026-02-14 21:21:01,INFO,110,108,0,Chunk 109 processing completed.,94.97
+CorpusCleaner,2026-02-14 21:21:01,INFO,111,108,0,Chunk 110 processing completed.,95.56
+CorpusCleaner,2026-02-14 21:21:01,INFO,112,108,0,Chunk 111 processing completed.,96.27
+CorpusCleaner,2026-02-14 21:21:01,INFO,112,112,0,Results buffer saved to disk.,96.27
+CorpusCleaner,2026-02-14 21:21:01,INFO,113,112,0,Chunk 112 processing completed.,96.84
+CorpusCleaner,2026-02-14 21:21:01,INFO,114,112,0,Chunk 113 processing completed.,97.41
+CorpusCleaner,2026-02-14 21:21:01,INFO,115,112,0,Chunk 114 processing completed.,98.00
+CorpusCleaner,2026-02-14 21:21:01,INFO,116,112,0,Chunk 115 processing completed.,98.58
+CorpusCleaner,2026-02-14 21:21:01,INFO,116,116,0,Results buffer saved to disk.,98.58
+CorpusCleaner,2026-02-14 21:21:01,INFO,117,116,0,Chunk 116 processing completed.,99.44
+CorpusCleaner,2026-02-14 21:21:01,INFO,118,116,0,Chunk 117 processing completed.,100.00
+CorpusCleaner,2026-02-14 21:21:01,INFO,118,118,0,Job CorpusCleaner has been completed.,100.00

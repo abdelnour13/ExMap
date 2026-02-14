@@ -2,13 +2,14 @@ import httpx
 import math
 import time
 import json
-from typing import Optional, Generator, Dict, Union, List
-from src.shared.command_tools import BaseCommand
+from typing import Optional, Generator, Dict, Union, List, Self
+from src.helpers import load_json_file
+from src.shared.command_tools import BaseCommand, BaseConfig
 from src.shared.handlers import ConsoleLogger, Event, EventLevel
 from src.shared.file_tools import FileWriter
 from returns.result import Result, safe
 from returns.primitives.exceptions import UnwrapFailedError
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, computed_field
 from typing import List
 from instance import cli
 
@@ -26,6 +27,15 @@ class HALConfig(BaseModel):
     page_size : int
     num_pages : Optional[int] = None
 
+class Config(BaseConfig):
+
+    hal_config : str = Field(description="Path to a config.json file.")
+
+    @computed_field
+    @property
+    def hal_conf(self) -> HALConfig:
+        return HALConfig(**load_json_file(self.hal_config))
+    
 class HAL_API:
 
     BASE_URL : str = "https://api.archives-ouvertes.fr/search"
@@ -137,6 +147,13 @@ class HAL_API:
             .map(lambda x :  x['response']['docs']) \
             .map(lambda x : list(map(self.normalize_document, x)))
 
+
+@cli.register_stage(
+    name="download",
+    description="Download the articles & their abstracts that will be used later to create the graph.",
+    add_from_conf=False,
+    add_save_to=False
+)
 class DataDownloader(BaseCommand):
 
     def __init__(self, 
@@ -236,24 +253,15 @@ class DataDownloader(BaseCommand):
 
         yield self._make_event(progress=1.0,level=EventLevel.INFO,message=f"Download of {self._num_pages} has been completed.")
 
-@cli.register_command(
-    name="download",
-    description="Download the articles & their abstracts that will be used later to create the graph.",
-    add_from_conf=False,
-    add_save_to=False
-)
-def download(
-    config : str = Field(description="Path to a config.toml file."), 
-    output_filename : str = Field(description="The path to the file to save the downloaded data to.")
-) -> None:
-    
-    with open(config, 'rb') as f:
-        data = json.load(f)
-        config = HALConfig(**data)
+    @classmethod
+    def from_config(cls, config : Config) -> Self:
 
-    downloader = DataDownloader(
-        api=HAL_API(config),
-        writer=FileWriter.from_filename(output_filename)
-    ).add_handler(ConsoleLogger("DataDownloader"))
+        downloader = DataDownloader(
+            api=HAL_API(config.hal_conf),
+            writer=FileWriter.from_filename(config.output_filename)
+        )
+        
+        downloader \
+            .add_handler(ConsoleLogger("DataDownloader"))
 
-    downloader.run()
+        return downloader

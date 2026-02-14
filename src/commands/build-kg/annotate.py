@@ -1,11 +1,11 @@
 import re
 import dotenv
 from typing import Dict, List
-from src.shared.command_tools import Stage, BaseConfig, command
+from src.shared.command_tools import Stage, StageConfig, add_handlers
 from src.shared.file_tools import FileWriter, FileReader
 from src.helpers import load_json_file
 from pydantic import computed_field
-from pycli import Field, Model
+from pycli import Field
 from dataclasses import dataclass
 from openai import OpenAI
 from definitions import ENV
@@ -19,7 +19,7 @@ class Domain:
     sub_domain : str
     definition : str
 
-class Config(BaseConfig):
+class Config(StageConfig):
 
     model : str = Field(
         default="deepseek-chat",
@@ -41,6 +41,15 @@ MODELS = {
     }
 }
 
+@cli.register_stage(
+    name="annotate",
+    description=(
+        "Classify using the provided LLM each document into one of the domains defined in the json file passed."
+    ),
+    add_from_conf=False,
+    add_save_to=False
+)
+@add_handlers
 class DocumentsAnnotator(Stage):
 
     def __init__(self, 
@@ -122,33 +131,23 @@ class DocumentsAnnotator(Stage):
             }
         }
     
-
-@cli.register_command(
-    name="annotate",
-    description=(
-        "Classify using the provided LLM each document into one of the domains defined in the json file passed."
-    ),
-    model=Model(Config, spread=False),
-    add_from_conf=False,
-    add_save_to=False
-)
-@command
-def from_config(config : Config) -> 'DocumentsAnnotator':
-    
-    return DocumentsAnnotator(
-        reader=FileReader.from_filename(config.input_filename),
-        writer=FileWriter.from_filename(config.output_filename),
-        batch_size=config.batch_size,
-        buffer_size=config.buffer_size,
-        client=OpenAI(
-            api_key=config.api_key,
-            base_url=MODELS[config.model]['url']
-        ),
-        domains=list(
-            map(
-                lambda x : Domain(**x),
-                load_json_file(config.domains_filename)
-            )
-        ),
-        model=config.model
-    )
+    @classmethod
+    def from_config(cls, config : Config) -> 'DocumentsAnnotator':
+        
+        return DocumentsAnnotator(
+            reader=FileReader.from_filename(config.input_filename),
+            writer=FileWriter.from_filename(config.output_filename),
+            batch_size=config.batch_size,
+            buffer_size=config.buffer_size,
+            client=OpenAI(
+                api_key=config.api_key,
+                base_url=MODELS[config.model]['url']
+            ),
+            domains=list(
+                map(
+                    lambda x : Domain(**x),
+                    load_json_file(config.domains_filename)
+                )
+            ),
+            model=config.model
+        )

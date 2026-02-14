@@ -1,4 +1,47 @@
-from pycli import Cli
+import inspect
+from pycli import Cli as PyCli, Example, Model
+from typing import List, Optional, TypeVar, Type, Callable
+from src.shared.command_tools import BaseCommand
+
+T = TypeVar('T')
+
+class Cli(PyCli):
+
+    def register_stage(self, 
+        name : Optional[str] = None,
+        description : Optional[str] = None,
+        examples : Optional[List[Example]] = None,
+        add_help : bool = True,
+        add_save_to : bool = True,
+        add_from_conf : bool = True,
+        strict : bool = True,
+    ) -> Callable[[Type[BaseCommand]], Type[BaseCommand]]:
+        
+        def __wrap__(cls : Type[BaseCommand]) -> Type[BaseCommand]:
+            
+            def _cmd(config : T) -> None:
+                instance = cls.from_config(config)
+                instance.run()
+
+            config_cls = inspect \
+                .signature(cls.from_config) \
+                .parameters['config'].annotation
+                
+            self.add_command(
+                _cmd, 
+                name, 
+                description, 
+                examples, 
+                Model(config_cls, spread=False),
+                add_help, 
+                add_save_to, 
+                add_from_conf,
+                strict
+            )
+
+            return cls
+        
+        return __wrap__
 
 cli = Cli(
     name="Text2KG.",

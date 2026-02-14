@@ -1,0 +1,2 @@
+python3 text2kg.py download --output-dir /home/abdelnour-main/Documents/Projects/Text2KG/data/ls2n/raw \
+    --format jsonl --hal-config /home/abdelnour-main/Documents/Projects/Text2KG/data/ls2n/config.json

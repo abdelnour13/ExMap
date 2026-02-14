@@ -1,53 +1,43 @@
-import os
-from typing import Generator, Dict, Iterable, Union, List, Optional, Annotated, Callable
+from src.helpers.config import assert_file_exists
+from typing import Generator, Dict, Iterable, Union, List, Annotated, Type
 from src.shared.handlers import SocketHandler, ConsoleLogger, FileLogger
-from pydantic import BaseModel
 from abc import abstractmethod
 from src.shared.file_tools import Reader, FileWriter, batched
 from src.shared.handlers import Event, EventLevel
-from src.helpers.config import assert_file_exists, makedirs
-from pycli import toml_parser
-from pydantic import BaseModel, Field, computed_field, BeforeValidator
+from pydantic import Field, BeforeValidator
 from functools import wraps
-from .base_command import BaseCommand
+from abc import ABC
+from .base_command import BaseCommand, BaseConfig
 
-class Connection(BaseModel):
-    host : str = Field(description="The host of the socket connection.")
-    port : str = Field(description="The port of the socket connection.")
-
-class BaseConfig(BaseModel):
-
-    connection : Optional[Annotated[Connection, BeforeValidator(toml_parser)]] = Field(
-        default=None, 
-        description="The socket connection used to send updates through."
-    )
+class StageConfig(BaseConfig):
 
     input_filename : Annotated[str, BeforeValidator(assert_file_exists)] = Field(
         description="The path to the file holding the data."
     )
-
-    output_dir : Annotated[str, BeforeValidator(makedirs)] = Field(
-        description="The path of the directory to save the result to."
-    )
-
-    format : str = Field(default="jsonl", description="The format to save result.")
+    
     batch_size : int = Field(default=1,description="How many documents to process on a single pass.")
     buffer_size : int = Field(default=4,description="The size of the buffer used to update the file on the disk.")
 
-    @computed_field
-    @property
-    def output_filename(self) -> str:
-        return os.path.join(self.output_dir, f"data.{self.format}")
-    
-    @computed_field
-    @property
-    def log_filename(self) -> str:
-        return os.path.join(self.output_dir, f"output.log")
-    
-    @computed_field
-    @property
-    def checkpoint_filename(self) -> str:
-        return os.path.join(self.output_dir, f"checkpoint")
+def add_handlers(cls : Type['Stage']):
+
+    from_config = cls.__dict__['from_config'].__func__    
+
+    @wraps(from_config)
+    def new_from_config(cls, config : StageConfig):
+
+        instance : 'Stage' = from_config(cls, config)
+
+        if config.connection is not None:
+            instance.add_handler(SocketHandler(host=config.connection.host, port=config.connection.port))
+
+        instance.add_handler(ConsoleLogger(cls.__name__))
+        instance.add_handler(FileLogger(name=cls.__name__, log_file=config.log_filename))
+
+        return instance
+
+    cls.from_config = classmethod(new_from_config)
+
+    return cls
 
 class Stage(BaseCommand):
 
@@ -199,20 +189,3 @@ class Stage(BaseCommand):
             total_skipped=total_skipped,
             message=f"Job {self.__class__.__name__} has been completed."
         )
-
-def command(fn : Callable[[BaseModel], 'BaseCommand']) -> Callable[[BaseModel], None]:
-
-    @wraps(fn)
-    def __warp__(config : BaseModel) -> None:
-
-        cmd = fn(config)
-
-        if config.connection is not None:
-            cmd.add_handler(SocketHandler(host=config.connection.host, port=config.connection.port))
-
-        cmd.add_handler(ConsoleLogger(cmd.__class__.__name__))
-        cmd.add_handler(FileLogger(name=cmd.__class__.__name__, log_file=config.log_filename))
-
-        cmd.run()
-
-    return __warp__

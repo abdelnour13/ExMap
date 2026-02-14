@@ -1,17 +1,16 @@
 import dotenv
-from src.shared.command_tools import Stage, BaseConfig, command
+from src.shared.command_tools import Stage, StageConfig, add_handlers
 from src.shared.handlers import EventLevel, Event
 from src.shared.file_tools import FileReader, FileWriter
 from typing import Dict, Any, Tuple, Union, Optional, List, Generator
 from neo4j import GraphDatabase, Driver
-from pycli import Model
 from definitions import ENV
 from pydantic import computed_field
 from instance import cli
 
 dotenv.load_dotenv(ENV)
 
-class Config(BaseConfig):
+class Config(StageConfig):
 
     @computed_field
     @property
@@ -28,6 +27,15 @@ class Config(BaseConfig):
     def neo4j_pwd(self) -> str:
         return dotenv.get_key(ENV, "NEO4J_PWD")
 
+@cli.register_stage(
+    name="insert2neo4j",
+    description=(
+        "Extract triples from sentences json file using an LLM-Based triples extractor componenet."
+    ),
+    add_from_conf=False,
+    add_save_to=False
+) 
+@add_handlers
 class Neo4J(Stage):
 
     def __init__(self, 
@@ -195,27 +203,18 @@ class Neo4J(Stage):
 
         return chunk
 
-@cli.register_command(
-    name="insert2neo4j",
-    description=(
-        "Extract triples from sentences json file using an LLM-Based triples extractor componenet."
-    ),
-    model=Model(Config, spread=False),
-    add_from_conf=False,
-    add_save_to=False
-) 
-@command
-def insert2neo4j(config : Config) -> 'Neo4J':
+    @classmethod
+    def from_config(cls, config : Config) -> 'Neo4J':
 
-    driver = GraphDatabase.driver(
-        uri=config.neo4j_uri,
-        auth=(config.neo4j_user,config.neo4j_pwd)
-    )
+        driver = GraphDatabase.driver(
+            uri=config.neo4j_uri,
+            auth=(config.neo4j_user,config.neo4j_pwd)
+        )
 
-    return Neo4J(
-        reader=FileReader.from_filename(config.input_filename),
-        writer=FileWriter.from_filename(config.output_filename),
-        buffer_size=config.buffer_size,
-        batch_size=config.batch_size,
-        driver=driver
-    )
+        return Neo4J(
+            reader=FileReader.from_filename(config.input_filename),
+            writer=FileWriter.from_filename(config.output_filename),
+            buffer_size=config.buffer_size,
+            batch_size=config.batch_size,
+            driver=driver
+        )

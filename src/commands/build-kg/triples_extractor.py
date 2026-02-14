@@ -1,17 +1,17 @@
 import dotenv
 from typing import List, Dict
-from src.shared.command_tools import Stage, BaseConfig, command
+from src.shared.command_tools import Stage, StageConfig, add_handlers
 from src.shared.file_tools import FileWriter, FileReader
 from returns.pipeline import is_successful
 from src.shared.triples_extractors import BaseTriplesExtractor, TriplesExtractorFactory
-from pycli import Field, Model
+from pycli import Field
 from pydantic import computed_field
 from definitions import ENV
 from instance import cli
 
 dotenv.load_dotenv(ENV)
 
-class Config(BaseConfig):
+class Config(StageConfig):
 
     type : str = Field(
         default='two-step',
@@ -25,6 +25,15 @@ class Config(BaseConfig):
     def api_key(self) -> str:
         return dotenv.get_key(f"{self.llm.upper()}_API_KEY")
 
+@cli.register_stage(
+    name="extract_triples",
+    description=(
+        "Extract triples from sentences json file using an LLM-Based triples extractor componenet."
+    ),
+    add_from_conf=False,
+    add_save_to=False
+) 
+@add_handlers
 class TriplesExtractor(Stage):
 
     def __init__(self, 
@@ -68,28 +77,18 @@ class TriplesExtractor(Stage):
                 pass
 
         return records
-
-
-@cli.register_command(
-    name="extract_triples",
-    description=(
-        "Extract triples from sentences json file using an LLM-Based triples extractor componenet."
-    ),
-    model=Model(Config, spread=False),
-    add_from_conf=False,
-    add_save_to=False
-) 
-@command
-def extract_triples(config : Config) -> 'TriplesExtractor':
     
-    return TriplesExtractor(
-        reader=FileReader.from_filename(config.input_filename),
-        writer=FileWriter.from_filename(config.output_filename),
-        batch_size=config.batch_size,
-        buffer_size=config.buffer_size,
-        triple_extractor=TriplesExtractorFactory.from_llm(
-            api_key=config.api_key,
-            type=config.type,
-            llm_name=config.llm
+    @classmethod
+    def from_config(cls, config : Config) -> 'TriplesExtractor':
+        
+        return TriplesExtractor(
+            reader=FileReader.from_filename(config.input_filename),
+            writer=FileWriter.from_filename(config.output_filename),
+            batch_size=config.batch_size,
+            buffer_size=config.buffer_size,
+            triple_extractor=TriplesExtractorFactory.from_llm(
+                api_key=config.api_key,
+                type=config.type,
+                llm_name=config.llm
+            )
         )
-    )

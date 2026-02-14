@@ -1,14 +1,13 @@
 import re
 from src.shared.file_tools import FileWriter, FileReader
-from src.shared.command_tools import Stage, BaseConfig, command
+from src.shared.command_tools import Stage, StageConfig, add_handlers
 from pydantic import Field
 from typing import Dict, List
 from transformers import pipeline
-from pycli import Model
 from instance import cli
 from definitions import hf_model_dir
 
-class Config(BaseConfig):
+class Config(StageConfig):
 
     qa_model : str = Field(
         default="timpal0l/mdeberta-v3-base-squad2",
@@ -20,6 +19,16 @@ class Config(BaseConfig):
         description="The minimum threshold to retain the acronym expansion."
     )
 
+@cli.register_stage(
+    name="extract_acronyms",
+    description=(
+        "Extract acronyms from the documents relying on a method that combines regular expressions "
+        "and QA models."
+    ),
+    add_from_conf=False,
+    add_save_to=False
+)
+@add_handlers
 class AcronymExtractor(Stage):
 
     def __init__(self, 
@@ -110,24 +119,14 @@ class AcronymExtractor(Stage):
 
         return records
 
-@cli.register_command(
-    name="extract_acronyms",
-    description=(
-        "Extract acronyms from the documents relying on a method that combines regular expressions "
-        "and QA models."
-    ),
-    model=Model(Config, spread=False),
-    add_from_conf=False,
-    add_save_to=False
-)
-@command
-def extract_acronyms(config : Config) -> Stage:
-    
-    return AcronymExtractor(
-        reader=FileReader.from_filename(config.input_filename),
-        writer=FileWriter.from_filename(config.output_filename),
-        batch_size=config.batch_size,
-        buffer_size=config.buffer_size,
-        qa_model=config.qa_model,
-        threshold=config.threshold
-    )
+    @classmethod
+    def from_config(cls, config : Config) -> Stage:
+        
+        return AcronymExtractor(
+            reader=FileReader.from_filename(config.input_filename),
+            writer=FileWriter.from_filename(config.output_filename),
+            batch_size=config.batch_size,
+            buffer_size=config.buffer_size,
+            qa_model=config.qa_model,
+            threshold=config.threshold
+        )

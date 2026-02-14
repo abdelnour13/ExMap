@@ -1,12 +1,21 @@
 import re
 from bs4 import BeautifulSoup
-from src.shared.command_tools import Stage, BaseConfig, command
+from src.shared.command_tools import Stage, StageConfig, add_handlers
 from src.shared.file_tools import FileReader, FileWriter
 from src.shared.language_detectors import LanguageDetector
 from typing import Dict
-from pycli import Model
 from instance import cli
 
+# TODO: keywords and authors normalization
+@cli.register_stage(
+    name="clean",
+    description=("Performs an initial cleaning on the corpus, including : removing HTML tags and links, filtering non-english "
+        "documents and keywords."
+    ),
+    add_from_conf=False,
+    add_save_to=False
+)
+@add_handlers
 class CorpusCleaner(Stage):
 
     def __init__(self, 
@@ -85,23 +94,13 @@ class CorpusCleaner(Stage):
     def transform(self, doc : Dict) -> bool:
         return self.clean_document(doc)
 
-# TODO: keywords and authors normalization
-@cli.register_command(
-    name="clean",
-    description=("Performs an initial cleaning on the corpus, including : removing HTML tags and links, filtering non-english "
-        "documents and keywords."
-    ),
-    model=Model(BaseConfig, spread=False),
-    add_from_conf=False,
-    add_save_to=False
-)
-@command
-def clean(config : BaseConfig) -> Stage:
+    @classmethod
+    def from_config(cls, config : StageConfig) -> Stage:
 
-    return CorpusCleaner(
-        reader=FileReader.from_filename(config.input_filename),
-        writer=FileWriter.from_filename(config.output_filename),
-        batch_size=config.batch_size,
-        buffer_size=config.buffer_size,
-        language_detector=LanguageDetector.create("lingua")
-    )
+        return CorpusCleaner(
+            reader=FileReader.from_filename(config.input_filename),
+            writer=FileWriter.from_filename(config.output_filename),
+            batch_size=config.batch_size,
+            buffer_size=config.buffer_size,
+            language_detector=LanguageDetector.create("lingua")
+        )

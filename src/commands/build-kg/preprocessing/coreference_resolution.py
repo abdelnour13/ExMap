@@ -1,6 +1,6 @@
 import re
 from src.shared.file_tools import FileWriter, FileReader
-from src.shared.command_tools import Stage, BaseConfig, command
+from src.shared.command_tools import Stage, StageConfig, add_handlers
 from src.shared.handlers import Event, EventLevel
 from src.rpc.interface import allennlp_predict, load_predictor_from_path
 from typing import Dict
@@ -11,7 +11,7 @@ MODELS = {
     "spanbert-large" : "https://storage.googleapis.com/allennlp-public-models/coref-spanbert-large-2021.03.10.tar.gz",
 }
 
-class Config(BaseConfig):
+class Config(StageConfig):
 
     model : str = Field(
         default="spanbert-large",
@@ -23,6 +23,13 @@ class Config(BaseConfig):
         description="The device id (CPU/GPU) used to preform the job."
     )
 
+@cli.register_stage(
+    name="coreference_resolution",
+    description="Resolve coreferences from abstracts as a preprocessing step.",
+    add_from_conf=False,
+    add_save_to=False
+)
+@add_handlers
 class CoreferenceResolver(Stage):
 
     def __init__(self, 
@@ -106,21 +113,14 @@ class CoreferenceResolver(Stage):
 
         return doc
 
-@cli.register_command(
-    name="coreference_resolution",
-    description="Resolve coreferences from abstracts as a preprocessing step.",
-    model=Model(Config, spread=False),
-    add_from_conf=False,
-    add_save_to=False
-)
-@command
-def coreference_resolution(config : Config) -> Stage:
+    @classmethod
+    def from_config(cls, config : Config) -> Stage:
 
-    return CoreferenceResolver(
-        reader=FileReader.from_filename(config.input_filename),
-        writer=FileWriter.from_filename(config.output_filename),
-        batch_size=config.batch_size,
-        buffer_size=config.buffer_size,
-        model=config.model,
-        device=config.device
-    )
+        return CoreferenceResolver(
+            reader=FileReader.from_filename(config.input_filename),
+            writer=FileWriter.from_filename(config.output_filename),
+            batch_size=config.batch_size,
+            buffer_size=config.buffer_size,
+            model=config.model,
+            device=config.device
+        )

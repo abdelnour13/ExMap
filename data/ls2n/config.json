@@ -3,20 +3,20 @@
     "num_pages" : null,
     "query" : {
         "teams" : ["LS2N-DUKE"],
-        "format" : "json"
-    },
-    "attributes" : [
-        "docid",
-        "title_s",
-        "keyword_s",
-        "abstract_s",
-        "authFullName_s",
-        "producedDate_tdate",
-        "domainAllCode_s",
-        "collCode_s"
-    ],
-    "from_" : "*",
-    "to" : "*",
-    "languages" : ["en"],
-    "sort" : "producedDate_tdate desc"
+        "format" : "json",
+        "attributes" : [
+            "docid",
+            "title_s",
+            "keyword_s",
+            "abstract_s",
+            "authFullName_s",
+            "producedDate_tdate",
+            "domainAllCode_s",
+            "collCode_s"
+        ],
+        "from_" : "*",
+        "to" : "*",
+        "languages" : ["en"],
+        "sort" : "producedDate_tdate desc"
+    }
 }

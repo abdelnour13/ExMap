@@ -4,12 +4,35 @@ import spacy
 from nltk import pos_tag, word_tokenize
 from typing import List, Tuple, Dict
 from dataclasses import dataclass
-from src.shared.command_tools import BaseConfig, command, Stage
+from src.helpers import load_json_file
+from src.shared.command_tools import StageConfig, Stage, add_handlers
 from src.shared.file_tools import FileWriter, FileReader
 from src.shared.language_detectors import LanguageDetector
 from dataclasses import dataclass
-from pycli import Model
+from pycli import Field
+from pydantic import computed_field, BaseModel
 from instance import cli
+from definitions import nlp_dir
+
+class Stop(BaseModel):
+    entities : List[str]
+    predicates : List[str]
+    standard_verbs : List[str]
+    tokens : List[str]
+
+class Nlp(BaseModel):
+    stop : Stop
+    propositions : List[str]
+    mapping : Dict[str, Tuple[str, bool]]
+
+class Config(StageConfig):
+
+    domain : str = Field(default="computer_science", description="The domain that describes nature of the topics discussed articles used to create the graph.")
+
+    @computed_field
+    @property
+    def nlp(self) -> Dict[str, str]:
+        return Nlp(**load_json_file(nlp_dir(self.domain)))
 
 @dataclass(frozen=True)
 class Token:
@@ -19,7 +42,6 @@ class Token:
     @property
     def simple_tag(self) -> str:
         return self.tag[:2]
-
 
 @dataclass(frozen=True)
 class Predicate:
@@ -44,106 +66,61 @@ class Predicate:
     @property
     def simple_pattern(self) -> str:
         return " ".join([token.simple_tag for token in self.tokens])
+    
+    def matches(self, expression : str) -> bool:
 
+        i = 0
+        parts = expression.split(' ')
 
+        for part in parts:
+
+            if i >= len(self.tokens):
+                return False
+
+            ### This means simple tag
+            if part.startswith("@"):
+                
+                if self.tokens[i].simple_tag not in part.strip('@').split('|'):
+                    return False
+                
+            ### This means tag
+            if part.startswith("#"):
+                
+                if self.tokens[i].tag not in part.strip('#').split('|'):
+                    return False
+                
+            ### *
+            elif part.startswith("*"):
+
+                if len(part) > 2:
+                    i += int(part.strip('*')) - 1                    
+
+            ### Word
+            else:
+
+                if self.tokens[i].value not in part.split('|'):
+                    return False
+
+            i += 1
+
+        if i > len(self.tokens):
+            return False
+
+        return True
+
+@cli.register_stage(
+    name="clean_triples",
+    description=(
+        "Apply a set of rules to clean the triples and retain the main verb in the predicate."
+    ),
+    add_from_conf=False,
+    add_save_to=False
+)
+@add_handlers
 class TriplesPostprocessor(Stage):
 
     MAX_PRED_LEN = 4
     MAX_ENTITY_LEN = 6
-
-    STOPWORDS_ENTITIES = [
-        "interest",
-        "researcher",
-        "researchers",
-        "phd",
-        "thesis",
-        "study",
-        "studies",
-        "approach",
-        "work",
-        "article",
-        "chapter",
-        "section",
-        "author",
-        "results",
-        "experiment",
-        "experiments",
-        "objective",
-        "reasearch",
-        "conference",
-        "contribution",
-        "survey",
-        "paper",
-        "experimental",
-        "comparision",
-        "we",
-        "it",
-        "research",
-        "literature",
-        "review",
-        "make",
-        "our",
-        "proposed",
-        "result",
-        "supplementary",
-    ]
-
-    STOPWORDS_RELATIONS = [
-        "suggest",
-        "introduce",
-        "show",
-        "present",
-        "can",
-        "cannot",
-        "will",
-        "could",
-        "like",
-        "hard",
-        "impossible",
-        "not",
-        "n't",
-        "unable",
-        "difficult",
-        "negatively",
-        "fail",
-        "no",
-        "became",
-        "should",
-        "must",
-        "may",
-        "without",
-        "est",
-        "non",
-        "incomplete",
-        "lack",
-        "unavailable",
-    ]
-
-    PROPOSITIONS = [
-        "of",
-        "on",
-        "in",
-        "with",
-        "into",
-        "onto",
-        "between",
-        "below",
-        "above",
-        "under",
-        "by",
-        "for",
-        "at",
-        "over",
-        "throught",
-        "have",
-        "to",
-        "from",
-    ]
-
-    STANDARD_VERBS = [
-        "be",
-        "have",
-    ]
 
     def __init__(
         self,
@@ -152,8 +129,10 @@ class TriplesPostprocessor(Stage):
         batch_size: int,
         buffer_size: int,
         language_detector: LanguageDetector,
+        domain_nlp : Nlp
     ) -> None:
         super().__init__(reader, writer, batch_size, buffer_size)
+        self.domain_nlp = domain_nlp
         self.nlp = spacy.load("en_core_web_sm")
         self.language_detector = language_detector
 
@@ -193,26 +172,13 @@ class TriplesPostprocessor(Stage):
         is_passive = False
         E2 = None
 
-        maps = {
-            # "such as" : ('is',True),
-            "is namely": ("have abbreviation", False),
-            "is abbreviated as": ("have abbreviation", False),
-            "are abbreviated as": ("have abbreviation", False),
-            "is abbreviation of": ("have abbreviation", True),
-            "is useful for": ("used for", False),
-            "find applications in": ("used for", False),
-            "are solution for": ("solve", False),
-            "is referred to as": ("have abbreviation", False),
-        }
-
         ### Remove stop words
         predicate = Predicate(
             [
                 token
                 for token in predicate.tokens
                 if token.tag != "DT"
-                and token.value
-                not in ["a", "the", "an", "also", "key", "challenge", "new"]
+                and token.value not in self.domain_nlp.stop.tokens
             ]
         )
 
@@ -228,7 +194,8 @@ class TriplesPostprocessor(Stage):
         if len(predicate.tokens) > 2:
 
             if predicate.values[0] in ["is", "was", "are", "be", "were", "being"] and (
-                predicate.tags[1][:2] == "VB" or predicate.values[1] in ["more", "less"]
+                predicate.tags[1][:2] == "VB" 
+                or predicate.values[1] in ["more", "less"]
             ):
                 predicate = Predicate(tokens=predicate.tokens[1:])
 
@@ -294,8 +261,8 @@ class TriplesPostprocessor(Stage):
                 predicate = Predicate(tokens=predicate.tokens[1:])
 
         ### Special Maps
-        if predicate.predicate in maps:
-            predicate, is_passive = maps.get(predicate.predicate)
+        if predicate.predicate in self.domain_nlp.mapping:
+            predicate, is_passive = self.domain_nlp.mapping.get(predicate.predicate)
             predicate = self.make_predicate(predicate)
 
         ### Parts to be moved to tail entity
@@ -327,13 +294,13 @@ class TriplesPostprocessor(Stage):
         is_valid = len(pred.tags) > 0 and len(pred.tags) <= self.MAX_PRED_LEN
 
         is_valid = is_valid and not any(
-            [stop_rel in pred.values for stop_rel in self.STOPWORDS_RELATIONS]
+            [stop_rel in pred.values for stop_rel in self.domain_nlp.stop.predicates]
         )
 
         is_valid = is_valid and "CC" not in pred.tags
 
         is_valid = is_valid and not all(
-            [token.value in self.PROPOSITIONS for token in pred.tokens]
+            [token.value in self.domain_nlp.propositions for token in pred.tokens]
         )
 
         is_valid = is_valid and pred.pattern not in [
@@ -363,7 +330,7 @@ class TriplesPostprocessor(Stage):
         ]
 
 
-        is_valid = is_valid # and self.language_detector.is_english(pred.predicate)
+        is_valid = is_valid
 
         return is_valid
 
@@ -378,13 +345,15 @@ class TriplesPostprocessor(Stage):
         is_valid = is_valid and not entity.isnumeric()
 
         is_valid = is_valid = is_valid and not any(
-            [stopword in tokens for stopword in self.STOPWORDS_ENTITIES]
+            [stopword in tokens for stopword in self.domain_nlp.stop.entities]
         )
 
         return is_valid
 
     def is_valid_triple(self, triple: Tuple[str, Predicate, str]) -> bool:
+
         head, pred, tail = triple
+
         return (
             self.is_valid_entity(head)
             and self.is_valid_predicate(pred)
@@ -401,7 +370,7 @@ class TriplesPostprocessor(Stage):
             [
                 token
                 for token in predicate.tokens
-                if token.value not in self.PROPOSITIONS
+                if token.value not in self.domain_nlp.propositions
             ]
         )
 
@@ -411,7 +380,7 @@ class TriplesPostprocessor(Stage):
                 [
                     token
                     for token in predicate.tokens
-                    if token.value not in self.STANDARD_VERBS
+                    if token.value not in self.domain_nlp.stop.standard_verbs
                 ]
             )
 
@@ -464,22 +433,14 @@ class TriplesPostprocessor(Stage):
 
         return triple
 
-@cli.register_command(
-    name="clean_triples",
-    description=(
-        "Apply a set of rules to clean the triples and retain the main verb in the predicate."
-    ),
-    model=Model(BaseConfig, spread=False),
-    add_from_conf=False,
-    add_save_to=False
-)
-@command
-def postprocess_triples(config: BaseConfig) -> "TriplesPostprocessor":
+    @classmethod
+    def from_config(cls, config: Config) -> "TriplesPostprocessor":
 
-    return TriplesPostprocessor(
-        reader=FileReader.from_filename(config.input_filename),
-        writer=FileWriter.from_filename(config.output_filename),
-        batch_size=config.batch_size,
-        buffer_size=config.buffer_size,
-        language_detector=LanguageDetector.create("lingua"),
-    )
+        return TriplesPostprocessor(
+            reader=FileReader.from_filename(config.input_filename),
+            writer=FileWriter.from_filename(config.output_filename),
+            batch_size=config.batch_size,
+            buffer_size=config.buffer_size,
+            language_detector=LanguageDetector.create("lingua"),
+            domain_nlp=config.nlp
+        )

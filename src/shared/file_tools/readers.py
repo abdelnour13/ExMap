@@ -3,13 +3,15 @@ import ijson
 import os
 import lmdb
 import msgpack
-from typing import Dict, Generator, Tuple, Optional, List, TypeVar
+from typing import Dict, Generator, Tuple, Optional, List, TypeVar, Callable, Any
 from abc import ABC, abstractmethod
 
 E = TypeVar('E')
 
-ReaderOutput = Tuple[Dict, Optional[float]]
-BatchedReaderOutput = Tuple[List[Dict], Optional[float]]
+MapFn = Callable[[Dict], Any]
+
+ReaderOutput = Tuple[Any, Optional[float]]
+BatchedReaderOutput = Tuple[List[Any], Optional[float]]
 
 def batched(
     generator : Generator[ReaderOutput, None, None],
@@ -37,11 +39,28 @@ def batched(
     if len(batch) > 0:
         yield batch, total_progres
 
+def map(gen : Generator[ReaderOutput, None, None], mapper : MapFn) -> Generator[ReaderOutput, None, None]:
+
+    for doc, progress in gen:
+        yield (mapper(doc), progress)
+
+def flatten(gen :  Generator[BatchedReaderOutput, None, None]) -> Generator[BatchedReaderOutput, None, None]:
+
+    p = 0
+
+    for doc, progress in gen:
+
+        for i,sub_doc in enumerate(doc):
+
+            yield (sub_doc, p + (progress - p) * (i+1) / len(doc))
+
+        p = progress
+
 class Reader(ABC):
 
     @abstractmethod
     def __iter__(self) -> Generator[ReaderOutput, None, None]:
-        return self        
+        ...   
 
 
 class FileReader(Reader):
@@ -123,7 +142,7 @@ class JSONlFileReader(FileReader):
     def __init__(self, filename : str) -> str:
         super().__init__(filename)
 
-    def __iter__(self) -> Generator[Dict, None, None]:
+    def __iter__(self) -> Generator[ReaderOutput, None, None]:
 
         bytes = os.path.getsize(self.filename)
         bytes_read = 0
