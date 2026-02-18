@@ -191,7 +191,7 @@ class TriplesPostprocessor(Stage):
             predicate = Predicate(tokens=predicate.tokens[:-1])
 
         ### Retain core action
-        if len(predicate.tokens) > 2:
+        if len(predicate.tokens) >= 2:
 
             if predicate.values[0] in ["is", "was", "are", "be", "were", "being"] and (
                 predicate.tags[1][:2] == "VB" 
@@ -199,48 +199,50 @@ class TriplesPostprocessor(Stage):
             ):
                 predicate = Predicate(tokens=predicate.tokens[1:])
 
-            if (
-                predicate.tags[0] == "MD"
-                and predicate.tags[1] in ["is", "be", "was", "are", "were", "being"]
-                and predicate.tags[2][:2] == "VB"
-            ):
-                predicate = Predicate(tokens=predicate.tokens[2:])
+            if len(predicate.tokens) >= 3:
 
-            if predicate.tags[0] in ["MD", "TO"]:
-                predicate = Predicate(tokens=predicate.tokens[1:])
+                if (
+                    predicate.tags[0] == "MD"
+                    and predicate.tags[1] in ["is", "be", "was", "are", "were", "being"]
+                    and predicate.tags[2][:2] == "VB"
+                ):
+                    predicate = Predicate(tokens=predicate.tokens[2:])
 
-            if (
-                predicate.predicate.startswith("used to")
-                and predicate.predicate.startswith("use for")
-                and predicate.predicate.startswith("use to")
-                and predicate.predicate.startswith("used for")
-                and predicate.predicate.startswith("used to")
-                and predicate.predicate.startswith("proposed to")
-                and predicate.predicate.startswith("applied to")
-                and predicate.predicate.startswith("managed to")
-                and predicate.predicate.startswith("proved to")
-                and predicate.predicate.startswith("aims to")
-                and predicate.predicate.startswith("aims at")
-                and predicate.predicate.startswith("focus on")
-                and predicate.predicate.startswith("appropriate for")
-                and predicate.predicate.startswith("able to")
-                and predicate.predicate.startswith("allowing to")
-                and predicate.predicate.startswith("consists in")
-                and predicate.predicate.startswith("has potential")
-                and predicate.predicate.startswith("design to")
-            ):
-                predicate = Predicate(tokens=predicate.tokens[2:])
+                if predicate.tags[0] in ["MD", "TO"]:
+                    predicate = Predicate(tokens=predicate.tokens[1:])
 
-            if predicate.pattern.startswith("JJ TO") and len(predicate.tags):
-                predicate = Predicate(tokens=predicate.tokens[2:])
+                if (
+                    predicate.predicate.startswith("used to")
+                    and predicate.predicate.startswith("use for")
+                    and predicate.predicate.startswith("use to")
+                    and predicate.predicate.startswith("used for")
+                    and predicate.predicate.startswith("used to")
+                    and predicate.predicate.startswith("proposed to")
+                    and predicate.predicate.startswith("applied to")
+                    and predicate.predicate.startswith("managed to")
+                    and predicate.predicate.startswith("proved to")
+                    and predicate.predicate.startswith("aims to")
+                    and predicate.predicate.startswith("aims at")
+                    and predicate.predicate.startswith("focus on")
+                    and predicate.predicate.startswith("appropriate for")
+                    and predicate.predicate.startswith("able to")
+                    and predicate.predicate.startswith("allowing to")
+                    and predicate.predicate.startswith("consists in")
+                    and predicate.predicate.startswith("has potential")
+                    and predicate.predicate.startswith("design to")
+                ):
+                    predicate = Predicate(tokens=predicate.tokens[2:])
 
-            if predicate.pattern == "IN NN TO":
-                predicate = Predicate(tokens=predicate.tokens[1:])
+                if predicate.pattern.startswith("JJ TO") and len(predicate.tags):
+                    predicate = Predicate(tokens=predicate.tokens[2:])
 
-            if (  ### TODO: check this rule
-                len(predicate.tags) > 4 and predicate.tokens[4].simple_tag == "VB"
-            ):
-                predicate = Predicate(tokens=predicate.tokens[4:])
+                if predicate.pattern == "IN NN TO":
+                    predicate = Predicate(tokens=predicate.tokens[1:])
+
+                if (  ### TODO: check this rule
+                    len(predicate.tags) > 4 and predicate.tokens[4].simple_tag == "VB"
+                ):
+                    predicate = Predicate(tokens=predicate.tokens[4:])
 
         if len(predicate.tags) > 1:
 
@@ -422,8 +424,6 @@ class TriplesPostprocessor(Stage):
         ### Construct Triple
         triple = {
             "id": doc["id"],
-            "sentence_id": doc["sentence_id"],
-            "document_id": doc["document_id"],
             "sentence": doc["sentence"],
             "head": head,
             "predicate": predicate,

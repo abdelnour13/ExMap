@@ -30,7 +30,7 @@ class Config(StageConfig):
 @cli.register_stage(
     name="insert2neo4j",
     description=(
-        "Extract triples from sentences json file using an LLM-Based triples extractor componenet."
+        "Inserts the graph into a neo4j database using the provided credentials in the '.env' file."
     ),
     add_from_conf=False,
     add_save_to=False
@@ -48,6 +48,7 @@ class Neo4J(Stage):
         super().__init__(reader, writer, batch_size, buffer_size)
 
         self.entities = {}
+        self.documents = {}
         self.driver = driver
 
     def format_value(self, value : Any) -> Any:
@@ -67,7 +68,7 @@ class Neo4J(Stage):
 
     def node_query(self, properties: dict, type_ : str = "Entity") -> str:
         props_str = ", ".join(f"{k}: {self.format_value(v)}" for k, v in properties.items())
-        query = f"CREATE (e:{type_} {{{props_str}}});"
+        query = f"MERGE (e:{type_} {{{props_str}}});"
         return query
 
     def relation_query(self,
@@ -83,7 +84,7 @@ class Neo4J(Stage):
             query = (
                 f"""MATCH (s:{type_1} {{ id: {self.format_value(src)} }})"""
                 f"""MATCH (o:{type_2} {{ id: {self.format_value(dst)} }})"""
-                f"""CREATE (s)-[:{relation} {{ type: {self.format_value(rel)} }}]->(o);"""
+                f"""MERGE (s)-[:{relation} {{ type: {self.format_value(rel)} }}]->(o);"""
             )
 
         else:
@@ -91,69 +92,31 @@ class Neo4J(Stage):
             query = (
                 f"""MATCH (s:{type_1} {{ id: {self.format_value(src)} }}) """
                 f"""MATCH (o:{type_2} {{ id: {self.format_value(dst)} }}) """
-                f"""CREATE (s)-[:{relation}]->(o);"""
+                f"""MERGE (s)-[:{relation}]->(o);"""
             )
 
         return query
     
-    def add_entity(self, entity : str) -> Tuple[int, bool]:
-
-        exists = entity in self.entities
-
-        if not exists:
-            self.entities[entity] = len(self.entities)
-
-        return self.entities[entity], exists
-    
-    def transform(self, doc : Dict) -> List[Dict]:
+    def transform(self, doc : Dict) -> List[str]:
         
-        ### Records To Return
-        records = []
+        n1 = doc["n1"]
+        n2 = doc["n2"]
+        relation = doc["relation"]
 
-        ### Get head, predicate and tail
-        head, predicate, tail = doc['head'], doc['predicate'], doc['tail']
-
-        head = head.replace(" ","_")
-        predicate = predicate.replace(" ","_")
-        tail = tail.replace(" ","_")
-
-        head_id,head_exists = self.add_entity(head)
-        tail_id,tail_exists = self.add_entity(tail)
-
-        if not head_exists:
-
-            records.append({
-                "id" : head_id,
-                "query_type" : "node_isertion",
-                "query" : self.node_query(properties={
-                    "id" : head_id,
-                    "name" : head
-                })
-            })
-
-        if not tail_exists:
-
-            records.append({
-                "id" : tail_id,
-                "query_type" : "node_isertion",
-                "query" : self.node_query(properties={
-                    "id" : tail_id,
-                    "name" : tail
-                })
-            })
-
-        records.append({
-            "id": f"{head_id}_{predicate}_{tail_id}",
-            "head_id" : head_id,
-            "tail_id" : tail_id,
-            "predicate" : predicate,
-            "query_type" : "relation_insertion",
-            "query" : self.relation_query(
-                relation=(head_id,predicate,tail_id)
+        return [
+            self.node_query(
+                properties=n1["proprties"],
+                type_=n1["type"]
+            ),
+            self.node_query(
+                properties=n2["proprties"],
+                type_=n2["type"]
+            ),
+            self.relation_query(
+                relation=(n1["proprties"]["id"],relation['properties'].get("value", None),n2["proprties"]["id"]),
+                types=(n1['type'], relation['type'],n2['type'])
             )
-        })
-
-        return records
+        ]
     
     def before_start(self) -> Generator[Event,None,None]:
 
@@ -183,6 +146,24 @@ class Neo4J(Stage):
                     message="Deleted all rows in the database."
                 )
 
+                session.run("""
+                    CREATE CONSTRAINT unique_entity_id IF NOT EXISTS
+                    FOR (e:Entity)
+                    REQUIRE e.id IS UNIQUE;
+                """)
+
+                session.run("""
+                    CREATE CONSTRAINT unique_article_id IF NOT EXISTS
+                    FOR (a:Article)
+                    REQUIRE a.id IS UNIQUE;
+                """)
+
+                yield Event(
+                    progress=0.0,
+                    level=EventLevel.DEBUG,
+                    message="Unique constraints created."
+                )
+
         except Exception as e:
 
             yield Event(
@@ -191,15 +172,15 @@ class Neo4J(Stage):
                 message="Connection to Neo4j failed."
             )
 
-    def transform_chunk(self, chunk : List[Dict]) -> List[Dict]:
+    def transform_chunk(self, chunk : List[str]) -> List[str]:
 
         chunk = super().transform_chunk(chunk)
 
         with self.driver.session() as session:
 
             with session.begin_transaction() as trx:
-                for record in chunk:
-                    trx.run(query=record['query'])
+                for query in chunk:
+                    trx.run(query=query)
 
         return chunk
 

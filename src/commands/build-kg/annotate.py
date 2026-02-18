@@ -31,7 +31,7 @@ class Config(StageConfig):
     @computed_field
     @property
     def api_key(self) -> str:
-        return dotenv.get_key(f"{self.model.upper()}_API_KEY")
+        return dotenv.get_key(ENV, f"{self.model.upper()}_API_KEY")
 
 MODELS = {
     "deepseek-chat": {
@@ -80,7 +80,7 @@ class DocumentsAnnotator(Stage):
     def get_prompt(self, domain : Domain) -> str:
 
         return (
-            f"Given the label named \" {domain.domain} \" and defined as : \" {domain.definition} \" . "
+            f"Given the label named \" {domain.sub_domain} \" and defined as : \" {domain.definition} \" . "
             "Does the article in question belong to this label"
         )
         
@@ -121,14 +121,11 @@ class DocumentsAnnotator(Stage):
             result = answer.strip().strip('"').lower()
 
             if result == "yes":
-                labels.append(domain.domain)
+                labels.append(domain.sub_domain)
 
         return {
             **doc, 
-            "domains": {
-                "raw": answers, 
-                "decoded": labels
-            }
+            "labels" : labels
         }
     
     @classmethod

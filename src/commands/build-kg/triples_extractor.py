@@ -23,7 +23,7 @@ class Config(StageConfig):
     @computed_field
     @property
     def api_key(self) -> str:
-        return dotenv.get_key(f"{self.llm.upper()}_API_KEY")
+        return dotenv.get_key(ENV, f"{self.llm.upper()}_API_KEY")
 
 @cli.register_stage(
     name="extract_triples",
@@ -64,12 +64,10 @@ class TriplesExtractor(Stage):
 
                     records.append({
                         "id" : f"{doc['id']}_{i}",
-                        "document_id" : doc['document_id'],
-                        "sentence_id" : doc['id'],
-                        "sentence" : doc['sentence'],
                         "head" : triple.head,
                         "predicate" : triple.predicate,
-                        "tail" : triple.tail
+                        "tail" : triple.tail,
+                        "sentence" : doc
                     })
                     
             else:

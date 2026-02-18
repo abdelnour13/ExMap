@@ -97,9 +97,9 @@ class AcronymExtractor(Stage):
         
         sentence = doc['sentence']
         candidates = self.parse_acronyms_type1(sentence)
-        records = []
+        acronyms = []
 
-        for i,acronym in enumerate(candidates):
+        for acronym in candidates:
 
             ### Use QA Model to get the expansion of acronym & the score
             question = f"What is the expansion of the acronym \"{acronym}\" ?"
@@ -108,16 +108,15 @@ class AcronymExtractor(Stage):
             ### Filter by threshold
             if result['score'] >= self.threshold:
 
-                records.append({
-                    "id" : f"{doc['id']}_{i}",
-                    "sentence_id" : doc['id'],
-                    "document_id" : doc["document_id"],
+                acronyms.append({
                     "acronym" : acronym,
                     "expansion" : result['answer'].strip(),
                     "score" : result['score']
                 })
 
-        return records
+        doc["acronyms"] = acronyms
+
+        return doc
 
     @classmethod
     def from_config(cls, config : Config) -> Stage:

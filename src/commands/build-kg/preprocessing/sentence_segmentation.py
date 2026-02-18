@@ -48,8 +48,8 @@ class SentenceSegmenter(Stage):
         return [
             {
                 "id" : f"{doc['id']}_{i}",
-                "document_id" : doc['id'],
-                "sentence" : sentence.strip()
+                "sentence" : sentence.strip(),
+                "document" : doc
             }
             for i,sentence in enumerate(sentences)
         ]
