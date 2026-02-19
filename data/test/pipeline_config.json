@@ -23,6 +23,10 @@
             }
         },
         {
+            "name" : "keyword_extraction",
+            "args" : {}
+        },
+        {
             "name" : "sentence_segmentation",
             "args" : {
                 "use_gpu" : false

@@ -1,10 +1,22 @@
-TriplesPostprocessor,2026-02-19 04:17:28,INFO,0,0,0,Job TriplesPostprocessor has started.,None
-TriplesPostprocessor,2026-02-19 04:17:28,INFO,1,0,0,Chunk 0 processing completed.,12.69
-TriplesPostprocessor,2026-02-19 04:17:28,INFO,2,0,0,Chunk 1 processing completed.,25.46
-TriplesPostprocessor,2026-02-19 04:17:28,INFO,3,0,0,Chunk 2 processing completed.,38.23
-TriplesPostprocessor,2026-02-19 04:17:28,INFO,4,0,0,Chunk 3 processing completed.,50.96
-TriplesPostprocessor,2026-02-19 04:17:28,INFO,5,0,0,Chunk 4 processing completed.,63.76
-TriplesPostprocessor,2026-02-19 04:17:29,INFO,6,0,0,Chunk 5 processing completed.,75.55
-TriplesPostprocessor,2026-02-19 04:17:29,INFO,7,0,0,Chunk 6 processing completed.,87.52
-TriplesPostprocessor,2026-02-19 04:17:29,INFO,8,0,0,Chunk 7 processing completed.,100.00
-TriplesPostprocessor,2026-02-19 04:17:29,INFO,8,3,0,Job TriplesPostprocessor has been completed.,100.00
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,0,0,0,Job TriplesPostprocessor has started.,None
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,1,0,0,Chunk 0 processing completed.,5.83
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,2,0,0,Chunk 1 processing completed.,11.64
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,3,0,0,Chunk 2 processing completed.,17.49
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,4,0,0,Chunk 3 processing completed.,23.33
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,4,4,0,Results buffer saved to disk.,23.33
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,5,4,0,Chunk 4 processing completed.,29.57
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,6,4,0,Chunk 5 processing completed.,35.80
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,7,4,0,Chunk 6 processing completed.,42.02
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,8,4,0,Chunk 7 processing completed.,48.23
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,8,8,0,Results buffer saved to disk.,48.23
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,9,8,0,Chunk 8 processing completed.,54.42
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,10,8,0,Chunk 9 processing completed.,60.05
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,11,8,0,Chunk 10 processing completed.,65.73
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,12,8,0,Chunk 11 processing completed.,71.37
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,13,8,0,Chunk 12 processing completed.,77.07
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,13,12,0,Results buffer saved to disk.,77.07
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,14,12,0,Chunk 13 processing completed.,82.79
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,15,12,0,Chunk 14 processing completed.,88.51
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,16,12,0,Chunk 15 processing completed.,94.21
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,17,12,0,Chunk 16 processing completed.,100.00
+TriplesPostprocessor,2026-02-19 20:58:03,INFO,17,14,0,Job TriplesPostprocessor has been completed.,100.00

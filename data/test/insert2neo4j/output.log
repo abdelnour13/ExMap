@@ -1,0 +1,78 @@
+Neo4J,2026-02-19 20:59:56,DEBUG,0,0,0,Connection to Neo4j established successfully.,None
+Neo4J,2026-02-19 20:59:57,DEBUG,0,0,0,Deleted all rows in the database.,None
+Neo4J,2026-02-19 20:59:58,DEBUG,0,0,0,Unique constraints created.,None
+Neo4J,2026-02-19 20:59:58,INFO,0,0,0,Job Neo4J has started.,None
+Neo4J,2026-02-19 20:59:58,INFO,1,0,0,Chunk 0 processing completed.,0.47
+Neo4J,2026-02-19 20:59:58,INFO,2,0,0,Chunk 1 processing completed.,3.77
+Neo4J,2026-02-19 20:59:58,INFO,2,4,0,Results buffer saved to disk.,3.77
+Neo4J,2026-02-19 20:59:58,INFO,3,4,0,Chunk 2 processing completed.,7.09
+Neo4J,2026-02-19 20:59:58,INFO,3,8,0,Results buffer saved to disk.,7.09
+Neo4J,2026-02-19 20:59:58,INFO,4,8,0,Chunk 3 processing completed.,7.52
+Neo4J,2026-02-19 20:59:58,INFO,4,12,0,Results buffer saved to disk.,7.52
+Neo4J,2026-02-19 20:59:58,INFO,5,12,0,Chunk 4 processing completed.,10.82
+Neo4J,2026-02-19 20:59:59,INFO,6,12,0,Chunk 5 processing completed.,14.11
+Neo4J,2026-02-19 20:59:59,INFO,6,16,0,Results buffer saved to disk.,14.11
+Neo4J,2026-02-19 20:59:59,INFO,7,16,0,Chunk 6 processing completed.,14.62
+Neo4J,2026-02-19 20:59:59,INFO,7,20,0,Results buffer saved to disk.,14.62
+Neo4J,2026-02-19 20:59:59,INFO,8,20,0,Chunk 7 processing completed.,17.96
+Neo4J,2026-02-19 20:59:59,INFO,8,24,0,Results buffer saved to disk.,17.96
+Neo4J,2026-02-19 20:59:59,INFO,9,24,0,Chunk 8 processing completed.,21.29
+Neo4J,2026-02-19 20:59:59,INFO,10,24,0,Chunk 9 processing completed.,21.78
+Neo4J,2026-02-19 20:59:59,INFO,10,28,0,Results buffer saved to disk.,21.78
+Neo4J,2026-02-19 20:59:59,INFO,11,28,0,Chunk 10 processing completed.,25.12
+Neo4J,2026-02-19 20:59:59,INFO,11,32,0,Results buffer saved to disk.,25.12
+Neo4J,2026-02-19 20:59:59,INFO,12,32,0,Chunk 11 processing completed.,28.42
+Neo4J,2026-02-19 20:59:59,INFO,12,36,0,Results buffer saved to disk.,28.42
+Neo4J,2026-02-19 20:59:59,INFO,13,36,0,Chunk 12 processing completed.,28.99
+Neo4J,2026-02-19 20:59:59,INFO,14,36,0,Chunk 13 processing completed.,32.33
+Neo4J,2026-02-19 20:59:59,INFO,14,40,0,Results buffer saved to disk.,32.33
+Neo4J,2026-02-19 20:59:59,INFO,15,40,0,Chunk 14 processing completed.,35.71
+Neo4J,2026-02-19 20:59:59,INFO,15,44,0,Results buffer saved to disk.,35.71
+Neo4J,2026-02-19 20:59:59,INFO,16,44,0,Chunk 15 processing completed.,36.23
+Neo4J,2026-02-19 20:59:59,INFO,16,48,0,Results buffer saved to disk.,36.23
+Neo4J,2026-02-19 20:59:59,INFO,17,48,0,Chunk 16 processing completed.,39.57
+Neo4J,2026-02-19 20:59:59,INFO,18,48,0,Chunk 17 processing completed.,42.92
+Neo4J,2026-02-19 20:59:59,INFO,18,52,0,Results buffer saved to disk.,42.92
+Neo4J,2026-02-19 20:59:59,INFO,19,52,0,Chunk 18 processing completed.,43.43
+Neo4J,2026-02-19 20:59:59,INFO,19,56,0,Results buffer saved to disk.,43.43
+Neo4J,2026-02-19 20:59:59,INFO,20,56,0,Chunk 19 processing completed.,46.78
+Neo4J,2026-02-19 20:59:59,INFO,20,60,0,Results buffer saved to disk.,46.78
+Neo4J,2026-02-19 20:59:59,INFO,21,60,0,Chunk 20 processing completed.,50.11
+Neo4J,2026-02-19 20:59:59,INFO,22,60,0,Chunk 21 processing completed.,50.61
+Neo4J,2026-02-19 20:59:59,INFO,22,64,0,Results buffer saved to disk.,50.61
+Neo4J,2026-02-19 20:59:59,INFO,23,64,0,Chunk 22 processing completed.,53.95
+Neo4J,2026-02-19 20:59:59,INFO,23,68,0,Results buffer saved to disk.,53.95
+Neo4J,2026-02-19 20:59:59,INFO,24,68,0,Chunk 23 processing completed.,57.27
+Neo4J,2026-02-19 20:59:59,INFO,24,72,0,Results buffer saved to disk.,57.27
+Neo4J,2026-02-19 20:59:59,INFO,25,72,0,Chunk 24 processing completed.,57.73
+Neo4J,2026-02-19 20:59:59,INFO,26,72,0,Chunk 25 processing completed.,61.07
+Neo4J,2026-02-19 20:59:59,INFO,26,76,0,Results buffer saved to disk.,61.07
+Neo4J,2026-02-19 20:59:59,INFO,27,76,0,Chunk 26 processing completed.,64.36
+Neo4J,2026-02-19 20:59:59,INFO,27,80,0,Results buffer saved to disk.,64.36
+Neo4J,2026-02-19 20:59:59,INFO,28,80,0,Chunk 27 processing completed.,64.77
+Neo4J,2026-02-19 20:59:59,INFO,28,84,0,Results buffer saved to disk.,64.77
+Neo4J,2026-02-19 20:59:59,INFO,29,84,0,Chunk 28 processing completed.,68.05
+Neo4J,2026-02-19 20:59:59,INFO,30,84,0,Chunk 29 processing completed.,71.34
+Neo4J,2026-02-19 20:59:59,INFO,30,88,0,Results buffer saved to disk.,71.34
+Neo4J,2026-02-19 20:59:59,INFO,31,88,0,Chunk 30 processing completed.,71.85
+Neo4J,2026-02-19 20:59:59,INFO,31,92,0,Results buffer saved to disk.,71.85
+Neo4J,2026-02-19 20:59:59,INFO,32,92,0,Chunk 31 processing completed.,75.15
+Neo4J,2026-02-19 20:59:59,INFO,32,96,0,Results buffer saved to disk.,75.15
+Neo4J,2026-02-19 20:59:59,INFO,33,96,0,Chunk 32 processing completed.,78.52
+Neo4J,2026-02-19 20:59:59,INFO,34,96,0,Chunk 33 processing completed.,78.97
+Neo4J,2026-02-19 20:59:59,INFO,34,100,0,Results buffer saved to disk.,78.97
+Neo4J,2026-02-19 20:59:59,INFO,35,100,0,Chunk 34 processing completed.,82.25
+Neo4J,2026-02-19 20:59:59,INFO,35,104,0,Results buffer saved to disk.,82.25
+Neo4J,2026-02-19 20:59:59,INFO,36,104,0,Chunk 35 processing completed.,85.59
+Neo4J,2026-02-19 21:00:00,INFO,36,108,0,Results buffer saved to disk.,85.59
+Neo4J,2026-02-19 21:00:00,INFO,37,108,0,Chunk 36 processing completed.,86.06
+Neo4J,2026-02-19 21:00:00,INFO,38,108,0,Chunk 37 processing completed.,89.34
+Neo4J,2026-02-19 21:00:00,INFO,38,112,0,Results buffer saved to disk.,89.34
+Neo4J,2026-02-19 21:00:00,INFO,39,112,0,Chunk 38 processing completed.,92.69
+Neo4J,2026-02-19 21:00:00,INFO,39,116,0,Results buffer saved to disk.,92.69
+Neo4J,2026-02-19 21:00:00,INFO,40,116,0,Chunk 39 processing completed.,93.27
+Neo4J,2026-02-19 21:00:00,INFO,40,120,0,Results buffer saved to disk.,93.27
+Neo4J,2026-02-19 21:00:00,INFO,41,120,0,Chunk 40 processing completed.,96.63
+Neo4J,2026-02-19 21:00:00,INFO,42,120,0,Chunk 41 processing completed.,100.00
+Neo4J,2026-02-19 21:00:00,INFO,42,124,0,Results buffer saved to disk.,100.00
+Neo4J,2026-02-19 21:00:00,INFO,42,126,0,Job Neo4J has been completed.,100.00

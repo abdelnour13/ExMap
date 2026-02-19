@@ -1,3 +1,4 @@
-TriplesExtractor,2026-02-19 04:29:22,INFO,0,0,0,Job TriplesExtractor has started.,None
-TriplesExtractor,2026-02-19 04:29:27,INFO,4,0,0,Chunk 0 processing completed.,100.00
-TriplesExtractor,2026-02-19 04:29:27,INFO,4,7,0,Job TriplesExtractor has been completed.,100.00
+TriplesExtractor,2026-02-19 20:56:55,INFO,0,0,0,Job TriplesExtractor has started.,None
+TriplesExtractor,2026-02-19 20:57:04,INFO,7,0,0,Chunk 0 processing completed.,100.00
+TriplesExtractor,2026-02-19 20:57:04,INFO,7,16,0,Results buffer saved to disk.,100.00
+TriplesExtractor,2026-02-19 20:57:04,INFO,7,17,0,Job TriplesExtractor has been completed.,100.00

@@ -1,17 +1,19 @@
 import os
-from typing import Generator, List, OrderedDict, Dict, Optional, Self, Tuple
+from typing import Generator, List, OrderedDict, Dict, Optional, Self, Tuple, Type
 from src.shared.command_tools import Stage, StageConfig, BaseCommand
 from src.shared.handlers import Event
 from src.helpers import load_json_file
 from src.helpers.config import override
 from pydantic import BaseModel, computed_field
 from instance import cli
-from multiprocessing import Process
 from definitions import DATA_DIR
+from multiprocessing import set_start_method, Process
+
+set_start_method('spawn', force=True)
 
 from src.commands.build_kg.cleaning import cleaning
 from src.commands.build_kg.preprocessing import coreference_resolution
-from src.commands.build_kg.content_enrichment import annotate, acronym_extraction
+from src.commands.build_kg.content_enrichment import annotate, acronym_extraction, keyword_extraction
 from src.commands.build_kg.preprocessing import sentence_segmentation
 from src.commands.build_kg.triplet_extraction import triples_extractor, triples_postprocessing
 from src.commands.build_kg.graph_construction import triples, neo4j
@@ -20,6 +22,7 @@ STAGES : Dict[str, Tuple[Stage, StageConfig]] = {
     "cleaning" : (cleaning.CorpusCleaner, cleaning.StageConfig),
     "coreference_resolution" : (coreference_resolution.CoreferenceResolver, coreference_resolution.Config),
     "annotate" : (annotate.DocumentsAnnotator, annotate.Config),
+    "keyword_extraction" : (keyword_extraction.KeywordExtractor, keyword_extraction.StageConfig),
     "sentence_segmentation" : (sentence_segmentation.SentenceSegmenter, sentence_segmentation.Config),
     "acronym_extraction" : (acronym_extraction.AcronymExtractor, acronym_extraction.Config),
     "extract_triples" : (triples_extractor.TriplesExtractor, triples_extractor.Config),
@@ -68,7 +71,7 @@ class Pipeline(BaseCommand):
         
         for i, (name, stage) in enumerate(self.stages.items()):
             print(f"({i+1}/{len(self.stages)}) Starting stage : {name}.\n")
-            p = Process(target=stage)
+            p = Process(target=stage[0], args=stage[1])
             p.start()
             p.join()
         
@@ -103,7 +106,7 @@ class Pipeline(BaseCommand):
                 cmd = cmd_cls.from_config(cmd_config)
                 cmd.run()
 
-            commands[stage_name] = create_and_run
+            commands[stage_name] = (cls.create_and_run, (cmd_cls, cmd_config))
 
             input_filename = cmd_config.output_filename
 
@@ -111,3 +114,8 @@ class Pipeline(BaseCommand):
                 break
 
         return Pipeline(stages={ config.stage : commands[config.stage]})
+    
+    @staticmethod
+    def create_and_run(cmd_cls : Type[BaseCommand], cmd_config : StageConfig) -> None:
+        cmd = cmd_cls.from_config(cmd_config)
+        cmd.run()        

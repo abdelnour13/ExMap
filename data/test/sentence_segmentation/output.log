@@ -1,15 +1,4 @@
-SentenceSegmenter,2026-02-19 03:02:45,INFO,0,0,0,Job SentenceSegmenter has started.,None
-SentenceSegmenter,2026-02-19 03:02:45,INFO,1,0,0,Chunk 0 processing completed.,100.00
-SentenceSegmenter,2026-02-19 03:02:45,INFO,1,4,0,Results buffer saved to disk.,100.00
-SentenceSegmenter,2026-02-19 03:02:45,INFO,1,5,0,Job SentenceSegmenter has been completed.,100.00
-AcronymExtractor,2026-02-19 03:03:18,INFO,0,0,0,Job AcronymExtractor has started.,None
-AcronymExtractor,2026-02-19 03:03:18,INFO,1,0,0,Chunk 0 processing completed.,20.73
-AcronymExtractor,2026-02-19 03:03:18,ERROR,1,0,1,An error has occured during processing chunk 1, error : Cannot re-initialize CUDA in forked subprocess. To use CUDA with multiprocessing, you must use the 'spawn' start method,40.93
-AcronymExtractor,2026-02-19 03:03:18,INFO,2,0,1,Chunk 2 processing completed.,60.10
-AcronymExtractor,2026-02-19 03:03:18,INFO,3,0,1,Chunk 3 processing completed.,79.97
-AcronymExtractor,2026-02-19 03:03:18,INFO,4,0,1,Chunk 4 processing completed.,100.00
-AcronymExtractor,2026-02-19 03:03:18,INFO,4,4,1,Results buffer saved to disk.,100.00
-AcronymExtractor,2026-02-19 03:03:18,INFO,4,4,1,Job AcronymExtractor has been completed.,100.00
-TriplesExtractor,2026-02-19 03:09:13,INFO,0,0,0,Job TriplesExtractor has started.,None
-TriplesExtractor,2026-02-19 03:09:17,INFO,4,0,0,Chunk 0 processing completed.,100.00
-TriplesExtractor,2026-02-19 03:09:17,INFO,4,9,0,Job TriplesExtractor has been completed.,100.00
+SentenceSegmenter,2026-02-19 17:48:45,INFO,0,0,0,Job SentenceSegmenter has started.,None
+SentenceSegmenter,2026-02-19 17:48:45,INFO,1,0,0,Chunk 0 processing completed.,100.00
+SentenceSegmenter,2026-02-19 17:48:45,INFO,1,4,0,Results buffer saved to disk.,100.00
+SentenceSegmenter,2026-02-19 17:48:45,INFO,1,7,0,Job SentenceSegmenter has been completed.,100.00
