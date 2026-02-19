@@ -1,5 +1,6 @@
 import re
 import dotenv
+import os
 from typing import Dict, List
 from src.shared.command_tools import Stage, StageConfig, add_handlers
 from src.shared.file_tools import FileWriter, FileReader
@@ -8,7 +9,7 @@ from pydantic import computed_field
 from pycli import Field
 from dataclasses import dataclass
 from openai import OpenAI
-from definitions import ENV
+from definitions import ENV, domain_dir
 from instance import cli
 
 dotenv.load_dotenv(ENV)
@@ -26,7 +27,12 @@ class Config(StageConfig):
         description="The LLM to be used for triple extraction."
     )
 
-    domains_filename : str = Field(description="The json file that holds the labels and their definitions.")
+    domain : str = Field(description="The json file that holds the labels and their definitions.")
+
+    @computed_field
+    @property
+    def domains(self) -> List[Domain]:
+        return [Domain(**domain) for domain in load_json_file(domain_dir(self.domain))]
 
     @computed_field
     @property
@@ -140,11 +146,6 @@ class DocumentsAnnotator(Stage):
                 api_key=config.api_key,
                 base_url=MODELS[config.model]['url']
             ),
-            domains=list(
-                map(
-                    lambda x : Domain(**x),
-                    load_json_file(config.domains_filename)
-                )
-            ),
+            domains=config.domains,
             model=config.model
         )

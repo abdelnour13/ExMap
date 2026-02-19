@@ -7,6 +7,7 @@ from typing import List
 from pycli import Example
 from pydantic import BaseModel
 from instance import cli
+from src.commands.pipeline import Pipeline
 
 class RPCService(BaseModel):
     add : bool
@@ -220,7 +221,7 @@ def start_rpc(servers : List[str]):
 
     
 def main():
-    cli.scan_dir(os.path.join(".", "src", "commands"), pattern_or_predicate="(.+).py")
+    # cli.scan_dir(os.path.join(".", "src", "commands"), pattern_or_predicate="(.+).py")
     cli.run()
 
 if __name__ == "__main__":

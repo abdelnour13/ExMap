@@ -10,10 +10,9 @@ from src.shared.file_tools import FileWriter
 from returns.result import Result, safe
 from returns.primitives.exceptions import UnwrapFailedError
 from pydantic import BaseModel, Field, computed_field
-from typing import List
 from instance import cli
 
-class Query(BaseModel):
+class Config(BaseModel):
     teams : List[str]
     format : str
     attributes : List[str]
@@ -21,11 +20,8 @@ class Query(BaseModel):
     to : str
     languages : List[str]
     sort : str
-
-class HALConfig(BaseModel):
-    query : Query
     page_size : int
-    num_pages : Optional[int] = None
+    num_pages : Optional[int]
 
 class Config(BaseConfig):
 
@@ -33,14 +29,14 @@ class Config(BaseConfig):
 
     @computed_field
     @property
-    def hal_conf(self) -> HALConfig:
-        return HALConfig(**load_json_file(self.hal_config))
+    def hal_conf(self) -> Config:
+        return Config(**load_json_file(self.hal_config))
     
 class HAL_API:
 
     BASE_URL : str = "https://api.archives-ouvertes.fr/search"
 
-    def __init__(self, config : HALConfig) -> None:
+    def __init__(self, config : Config) -> None:
         self.config = config
         self.__num_pages : Optional[Result[int, Union[httpx.TransportError,httpx.HTTPStatusError]]] = None
 
@@ -48,12 +44,12 @@ class HAL_API:
 
         return ''.join([
             HAL_API.BASE_URL,
-            f'?wt={self.config.query.format}',
-            f'&fl={",".join(self.config.query.attributes)}',
-            f'&fq=collCode_s:({" OR ".join(self.config.query.teams)})'
-            f'&fq=producedDate_tdate:[{self.config.query.from_} TO {self.config.query.to}]',
-            f'&fq=language_s:({" OR ".join(self.config.query.languages)})',
-            f'&sort={self.config.query.sort}',
+            f'?wt={self.config.format}',
+            f'&fl={",".join(self.config.attributes)}',
+            f'&fq=collCode_s:({" OR ".join(self.config.teams)})'
+            f'&fq=producedDate_tdate:[{self.config.from_} TO {self.config.to}]',
+            f'&fq=language_s:({" OR ".join(self.config.languages)})',
+            f'&sort={self.config.sort}',
             f'&rows={self.config.page_size}',
             f'&start={page_id * self.config.page_size}',
             f'&fq=abstract_s:["" TO *]',
@@ -107,7 +103,7 @@ class HAL_API:
 
         normalized_doc["teams"] = list(
             filter(
-                lambda x : x in self.config.query.teams,
+                lambda x : x in self.config.teams,
                 doc.get("collCode_s", [])
             )
         )

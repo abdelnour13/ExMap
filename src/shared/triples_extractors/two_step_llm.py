@@ -26,6 +26,7 @@ TRIPLES_PROMPT = (
 "1. A triple is composed of three parts : a head, a predicate and an entity.\n"
 "2. The triple should also preseve the logical flow tail => predicate => entity."
 "3. A predicate must describe the relationship between the two entities and be an english verb of 1-3 tokens."
+# "4. Add the verb 'is'/'are' when the following predicates are encountered : 'challenge for'."
 "4. A Triple must be loyal to the original text and should not present a fact that is not present in the provided text, do not invent or assume any relations.\n"
 "5. The answer must be encoded as follows (pipe seprated) : ([HEAD_1],[PREDICATE_1],[HEAD_2])|([HEAD_1],[PREDICATE_1],[HEAD_2]),...\n"
 "6. No additional explanation should be provided with the answer."

@@ -9,7 +9,8 @@ from instance import cli
 # TODO: keywords and authors normalization
 @cli.register_stage(
     name="clean",
-    description=("Performs an initial cleaning on the corpus, including : removing HTML tags and links, filtering non-english "
+    description=(
+        "Performs an initial cleaning on the corpus, including : removing HTML tags and links, filtering non-english "
         "documents and keywords."
     ),
     add_from_conf=False,
@@ -27,6 +28,21 @@ class CorpusCleaner(Stage):
     ) -> None:
         super().__init__(reader, writer, batch_size, buffer_size)
         self.language_detector = language_detector
+
+    def clean_keywords(self, keywords : list[str]) -> list[str]:
+
+        new_keywords = []
+
+        for keyword in keywords:
+            new_keywords.extend(keyword.split('·'))
+
+        new_keywords = list(set(
+            re.sub(r'\s+', ' ', keyword.lower().replace('-', ' ').strip(' '))
+            for keyword in new_keywords
+            if self.language_detector.is_english(keyword)
+        ))
+
+        return new_keywords
 
     def remove_html_tags(self, text : str) -> str:
         return re.sub(" +"," ",BeautifulSoup(text, 'html.parser').get_text().replace("\n"," ")).strip()
@@ -78,12 +94,7 @@ class CorpusCleaner(Stage):
         else:
             doc['abstract'] = self.clean_text(doc['abstract'])
 
-        doc['keywords'] = list(
-            filter(
-                self.language_detector.is_english,
-                doc['keywords']
-            )
-        )
+        doc['keywords'] = self.clean_keywords(doc['keywords'])
 
         return doc
     

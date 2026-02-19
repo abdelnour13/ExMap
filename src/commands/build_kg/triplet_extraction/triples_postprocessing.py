@@ -400,8 +400,13 @@ class TriplesPostprocessor(Stage):
         tail = self.base_normalize(tail)
         predicate = self.base_normalize(predicate)
 
-        ### Clean Predicate
         predicate = self.make_predicate(predicate)
+
+        ### Pre-Cleaning validation
+        if len(predicate.tags) == 1 and predicate.tokens[0].value.endswith('ing'):
+            return None
+
+        ### Clean Predicate
         predicate, is_passive, e2 = self.clean_predicate(predicate)
 
         ### Handle Passive Form & E2
