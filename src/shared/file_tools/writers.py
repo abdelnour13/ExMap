@@ -2,20 +2,59 @@ import lmdb
 import json
 import os
 import msgpack
-from typing import Dict, Iterable
+from typing import Dict, Iterable, Optional
+from abc import ABC, abstractmethod
+from .cache import Cache
 
-class FileWriter:
+class BufferedWriter:
+
+    def __init__(self, 
+        writer : 'Writer', 
+        buffer_size : int,
+        cache : Optional[Cache] = None
+    ) -> None:
+        self.writer = writer
+        self.buffer_size = buffer_size
+        self.cache = cache
+        self.buffer = []
+
+    def write(self, docs : Iterable[Dict]) -> int:
+
+        self.buffer.extend(docs)
+
+        if len(self.buffer) >= self.buffer_size:
+            buff = self.buffer[:self.buffer_size]
+            self.writer.write(buff)
+            self.cache.update(buff)
+            self.buffer = self.buffer_size[self.buffer_size:]
+            return self.buffer_size
+
+        return 0
+
+    def flush(self) -> int:
+
+        if len(self.buffer) > 0:
+            self.writer.write(self.buffer)
+            self.cache.update(self.buffer)
+        
+        return len(self.buffer)
+
+class Writer(ABC):
+
+    def __init__(self):
+        super().__init__()
+
+    @abstractmethod
+    def write(self, docs : Iterable[Dict]) -> None:
+        ...
+
+    def buffered(self, buffer_size : int, cache : Cache) -> BufferedWriter:
+        return BufferedWriter(self, buffer_size, cache)
+
+class FileWriter(Writer):
 
     def __init__(self, filename : str):
         self.filename = filename
-
-    def write(self, doc : Dict) -> None:
-        raise NotImplementedError
-    
-    def write_chunk(self, chunk : Iterable[Dict]) -> None:
-
-        for doc in chunk:
-            self.write(doc)
 
     @staticmethod
     def from_filename(filename : str) -> 'FileWriter':
@@ -27,16 +66,11 @@ class FileWriter:
         elif extension == "jsonl":
             return JSONlWriter(filename)
         else:
-            raise ValueError(f"Unsupported extention {extension}")
+            raise ValueError(f"Unsupported extention {extension}.")
         
 class JSONlWriter(FileWriter):
 
-    def write(self, doc : Dict) -> None:
-        
-        with open(self.filename, 'a') as f:
-            f.write(json.dumps(doc) + "\n")
-
-    def write_chunk(self, chunk : Iterable[Dict]):
+    def write(self, chunk : Iterable[Dict]):
 
         dump = ""
         
@@ -61,14 +95,7 @@ class LMDBWriter(FileWriter):
 
         return n
 
-    def write(self, doc : Dict) -> None:
-
-        n = self._get_num_records()
-        
-        with self.db.begin(write=True) as trx:
-            trx.put(str(n).encode("ascii"), msgpack.packb(doc))
-
-    def write_chunk(self, chunk : Iterable[Dict]) -> None:
+    def write(self, chunk : Iterable[Dict]) -> None:
 
         n = self._get_num_records()
         

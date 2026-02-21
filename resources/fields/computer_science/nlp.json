@@ -64,7 +64,8 @@
             "non",
             "incomplete",
             "lack",
-            "unavailable"
+            "unavailable",
+            "investigate"
         ],
         "standard_verbs" : [
             "be",

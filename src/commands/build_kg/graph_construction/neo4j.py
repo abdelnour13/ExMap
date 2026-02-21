@@ -1,7 +1,7 @@
 import dotenv
 from src.shared.command_tools import Stage, StageConfig, add_handlers
 from src.shared.handlers import EventLevel, Event
-from src.shared.file_tools import FileReader, FileWriter
+from src.shared.file_tools import FileReader, FileWriter, TextfileCache
 from typing import Dict, Any, Tuple, Union, Optional, List, Generator
 from neo4j import GraphDatabase, Driver
 from definitions import ENV
@@ -42,10 +42,9 @@ class Neo4J(Stage):
         reader : FileReader, 
         writer : FileWriter, 
         batch_size : int, 
-        buffer_size : int,
         driver : Driver
     ) -> None:
-        super().__init__(reader, writer, batch_size, buffer_size)
+        super().__init__(reader, writer, batch_size)
 
         self.entities = {}
         self.documents = {}
@@ -187,15 +186,19 @@ class Neo4J(Stage):
     @classmethod
     def from_config(cls, config : Config) -> 'Neo4J':
 
+        cache = TextfileCache(config.checkpoint_filename)
+
         driver = GraphDatabase.driver(
             uri=config.neo4j_uri,
             auth=(config.neo4j_user,config.neo4j_pwd)
         )
 
         return Neo4J(
-            reader=FileReader.from_filename(config.input_filename),
-            writer=FileWriter.from_filename(config.output_filename),
-            buffer_size=config.buffer_size,
-            batch_size=config.batch_size,
+            reader=FileReader
+                .from_filename(config.input_filename, cache)
+                .batched(config.batch_size),
+            writer=FileWriter
+                .from_filename(config.output_filename)
+                .buffered(config.buffer_size, cache),
             driver=driver
         )

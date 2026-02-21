@@ -1,5 +1,5 @@
 import re
-from src.shared.file_tools import FileWriter, FileReader
+from src.shared.file_tools import FileWriter, FileReader, TextfileCache
 from src.shared.command_tools import Stage, StageConfig, add_handlers
 from pydantic import Field
 from typing import Dict, List
@@ -35,11 +35,10 @@ class AcronymExtractor(Stage):
         reader : FileReader, 
         writer : FileWriter, 
         batch_size : int, 
-        buffer_size : int,
         qa_model : str,
         threshold : float
     ) -> None:
-        super().__init__(reader, writer, batch_size, buffer_size)
+        super().__init__(reader, writer, batch_size)
 
         self.qa_model = qa_model
         self.threshold = threshold
@@ -120,12 +119,16 @@ class AcronymExtractor(Stage):
 
     @classmethod
     def from_config(cls, config : Config) -> Stage:
+
+        cache = TextfileCache(config.checkpoint_filename)
         
         return AcronymExtractor(
-            reader=FileReader.from_filename(config.input_filename),
-            writer=FileWriter.from_filename(config.output_filename),
-            batch_size=config.batch_size,
-            buffer_size=config.buffer_size,
+            reader=FileReader
+                .from_filename(config.input_filename, cache)
+                .batched(config.batch_size),
+            writer=FileWriter
+                .from_filename(config.output_filename)
+                .buffered(config.buffer_size, cache),
             qa_model=config.qa_model,
             threshold=config.threshold
         )

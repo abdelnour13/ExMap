@@ -1,12 +1,13 @@
+import asyncio
+import multiprocessing
 from src.helpers.config import assert_file_exists
-from typing import Generator, Dict, Iterable, Union, List, Annotated, Type
+from typing import Generator, Dict, Iterable, Union, List, Annotated, Type, Literal, Optional
 from src.shared.handlers import SocketHandler, ConsoleLogger, FileLogger
 from abc import abstractmethod
-from src.shared.file_tools import Reader, FileWriter, batched
+from src.shared.file_tools import BufferedWriter, BatchedReader
 from src.shared.handlers import Event, EventLevel
 from pydantic import Field, BeforeValidator
 from functools import wraps
-from abc import ABC
 from .base_command import BaseCommand, BaseConfig
 
 class StageConfig(BaseConfig):
@@ -42,17 +43,21 @@ def add_handlers(cls : Type['Stage']):
 class Stage(BaseCommand):
 
     def __init__(self,
-        reader : Reader,
-        writer : FileWriter,
-        batch_size : int,
-        buffer_size : int
+        reader : BatchedReader,
+        writer : BufferedWriter,
     ) -> None:
         super().__init__()
 
         self.reader = reader
         self.writer = writer
-        self.batch_size = batch_size
-        self.buffer_size = buffer_size
+        self.parallelism_mode : Optional[Literal['async', 'multiprocessing']] = None
+
+        self.total_processed = 0
+        self.total_saved = 0
+        self.total_skipped = 0
+
+    def set_parallelism_mode(self, mode : Optional[Literal['async', 'multiprocessing']]) -> None:
+        self.parallelism_mode = mode
 
     def skip(self, doc : Dict) -> bool:
         """
@@ -77,6 +82,14 @@ class Stage(BaseCommand):
         """
         ...
 
+    async def async_transform_chunk(self, chunk : Iterable[Dict]) -> Union[Dict, List[Dict]]:
+        return await asyncio.gather(*[asyncio.to_thread(self.transform, document) for document in chunk])
+    
+    def mp_transform_chunk(self, chunk : Iterable[Dict]) -> Union[Dict, List[Dict]]:
+        
+        with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
+            return pool.map(self.transform, chunk)
+
     def transform_chunk(self, chunk : Iterable[Dict]) -> List[Dict]:
         """
         Transforms a chunk of documents, bu default it runs a self.transform on
@@ -89,11 +102,16 @@ class Stage(BaseCommand):
         :rtype: List[Dict]
         """
 
+        if self.parallelism_mode == 'async':
+            chunk = asyncio.run(self.async_transform_chunk(chunk))
+        elif self.parallelism_mode == 'multiprocessing':
+            chunk = self.mp_transform_chunk(chunk)
+        else:
+            chunk = [self.transform(document) for document in chunk]
+
         transformed_chunk = []
 
         for document in chunk:
-
-            document = self.transform(document)
 
             if isinstance(document, list):
                 transformed_chunk.extend(document)
@@ -104,88 +122,73 @@ class Stage(BaseCommand):
 
     def __iter__(self) -> Generator[Event, None, None]:
 
-        ### Buffer
-        buffer = []
-
-        ### Stats
-        total_processed = 0
-        total_saved = 0
-        total_skipped = 0
-
         ### Notify Job started
         yield Event(
             progress=0.0,
             level=EventLevel.INFO,
-            total_processed=total_processed,
-            total_saved=total_saved,
-            total_skipped=total_skipped,
+            total_processed=self.total_processed,
+            total_saved=self.total_saved,
+            total_skipped=self.total_skipped,
             message=f"Job {self.__class__.__name__} has started."
         )
         
-        for i,(chunk,progress) in enumerate(batched(self.reader, self.batch_size)):
+        for i,(chunk,progress) in enumerate(self.reader):
 
             error = None
 
             try:
 
                 transformed_chunk = self.transform_chunk(chunk)
-                total_processed += len(chunk)
+                self.total_processed += len(chunk)
 
                 yield Event(
                     progress=progress,
                     level=EventLevel.INFO,
-                    total_processed=total_processed,
-                    total_saved=total_saved,
-                    total_skipped=total_skipped,
+                    total_processed=self.total_processed,
+                    total_saved=self.total_saved,
+                    total_skipped=self.total_skipped,
                     message=f"Chunk {i} processing completed."
                 )
 
             except Exception as e:
-                total_skipped += 1
+                self.total_skipped += 1
                 error = e
 
             if error is None:
 
-                for item in transformed_chunk:
+                transformed_chunk = [item for item in transformed_chunk if not self.skip(item)]
+                written_documents = self.writer.write(transformed_chunk)
+                self.total_saved += written_documents
 
-                    if not self.skip(item):
-                        buffer.append(item)
+                if written_documents > 0:
 
-                    if len(buffer) >= self.buffer_size:
+                    yield Event(
+                        progress=progress,
+                        level=EventLevel.INFO,
+                        total_processed=self.total_processed,
+                        total_saved=self.total_saved,
+                        total_skipped=self.total_skipped,
+                        message=f"{written_documents} documents written to disk."
+                    )
 
-                        total_saved += len(buffer)
-                        self.writer.write_chunk(buffer)
-                        buffer.clear()
-
-                        yield Event(
-                            progress=progress,
-                            level=EventLevel.INFO,
-                            total_processed=total_processed,
-                            total_saved=total_saved,
-                            total_skipped=total_skipped,
-                            message="Results buffer saved to disk."
-                        )
             else:
  
                 yield Event(
                     progress=progress,
                     level=EventLevel.ERROR,
-                    total_processed=total_processed,
-                    total_saved=total_saved,
-                    total_skipped=total_skipped,
-                    message=f"An error has occured during processing chunk {i}, error : {error}"
+                    total_processed=self.total_processed,
+                    total_saved=self.total_saved,
+                    total_skipped=self.total_skipped,
+                    message=f"An error has occurred during processing chunk {i}, error : {error}"
                 )
 
-        if len(buffer) > 0:
-            total_saved += len(buffer)
-            self.writer.write_chunk(buffer)
-            buffer.clear()
+        self.total_saved += self.writer.flush()
 
         yield Event(
             progress=1.0,
             level=EventLevel.INFO,
-            total_processed=total_processed,
-            total_saved=total_saved,
-            total_skipped=total_skipped,
+            total_processed=self.total_processed,
+            total_saved=self.total_saved,
+            total_skipped=self.total_skipped,
             message=f"Job {self.__class__.__name__} has been completed."
         )

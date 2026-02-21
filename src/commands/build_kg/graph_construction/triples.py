@@ -1,7 +1,7 @@
 import dotenv
 from src.shared.command_tools import Stage, StageConfig, add_handlers
-from src.shared.file_tools import FileReader, FileWriter
-from typing import Dict, Any, List
+from src.shared.file_tools import FileReader, FileWriter, TextfileCache
+from typing import Dict, List
 from definitions import ENV
 from instance import cli
 
@@ -119,9 +119,13 @@ class Graph2Triples(Stage):
     @classmethod
     def from_config(cls, config : StageConfig) -> 'Graph2Triples':
 
+        cache = TextfileCache(config.checkpoint_filename)
+
         return Graph2Triples(
-            reader=FileReader.from_filename(config.input_filename),
-            writer=FileWriter.from_filename(config.output_filename),
-            buffer_size=config.buffer_size,
-            batch_size=config.batch_size,
+            reader=FileReader
+                .from_filename(config.input_filename, cache)
+                .batched(config.batch_size),
+            writer=FileWriter
+                .from_filename(config.output_filename)
+                .buffered(config.buffer_size, cache),
         )

@@ -3,95 +3,94 @@ import ijson
 import os
 import lmdb
 import msgpack
-from typing import Dict, Generator, Tuple, Optional, List, TypeVar, Callable, Any
+from typing import Generator, Tuple, Optional, List, Dict
 from abc import ABC, abstractmethod
+from .cache import Cache
 
-E = TypeVar('E')
+ReaderOutput = Tuple[Dict, Optional[float]]
+BatchedReaderOutput = Tuple[List[Dict], Optional[float]]
 
-MapFn = Callable[[Dict], Any]
-
-ReaderOutput = Tuple[Any, Optional[float]]
-BatchedReaderOutput = Tuple[List[Any], Optional[float]]
-
-def batched(
-    generator : Generator[ReaderOutput, None, None],
-    batch_size : int
-) -> Generator[BatchedReaderOutput, None, None]:
+class BatchedReader:
     
-    batch = []
-    total_progres = 0.0
+    def __init__(self, 
+        reader : 'Reader',
+        batch_size : int
+    ) -> None:
+        self.reader = reader
+        self.batch_size = batch_size
 
-    for record, progres in generator:
+    def __iter__(self) -> Generator[BatchedReaderOutput, None, None]:
+        
+        batch = []
+        total_progress = 0.0
 
-        batch.append(record)
+        for record, progress in self.reader:
 
-        if progres is not None:
-            total_progres = progres
+            batch.append(record)
 
-        if len(batch) == batch_size:
-                
-            yield batch, total_progres
+            if progress is not None:
+                total_progress = progress
 
-            batch.clear()
-            total_progres = 0.0
+            if len(batch) == self.batch_size:
+                    
+                yield batch, total_progress
 
+                batch.clear()
+                total_progress = 0.0
 
-    if len(batch) > 0:
-        yield batch, total_progres
-
-def map(gen : Generator[ReaderOutput, None, None], mapper : MapFn) -> Generator[ReaderOutput, None, None]:
-
-    for doc, progress in gen:
-        yield (mapper(doc), progress)
-
-def flatten(gen :  Generator[BatchedReaderOutput, None, None]) -> Generator[BatchedReaderOutput, None, None]:
-
-    p = 0
-
-    for doc, progress in gen:
-
-        for i,sub_doc in enumerate(doc):
-
-            yield (sub_doc, p + (progress - p) * (i+1) / len(doc))
-
-        p = progress
+        if len(batch) > 0:
+            yield batch, total_progress
 
 class Reader(ABC):
 
+    def __init__(self, cache : Optional[Cache] = None):
+        super().__init__()
+        self.cache = cache
+
     @abstractmethod
-    def __iter__(self) -> Generator[ReaderOutput, None, None]:
+    def generate(self) -> Generator[ReaderOutput, None, None]:
         ...   
 
+    def __iter__(self):
+        
+        if self.cache is not None:
+
+            for doc, prog in self.generate():
+                if not self.cache.check_exists(doc):
+                    yield doc, prog
+
+        else:
+            yield from self.generate()
+
+    def batched(self, batch_size : int) -> BatchedReader:
+        return BatchedReader(self, batch_size)
 
 class FileReader(Reader):
 
-    def __init__(self, filename : str) -> None:
+    def __init__(self, filename : str, cache : Optional[Cache] = None) -> None:
+        super().__init__(cache)
         self.filename = filename
 
-    @abstractmethod
-    def __iter__(self) -> Generator[ReaderOutput, None, None]:
-        ...
-
     @staticmethod
-    def from_filename(filename : str) -> 'FileReader':
+    def from_filename(filename : str, cache : Optional[Cache] = None) -> 'FileReader':
         
         extension = os.path.splitext(filename)[1].lower()[1:]
 
         if extension in ['txt', 'log']:
-            return TextFileReader(filename)
+            return TextFileReader(filename, cache)
         elif extension in ['json']:
-            return JSONFileReader(filename)
+            return JSONFileReader(filename, cache)
         elif extension in ['jsonl']:
-            return JSONlFileReader(filename)
+            return JSONlFileReader(filename, cache)
         elif extension in ['lmdb']:
-            return LMDBReader(filename)
+            return LMDBReader(filename, cache)
         else:
             raise Exception(f"Extension {extension} is not supported")
         
 class LMDBReader(FileReader):
 
-    def __init__(self, filename : str):
-        super().__init__(filename)
+    def __init__(self, filename : str, cache : Optional[Cache] = None):
+        super().__init__(filename, cache)
         self.db = lmdb.open(filename)
 
     def __len__(self) -> int:
@@ -103,7 +102,7 @@ class LMDBReader(FileReader):
 
         return n
         
-    def __iter__(self) -> Generator[ReaderOutput, None, None]:
+    def generate(self) -> Generator[ReaderOutput, None, None]:
 
         num_records = len(self)
         
@@ -113,24 +112,30 @@ class LMDBReader(FileReader):
                 
 class TextFileReader(FileReader):
 
-    def __iter__(self) -> Generator[ReaderOutput, None, None]:
+    def __init__(self, filename : str, cache : Optional[Cache] = None) -> None:
+        super().__init__(filename, cache)
+        self.bytes_read = 0.0
+
+    def generate(self) -> Generator[ReaderOutput, None, None]:
 
         bytes = os.path.getsize(self.filename)
-        bytes_read = 0
 
         with open(self.filename, 'r') as f:
 
             for line in f:
 
-                bytes_read += len(line)
+                self.bytes_read += len(line)
                 record = { "content" : line.strip() }
-                progress = bytes_read / bytes
+                progress = self.bytes_read / bytes
 
                 yield record, progress
 
 class JSONFileReader(FileReader):
 
-    def __iter__(self) -> Generator[ReaderOutput, None, None]:
+    def __init__(self, filename : str, cache : Optional[Cache] = None) -> None:
+        super().__init__(filename, cache)
+
+    def generate(self) -> Generator[ReaderOutput, None, None]:
         
         with open(self.filename, 'r') as f:
 
@@ -139,18 +144,18 @@ class JSONFileReader(FileReader):
 
 class JSONlFileReader(FileReader):
 
-    def __init__(self, filename : str) -> str:
-        super().__init__(filename)
+    def __init__(self, filename : str, cache : Optional[Cache] = None) -> None:
+        super().__init__(filename, cache)
+        self.bytes_read = 0.0
 
-    def __iter__(self) -> Generator[ReaderOutput, None, None]:
+    def generate(self) -> Generator[ReaderOutput, None, None]:
 
         bytes = os.path.getsize(self.filename)
-        bytes_read = 0
         
         with open(self.filename, "r") as f:
 
             for line in f:
-                bytes_read += len(line)
+                self.bytes_read += len(line)
                 record = json.loads(line)
-                progress = bytes_read / bytes
+                progress = self.bytes_read / bytes
                 yield record, progress

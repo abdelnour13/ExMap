@@ -1,9 +1,8 @@
 import re
 import dotenv
-import os
 from typing import Dict, List
 from src.shared.command_tools import Stage, StageConfig, add_handlers
-from src.shared.file_tools import FileWriter, FileReader
+from src.shared.file_tools import FileWriter, FileReader, TextfileCache
 from src.helpers import load_json_file
 from pydantic import computed_field
 from pycli import Field
@@ -62,12 +61,11 @@ class DocumentsAnnotator(Stage):
         reader : FileReader, 
         writer : FileWriter, 
         batch_size : int, 
-        buffer_size : int,
         client : OpenAI,
         domains : List[Domain],
         model : str
     ) -> None:
-        super().__init__(reader, writer, batch_size, buffer_size)
+        super().__init__(reader, writer, batch_size)
 
         self.client = client
         self.domains = domains
@@ -136,12 +134,16 @@ class DocumentsAnnotator(Stage):
     
     @classmethod
     def from_config(cls, config : Config) -> 'DocumentsAnnotator':
+
+        cache = TextfileCache(config.checkpoint_filename)
         
         return DocumentsAnnotator(
-            reader=FileReader.from_filename(config.input_filename),
-            writer=FileWriter.from_filename(config.output_filename),
-            batch_size=config.batch_size,
-            buffer_size=config.buffer_size,
+            reader=FileReader
+                .from_filename(config.input_filename, cache)
+                .batched(config.batch_size),
+            writer=FileWriter
+                .from_filename(config.output_filename)
+                .buffered(config.buffer_size, cache),
             client=OpenAI(
                 api_key=config.api_key,
                 base_url=MODELS[config.model]['url']

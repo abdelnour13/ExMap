@@ -1,4 +1,4 @@
-from src.shared.file_tools import FileWriter, FileReader
+from src.shared.file_tools import FileWriter, FileReader, TextfileCache
 from src.shared.command_tools import Stage, StageConfig, add_handlers
 from pycli import Field
 from typing import Dict,List
@@ -23,10 +23,9 @@ class SentenceSegmenter(Stage):
         reader : FileReader, 
         writer : FileWriter, 
         batch_size : int, 
-        buffer_size : int,
         use_gpu : bool
     ) -> None:
-        super().__init__(reader, writer, batch_size, buffer_size)
+        super().__init__(reader, writer, batch_size)
 
         self.use_gpu = use_gpu
 
@@ -59,11 +58,15 @@ class SentenceSegmenter(Stage):
 
     @classmethod
     def from_config(cls, config : Config) -> Stage:
+
+        cache = TextfileCache(config.checkpoint_filename)
         
         return SentenceSegmenter(
-            reader=FileReader.from_filename(config.input_filename),
-            writer=FileWriter.from_filename(config.output_filename),
-            buffer_size=config.buffer_size,
-            batch_size=config.batch_size,
+            reader=FileReader
+                .from_filename(config.input_filename, cache)
+                .batched(config.batch_size),
+            writer=FileWriter
+                .from_filename(config.output_filename)
+                .buffered(config.buffer_size),
             use_gpu=config.use_gpu
         )

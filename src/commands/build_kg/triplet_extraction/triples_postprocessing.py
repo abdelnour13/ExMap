@@ -6,7 +6,7 @@ from typing import List, Tuple, Dict
 from dataclasses import dataclass
 from src.helpers import load_json_file
 from src.shared.command_tools import StageConfig, Stage, add_handlers
-from src.shared.file_tools import FileWriter, FileReader
+from src.shared.file_tools import FileWriter, FileReader, TextfileCache
 from src.shared.language_detectors import LanguageDetector
 from dataclasses import dataclass
 from pycli import Field
@@ -127,11 +127,10 @@ class TriplesPostprocessor(Stage):
         reader: FileReader,
         writer: FileWriter,
         batch_size: int,
-        buffer_size: int,
         language_detector: LanguageDetector,
         domain_nlp : Nlp
     ) -> None:
-        super().__init__(reader, writer, batch_size, buffer_size)
+        super().__init__(reader, writer, batch_size)
         self.domain_nlp = domain_nlp
         self.nlp = spacy.load("en_core_web_sm")
         self.language_detector = language_detector
@@ -441,11 +440,15 @@ class TriplesPostprocessor(Stage):
     @classmethod
     def from_config(cls, config: Config) -> "TriplesPostprocessor":
 
+        cache = TextfileCache(config.checkpoint_filename)
+
         return TriplesPostprocessor(
-            reader=FileReader.from_filename(config.input_filename),
-            writer=FileWriter.from_filename(config.output_filename),
-            batch_size=config.batch_size,
-            buffer_size=config.buffer_size,
+            reader=FileReader
+                .from_filename(config.input_filename, cache)
+                .batched(config.batch_size),
+            writer=FileWriter
+                .from_filename(config.output_filename)
+                .buffered(config.buffer_size, cache),
             language_detector=LanguageDetector.create("lingua"),
             domain_nlp=config.nlp
         )

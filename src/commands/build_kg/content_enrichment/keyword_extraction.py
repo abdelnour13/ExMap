@@ -20,9 +20,8 @@ class KeywordExtractor(Stage):
         reader : FileReader, 
         writer : FileWriter, 
         batch_size : int, 
-        buffer_size : int
     ) -> None:
-        super().__init__(reader, writer, batch_size, buffer_size)
+        super().__init__(reader, writer, batch_size)
         self.key_phrase_transformer = KeyPhraseTransformer(model_name=hf_model_dir("snrspeaks/KeyPhraseTransformer"))
     
     def transform(self, doc : Dict) -> List[Dict]:
@@ -38,7 +37,8 @@ class KeywordExtractor(Stage):
         
         return KeywordExtractor(
             reader=FileReader.from_filename(config.input_filename),
-            writer=FileWriter.from_filename(config.output_filename),
+            writer=FileWriter
+                .from_filename(config.output_filename)
+                .buffered(config.buffer_size),
             batch_size=config.batch_size,
-            buffer_size=config.buffer_size,
         )

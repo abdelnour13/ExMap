@@ -1,5 +1,5 @@
 import re
-from src.shared.file_tools import FileWriter, FileReader
+from src.shared.file_tools import FileWriter, FileReader, TextfileCache
 from src.shared.command_tools import Stage, StageConfig, add_handlers
 from src.shared.handlers import Event, EventLevel
 from src.rpc.interface import allennlp_predict, load_predictor_from_path
@@ -36,11 +36,10 @@ class CoreferenceResolver(Stage):
         reader : FileReader, 
         writer : FileWriter, 
         batch_size : int, 
-        buffer_size : int,
         model : str,
         device : int
     ) -> None:
-        super().__init__(reader, writer, batch_size, buffer_size)
+        super().__init__(reader, writer, batch_size)
         self.model = model
         self.device = device
 
@@ -116,11 +115,15 @@ class CoreferenceResolver(Stage):
     @classmethod
     def from_config(cls, config : Config) -> Stage:
 
+        cache = TextfileCache(config.checkpoint_filename)
+
         return CoreferenceResolver(
-            reader=FileReader.from_filename(config.input_filename),
-            writer=FileWriter.from_filename(config.output_filename),
-            batch_size=config.batch_size,
-            buffer_size=config.buffer_size,
+            reader=FileReader
+                .from_filename(config.input_filename, cache)
+                .batched(config.batch_size),
+            writer=FileWriter
+                .from_filename(config.output_filename)
+                .buffered(config.buffer_size, cache),
             model=config.model,
             device=config.device
         )

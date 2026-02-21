@@ -1,12 +1,11 @@
 import re
 from bs4 import BeautifulSoup
 from src.shared.command_tools import Stage, StageConfig, add_handlers
-from src.shared.file_tools import FileReader, FileWriter
+from src.shared.file_tools import FileReader, FileWriter, TextfileCache
 from src.shared.language_detectors import LanguageDetector
 from typing import Dict
 from instance import cli
 
-# TODO: keywords and authors normalization
 @cli.register_stage(
     name="clean",
     description=(
@@ -22,11 +21,9 @@ class CorpusCleaner(Stage):
     def __init__(self, 
         reader : FileReader, 
         writer : FileWriter, 
-        batch_size : int, 
-        buffer_size : int,
         language_detector : LanguageDetector
     ) -> None:
-        super().__init__(reader, writer, batch_size, buffer_size)
+        super().__init__(reader, writer)
         self.language_detector = language_detector
 
     def clean_keywords(self, keywords : list[str]) -> list[str]:
@@ -84,7 +81,7 @@ class CorpusCleaner(Stage):
             )
         )
 
-    def clean_document(self, doc : Dict) -> Dict:
+    def transform(self, doc : Dict) -> Dict:
         
         if not self.language_detector.is_english(doc['title']):
             doc['title'] = None
@@ -98,20 +95,21 @@ class CorpusCleaner(Stage):
 
         return doc
     
-    def valid(self, doc : Dict) -> bool:
-        return (doc["title"] is not None) and \
-            (doc["abstract"] is not None)
-
-    def transform(self, doc : Dict) -> bool:
-        return self.clean_document(doc)
+    def skip(self, doc : Dict) -> bool:
+        return (doc["title"] is None) or \
+            (doc["abstract"] is None)
 
     @classmethod
     def from_config(cls, config : StageConfig) -> Stage:
 
+        cache = TextfileCache(config.checkpoint_filename)
+
         return CorpusCleaner(
-            reader=FileReader.from_filename(config.input_filename),
-            writer=FileWriter.from_filename(config.output_filename),
-            batch_size=config.batch_size,
-            buffer_size=config.buffer_size,
+            reader=FileReader
+                .from_filename(config.input_filename, cache)
+                .batched(config.batch_size),
+            writer=FileWriter
+                .from_filename(config.output_filename)
+                .buffered(config.buffer_size, cache),
             language_detector=LanguageDetector.create("lingua")
         )
