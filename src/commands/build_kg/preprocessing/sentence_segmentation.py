@@ -22,10 +22,9 @@ class SentenceSegmenter(Stage):
     def __init__(self, 
         reader : FileReader, 
         writer : FileWriter, 
-        batch_size : int, 
         use_gpu : bool
     ) -> None:
-        super().__init__(reader, writer, batch_size)
+        super().__init__(reader, writer)
 
         self.use_gpu = use_gpu
 

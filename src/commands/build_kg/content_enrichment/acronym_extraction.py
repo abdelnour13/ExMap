@@ -3,7 +3,6 @@ from src.shared.file_tools import FileWriter, FileReader, TextfileCache
 from src.shared.command_tools import Stage, StageConfig, add_handlers
 from pydantic import Field
 from typing import Dict, List
-from transformers import pipeline
 from instance import cli
 from definitions import hf_model_dir
 
@@ -34,11 +33,12 @@ class AcronymExtractor(Stage):
     def __init__(self, 
         reader : FileReader, 
         writer : FileWriter, 
-        batch_size : int, 
         qa_model : str,
         threshold : float
     ) -> None:
-        super().__init__(reader, writer, batch_size)
+        from transformers import pipeline
+
+        super().__init__(reader, writer)
 
         self.qa_model = qa_model
         self.threshold = threshold

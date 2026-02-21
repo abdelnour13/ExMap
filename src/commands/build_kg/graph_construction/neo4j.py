@@ -41,10 +41,9 @@ class Neo4J(Stage):
     def __init__(self, 
         reader : FileReader, 
         writer : FileWriter, 
-        batch_size : int, 
         driver : Driver
     ) -> None:
-        super().__init__(reader, writer, batch_size)
+        super().__init__(reader, writer)
 
         self.entities = {}
         self.documents = {}

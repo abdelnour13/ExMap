@@ -65,7 +65,7 @@
             "incomplete",
             "lack",
             "unavailable",
-            "investigate"
+            "investigate", "investigates"
         ],
         "standard_verbs" : [
             "be",

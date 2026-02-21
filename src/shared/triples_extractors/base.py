@@ -4,6 +4,7 @@ from typing import List, Union, Dict
 from returns.result import Result
 from dataclasses import dataclass
 from openai import APIError, RateLimitError, AsyncOpenAI
+from src.helpers import make_openai_request
 
 @dataclass
 class Triple:
@@ -31,27 +32,12 @@ class LLMBasedTripleExtractor(BaseTriplesExtractor):
 
     async def make_request(self, messages : List[Dict]):
 
-        for attempt in range(self.MAX_ATTEMPTS):
-
-            try:
-                
-                response = await self.client.chat.completions.create(
-                    model=self.model,
-                    messages=messages,
-                    temperature=0,  # No randomness
-                    top_p=1,  # Disable sampling
-                    seed=42,  # Seed
-                )
-
-                return Result.from_value(response)
-            
-            except (RateLimitError, APIError) as e:
-
-                if attempt == self.MAX_ATTEMPTS - 1:
-                    return Result.from_failure(e)
-
-                wait = 2 ** (0.8 * attempt)
-                await asyncio.sleep(wait)
+        return make_openai_request(
+            self.client,
+            self.model,
+            messages,
+            self.MAX_ATTEMPTS
+        )
 
     @abstractmethod
     def extract(self, texts : List[str]) -> List[Result[List[Triple], Union[APIError,RateLimitError]]]:

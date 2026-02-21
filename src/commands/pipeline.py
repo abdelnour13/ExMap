@@ -8,6 +8,7 @@ from pydantic import BaseModel, computed_field
 from instance import cli
 from definitions import DATA_DIR
 from multiprocessing import set_start_method, Process
+from dataclasses import dataclass
 
 set_start_method('spawn', force=True)
 
@@ -15,7 +16,7 @@ from src.commands.build_kg.cleaning import cleaning
 from src.commands.build_kg.preprocessing import coreference_resolution
 from src.commands.build_kg.content_enrichment import annotate, acronym_extraction, keyword_extraction
 from src.commands.build_kg.preprocessing import sentence_segmentation
-from src.commands.build_kg.triplet_extraction import triples_extractor, triples_postprocessing
+from src.commands.build_kg.triplet_extraction import triples_extractor, triples_postprocessing, validation
 from src.commands.build_kg.graph_construction import triples, neo4j
 
 STAGES : Dict[str, Tuple[Stage, StageConfig]] = {
@@ -26,6 +27,7 @@ STAGES : Dict[str, Tuple[Stage, StageConfig]] = {
     "sentence_segmentation" : (sentence_segmentation.SentenceSegmenter, sentence_segmentation.Config),
     "acronym_extraction" : (acronym_extraction.AcronymExtractor, acronym_extraction.Config),
     "extract_triples" : (triples_extractor.TriplesExtractor, triples_extractor.Config),
+    "triples_validation" : (validation.TriplesLLMValidator, triples_extractor.Config),
     "clean_triples" : (triples_postprocessing.TriplesPostprocessor, triples_postprocessing.Config),
     "graph2triples" : (triples.Graph2Triples, triples.StageConfig),
     "insert2neo4j"  : (neo4j.Neo4J, neo4j.Config)
@@ -35,6 +37,7 @@ class GlobalConfig(BaseModel):
     domain : str
     batch_size : int
     buffer_size : int
+    resume : bool
 
 class Override(BaseModel):
     name : str
@@ -53,6 +56,10 @@ class Config(BaseModel):
     def conf(self) -> PipeConfig:
         return PipeConfig(**load_json_file(os.path.join(DATA_DIR, self.graph, 'pipeline_config.json')))
 
+@dataclass
+class StageInfo:
+    cmd_cls : Type[BaseCommand]
+    config : StageConfig
 
 @cli.register_stage(
     name="pipeline",
@@ -63,15 +70,17 @@ class Config(BaseModel):
 class Pipeline(BaseCommand):
 
     def __init__(self, 
-        stages : OrderedDict[str, BaseCommand]
+        stages : OrderedDict[str, StageInfo]
     ) -> None:
         self.stages = stages
 
     def __iter__(self) -> Generator[Event, None, None]:
         
         for i, (name, stage) in enumerate(self.stages.items()):
+
             print(f"({i+1}/{len(self.stages)}) Starting stage : {name}.\n")
-            p = Process(target=stage[0], args=stage[1])
+
+            p = Process(target=self.create_and_run, args=(stage.cmd_cls, stage.config))
             p.start()
             p.join()
         
@@ -99,14 +108,9 @@ class Pipeline(BaseCommand):
                 input_filename=input_filename,
                 output_dir=output_dir,
                 **override(config.conf.glob.model_dump(), overrides[stage_name]),
-                resume=True
             )
 
-            def create_and_run():
-                cmd = cmd_cls.from_config(cmd_config)
-                cmd.run()
-
-            commands[stage_name] = (cls.create_and_run, (cmd_cls, cmd_config))
+            commands[stage_name] = StageInfo(cmd_cls=cmd_cls, config=cmd_config)
 
             input_filename = cmd_config.output_filename
 

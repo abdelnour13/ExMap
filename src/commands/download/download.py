@@ -6,13 +6,13 @@ from typing import Optional, Generator, Dict, Union, List, Self
 from src.helpers import load_json_file
 from src.shared.command_tools import BaseCommand, BaseConfig
 from src.shared.handlers import ConsoleLogger, Event, EventLevel
-from src.shared.file_tools import FileWriter
+from src.shared.file_tools import BufferedWriter, FileWriter
 from returns.result import Result, safe
 from returns.primitives.exceptions import UnwrapFailedError
 from pydantic import BaseModel, Field, computed_field
 from instance import cli
 
-class Config(BaseModel):
+class HALConfig(BaseModel):
     teams : List[str]
     format : str
     attributes : List[str]
@@ -29,14 +29,14 @@ class Config(BaseConfig):
 
     @computed_field
     @property
-    def hal_conf(self) -> Config:
-        return Config(**load_json_file(self.hal_config))
+    def hal_conf(self) -> HALConfig:
+        return HALConfig(**load_json_file(self.hal_config))
     
 class HAL_API:
 
     BASE_URL : str = "https://api.archives-ouvertes.fr/search"
 
-    def __init__(self, config : Config) -> None:
+    def __init__(self, config : HALConfig) -> None:
         self.config = config
         self.__num_pages : Optional[Result[int, Union[httpx.TransportError,httpx.HTTPStatusError]]] = None
 
@@ -154,7 +154,7 @@ class DataDownloader(BaseCommand):
 
     def __init__(self, 
         api : HAL_API, 
-        writer : FileWriter, 
+        writer : BufferedWriter, 
     ) -> None:
         super().__init__()
         
@@ -215,7 +215,7 @@ class DataDownloader(BaseCommand):
             page = page.unwrap()
             yield self._make_event(progress, EventLevel.INFO,message=f"Downloaded {page_id} has a total of {len(page)} documents.")
 
-            self.writer.write_chunk(page)
+            self.writer.write(page)
             self._num_processed += 1
             self._num_saved += 1
 
@@ -238,6 +238,8 @@ class DataDownloader(BaseCommand):
 
                 yield self._make_event(progress, EventLevel.ERROR, message=f"Failed to fetch number of pages due to an HTTP error : {payload}.")
 
+        self.writer.flush()
+
     def __iter__(self) -> Generator[Event, None, None]:
 
         ### Get the number of pages
@@ -254,7 +256,9 @@ class DataDownloader(BaseCommand):
 
         downloader = DataDownloader(
             api=HAL_API(config.hal_conf),
-            writer=FileWriter.from_filename(config.output_filename)
+            writer=FileWriter
+                .from_filename(config.output_filename)
+                .buffered(config.hal_conf.page_size)
         )
         
         downloader \

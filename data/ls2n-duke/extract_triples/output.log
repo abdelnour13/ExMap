@@ -1,0 +1,104 @@
+TriplesExtractor,2026-02-21 17:24:14,INFO,0,0,0,Job TriplesExtractor has started.,None
+TriplesExtractor,2026-02-21 17:24:20,INFO,16,0,0,Chunk 0 processing completed.,1.73
+TriplesExtractor,2026-02-21 17:24:20,INFO,16,16,0,16 documents written to disk.,1.73
+TriplesExtractor,2026-02-21 17:24:25,INFO,32,16,0,Chunk 1 processing completed.,3.36
+TriplesExtractor,2026-02-21 17:24:25,INFO,32,32,0,16 documents written to disk.,3.36
+TriplesExtractor,2026-02-21 17:24:31,INFO,48,32,0,Chunk 2 processing completed.,5.32
+TriplesExtractor,2026-02-21 17:24:31,INFO,48,48,0,16 documents written to disk.,5.32
+TriplesExtractor,2026-02-21 17:24:36,INFO,64,48,0,Chunk 3 processing completed.,7.32
+TriplesExtractor,2026-02-21 17:24:36,INFO,64,64,0,16 documents written to disk.,7.32
+TriplesExtractor,2026-02-21 17:24:49,INFO,80,64,0,Chunk 4 processing completed.,12.55
+TriplesExtractor,2026-02-21 17:24:49,INFO,80,80,0,16 documents written to disk.,12.55
+TriplesExtractor,2026-02-21 17:24:55,INFO,96,80,0,Chunk 5 processing completed.,14.52
+TriplesExtractor,2026-02-21 17:24:55,INFO,96,96,0,16 documents written to disk.,14.52
+TriplesExtractor,2026-02-21 17:25:05,INFO,112,96,0,Chunk 6 processing completed.,16.50
+TriplesExtractor,2026-02-21 17:25:05,INFO,112,112,0,16 documents written to disk.,16.50
+TriplesExtractor,2026-02-21 17:25:16,INFO,128,112,0,Chunk 7 processing completed.,18.12
+TriplesExtractor,2026-02-21 17:25:16,INFO,128,128,0,16 documents written to disk.,18.12
+TriplesExtractor,2026-02-21 17:25:30,INFO,144,128,0,Chunk 8 processing completed.,19.58
+TriplesExtractor,2026-02-21 17:25:30,INFO,144,144,0,16 documents written to disk.,19.58
+TriplesExtractor,2026-02-21 17:26:00,INFO,160,144,0,Chunk 9 processing completed.,21.43
+TriplesExtractor,2026-02-21 17:26:00,INFO,160,160,0,16 documents written to disk.,21.43
+TriplesExtractor,2026-02-21 17:26:06,INFO,176,160,0,Chunk 10 processing completed.,23.96
+TriplesExtractor,2026-02-21 17:26:06,INFO,176,176,0,16 documents written to disk.,23.96
+TriplesExtractor,2026-02-21 17:26:12,INFO,192,176,0,Chunk 11 processing completed.,25.81
+TriplesExtractor,2026-02-21 17:26:12,INFO,192,192,0,16 documents written to disk.,25.81
+TriplesExtractor,2026-02-21 17:26:18,INFO,208,192,0,Chunk 12 processing completed.,27.98
+TriplesExtractor,2026-02-21 17:26:18,INFO,208,208,0,16 documents written to disk.,27.98
+TriplesExtractor,2026-02-21 17:26:24,INFO,224,208,0,Chunk 13 processing completed.,30.01
+TriplesExtractor,2026-02-21 17:26:24,INFO,224,224,0,16 documents written to disk.,30.01
+TriplesExtractor,2026-02-21 17:26:29,INFO,240,224,0,Chunk 14 processing completed.,32.21
+TriplesExtractor,2026-02-21 17:26:29,INFO,240,240,0,16 documents written to disk.,32.21
+TriplesExtractor,2026-02-21 17:26:35,INFO,256,240,0,Chunk 15 processing completed.,34.12
+TriplesExtractor,2026-02-21 17:26:35,INFO,256,256,0,16 documents written to disk.,34.12
+TriplesExtractor,2026-02-21 17:26:41,INFO,272,256,0,Chunk 16 processing completed.,36.64
+TriplesExtractor,2026-02-21 17:26:41,INFO,272,272,0,16 documents written to disk.,36.64
+TriplesExtractor,2026-02-21 17:26:47,INFO,288,272,0,Chunk 17 processing completed.,38.47
+TriplesExtractor,2026-02-21 17:26:47,INFO,288,288,0,16 documents written to disk.,38.47
+TriplesExtractor,2026-02-21 17:26:52,INFO,304,288,0,Chunk 18 processing completed.,40.38
+TriplesExtractor,2026-02-21 17:26:52,INFO,304,304,0,16 documents written to disk.,40.38
+TriplesExtractor,2026-02-21 17:26:59,INFO,320,304,0,Chunk 19 processing completed.,41.93
+TriplesExtractor,2026-02-21 17:26:59,INFO,320,320,0,16 documents written to disk.,41.93
+TriplesExtractor,2026-02-21 17:27:05,INFO,336,320,0,Chunk 20 processing completed.,43.56
+TriplesExtractor,2026-02-21 17:27:05,INFO,336,336,0,16 documents written to disk.,43.56
+TriplesExtractor,2026-02-21 17:27:13,INFO,352,336,0,Chunk 21 processing completed.,46.00
+TriplesExtractor,2026-02-21 17:27:13,INFO,352,352,0,16 documents written to disk.,46.00
+TriplesExtractor,2026-02-21 17:27:21,INFO,368,352,0,Chunk 22 processing completed.,47.97
+TriplesExtractor,2026-02-21 17:27:21,INFO,368,368,0,16 documents written to disk.,47.97
+TriplesExtractor,2026-02-21 17:27:32,INFO,384,368,0,Chunk 23 processing completed.,49.60
+TriplesExtractor,2026-02-21 17:27:32,INFO,384,384,0,16 documents written to disk.,49.60
+TriplesExtractor,2026-02-21 17:27:39,INFO,400,384,0,Chunk 24 processing completed.,50.96
+TriplesExtractor,2026-02-21 17:27:39,INFO,400,400,0,16 documents written to disk.,50.96
+TriplesExtractor,2026-02-21 17:27:46,INFO,416,400,0,Chunk 25 processing completed.,53.17
+TriplesExtractor,2026-02-21 17:27:46,INFO,416,416,0,16 documents written to disk.,53.17
+TriplesExtractor,2026-02-21 17:27:59,INFO,432,416,0,Chunk 26 processing completed.,55.09
+TriplesExtractor,2026-02-21 17:27:59,INFO,432,432,0,16 documents written to disk.,55.09
+TriplesExtractor,2026-02-21 17:28:05,INFO,448,432,0,Chunk 27 processing completed.,57.85
+TriplesExtractor,2026-02-21 17:28:05,INFO,448,448,0,16 documents written to disk.,57.85
+TriplesExtractor,2026-02-21 17:28:10,INFO,464,448,0,Chunk 28 processing completed.,60.84
+TriplesExtractor,2026-02-21 17:28:10,INFO,464,464,0,16 documents written to disk.,60.84
+TriplesExtractor,2026-02-21 17:28:27,INFO,480,464,0,Chunk 29 processing completed.,64.22
+TriplesExtractor,2026-02-21 17:28:27,INFO,480,480,0,16 documents written to disk.,64.22
+TriplesExtractor,2026-02-21 17:28:39,INFO,496,480,0,Chunk 30 processing completed.,65.73
+TriplesExtractor,2026-02-21 17:28:39,INFO,496,496,0,16 documents written to disk.,65.73
+TriplesExtractor,2026-02-21 17:28:43,INFO,512,496,0,Chunk 31 processing completed.,67.44
+TriplesExtractor,2026-02-21 17:28:43,INFO,512,512,0,16 documents written to disk.,67.44
+TriplesExtractor,2026-02-21 17:28:51,INFO,528,512,0,Chunk 32 processing completed.,69.20
+TriplesExtractor,2026-02-21 17:28:51,INFO,528,528,0,16 documents written to disk.,69.20
+TriplesExtractor,2026-02-21 17:28:58,INFO,544,528,0,Chunk 33 processing completed.,70.81
+TriplesExtractor,2026-02-21 17:28:58,INFO,544,544,0,16 documents written to disk.,70.81
+TriplesExtractor,2026-02-21 17:29:09,INFO,560,544,0,Chunk 34 processing completed.,72.19
+TriplesExtractor,2026-02-21 17:29:09,INFO,560,560,0,16 documents written to disk.,72.19
+TriplesExtractor,2026-02-21 17:29:15,INFO,576,560,0,Chunk 35 processing completed.,73.34
+TriplesExtractor,2026-02-21 17:29:15,INFO,576,576,0,16 documents written to disk.,73.34
+TriplesExtractor,2026-02-21 17:29:22,INFO,592,576,0,Chunk 36 processing completed.,74.89
+TriplesExtractor,2026-02-21 17:29:22,INFO,592,592,0,16 documents written to disk.,74.89
+TriplesExtractor,2026-02-21 17:29:30,INFO,608,592,0,Chunk 37 processing completed.,77.36
+TriplesExtractor,2026-02-21 17:29:30,INFO,608,608,0,16 documents written to disk.,77.36
+TriplesExtractor,2026-02-21 17:29:42,INFO,624,608,0,Chunk 38 processing completed.,79.23
+TriplesExtractor,2026-02-21 17:29:42,INFO,624,624,0,16 documents written to disk.,79.23
+TriplesExtractor,2026-02-21 17:29:48,INFO,640,624,0,Chunk 39 processing completed.,81.19
+TriplesExtractor,2026-02-21 17:29:48,INFO,640,640,0,16 documents written to disk.,81.19
+TriplesExtractor,2026-02-21 17:29:54,INFO,656,640,0,Chunk 40 processing completed.,83.14
+TriplesExtractor,2026-02-21 17:29:54,INFO,656,656,0,16 documents written to disk.,83.14
+TriplesExtractor,2026-02-21 17:30:01,INFO,672,656,0,Chunk 41 processing completed.,84.74
+TriplesExtractor,2026-02-21 17:30:01,INFO,672,672,0,16 documents written to disk.,84.74
+TriplesExtractor,2026-02-21 17:30:08,INFO,688,672,0,Chunk 42 processing completed.,86.77
+TriplesExtractor,2026-02-21 17:30:08,INFO,688,688,0,16 documents written to disk.,86.77
+TriplesExtractor,2026-02-21 17:30:15,INFO,704,688,0,Chunk 43 processing completed.,89.83
+TriplesExtractor,2026-02-21 17:30:15,INFO,704,704,0,16 documents written to disk.,89.83
+TriplesExtractor,2026-02-21 17:30:23,INFO,720,704,0,Chunk 44 processing completed.,91.28
+TriplesExtractor,2026-02-21 17:30:23,INFO,720,720,0,16 documents written to disk.,91.28
+TriplesExtractor,2026-02-21 17:30:29,INFO,736,720,0,Chunk 45 processing completed.,93.02
+TriplesExtractor,2026-02-21 17:30:29,INFO,736,736,0,16 documents written to disk.,93.02
+TriplesExtractor,2026-02-21 17:30:35,INFO,752,736,0,Chunk 46 processing completed.,94.56
+TriplesExtractor,2026-02-21 17:30:35,INFO,752,752,0,16 documents written to disk.,94.56
+TriplesExtractor,2026-02-21 17:30:41,INFO,768,752,0,Chunk 47 processing completed.,95.99
+TriplesExtractor,2026-02-21 17:30:41,INFO,768,768,0,16 documents written to disk.,95.99
+TriplesExtractor,2026-02-21 17:30:48,INFO,784,768,0,Chunk 48 processing completed.,97.68
+TriplesExtractor,2026-02-21 17:30:48,INFO,784,784,0,16 documents written to disk.,97.68
+TriplesExtractor,2026-02-21 17:30:54,INFO,800,784,0,Chunk 49 processing completed.,98.83
+TriplesExtractor,2026-02-21 17:30:54,INFO,800,800,0,16 documents written to disk.,98.83
+TriplesExtractor,2026-02-21 17:31:01,INFO,812,800,0,Chunk 50 processing completed.,100.00
+TriplesExtractor,2026-02-21 17:31:01,INFO,812,816,0,16 documents written to disk.,100.00
+TriplesExtractor,2026-02-21 17:31:01,INFO,812,2013,0,Job TriplesExtractor has been completed.,100.00

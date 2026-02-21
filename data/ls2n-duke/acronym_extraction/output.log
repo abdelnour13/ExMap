@@ -1,0 +1,1017 @@
+AcronymExtractor,2026-02-21 17:21:14,INFO,0,0,0,Job AcronymExtractor has started.,None
+AcronymExtractor,2026-02-21 17:21:14,INFO,1,0,0,Chunk 0 processing completed.,0.10
+AcronymExtractor,2026-02-21 17:21:15,INFO,2,0,0,Chunk 1 processing completed.,0.20
+AcronymExtractor,2026-02-21 17:21:15,INFO,3,0,0,Chunk 2 processing completed.,0.29
+AcronymExtractor,2026-02-21 17:21:15,INFO,4,0,0,Chunk 3 processing completed.,0.38
+AcronymExtractor,2026-02-21 17:21:15,INFO,4,4,0,4 documents written to disk.,0.38
+AcronymExtractor,2026-02-21 17:21:15,INFO,5,4,0,Chunk 4 processing completed.,0.48
+AcronymExtractor,2026-02-21 17:21:15,INFO,6,4,0,Chunk 5 processing completed.,0.61
+AcronymExtractor,2026-02-21 17:21:15,INFO,7,4,0,Chunk 6 processing completed.,0.74
+AcronymExtractor,2026-02-21 17:21:15,INFO,8,4,0,Chunk 7 processing completed.,0.87
+AcronymExtractor,2026-02-21 17:21:15,INFO,8,8,0,4 documents written to disk.,0.87
+AcronymExtractor,2026-02-21 17:21:15,INFO,9,8,0,Chunk 8 processing completed.,1.00
+AcronymExtractor,2026-02-21 17:21:15,INFO,10,8,0,Chunk 9 processing completed.,1.12
+AcronymExtractor,2026-02-21 17:21:15,INFO,11,8,0,Chunk 10 processing completed.,1.25
+AcronymExtractor,2026-02-21 17:21:15,INFO,12,8,0,Chunk 11 processing completed.,1.37
+AcronymExtractor,2026-02-21 17:21:15,INFO,12,12,0,4 documents written to disk.,1.37
+AcronymExtractor,2026-02-21 17:21:15,INFO,13,12,0,Chunk 12 processing completed.,1.46
+AcronymExtractor,2026-02-21 17:21:15,INFO,14,12,0,Chunk 13 processing completed.,1.55
+AcronymExtractor,2026-02-21 17:21:15,INFO,15,12,0,Chunk 14 processing completed.,1.64
+AcronymExtractor,2026-02-21 17:21:15,INFO,16,12,0,Chunk 15 processing completed.,1.73
+AcronymExtractor,2026-02-21 17:21:15,INFO,16,16,0,4 documents written to disk.,1.73
+AcronymExtractor,2026-02-21 17:21:15,INFO,17,16,0,Chunk 16 processing completed.,1.82
+AcronymExtractor,2026-02-21 17:21:15,INFO,18,16,0,Chunk 17 processing completed.,1.90
+AcronymExtractor,2026-02-21 17:21:15,INFO,19,16,0,Chunk 18 processing completed.,1.98
+AcronymExtractor,2026-02-21 17:21:15,INFO,20,16,0,Chunk 19 processing completed.,2.06
+AcronymExtractor,2026-02-21 17:21:15,INFO,20,20,0,4 documents written to disk.,2.06
+AcronymExtractor,2026-02-21 17:21:15,INFO,21,20,0,Chunk 20 processing completed.,2.14
+AcronymExtractor,2026-02-21 17:21:15,INFO,22,20,0,Chunk 21 processing completed.,2.22
+AcronymExtractor,2026-02-21 17:21:15,INFO,23,20,0,Chunk 22 processing completed.,2.33
+AcronymExtractor,2026-02-21 17:21:15,INFO,24,20,0,Chunk 23 processing completed.,2.45
+AcronymExtractor,2026-02-21 17:21:15,INFO,24,24,0,4 documents written to disk.,2.45
+AcronymExtractor,2026-02-21 17:21:15,INFO,25,24,0,Chunk 24 processing completed.,2.55
+AcronymExtractor,2026-02-21 17:21:15,INFO,26,24,0,Chunk 25 processing completed.,2.67
+AcronymExtractor,2026-02-21 17:21:15,INFO,27,24,0,Chunk 26 processing completed.,2.78
+AcronymExtractor,2026-02-21 17:21:15,INFO,28,24,0,Chunk 27 processing completed.,2.90
+AcronymExtractor,2026-02-21 17:21:15,INFO,28,28,0,4 documents written to disk.,2.90
+AcronymExtractor,2026-02-21 17:21:15,INFO,29,28,0,Chunk 28 processing completed.,3.01
+AcronymExtractor,2026-02-21 17:21:15,INFO,30,28,0,Chunk 29 processing completed.,3.12
+AcronymExtractor,2026-02-21 17:21:15,INFO,31,28,0,Chunk 30 processing completed.,3.24
+AcronymExtractor,2026-02-21 17:21:15,INFO,32,28,0,Chunk 31 processing completed.,3.35
+AcronymExtractor,2026-02-21 17:21:15,INFO,32,32,0,4 documents written to disk.,3.35
+AcronymExtractor,2026-02-21 17:21:15,INFO,33,32,0,Chunk 32 processing completed.,3.48
+AcronymExtractor,2026-02-21 17:21:15,INFO,34,32,0,Chunk 33 processing completed.,3.61
+AcronymExtractor,2026-02-21 17:21:15,INFO,35,32,0,Chunk 34 processing completed.,3.74
+AcronymExtractor,2026-02-21 17:21:15,INFO,36,32,0,Chunk 35 processing completed.,3.86
+AcronymExtractor,2026-02-21 17:21:15,INFO,36,36,0,4 documents written to disk.,3.86
+AcronymExtractor,2026-02-21 17:21:16,INFO,37,36,0,Chunk 36 processing completed.,4.00
+AcronymExtractor,2026-02-21 17:21:16,INFO,38,36,0,Chunk 37 processing completed.,4.13
+AcronymExtractor,2026-02-21 17:21:16,INFO,39,36,0,Chunk 38 processing completed.,4.27
+AcronymExtractor,2026-02-21 17:21:16,INFO,40,36,0,Chunk 39 processing completed.,4.40
+AcronymExtractor,2026-02-21 17:21:16,INFO,40,40,0,4 documents written to disk.,4.40
+AcronymExtractor,2026-02-21 17:21:16,INFO,41,40,0,Chunk 40 processing completed.,4.53
+AcronymExtractor,2026-02-21 17:21:16,INFO,42,40,0,Chunk 41 processing completed.,4.66
+AcronymExtractor,2026-02-21 17:21:16,INFO,43,40,0,Chunk 42 processing completed.,4.77
+AcronymExtractor,2026-02-21 17:21:16,INFO,44,40,0,Chunk 43 processing completed.,4.88
+AcronymExtractor,2026-02-21 17:21:16,INFO,44,44,0,4 documents written to disk.,4.88
+AcronymExtractor,2026-02-21 17:21:16,INFO,45,44,0,Chunk 44 processing completed.,4.99
+AcronymExtractor,2026-02-21 17:21:16,INFO,46,44,0,Chunk 45 processing completed.,5.10
+AcronymExtractor,2026-02-21 17:21:16,INFO,47,44,0,Chunk 46 processing completed.,5.20
+AcronymExtractor,2026-02-21 17:21:16,INFO,48,44,0,Chunk 47 processing completed.,5.31
+AcronymExtractor,2026-02-21 17:21:16,INFO,48,48,0,4 documents written to disk.,5.31
+AcronymExtractor,2026-02-21 17:21:16,INFO,49,48,0,Chunk 48 processing completed.,5.41
+AcronymExtractor,2026-02-21 17:21:16,INFO,50,48,0,Chunk 49 processing completed.,5.52
+AcronymExtractor,2026-02-21 17:21:16,INFO,51,48,0,Chunk 50 processing completed.,5.64
+AcronymExtractor,2026-02-21 17:21:16,INFO,52,48,0,Chunk 51 processing completed.,5.77
+AcronymExtractor,2026-02-21 17:21:16,INFO,52,52,0,4 documents written to disk.,5.77
+AcronymExtractor,2026-02-21 17:21:16,INFO,53,52,0,Chunk 52 processing completed.,5.90
+AcronymExtractor,2026-02-21 17:21:16,INFO,54,52,0,Chunk 53 processing completed.,6.02
+AcronymExtractor,2026-02-21 17:21:16,INFO,55,52,0,Chunk 54 processing completed.,6.15
+AcronymExtractor,2026-02-21 17:21:16,INFO,56,52,0,Chunk 55 processing completed.,6.28
+AcronymExtractor,2026-02-21 17:21:16,INFO,56,56,0,4 documents written to disk.,6.28
+AcronymExtractor,2026-02-21 17:21:16,INFO,57,56,0,Chunk 56 processing completed.,6.40
+AcronymExtractor,2026-02-21 17:21:16,INFO,58,56,0,Chunk 57 processing completed.,6.50
+AcronymExtractor,2026-02-21 17:21:16,INFO,59,56,0,Chunk 58 processing completed.,6.60
+AcronymExtractor,2026-02-21 17:21:16,INFO,60,56,0,Chunk 59 processing completed.,6.70
+AcronymExtractor,2026-02-21 17:21:16,INFO,60,60,0,4 documents written to disk.,6.70
+AcronymExtractor,2026-02-21 17:21:17,INFO,61,60,0,Chunk 60 processing completed.,6.80
+AcronymExtractor,2026-02-21 17:21:17,INFO,62,60,0,Chunk 61 processing completed.,6.90
+AcronymExtractor,2026-02-21 17:21:17,INFO,63,60,0,Chunk 62 processing completed.,6.99
+AcronymExtractor,2026-02-21 17:21:17,INFO,64,60,0,Chunk 63 processing completed.,7.31
+AcronymExtractor,2026-02-21 17:21:17,INFO,64,64,0,4 documents written to disk.,7.31
+AcronymExtractor,2026-02-21 17:21:17,INFO,65,64,0,Chunk 64 processing completed.,7.63
+AcronymExtractor,2026-02-21 17:21:17,INFO,66,64,0,Chunk 65 processing completed.,7.95
+AcronymExtractor,2026-02-21 17:21:17,INFO,67,64,0,Chunk 66 processing completed.,8.28
+AcronymExtractor,2026-02-21 17:21:17,INFO,68,64,0,Chunk 67 processing completed.,8.60
+AcronymExtractor,2026-02-21 17:21:17,INFO,68,68,0,4 documents written to disk.,8.60
+AcronymExtractor,2026-02-21 17:21:17,INFO,69,68,0,Chunk 68 processing completed.,8.91
+AcronymExtractor,2026-02-21 17:21:17,INFO,70,68,0,Chunk 69 processing completed.,9.24
+AcronymExtractor,2026-02-21 17:21:17,INFO,71,68,0,Chunk 70 processing completed.,9.57
+AcronymExtractor,2026-02-21 17:21:18,INFO,72,68,0,Chunk 71 processing completed.,9.94
+AcronymExtractor,2026-02-21 17:21:18,INFO,72,72,0,4 documents written to disk.,9.94
+AcronymExtractor,2026-02-21 17:21:18,INFO,73,72,0,Chunk 72 processing completed.,10.26
+AcronymExtractor,2026-02-21 17:21:18,INFO,74,72,0,Chunk 73 processing completed.,10.58
+AcronymExtractor,2026-02-21 17:21:18,INFO,75,72,0,Chunk 74 processing completed.,10.90
+AcronymExtractor,2026-02-21 17:21:19,INFO,76,72,0,Chunk 75 processing completed.,11.28
+AcronymExtractor,2026-02-21 17:21:19,INFO,76,76,0,4 documents written to disk.,11.28
+AcronymExtractor,2026-02-21 17:21:19,INFO,77,76,0,Chunk 76 processing completed.,11.59
+AcronymExtractor,2026-02-21 17:21:19,INFO,78,76,0,Chunk 77 processing completed.,11.91
+AcronymExtractor,2026-02-21 17:21:19,INFO,79,76,0,Chunk 78 processing completed.,12.24
+AcronymExtractor,2026-02-21 17:21:19,INFO,80,76,0,Chunk 79 processing completed.,12.56
+AcronymExtractor,2026-02-21 17:21:19,INFO,80,80,0,4 documents written to disk.,12.56
+AcronymExtractor,2026-02-21 17:21:19,INFO,81,80,0,Chunk 80 processing completed.,12.88
+AcronymExtractor,2026-02-21 17:21:19,INFO,82,80,0,Chunk 81 processing completed.,13.20
+AcronymExtractor,2026-02-21 17:21:19,INFO,83,80,0,Chunk 82 processing completed.,13.31
+AcronymExtractor,2026-02-21 17:21:19,INFO,84,80,0,Chunk 83 processing completed.,13.41
+AcronymExtractor,2026-02-21 17:21:19,INFO,84,84,0,4 documents written to disk.,13.41
+AcronymExtractor,2026-02-21 17:21:19,INFO,85,84,0,Chunk 84 processing completed.,13.52
+AcronymExtractor,2026-02-21 17:21:19,INFO,86,84,0,Chunk 85 processing completed.,13.62
+AcronymExtractor,2026-02-21 17:21:19,INFO,87,84,0,Chunk 86 processing completed.,13.73
+AcronymExtractor,2026-02-21 17:21:19,INFO,88,84,0,Chunk 87 processing completed.,13.84
+AcronymExtractor,2026-02-21 17:21:19,INFO,88,88,0,4 documents written to disk.,13.84
+AcronymExtractor,2026-02-21 17:21:19,INFO,89,88,0,Chunk 88 processing completed.,13.95
+AcronymExtractor,2026-02-21 17:21:19,INFO,90,88,0,Chunk 89 processing completed.,14.05
+AcronymExtractor,2026-02-21 17:21:19,INFO,91,88,0,Chunk 90 processing completed.,14.12
+AcronymExtractor,2026-02-21 17:21:19,INFO,92,88,0,Chunk 91 processing completed.,14.19
+AcronymExtractor,2026-02-21 17:21:19,INFO,92,92,0,4 documents written to disk.,14.19
+AcronymExtractor,2026-02-21 17:21:19,INFO,93,92,0,Chunk 92 processing completed.,14.26
+AcronymExtractor,2026-02-21 17:21:19,INFO,94,92,0,Chunk 93 processing completed.,14.33
+AcronymExtractor,2026-02-21 17:21:19,INFO,95,92,0,Chunk 94 processing completed.,14.43
+AcronymExtractor,2026-02-21 17:21:19,INFO,96,92,0,Chunk 95 processing completed.,14.53
+AcronymExtractor,2026-02-21 17:21:19,INFO,96,96,0,4 documents written to disk.,14.53
+AcronymExtractor,2026-02-21 17:21:19,INFO,97,96,0,Chunk 96 processing completed.,14.64
+AcronymExtractor,2026-02-21 17:21:19,INFO,98,96,0,Chunk 97 processing completed.,14.73
+AcronymExtractor,2026-02-21 17:21:20,INFO,99,96,0,Chunk 98 processing completed.,14.86
+AcronymExtractor,2026-02-21 17:21:20,INFO,100,96,0,Chunk 99 processing completed.,14.97
+AcronymExtractor,2026-02-21 17:21:20,INFO,100,100,0,4 documents written to disk.,14.97
+AcronymExtractor,2026-02-21 17:21:20,INFO,101,100,0,Chunk 100 processing completed.,15.10
+AcronymExtractor,2026-02-21 17:21:20,INFO,102,100,0,Chunk 101 processing completed.,15.23
+AcronymExtractor,2026-02-21 17:21:20,INFO,103,100,0,Chunk 102 processing completed.,15.35
+AcronymExtractor,2026-02-21 17:21:20,INFO,104,100,0,Chunk 103 processing completed.,15.48
+AcronymExtractor,2026-02-21 17:21:20,INFO,104,104,0,4 documents written to disk.,15.48
+AcronymExtractor,2026-02-21 17:21:20,INFO,105,104,0,Chunk 104 processing completed.,15.60
+AcronymExtractor,2026-02-21 17:21:20,INFO,106,104,0,Chunk 105 processing completed.,15.74
+AcronymExtractor,2026-02-21 17:21:22,INFO,107,104,0,Chunk 106 processing completed.,15.92
+AcronymExtractor,2026-02-21 17:21:22,INFO,108,104,0,Chunk 107 processing completed.,16.05
+AcronymExtractor,2026-02-21 17:21:22,INFO,108,108,0,4 documents written to disk.,16.05
+AcronymExtractor,2026-02-21 17:21:22,INFO,109,108,0,Chunk 108 processing completed.,16.19
+AcronymExtractor,2026-02-21 17:21:22,INFO,110,108,0,Chunk 109 processing completed.,16.29
+AcronymExtractor,2026-02-21 17:21:22,INFO,111,108,0,Chunk 110 processing completed.,16.39
+AcronymExtractor,2026-02-21 17:21:23,INFO,112,108,0,Chunk 111 processing completed.,16.50
+AcronymExtractor,2026-02-21 17:21:23,INFO,112,112,0,4 documents written to disk.,16.50
+AcronymExtractor,2026-02-21 17:21:23,INFO,113,112,0,Chunk 112 processing completed.,16.60
+AcronymExtractor,2026-02-21 17:21:23,INFO,114,112,0,Chunk 113 processing completed.,16.70
+AcronymExtractor,2026-02-21 17:21:23,INFO,115,112,0,Chunk 114 processing completed.,16.81
+AcronymExtractor,2026-02-21 17:21:23,INFO,116,112,0,Chunk 115 processing completed.,16.92
+AcronymExtractor,2026-02-21 17:21:23,INFO,116,116,0,4 documents written to disk.,16.92
+AcronymExtractor,2026-02-21 17:21:23,INFO,117,116,0,Chunk 116 processing completed.,17.03
+AcronymExtractor,2026-02-21 17:21:23,INFO,118,116,0,Chunk 117 processing completed.,17.14
+AcronymExtractor,2026-02-21 17:21:23,INFO,119,116,0,Chunk 118 processing completed.,17.25
+AcronymExtractor,2026-02-21 17:21:23,INFO,120,116,0,Chunk 119 processing completed.,17.36
+AcronymExtractor,2026-02-21 17:21:23,INFO,120,120,0,4 documents written to disk.,17.36
+AcronymExtractor,2026-02-21 17:21:23,INFO,121,120,0,Chunk 120 processing completed.,17.47
+AcronymExtractor,2026-02-21 17:21:23,INFO,122,120,0,Chunk 121 processing completed.,17.57
+AcronymExtractor,2026-02-21 17:21:23,INFO,123,120,0,Chunk 122 processing completed.,17.68
+AcronymExtractor,2026-02-21 17:21:23,INFO,124,120,0,Chunk 123 processing completed.,17.76
+AcronymExtractor,2026-02-21 17:21:23,INFO,124,124,0,4 documents written to disk.,17.76
+AcronymExtractor,2026-02-21 17:21:23,INFO,125,124,0,Chunk 124 processing completed.,17.85
+AcronymExtractor,2026-02-21 17:21:23,INFO,126,124,0,Chunk 125 processing completed.,17.94
+AcronymExtractor,2026-02-21 17:21:23,INFO,127,124,0,Chunk 126 processing completed.,18.02
+AcronymExtractor,2026-02-21 17:21:23,INFO,128,124,0,Chunk 127 processing completed.,18.11
+AcronymExtractor,2026-02-21 17:21:23,INFO,128,128,0,4 documents written to disk.,18.11
+AcronymExtractor,2026-02-21 17:21:23,INFO,129,128,0,Chunk 128 processing completed.,18.20
+AcronymExtractor,2026-02-21 17:21:23,INFO,130,128,0,Chunk 129 processing completed.,18.29
+AcronymExtractor,2026-02-21 17:21:23,INFO,131,128,0,Chunk 130 processing completed.,18.37
+AcronymExtractor,2026-02-21 17:21:23,INFO,132,128,0,Chunk 131 processing completed.,18.46
+AcronymExtractor,2026-02-21 17:21:23,INFO,132,132,0,4 documents written to disk.,18.46
+AcronymExtractor,2026-02-21 17:21:23,INFO,133,132,0,Chunk 132 processing completed.,18.54
+AcronymExtractor,2026-02-21 17:21:23,INFO,134,132,0,Chunk 133 processing completed.,18.63
+AcronymExtractor,2026-02-21 17:21:23,INFO,135,132,0,Chunk 134 processing completed.,18.72
+AcronymExtractor,2026-02-21 17:21:23,INFO,136,132,0,Chunk 135 processing completed.,18.81
+AcronymExtractor,2026-02-21 17:21:23,INFO,136,136,0,4 documents written to disk.,18.81
+AcronymExtractor,2026-02-21 17:21:23,INFO,137,136,0,Chunk 136 processing completed.,18.88
+AcronymExtractor,2026-02-21 17:21:23,INFO,138,136,0,Chunk 137 processing completed.,18.95
+AcronymExtractor,2026-02-21 17:21:23,INFO,139,136,0,Chunk 138 processing completed.,19.02
+AcronymExtractor,2026-02-21 17:21:23,INFO,140,136,0,Chunk 139 processing completed.,19.09
+AcronymExtractor,2026-02-21 17:21:23,INFO,140,140,0,4 documents written to disk.,19.09
+AcronymExtractor,2026-02-21 17:21:23,INFO,141,140,0,Chunk 140 processing completed.,19.21
+AcronymExtractor,2026-02-21 17:21:23,INFO,142,140,0,Chunk 141 processing completed.,19.33
+AcronymExtractor,2026-02-21 17:21:23,INFO,143,140,0,Chunk 142 processing completed.,19.45
+AcronymExtractor,2026-02-21 17:21:23,INFO,144,140,0,Chunk 143 processing completed.,19.57
+AcronymExtractor,2026-02-21 17:21:23,INFO,144,144,0,4 documents written to disk.,19.57
+AcronymExtractor,2026-02-21 17:21:23,INFO,145,144,0,Chunk 144 processing completed.,19.69
+AcronymExtractor,2026-02-21 17:21:23,INFO,146,144,0,Chunk 145 processing completed.,19.81
+AcronymExtractor,2026-02-21 17:21:23,INFO,147,144,0,Chunk 146 processing completed.,19.93
+AcronymExtractor,2026-02-21 17:21:23,INFO,148,144,0,Chunk 147 processing completed.,20.05
+AcronymExtractor,2026-02-21 17:21:23,INFO,148,148,0,4 documents written to disk.,20.05
+AcronymExtractor,2026-02-21 17:21:23,INFO,149,148,0,Chunk 148 processing completed.,20.18
+AcronymExtractor,2026-02-21 17:21:23,INFO,150,148,0,Chunk 149 processing completed.,20.31
+AcronymExtractor,2026-02-21 17:21:23,INFO,151,148,0,Chunk 150 processing completed.,20.43
+AcronymExtractor,2026-02-21 17:21:23,INFO,152,148,0,Chunk 151 processing completed.,20.53
+AcronymExtractor,2026-02-21 17:21:23,INFO,152,152,0,4 documents written to disk.,20.53
+AcronymExtractor,2026-02-21 17:21:23,INFO,153,152,0,Chunk 152 processing completed.,20.63
+AcronymExtractor,2026-02-21 17:21:23,INFO,154,152,0,Chunk 153 processing completed.,20.74
+AcronymExtractor,2026-02-21 17:21:23,INFO,155,152,0,Chunk 154 processing completed.,20.87
+AcronymExtractor,2026-02-21 17:21:23,INFO,156,152,0,Chunk 155 processing completed.,20.98
+AcronymExtractor,2026-02-21 17:21:23,INFO,156,156,0,4 documents written to disk.,20.98
+AcronymExtractor,2026-02-21 17:21:23,INFO,157,156,0,Chunk 156 processing completed.,21.08
+AcronymExtractor,2026-02-21 17:21:23,INFO,158,156,0,Chunk 157 processing completed.,21.19
+AcronymExtractor,2026-02-21 17:21:23,INFO,159,156,0,Chunk 158 processing completed.,21.31
+AcronymExtractor,2026-02-21 17:21:23,INFO,160,156,0,Chunk 159 processing completed.,21.43
+AcronymExtractor,2026-02-21 17:21:23,INFO,160,160,0,4 documents written to disk.,21.43
+AcronymExtractor,2026-02-21 17:21:23,INFO,161,160,0,Chunk 160 processing completed.,21.56
+AcronymExtractor,2026-02-21 17:21:23,INFO,162,160,0,Chunk 161 processing completed.,21.68
+AcronymExtractor,2026-02-21 17:21:23,INFO,163,160,0,Chunk 162 processing completed.,21.81
+AcronymExtractor,2026-02-21 17:21:23,INFO,164,160,0,Chunk 163 processing completed.,21.93
+AcronymExtractor,2026-02-21 17:21:23,INFO,164,164,0,4 documents written to disk.,21.93
+AcronymExtractor,2026-02-21 17:21:23,INFO,165,164,0,Chunk 164 processing completed.,22.05
+AcronymExtractor,2026-02-21 17:21:23,INFO,166,164,0,Chunk 165 processing completed.,22.22
+AcronymExtractor,2026-02-21 17:21:23,INFO,167,164,0,Chunk 166 processing completed.,22.39
+AcronymExtractor,2026-02-21 17:21:23,INFO,168,164,0,Chunk 167 processing completed.,22.56
+AcronymExtractor,2026-02-21 17:21:23,INFO,168,168,0,4 documents written to disk.,22.56
+AcronymExtractor,2026-02-21 17:21:23,INFO,169,168,0,Chunk 168 processing completed.,22.74
+AcronymExtractor,2026-02-21 17:21:23,INFO,170,168,0,Chunk 169 processing completed.,22.92
+AcronymExtractor,2026-02-21 17:21:23,INFO,171,168,0,Chunk 170 processing completed.,23.10
+AcronymExtractor,2026-02-21 17:21:23,INFO,172,168,0,Chunk 171 processing completed.,23.27
+AcronymExtractor,2026-02-21 17:21:23,INFO,172,172,0,4 documents written to disk.,23.27
+AcronymExtractor,2026-02-21 17:21:23,INFO,173,172,0,Chunk 172 processing completed.,23.44
+AcronymExtractor,2026-02-21 17:21:23,INFO,174,172,0,Chunk 173 processing completed.,23.61
+AcronymExtractor,2026-02-21 17:21:23,INFO,175,172,0,Chunk 174 processing completed.,23.80
+AcronymExtractor,2026-02-21 17:21:23,INFO,176,172,0,Chunk 175 processing completed.,23.97
+AcronymExtractor,2026-02-21 17:21:23,INFO,176,176,0,4 documents written to disk.,23.97
+AcronymExtractor,2026-02-21 17:21:23,INFO,177,176,0,Chunk 176 processing completed.,24.14
+AcronymExtractor,2026-02-21 17:21:23,INFO,178,176,0,Chunk 177 processing completed.,24.32
+AcronymExtractor,2026-02-21 17:21:24,INFO,179,176,0,Chunk 178 processing completed.,24.43
+AcronymExtractor,2026-02-21 17:21:24,INFO,180,176,0,Chunk 179 processing completed.,24.53
+AcronymExtractor,2026-02-21 17:21:24,INFO,180,180,0,4 documents written to disk.,24.53
+AcronymExtractor,2026-02-21 17:21:24,INFO,181,180,0,Chunk 180 processing completed.,24.63
+AcronymExtractor,2026-02-21 17:21:24,INFO,182,180,0,Chunk 181 processing completed.,24.72
+AcronymExtractor,2026-02-21 17:21:24,INFO,183,180,0,Chunk 182 processing completed.,24.82
+AcronymExtractor,2026-02-21 17:21:24,INFO,184,180,0,Chunk 183 processing completed.,24.92
+AcronymExtractor,2026-02-21 17:21:24,INFO,184,184,0,4 documents written to disk.,24.92
+AcronymExtractor,2026-02-21 17:21:24,INFO,185,184,0,Chunk 184 processing completed.,25.02
+AcronymExtractor,2026-02-21 17:21:24,INFO,186,184,0,Chunk 185 processing completed.,25.13
+AcronymExtractor,2026-02-21 17:21:24,INFO,187,184,0,Chunk 186 processing completed.,25.23
+AcronymExtractor,2026-02-21 17:21:24,INFO,188,184,0,Chunk 187 processing completed.,25.34
+AcronymExtractor,2026-02-21 17:21:24,INFO,188,188,0,4 documents written to disk.,25.34
+AcronymExtractor,2026-02-21 17:21:24,INFO,189,188,0,Chunk 188 processing completed.,25.44
+AcronymExtractor,2026-02-21 17:21:24,INFO,190,188,0,Chunk 189 processing completed.,25.55
+AcronymExtractor,2026-02-21 17:21:24,INFO,191,188,0,Chunk 190 processing completed.,25.69
+AcronymExtractor,2026-02-21 17:21:24,INFO,192,188,0,Chunk 191 processing completed.,25.83
+AcronymExtractor,2026-02-21 17:21:24,INFO,192,192,0,4 documents written to disk.,25.83
+AcronymExtractor,2026-02-21 17:21:24,INFO,193,192,0,Chunk 192 processing completed.,25.98
+AcronymExtractor,2026-02-21 17:21:24,INFO,194,192,0,Chunk 193 processing completed.,26.12
+AcronymExtractor,2026-02-21 17:21:24,INFO,195,192,0,Chunk 194 processing completed.,26.27
+AcronymExtractor,2026-02-21 17:21:24,INFO,196,192,0,Chunk 195 processing completed.,26.42
+AcronymExtractor,2026-02-21 17:21:24,INFO,196,196,0,4 documents written to disk.,26.42
+AcronymExtractor,2026-02-21 17:21:24,INFO,197,196,0,Chunk 196 processing completed.,26.57
+AcronymExtractor,2026-02-21 17:21:24,INFO,198,196,0,Chunk 197 processing completed.,26.72
+AcronymExtractor,2026-02-21 17:21:24,INFO,199,196,0,Chunk 198 processing completed.,26.86
+AcronymExtractor,2026-02-21 17:21:24,INFO,200,196,0,Chunk 199 processing completed.,26.99
+AcronymExtractor,2026-02-21 17:21:24,INFO,200,200,0,4 documents written to disk.,26.99
+AcronymExtractor,2026-02-21 17:21:24,INFO,201,200,0,Chunk 200 processing completed.,27.12
+AcronymExtractor,2026-02-21 17:21:24,INFO,202,200,0,Chunk 201 processing completed.,27.25
+AcronymExtractor,2026-02-21 17:21:24,INFO,203,200,0,Chunk 202 processing completed.,27.38
+AcronymExtractor,2026-02-21 17:21:24,INFO,204,200,0,Chunk 203 processing completed.,27.50
+AcronymExtractor,2026-02-21 17:21:24,INFO,204,204,0,4 documents written to disk.,27.50
+AcronymExtractor,2026-02-21 17:21:24,INFO,205,204,0,Chunk 204 processing completed.,27.63
+AcronymExtractor,2026-02-21 17:21:24,INFO,206,204,0,Chunk 205 processing completed.,27.76
+AcronymExtractor,2026-02-21 17:21:24,INFO,207,204,0,Chunk 206 processing completed.,27.88
+AcronymExtractor,2026-02-21 17:21:24,INFO,208,204,0,Chunk 207 processing completed.,28.00
+AcronymExtractor,2026-02-21 17:21:24,INFO,208,208,0,4 documents written to disk.,28.00
+AcronymExtractor,2026-02-21 17:21:24,INFO,209,208,0,Chunk 208 processing completed.,28.13
+AcronymExtractor,2026-02-21 17:21:24,INFO,210,208,0,Chunk 209 processing completed.,28.26
+AcronymExtractor,2026-02-21 17:21:24,INFO,211,208,0,Chunk 210 processing completed.,28.38
+AcronymExtractor,2026-02-21 17:21:24,INFO,212,208,0,Chunk 211 processing completed.,28.50
+AcronymExtractor,2026-02-21 17:21:24,INFO,212,212,0,4 documents written to disk.,28.50
+AcronymExtractor,2026-02-21 17:21:25,INFO,213,212,0,Chunk 212 processing completed.,28.62
+AcronymExtractor,2026-02-21 17:21:25,INFO,214,212,0,Chunk 213 processing completed.,28.74
+AcronymExtractor,2026-02-21 17:21:25,INFO,215,212,0,Chunk 214 processing completed.,28.86
+AcronymExtractor,2026-02-21 17:21:25,INFO,216,212,0,Chunk 215 processing completed.,28.99
+AcronymExtractor,2026-02-21 17:21:25,INFO,216,216,0,4 documents written to disk.,28.99
+AcronymExtractor,2026-02-21 17:21:25,INFO,217,216,0,Chunk 216 processing completed.,29.12
+AcronymExtractor,2026-02-21 17:21:25,INFO,218,216,0,Chunk 217 processing completed.,29.25
+AcronymExtractor,2026-02-21 17:21:25,INFO,219,216,0,Chunk 218 processing completed.,29.38
+AcronymExtractor,2026-02-21 17:21:25,INFO,220,216,0,Chunk 219 processing completed.,29.51
+AcronymExtractor,2026-02-21 17:21:25,INFO,220,220,0,4 documents written to disk.,29.51
+AcronymExtractor,2026-02-21 17:21:25,INFO,221,220,0,Chunk 220 processing completed.,29.65
+AcronymExtractor,2026-02-21 17:21:25,INFO,222,220,0,Chunk 221 processing completed.,29.78
+AcronymExtractor,2026-02-21 17:21:25,INFO,223,220,0,Chunk 222 processing completed.,29.91
+AcronymExtractor,2026-02-21 17:21:25,INFO,224,220,0,Chunk 223 processing completed.,30.04
+AcronymExtractor,2026-02-21 17:21:25,INFO,224,224,0,4 documents written to disk.,30.04
+AcronymExtractor,2026-02-21 17:21:25,INFO,225,224,0,Chunk 224 processing completed.,30.17
+AcronymExtractor,2026-02-21 17:21:25,INFO,226,224,0,Chunk 225 processing completed.,30.30
+AcronymExtractor,2026-02-21 17:21:25,INFO,227,224,0,Chunk 226 processing completed.,30.44
+AcronymExtractor,2026-02-21 17:21:25,INFO,228,224,0,Chunk 227 processing completed.,30.58
+AcronymExtractor,2026-02-21 17:21:25,INFO,228,228,0,4 documents written to disk.,30.58
+AcronymExtractor,2026-02-21 17:21:25,INFO,229,228,0,Chunk 228 processing completed.,30.71
+AcronymExtractor,2026-02-21 17:21:25,INFO,230,228,0,Chunk 229 processing completed.,30.85
+AcronymExtractor,2026-02-21 17:21:25,INFO,231,228,0,Chunk 230 processing completed.,30.98
+AcronymExtractor,2026-02-21 17:21:25,INFO,232,228,0,Chunk 231 processing completed.,31.11
+AcronymExtractor,2026-02-21 17:21:25,INFO,232,232,0,4 documents written to disk.,31.11
+AcronymExtractor,2026-02-21 17:21:25,INFO,233,232,0,Chunk 232 processing completed.,31.25
+AcronymExtractor,2026-02-21 17:21:25,INFO,234,232,0,Chunk 233 processing completed.,31.39
+AcronymExtractor,2026-02-21 17:21:25,INFO,235,232,0,Chunk 234 processing completed.,31.53
+AcronymExtractor,2026-02-21 17:21:25,INFO,236,232,0,Chunk 235 processing completed.,31.66
+AcronymExtractor,2026-02-21 17:21:25,INFO,236,236,0,4 documents written to disk.,31.66
+AcronymExtractor,2026-02-21 17:21:26,INFO,237,236,0,Chunk 236 processing completed.,31.81
+AcronymExtractor,2026-02-21 17:21:26,INFO,238,236,0,Chunk 237 processing completed.,31.95
+AcronymExtractor,2026-02-21 17:21:26,INFO,239,236,0,Chunk 238 processing completed.,32.09
+AcronymExtractor,2026-02-21 17:21:26,INFO,240,236,0,Chunk 239 processing completed.,32.23
+AcronymExtractor,2026-02-21 17:21:26,INFO,240,240,0,4 documents written to disk.,32.23
+AcronymExtractor,2026-02-21 17:21:26,INFO,241,240,0,Chunk 240 processing completed.,32.37
+AcronymExtractor,2026-02-21 17:21:26,INFO,242,240,0,Chunk 241 processing completed.,32.50
+AcronymExtractor,2026-02-21 17:21:26,INFO,243,240,0,Chunk 242 processing completed.,32.66
+AcronymExtractor,2026-02-21 17:21:26,INFO,244,240,0,Chunk 243 processing completed.,32.75
+AcronymExtractor,2026-02-21 17:21:26,INFO,244,244,0,4 documents written to disk.,32.75
+AcronymExtractor,2026-02-21 17:21:27,INFO,245,244,0,Chunk 244 processing completed.,32.85
+AcronymExtractor,2026-02-21 17:21:27,INFO,246,244,0,Chunk 245 processing completed.,32.94
+AcronymExtractor,2026-02-21 17:21:27,INFO,247,244,0,Chunk 246 processing completed.,33.03
+AcronymExtractor,2026-02-21 17:21:27,INFO,248,244,0,Chunk 247 processing completed.,33.12
+AcronymExtractor,2026-02-21 17:21:27,INFO,248,248,0,4 documents written to disk.,33.12
+AcronymExtractor,2026-02-21 17:21:27,INFO,249,248,0,Chunk 248 processing completed.,33.24
+AcronymExtractor,2026-02-21 17:21:27,INFO,250,248,0,Chunk 249 processing completed.,33.37
+AcronymExtractor,2026-02-21 17:21:27,INFO,251,248,0,Chunk 250 processing completed.,33.49
+AcronymExtractor,2026-02-21 17:21:27,INFO,252,248,0,Chunk 251 processing completed.,33.61
+AcronymExtractor,2026-02-21 17:21:27,INFO,252,252,0,4 documents written to disk.,33.61
+AcronymExtractor,2026-02-21 17:21:27,INFO,253,252,0,Chunk 252 processing completed.,33.74
+AcronymExtractor,2026-02-21 17:21:27,INFO,254,252,0,Chunk 253 processing completed.,33.87
+AcronymExtractor,2026-02-21 17:21:27,INFO,255,252,0,Chunk 254 processing completed.,33.99
+AcronymExtractor,2026-02-21 17:21:27,INFO,256,252,0,Chunk 255 processing completed.,34.12
+AcronymExtractor,2026-02-21 17:21:27,INFO,256,256,0,4 documents written to disk.,34.12
+AcronymExtractor,2026-02-21 17:21:27,INFO,257,256,0,Chunk 256 processing completed.,34.25
+AcronymExtractor,2026-02-21 17:21:27,INFO,258,256,0,Chunk 257 processing completed.,34.38
+AcronymExtractor,2026-02-21 17:21:27,INFO,259,256,0,Chunk 258 processing completed.,34.50
+AcronymExtractor,2026-02-21 17:21:27,INFO,260,256,0,Chunk 259 processing completed.,34.58
+AcronymExtractor,2026-02-21 17:21:27,INFO,260,260,0,4 documents written to disk.,34.58
+AcronymExtractor,2026-02-21 17:21:27,INFO,261,260,0,Chunk 260 processing completed.,34.67
+AcronymExtractor,2026-02-21 17:21:27,INFO,262,260,0,Chunk 261 processing completed.,34.78
+AcronymExtractor,2026-02-21 17:21:27,INFO,263,260,0,Chunk 262 processing completed.,34.96
+AcronymExtractor,2026-02-21 17:21:27,INFO,264,260,0,Chunk 263 processing completed.,35.15
+AcronymExtractor,2026-02-21 17:21:27,INFO,264,264,0,4 documents written to disk.,35.15
+AcronymExtractor,2026-02-21 17:21:27,INFO,265,264,0,Chunk 264 processing completed.,35.34
+AcronymExtractor,2026-02-21 17:21:27,INFO,266,264,0,Chunk 265 processing completed.,35.54
+AcronymExtractor,2026-02-21 17:21:27,INFO,267,264,0,Chunk 266 processing completed.,35.72
+AcronymExtractor,2026-02-21 17:21:27,INFO,268,264,0,Chunk 267 processing completed.,35.91
+AcronymExtractor,2026-02-21 17:21:27,INFO,268,268,0,4 documents written to disk.,35.91
+AcronymExtractor,2026-02-21 17:21:27,INFO,269,268,0,Chunk 268 processing completed.,36.09
+AcronymExtractor,2026-02-21 17:21:27,INFO,270,268,0,Chunk 269 processing completed.,36.28
+AcronymExtractor,2026-02-21 17:21:27,INFO,271,268,0,Chunk 270 processing completed.,36.48
+AcronymExtractor,2026-02-21 17:21:27,INFO,272,268,0,Chunk 271 processing completed.,36.66
+AcronymExtractor,2026-02-21 17:21:27,INFO,272,272,0,4 documents written to disk.,36.66
+AcronymExtractor,2026-02-21 17:21:27,INFO,273,272,0,Chunk 272 processing completed.,36.84
+AcronymExtractor,2026-02-21 17:21:27,INFO,274,272,0,Chunk 273 processing completed.,37.03
+AcronymExtractor,2026-02-21 17:21:27,INFO,275,272,0,Chunk 274 processing completed.,37.21
+AcronymExtractor,2026-02-21 17:21:27,INFO,276,272,0,Chunk 275 processing completed.,37.30
+AcronymExtractor,2026-02-21 17:21:27,INFO,276,276,0,4 documents written to disk.,37.30
+AcronymExtractor,2026-02-21 17:21:27,INFO,277,276,0,Chunk 276 processing completed.,37.40
+AcronymExtractor,2026-02-21 17:21:27,INFO,278,276,0,Chunk 277 processing completed.,37.49
+AcronymExtractor,2026-02-21 17:21:27,INFO,279,276,0,Chunk 278 processing completed.,37.59
+AcronymExtractor,2026-02-21 17:21:27,INFO,280,276,0,Chunk 279 processing completed.,37.68
+AcronymExtractor,2026-02-21 17:21:27,INFO,280,280,0,4 documents written to disk.,37.68
+AcronymExtractor,2026-02-21 17:21:27,INFO,281,280,0,Chunk 280 processing completed.,37.77
+AcronymExtractor,2026-02-21 17:21:27,INFO,282,280,0,Chunk 281 processing completed.,37.87
+AcronymExtractor,2026-02-21 17:21:27,INFO,283,280,0,Chunk 282 processing completed.,37.98
+AcronymExtractor,2026-02-21 17:21:27,INFO,284,280,0,Chunk 283 processing completed.,38.09
+AcronymExtractor,2026-02-21 17:21:27,INFO,284,284,0,4 documents written to disk.,38.09
+AcronymExtractor,2026-02-21 17:21:27,INFO,285,284,0,Chunk 284 processing completed.,38.19
+AcronymExtractor,2026-02-21 17:21:27,INFO,286,284,0,Chunk 285 processing completed.,38.29
+AcronymExtractor,2026-02-21 17:21:27,INFO,287,284,0,Chunk 286 processing completed.,38.40
+AcronymExtractor,2026-02-21 17:21:27,INFO,288,284,0,Chunk 287 processing completed.,38.50
+AcronymExtractor,2026-02-21 17:21:27,INFO,288,288,0,4 documents written to disk.,38.50
+AcronymExtractor,2026-02-21 17:21:27,INFO,289,288,0,Chunk 288 processing completed.,38.55
+AcronymExtractor,2026-02-21 17:21:27,INFO,290,288,0,Chunk 289 processing completed.,38.61
+AcronymExtractor,2026-02-21 17:21:27,INFO,291,288,0,Chunk 290 processing completed.,38.66
+AcronymExtractor,2026-02-21 17:21:27,INFO,292,288,0,Chunk 291 processing completed.,38.81
+AcronymExtractor,2026-02-21 17:21:27,INFO,292,292,0,4 documents written to disk.,38.81
+AcronymExtractor,2026-02-21 17:21:27,INFO,293,292,0,Chunk 292 processing completed.,38.95
+AcronymExtractor,2026-02-21 17:21:28,INFO,294,292,0,Chunk 293 processing completed.,39.09
+AcronymExtractor,2026-02-21 17:21:28,INFO,295,292,0,Chunk 294 processing completed.,39.23
+AcronymExtractor,2026-02-21 17:21:28,INFO,296,292,0,Chunk 295 processing completed.,39.37
+AcronymExtractor,2026-02-21 17:21:28,INFO,296,296,0,4 documents written to disk.,39.37
+AcronymExtractor,2026-02-21 17:21:28,INFO,297,296,0,Chunk 296 processing completed.,39.51
+AcronymExtractor,2026-02-21 17:21:28,INFO,298,296,0,Chunk 297 processing completed.,39.66
+AcronymExtractor,2026-02-21 17:21:28,INFO,299,296,0,Chunk 298 processing completed.,39.80
+AcronymExtractor,2026-02-21 17:21:28,INFO,300,296,0,Chunk 299 processing completed.,39.94
+AcronymExtractor,2026-02-21 17:21:28,INFO,300,300,0,4 documents written to disk.,39.94
+AcronymExtractor,2026-02-21 17:21:28,INFO,301,300,0,Chunk 300 processing completed.,40.09
+AcronymExtractor,2026-02-21 17:21:28,INFO,302,300,0,Chunk 301 processing completed.,40.19
+AcronymExtractor,2026-02-21 17:21:28,INFO,303,300,0,Chunk 302 processing completed.,40.28
+AcronymExtractor,2026-02-21 17:21:28,INFO,304,300,0,Chunk 303 processing completed.,40.39
+AcronymExtractor,2026-02-21 17:21:28,INFO,304,304,0,4 documents written to disk.,40.39
+AcronymExtractor,2026-02-21 17:21:28,INFO,305,304,0,Chunk 304 processing completed.,40.49
+AcronymExtractor,2026-02-21 17:21:29,INFO,306,304,0,Chunk 305 processing completed.,40.59
+AcronymExtractor,2026-02-21 17:21:29,INFO,307,304,0,Chunk 306 processing completed.,40.69
+AcronymExtractor,2026-02-21 17:21:29,INFO,308,304,0,Chunk 307 processing completed.,40.78
+AcronymExtractor,2026-02-21 17:21:29,INFO,308,308,0,4 documents written to disk.,40.78
+AcronymExtractor,2026-02-21 17:21:29,INFO,309,308,0,Chunk 308 processing completed.,40.88
+AcronymExtractor,2026-02-21 17:21:29,INFO,310,308,0,Chunk 309 processing completed.,41.00
+AcronymExtractor,2026-02-21 17:21:29,INFO,311,308,0,Chunk 310 processing completed.,41.13
+AcronymExtractor,2026-02-21 17:21:29,INFO,312,308,0,Chunk 311 processing completed.,41.25
+AcronymExtractor,2026-02-21 17:21:29,INFO,312,312,0,4 documents written to disk.,41.25
+AcronymExtractor,2026-02-21 17:21:30,INFO,313,312,0,Chunk 312 processing completed.,41.40
+AcronymExtractor,2026-02-21 17:21:30,INFO,314,312,0,Chunk 313 processing completed.,41.47
+AcronymExtractor,2026-02-21 17:21:30,INFO,315,312,0,Chunk 314 processing completed.,41.55
+AcronymExtractor,2026-02-21 17:21:30,INFO,316,312,0,Chunk 315 processing completed.,41.62
+AcronymExtractor,2026-02-21 17:21:30,INFO,316,316,0,4 documents written to disk.,41.62
+AcronymExtractor,2026-02-21 17:21:30,INFO,317,316,0,Chunk 316 processing completed.,41.70
+AcronymExtractor,2026-02-21 17:21:30,INFO,318,316,0,Chunk 317 processing completed.,41.77
+AcronymExtractor,2026-02-21 17:21:30,INFO,319,316,0,Chunk 318 processing completed.,41.85
+AcronymExtractor,2026-02-21 17:21:30,INFO,320,316,0,Chunk 319 processing completed.,41.93
+AcronymExtractor,2026-02-21 17:21:30,INFO,320,320,0,4 documents written to disk.,41.93
+AcronymExtractor,2026-02-21 17:21:30,INFO,321,320,0,Chunk 320 processing completed.,42.00
+AcronymExtractor,2026-02-21 17:21:30,INFO,322,320,0,Chunk 321 processing completed.,42.10
+AcronymExtractor,2026-02-21 17:21:30,INFO,323,320,0,Chunk 322 processing completed.,42.21
+AcronymExtractor,2026-02-21 17:21:30,INFO,324,320,0,Chunk 323 processing completed.,42.31
+AcronymExtractor,2026-02-21 17:21:30,INFO,324,324,0,4 documents written to disk.,42.31
+AcronymExtractor,2026-02-21 17:21:30,INFO,325,324,0,Chunk 324 processing completed.,42.43
+AcronymExtractor,2026-02-21 17:21:30,INFO,326,324,0,Chunk 325 processing completed.,42.53
+AcronymExtractor,2026-02-21 17:21:30,INFO,327,324,0,Chunk 326 processing completed.,42.60
+AcronymExtractor,2026-02-21 17:21:30,INFO,328,324,0,Chunk 327 processing completed.,42.68
+AcronymExtractor,2026-02-21 17:21:30,INFO,328,328,0,4 documents written to disk.,42.68
+AcronymExtractor,2026-02-21 17:21:30,INFO,329,328,0,Chunk 328 processing completed.,42.75
+AcronymExtractor,2026-02-21 17:21:30,INFO,330,328,0,Chunk 329 processing completed.,42.83
+AcronymExtractor,2026-02-21 17:21:30,INFO,331,328,0,Chunk 330 processing completed.,42.93
+AcronymExtractor,2026-02-21 17:21:30,INFO,332,328,0,Chunk 331 processing completed.,43.06
+AcronymExtractor,2026-02-21 17:21:30,INFO,332,332,0,4 documents written to disk.,43.06
+AcronymExtractor,2026-02-21 17:21:30,INFO,333,332,0,Chunk 332 processing completed.,43.19
+AcronymExtractor,2026-02-21 17:21:30,INFO,334,332,0,Chunk 333 processing completed.,43.31
+AcronymExtractor,2026-02-21 17:21:30,INFO,335,332,0,Chunk 334 processing completed.,43.44
+AcronymExtractor,2026-02-21 17:21:30,INFO,336,332,0,Chunk 335 processing completed.,43.57
+AcronymExtractor,2026-02-21 17:21:30,INFO,336,336,0,4 documents written to disk.,43.57
+AcronymExtractor,2026-02-21 17:21:30,INFO,337,336,0,Chunk 336 processing completed.,43.72
+AcronymExtractor,2026-02-21 17:21:30,INFO,338,336,0,Chunk 337 processing completed.,43.86
+AcronymExtractor,2026-02-21 17:21:30,INFO,339,336,0,Chunk 338 processing completed.,43.99
+AcronymExtractor,2026-02-21 17:21:30,INFO,340,336,0,Chunk 339 processing completed.,44.13
+AcronymExtractor,2026-02-21 17:21:30,INFO,340,340,0,4 documents written to disk.,44.13
+AcronymExtractor,2026-02-21 17:21:30,INFO,341,340,0,Chunk 340 processing completed.,44.25
+AcronymExtractor,2026-02-21 17:21:30,INFO,342,340,0,Chunk 341 processing completed.,44.37
+AcronymExtractor,2026-02-21 17:21:30,INFO,343,340,0,Chunk 342 processing completed.,44.49
+AcronymExtractor,2026-02-21 17:21:30,INFO,344,340,0,Chunk 343 processing completed.,44.60
+AcronymExtractor,2026-02-21 17:21:30,INFO,344,344,0,4 documents written to disk.,44.60
+AcronymExtractor,2026-02-21 17:21:30,INFO,345,344,0,Chunk 344 processing completed.,44.73
+AcronymExtractor,2026-02-21 17:21:30,INFO,346,344,0,Chunk 345 processing completed.,44.91
+AcronymExtractor,2026-02-21 17:21:30,INFO,347,344,0,Chunk 346 processing completed.,45.09
+AcronymExtractor,2026-02-21 17:21:30,INFO,348,344,0,Chunk 347 processing completed.,45.30
+AcronymExtractor,2026-02-21 17:21:30,INFO,348,348,0,4 documents written to disk.,45.30
+AcronymExtractor,2026-02-21 17:21:30,INFO,349,348,0,Chunk 348 processing completed.,45.47
+AcronymExtractor,2026-02-21 17:21:30,INFO,350,348,0,Chunk 349 processing completed.,45.65
+AcronymExtractor,2026-02-21 17:21:31,INFO,351,348,0,Chunk 350 processing completed.,45.84
+AcronymExtractor,2026-02-21 17:21:31,INFO,352,348,0,Chunk 351 processing completed.,46.02
+AcronymExtractor,2026-02-21 17:21:31,INFO,352,352,0,4 documents written to disk.,46.02
+AcronymExtractor,2026-02-21 17:21:31,INFO,353,352,0,Chunk 352 processing completed.,46.20
+AcronymExtractor,2026-02-21 17:21:31,INFO,354,352,0,Chunk 353 processing completed.,46.38
+AcronymExtractor,2026-02-21 17:21:31,INFO,355,352,0,Chunk 354 processing completed.,46.55
+AcronymExtractor,2026-02-21 17:21:31,INFO,356,352,0,Chunk 355 processing completed.,46.73
+AcronymExtractor,2026-02-21 17:21:31,INFO,356,356,0,4 documents written to disk.,46.73
+AcronymExtractor,2026-02-21 17:21:31,INFO,357,356,0,Chunk 356 processing completed.,46.90
+AcronymExtractor,2026-02-21 17:21:31,INFO,358,356,0,Chunk 357 processing completed.,47.08
+AcronymExtractor,2026-02-21 17:21:31,INFO,359,356,0,Chunk 358 processing completed.,47.18
+AcronymExtractor,2026-02-21 17:21:31,INFO,360,356,0,Chunk 359 processing completed.,47.28
+AcronymExtractor,2026-02-21 17:21:31,INFO,360,360,0,4 documents written to disk.,47.28
+AcronymExtractor,2026-02-21 17:21:31,INFO,361,360,0,Chunk 360 processing completed.,47.38
+AcronymExtractor,2026-02-21 17:21:31,INFO,362,360,0,Chunk 361 processing completed.,47.48
+AcronymExtractor,2026-02-21 17:21:31,INFO,363,360,0,Chunk 362 processing completed.,47.59
+AcronymExtractor,2026-02-21 17:21:31,INFO,364,360,0,Chunk 363 processing completed.,47.67
+AcronymExtractor,2026-02-21 17:21:31,INFO,364,364,0,4 documents written to disk.,47.67
+AcronymExtractor,2026-02-21 17:21:31,INFO,365,364,0,Chunk 364 processing completed.,47.75
+AcronymExtractor,2026-02-21 17:21:31,INFO,366,364,0,Chunk 365 processing completed.,47.83
+AcronymExtractor,2026-02-21 17:21:31,INFO,367,364,0,Chunk 366 processing completed.,47.92
+AcronymExtractor,2026-02-21 17:21:31,INFO,368,364,0,Chunk 367 processing completed.,48.00
+AcronymExtractor,2026-02-21 17:21:31,INFO,368,368,0,4 documents written to disk.,48.00
+AcronymExtractor,2026-02-21 17:21:31,INFO,369,368,0,Chunk 368 processing completed.,48.08
+AcronymExtractor,2026-02-21 17:21:31,INFO,370,368,0,Chunk 369 processing completed.,48.15
+AcronymExtractor,2026-02-21 17:21:31,INFO,371,368,0,Chunk 370 processing completed.,48.22
+AcronymExtractor,2026-02-21 17:21:31,INFO,372,368,0,Chunk 371 processing completed.,48.29
+AcronymExtractor,2026-02-21 17:21:31,INFO,372,372,0,4 documents written to disk.,48.29
+AcronymExtractor,2026-02-21 17:21:31,INFO,373,372,0,Chunk 372 processing completed.,48.37
+AcronymExtractor,2026-02-21 17:21:31,INFO,374,372,0,Chunk 373 processing completed.,48.49
+AcronymExtractor,2026-02-21 17:21:31,INFO,375,372,0,Chunk 374 processing completed.,48.61
+AcronymExtractor,2026-02-21 17:21:31,INFO,376,372,0,Chunk 375 processing completed.,48.72
+AcronymExtractor,2026-02-21 17:21:31,INFO,376,376,0,4 documents written to disk.,48.72
+AcronymExtractor,2026-02-21 17:21:32,INFO,377,376,0,Chunk 376 processing completed.,48.86
+AcronymExtractor,2026-02-21 17:21:32,INFO,378,376,0,Chunk 377 processing completed.,48.97
+AcronymExtractor,2026-02-21 17:21:32,INFO,379,376,0,Chunk 378 processing completed.,49.09
+AcronymExtractor,2026-02-21 17:21:32,INFO,380,376,0,Chunk 379 processing completed.,49.20
+AcronymExtractor,2026-02-21 17:21:32,INFO,380,380,0,4 documents written to disk.,49.20
+AcronymExtractor,2026-02-21 17:21:32,INFO,381,380,0,Chunk 380 processing completed.,49.32
+AcronymExtractor,2026-02-21 17:21:32,INFO,382,380,0,Chunk 381 processing completed.,49.42
+AcronymExtractor,2026-02-21 17:21:32,INFO,383,380,0,Chunk 382 processing completed.,49.52
+AcronymExtractor,2026-02-21 17:21:32,INFO,384,380,0,Chunk 383 processing completed.,49.62
+AcronymExtractor,2026-02-21 17:21:32,INFO,384,384,0,4 documents written to disk.,49.62
+AcronymExtractor,2026-02-21 17:21:32,INFO,385,384,0,Chunk 384 processing completed.,49.72
+AcronymExtractor,2026-02-21 17:21:32,INFO,386,384,0,Chunk 385 processing completed.,49.83
+AcronymExtractor,2026-02-21 17:21:32,INFO,387,384,0,Chunk 386 processing completed.,49.93
+AcronymExtractor,2026-02-21 17:21:32,INFO,388,384,0,Chunk 387 processing completed.,50.03
+AcronymExtractor,2026-02-21 17:21:32,INFO,388,388,0,4 documents written to disk.,50.03
+AcronymExtractor,2026-02-21 17:21:32,INFO,389,388,0,Chunk 388 processing completed.,50.11
+AcronymExtractor,2026-02-21 17:21:32,INFO,390,388,0,Chunk 389 processing completed.,50.19
+AcronymExtractor,2026-02-21 17:21:32,INFO,391,388,0,Chunk 390 processing completed.,50.27
+AcronymExtractor,2026-02-21 17:21:32,INFO,392,388,0,Chunk 391 processing completed.,50.35
+AcronymExtractor,2026-02-21 17:21:32,INFO,392,392,0,4 documents written to disk.,50.35
+AcronymExtractor,2026-02-21 17:21:32,INFO,393,392,0,Chunk 392 processing completed.,50.43
+AcronymExtractor,2026-02-21 17:21:32,INFO,394,392,0,Chunk 393 processing completed.,50.52
+AcronymExtractor,2026-02-21 17:21:32,INFO,395,392,0,Chunk 394 processing completed.,50.59
+AcronymExtractor,2026-02-21 17:21:32,INFO,396,392,0,Chunk 395 processing completed.,50.67
+AcronymExtractor,2026-02-21 17:21:32,INFO,396,396,0,4 documents written to disk.,50.67
+AcronymExtractor,2026-02-21 17:21:32,INFO,397,396,0,Chunk 396 processing completed.,50.75
+AcronymExtractor,2026-02-21 17:21:32,INFO,398,396,0,Chunk 397 processing completed.,50.83
+AcronymExtractor,2026-02-21 17:21:32,INFO,399,396,0,Chunk 398 processing completed.,50.90
+AcronymExtractor,2026-02-21 17:21:32,INFO,400,396,0,Chunk 399 processing completed.,50.98
+AcronymExtractor,2026-02-21 17:21:32,INFO,400,400,0,4 documents written to disk.,50.98
+AcronymExtractor,2026-02-21 17:21:32,INFO,401,400,0,Chunk 400 processing completed.,51.07
+AcronymExtractor,2026-02-21 17:21:32,INFO,402,400,0,Chunk 401 processing completed.,51.17
+AcronymExtractor,2026-02-21 17:21:32,INFO,403,400,0,Chunk 402 processing completed.,51.26
+AcronymExtractor,2026-02-21 17:21:32,INFO,404,400,0,Chunk 403 processing completed.,51.35
+AcronymExtractor,2026-02-21 17:21:32,INFO,404,404,0,4 documents written to disk.,51.35
+AcronymExtractor,2026-02-21 17:21:32,INFO,405,404,0,Chunk 404 processing completed.,51.44
+AcronymExtractor,2026-02-21 17:21:32,INFO,406,404,0,Chunk 405 processing completed.,51.54
+AcronymExtractor,2026-02-21 17:21:32,INFO,407,404,0,Chunk 406 processing completed.,51.71
+AcronymExtractor,2026-02-21 17:21:32,INFO,408,404,0,Chunk 407 processing completed.,51.88
+AcronymExtractor,2026-02-21 17:21:32,INFO,408,408,0,4 documents written to disk.,51.88
+AcronymExtractor,2026-02-21 17:21:32,INFO,409,408,0,Chunk 408 processing completed.,52.04
+AcronymExtractor,2026-02-21 17:21:32,INFO,410,408,0,Chunk 409 processing completed.,52.21
+AcronymExtractor,2026-02-21 17:21:32,INFO,411,408,0,Chunk 410 processing completed.,52.38
+AcronymExtractor,2026-02-21 17:21:32,INFO,412,408,0,Chunk 411 processing completed.,52.54
+AcronymExtractor,2026-02-21 17:21:32,INFO,412,412,0,4 documents written to disk.,52.54
+AcronymExtractor,2026-02-21 17:21:32,INFO,413,412,0,Chunk 412 processing completed.,52.71
+AcronymExtractor,2026-02-21 17:21:32,INFO,414,412,0,Chunk 413 processing completed.,52.87
+AcronymExtractor,2026-02-21 17:21:32,INFO,415,412,0,Chunk 414 processing completed.,53.03
+AcronymExtractor,2026-02-21 17:21:32,INFO,416,412,0,Chunk 415 processing completed.,53.20
+AcronymExtractor,2026-02-21 17:21:32,INFO,416,416,0,4 documents written to disk.,53.20
+AcronymExtractor,2026-02-21 17:21:32,INFO,417,416,0,Chunk 416 processing completed.,53.36
+AcronymExtractor,2026-02-21 17:21:32,INFO,418,416,0,Chunk 417 processing completed.,53.52
+AcronymExtractor,2026-02-21 17:21:32,INFO,419,416,0,Chunk 418 processing completed.,53.59
+AcronymExtractor,2026-02-21 17:21:32,INFO,420,416,0,Chunk 419 processing completed.,53.65
+AcronymExtractor,2026-02-21 17:21:32,INFO,420,420,0,4 documents written to disk.,53.65
+AcronymExtractor,2026-02-21 17:21:32,INFO,421,420,0,Chunk 420 processing completed.,53.72
+AcronymExtractor,2026-02-21 17:21:32,INFO,422,420,0,Chunk 421 processing completed.,53.80
+AcronymExtractor,2026-02-21 17:21:32,INFO,423,420,0,Chunk 422 processing completed.,53.88
+AcronymExtractor,2026-02-21 17:21:32,INFO,424,420,0,Chunk 423 processing completed.,53.95
+AcronymExtractor,2026-02-21 17:21:32,INFO,424,424,0,4 documents written to disk.,53.95
+AcronymExtractor,2026-02-21 17:21:32,INFO,425,424,0,Chunk 424 processing completed.,54.03
+AcronymExtractor,2026-02-21 17:21:32,INFO,426,424,0,Chunk 425 processing completed.,54.11
+AcronymExtractor,2026-02-21 17:21:32,INFO,427,424,0,Chunk 426 processing completed.,54.20
+AcronymExtractor,2026-02-21 17:21:32,INFO,428,424,0,Chunk 427 processing completed.,54.37
+AcronymExtractor,2026-02-21 17:21:32,INFO,428,428,0,4 documents written to disk.,54.37
+AcronymExtractor,2026-02-21 17:21:33,INFO,429,428,0,Chunk 428 processing completed.,54.55
+AcronymExtractor,2026-02-21 17:21:33,INFO,430,428,0,Chunk 429 processing completed.,54.74
+AcronymExtractor,2026-02-21 17:21:33,INFO,431,428,0,Chunk 430 processing completed.,54.93
+AcronymExtractor,2026-02-21 17:21:33,INFO,432,428,0,Chunk 431 processing completed.,55.11
+AcronymExtractor,2026-02-21 17:21:33,INFO,432,432,0,4 documents written to disk.,55.11
+AcronymExtractor,2026-02-21 17:21:33,INFO,433,432,0,Chunk 432 processing completed.,55.29
+AcronymExtractor,2026-02-21 17:21:34,INFO,434,432,0,Chunk 433 processing completed.,55.48
+AcronymExtractor,2026-02-21 17:21:34,INFO,435,432,0,Chunk 434 processing completed.,55.66
+AcronymExtractor,2026-02-21 17:21:34,INFO,436,432,0,Chunk 435 processing completed.,55.85
+AcronymExtractor,2026-02-21 17:21:34,INFO,436,436,0,4 documents written to disk.,55.85
+AcronymExtractor,2026-02-21 17:21:34,INFO,437,436,0,Chunk 436 processing completed.,56.03
+AcronymExtractor,2026-02-21 17:21:34,INFO,438,436,0,Chunk 437 processing completed.,56.21
+AcronymExtractor,2026-02-21 17:21:34,INFO,439,436,0,Chunk 438 processing completed.,56.39
+AcronymExtractor,2026-02-21 17:21:34,INFO,440,436,0,Chunk 439 processing completed.,56.58
+AcronymExtractor,2026-02-21 17:21:34,INFO,440,440,0,4 documents written to disk.,56.58
+AcronymExtractor,2026-02-21 17:21:34,INFO,441,440,0,Chunk 440 processing completed.,56.76
+AcronymExtractor,2026-02-21 17:21:34,INFO,442,440,0,Chunk 441 processing completed.,56.94
+AcronymExtractor,2026-02-21 17:21:34,INFO,443,440,0,Chunk 442 processing completed.,57.11
+AcronymExtractor,2026-02-21 17:21:34,INFO,444,440,0,Chunk 443 processing completed.,57.29
+AcronymExtractor,2026-02-21 17:21:34,INFO,444,444,0,4 documents written to disk.,57.29
+AcronymExtractor,2026-02-21 17:21:34,INFO,445,444,0,Chunk 444 processing completed.,57.47
+AcronymExtractor,2026-02-21 17:21:34,INFO,446,444,0,Chunk 445 processing completed.,57.65
+AcronymExtractor,2026-02-21 17:21:34,INFO,447,444,0,Chunk 446 processing completed.,57.76
+AcronymExtractor,2026-02-21 17:21:34,INFO,448,444,0,Chunk 447 processing completed.,57.86
+AcronymExtractor,2026-02-21 17:21:34,INFO,448,448,0,4 documents written to disk.,57.86
+AcronymExtractor,2026-02-21 17:21:34,INFO,449,448,0,Chunk 448 processing completed.,57.96
+AcronymExtractor,2026-02-21 17:21:34,INFO,450,448,0,Chunk 449 processing completed.,58.06
+AcronymExtractor,2026-02-21 17:21:34,INFO,451,448,0,Chunk 450 processing completed.,58.17
+AcronymExtractor,2026-02-21 17:21:34,INFO,452,448,0,Chunk 451 processing completed.,58.28
+AcronymExtractor,2026-02-21 17:21:34,INFO,452,452,0,4 documents written to disk.,58.28
+AcronymExtractor,2026-02-21 17:21:34,INFO,453,452,0,Chunk 452 processing completed.,58.38
+AcronymExtractor,2026-02-21 17:21:34,INFO,454,452,0,Chunk 453 processing completed.,58.61
+AcronymExtractor,2026-02-21 17:21:34,INFO,455,452,0,Chunk 454 processing completed.,58.84
+AcronymExtractor,2026-02-21 17:21:34,INFO,456,452,0,Chunk 455 processing completed.,59.06
+AcronymExtractor,2026-02-21 17:21:34,INFO,456,456,0,4 documents written to disk.,59.06
+AcronymExtractor,2026-02-21 17:21:34,INFO,457,456,0,Chunk 456 processing completed.,59.29
+AcronymExtractor,2026-02-21 17:21:34,INFO,458,456,0,Chunk 457 processing completed.,59.52
+AcronymExtractor,2026-02-21 17:21:34,INFO,459,456,0,Chunk 458 processing completed.,59.74
+AcronymExtractor,2026-02-21 17:21:34,INFO,460,456,0,Chunk 459 processing completed.,59.98
+AcronymExtractor,2026-02-21 17:21:34,INFO,460,460,0,4 documents written to disk.,59.98
+AcronymExtractor,2026-02-21 17:21:34,INFO,461,460,0,Chunk 460 processing completed.,60.19
+AcronymExtractor,2026-02-21 17:21:34,INFO,462,460,0,Chunk 461 processing completed.,60.42
+AcronymExtractor,2026-02-21 17:21:34,INFO,463,460,0,Chunk 462 processing completed.,60.64
+AcronymExtractor,2026-02-21 17:21:34,INFO,464,460,0,Chunk 463 processing completed.,60.87
+AcronymExtractor,2026-02-21 17:21:34,INFO,464,464,0,4 documents written to disk.,60.87
+AcronymExtractor,2026-02-21 17:21:34,INFO,465,464,0,Chunk 464 processing completed.,61.09
+AcronymExtractor,2026-02-21 17:21:35,INFO,466,464,0,Chunk 465 processing completed.,61.32
+AcronymExtractor,2026-02-21 17:21:35,INFO,467,464,0,Chunk 466 processing completed.,61.55
+AcronymExtractor,2026-02-21 17:21:35,INFO,468,464,0,Chunk 467 processing completed.,61.78
+AcronymExtractor,2026-02-21 17:21:35,INFO,468,468,0,4 documents written to disk.,61.78
+AcronymExtractor,2026-02-21 17:21:35,INFO,469,468,0,Chunk 468 processing completed.,62.00
+AcronymExtractor,2026-02-21 17:21:35,INFO,470,468,0,Chunk 469 processing completed.,62.22
+AcronymExtractor,2026-02-21 17:21:35,INFO,471,468,0,Chunk 470 processing completed.,62.45
+AcronymExtractor,2026-02-21 17:21:35,INFO,472,468,0,Chunk 471 processing completed.,62.68
+AcronymExtractor,2026-02-21 17:21:35,INFO,472,472,0,4 documents written to disk.,62.68
+AcronymExtractor,2026-02-21 17:21:35,INFO,473,472,0,Chunk 472 processing completed.,62.90
+AcronymExtractor,2026-02-21 17:21:35,INFO,474,472,0,Chunk 473 processing completed.,63.12
+AcronymExtractor,2026-02-21 17:21:35,INFO,475,472,0,Chunk 474 processing completed.,63.35
+AcronymExtractor,2026-02-21 17:21:35,INFO,476,472,0,Chunk 475 processing completed.,63.57
+AcronymExtractor,2026-02-21 17:21:35,INFO,476,476,0,4 documents written to disk.,63.57
+AcronymExtractor,2026-02-21 17:21:35,INFO,477,476,0,Chunk 476 processing completed.,63.80
+AcronymExtractor,2026-02-21 17:21:35,INFO,478,476,0,Chunk 477 processing completed.,63.93
+AcronymExtractor,2026-02-21 17:21:35,INFO,479,476,0,Chunk 478 processing completed.,64.10
+AcronymExtractor,2026-02-21 17:21:36,INFO,480,476,0,Chunk 479 processing completed.,64.26
+AcronymExtractor,2026-02-21 17:21:36,INFO,480,480,0,4 documents written to disk.,64.26
+AcronymExtractor,2026-02-21 17:21:36,INFO,481,480,0,Chunk 480 processing completed.,64.41
+AcronymExtractor,2026-02-21 17:21:36,INFO,482,480,0,Chunk 481 processing completed.,64.48
+AcronymExtractor,2026-02-21 17:21:36,INFO,483,480,0,Chunk 482 processing completed.,64.55
+AcronymExtractor,2026-02-21 17:21:36,INFO,484,480,0,Chunk 483 processing completed.,64.62
+AcronymExtractor,2026-02-21 17:21:36,INFO,484,484,0,4 documents written to disk.,64.62
+AcronymExtractor,2026-02-21 17:21:36,INFO,485,484,0,Chunk 484 processing completed.,64.69
+AcronymExtractor,2026-02-21 17:21:36,INFO,486,484,0,Chunk 485 processing completed.,64.76
+AcronymExtractor,2026-02-21 17:21:36,INFO,487,484,0,Chunk 486 processing completed.,64.85
+AcronymExtractor,2026-02-21 17:21:36,INFO,488,484,0,Chunk 487 processing completed.,64.95
+AcronymExtractor,2026-02-21 17:21:36,INFO,488,488,0,4 documents written to disk.,64.95
+AcronymExtractor,2026-02-21 17:21:36,INFO,489,488,0,Chunk 488 processing completed.,65.03
+AcronymExtractor,2026-02-21 17:21:36,INFO,490,488,0,Chunk 489 processing completed.,65.13
+AcronymExtractor,2026-02-21 17:21:36,INFO,491,488,0,Chunk 490 processing completed.,65.23
+AcronymExtractor,2026-02-21 17:21:36,INFO,492,488,0,Chunk 491 processing completed.,65.34
+AcronymExtractor,2026-02-21 17:21:36,INFO,492,492,0,4 documents written to disk.,65.34
+AcronymExtractor,2026-02-21 17:21:36,INFO,493,492,0,Chunk 492 processing completed.,65.45
+AcronymExtractor,2026-02-21 17:21:36,INFO,494,492,0,Chunk 493 processing completed.,65.56
+AcronymExtractor,2026-02-21 17:21:36,INFO,495,492,0,Chunk 494 processing completed.,65.67
+AcronymExtractor,2026-02-21 17:21:36,INFO,496,492,0,Chunk 495 processing completed.,65.78
+AcronymExtractor,2026-02-21 17:21:36,INFO,496,496,0,4 documents written to disk.,65.78
+AcronymExtractor,2026-02-21 17:21:36,INFO,497,496,0,Chunk 496 processing completed.,65.90
+AcronymExtractor,2026-02-21 17:21:36,INFO,498,496,0,Chunk 497 processing completed.,66.01
+AcronymExtractor,2026-02-21 17:21:36,INFO,499,496,0,Chunk 498 processing completed.,66.12
+AcronymExtractor,2026-02-21 17:21:36,INFO,500,496,0,Chunk 499 processing completed.,66.23
+AcronymExtractor,2026-02-21 17:21:36,INFO,500,500,0,4 documents written to disk.,66.23
+AcronymExtractor,2026-02-21 17:21:36,INFO,501,500,0,Chunk 500 processing completed.,66.31
+AcronymExtractor,2026-02-21 17:21:36,INFO,502,500,0,Chunk 501 processing completed.,66.40
+AcronymExtractor,2026-02-21 17:21:36,INFO,503,500,0,Chunk 502 processing completed.,66.50
+AcronymExtractor,2026-02-21 17:21:36,INFO,504,500,0,Chunk 503 processing completed.,66.58
+AcronymExtractor,2026-02-21 17:21:36,INFO,504,504,0,4 documents written to disk.,66.58
+AcronymExtractor,2026-02-21 17:21:36,INFO,505,504,0,Chunk 504 processing completed.,66.68
+AcronymExtractor,2026-02-21 17:21:36,INFO,506,504,0,Chunk 505 processing completed.,66.77
+AcronymExtractor,2026-02-21 17:21:36,INFO,507,504,0,Chunk 506 processing completed.,66.87
+AcronymExtractor,2026-02-21 17:21:36,INFO,508,504,0,Chunk 507 processing completed.,66.99
+AcronymExtractor,2026-02-21 17:21:36,INFO,508,508,0,4 documents written to disk.,66.99
+AcronymExtractor,2026-02-21 17:21:36,INFO,509,508,0,Chunk 508 processing completed.,67.12
+AcronymExtractor,2026-02-21 17:21:36,INFO,510,508,0,Chunk 509 processing completed.,67.24
+AcronymExtractor,2026-02-21 17:21:36,INFO,511,508,0,Chunk 510 processing completed.,67.37
+AcronymExtractor,2026-02-21 17:21:36,INFO,512,508,0,Chunk 511 processing completed.,67.49
+AcronymExtractor,2026-02-21 17:21:36,INFO,512,512,0,4 documents written to disk.,67.49
+AcronymExtractor,2026-02-21 17:21:36,INFO,513,512,0,Chunk 512 processing completed.,67.62
+AcronymExtractor,2026-02-21 17:21:36,INFO,514,512,0,Chunk 513 processing completed.,67.75
+AcronymExtractor,2026-02-21 17:21:36,INFO,515,512,0,Chunk 514 processing completed.,67.85
+AcronymExtractor,2026-02-21 17:21:36,INFO,516,512,0,Chunk 515 processing completed.,67.95
+AcronymExtractor,2026-02-21 17:21:36,INFO,516,516,0,4 documents written to disk.,67.95
+AcronymExtractor,2026-02-21 17:21:36,INFO,517,516,0,Chunk 516 processing completed.,68.06
+AcronymExtractor,2026-02-21 17:21:36,INFO,518,516,0,Chunk 517 processing completed.,68.16
+AcronymExtractor,2026-02-21 17:21:36,INFO,519,516,0,Chunk 518 processing completed.,68.27
+AcronymExtractor,2026-02-21 17:21:36,INFO,520,516,0,Chunk 519 processing completed.,68.37
+AcronymExtractor,2026-02-21 17:21:36,INFO,520,520,0,4 documents written to disk.,68.37
+AcronymExtractor,2026-02-21 17:21:36,INFO,521,520,0,Chunk 520 processing completed.,68.48
+AcronymExtractor,2026-02-21 17:21:36,INFO,522,520,0,Chunk 521 processing completed.,68.58
+AcronymExtractor,2026-02-21 17:21:36,INFO,523,520,0,Chunk 522 processing completed.,68.69
+AcronymExtractor,2026-02-21 17:21:36,INFO,524,520,0,Chunk 523 processing completed.,68.80
+AcronymExtractor,2026-02-21 17:21:36,INFO,524,524,0,4 documents written to disk.,68.80
+AcronymExtractor,2026-02-21 17:21:36,INFO,525,524,0,Chunk 524 processing completed.,68.92
+AcronymExtractor,2026-02-21 17:21:36,INFO,526,524,0,Chunk 525 processing completed.,69.03
+AcronymExtractor,2026-02-21 17:21:36,INFO,527,524,0,Chunk 526 processing completed.,69.14
+AcronymExtractor,2026-02-21 17:21:36,INFO,528,524,0,Chunk 527 processing completed.,69.26
+AcronymExtractor,2026-02-21 17:21:36,INFO,528,528,0,4 documents written to disk.,69.26
+AcronymExtractor,2026-02-21 17:21:36,INFO,529,528,0,Chunk 528 processing completed.,69.37
+AcronymExtractor,2026-02-21 17:21:36,INFO,530,528,0,Chunk 529 processing completed.,69.48
+AcronymExtractor,2026-02-21 17:21:36,INFO,531,528,0,Chunk 530 processing completed.,69.60
+AcronymExtractor,2026-02-21 17:21:36,INFO,532,528,0,Chunk 531 processing completed.,69.71
+AcronymExtractor,2026-02-21 17:21:36,INFO,532,532,0,4 documents written to disk.,69.71
+AcronymExtractor,2026-02-21 17:21:36,INFO,533,532,0,Chunk 532 processing completed.,69.81
+AcronymExtractor,2026-02-21 17:21:36,INFO,534,532,0,Chunk 533 processing completed.,69.93
+AcronymExtractor,2026-02-21 17:21:36,INFO,535,532,0,Chunk 534 processing completed.,70.02
+AcronymExtractor,2026-02-21 17:21:36,INFO,536,532,0,Chunk 535 processing completed.,70.14
+AcronymExtractor,2026-02-21 17:21:36,INFO,536,536,0,4 documents written to disk.,70.14
+AcronymExtractor,2026-02-21 17:21:36,INFO,537,536,0,Chunk 536 processing completed.,70.24
+AcronymExtractor,2026-02-21 17:21:36,INFO,538,536,0,Chunk 537 processing completed.,70.33
+AcronymExtractor,2026-02-21 17:21:36,INFO,539,536,0,Chunk 538 processing completed.,70.42
+AcronymExtractor,2026-02-21 17:21:36,INFO,540,536,0,Chunk 539 processing completed.,70.52
+AcronymExtractor,2026-02-21 17:21:36,INFO,540,540,0,4 documents written to disk.,70.52
+AcronymExtractor,2026-02-21 17:21:36,INFO,541,540,0,Chunk 540 processing completed.,70.61
+AcronymExtractor,2026-02-21 17:21:36,INFO,542,540,0,Chunk 541 processing completed.,70.69
+AcronymExtractor,2026-02-21 17:21:36,INFO,543,540,0,Chunk 542 processing completed.,70.78
+AcronymExtractor,2026-02-21 17:21:36,INFO,544,540,0,Chunk 543 processing completed.,70.87
+AcronymExtractor,2026-02-21 17:21:36,INFO,544,544,0,4 documents written to disk.,70.87
+AcronymExtractor,2026-02-21 17:21:36,INFO,545,544,0,Chunk 544 processing completed.,70.96
+AcronymExtractor,2026-02-21 17:21:36,INFO,546,544,0,Chunk 545 processing completed.,71.04
+AcronymExtractor,2026-02-21 17:21:36,INFO,547,544,0,Chunk 546 processing completed.,71.12
+AcronymExtractor,2026-02-21 17:21:37,INFO,548,544,0,Chunk 547 processing completed.,71.21
+AcronymExtractor,2026-02-21 17:21:37,INFO,548,548,0,4 documents written to disk.,71.21
+AcronymExtractor,2026-02-21 17:21:37,INFO,549,548,0,Chunk 548 processing completed.,71.30
+AcronymExtractor,2026-02-21 17:21:37,INFO,550,548,0,Chunk 549 processing completed.,71.37
+AcronymExtractor,2026-02-21 17:21:37,INFO,551,548,0,Chunk 550 processing completed.,71.45
+AcronymExtractor,2026-02-21 17:21:37,INFO,552,548,0,Chunk 551 processing completed.,71.52
+AcronymExtractor,2026-02-21 17:21:37,INFO,552,552,0,4 documents written to disk.,71.52
+AcronymExtractor,2026-02-21 17:21:37,INFO,553,552,0,Chunk 552 processing completed.,71.59
+AcronymExtractor,2026-02-21 17:21:37,INFO,554,552,0,Chunk 553 processing completed.,71.66
+AcronymExtractor,2026-02-21 17:21:37,INFO,555,552,0,Chunk 554 processing completed.,71.76
+AcronymExtractor,2026-02-21 17:21:37,INFO,556,552,0,Chunk 555 processing completed.,71.86
+AcronymExtractor,2026-02-21 17:21:37,INFO,556,556,0,4 documents written to disk.,71.86
+AcronymExtractor,2026-02-21 17:21:37,INFO,557,556,0,Chunk 556 processing completed.,71.96
+AcronymExtractor,2026-02-21 17:21:37,INFO,558,556,0,Chunk 557 processing completed.,72.06
+AcronymExtractor,2026-02-21 17:21:37,INFO,559,556,0,Chunk 558 processing completed.,72.16
+AcronymExtractor,2026-02-21 17:21:37,INFO,560,556,0,Chunk 559 processing completed.,72.25
+AcronymExtractor,2026-02-21 17:21:37,INFO,560,560,0,4 documents written to disk.,72.25
+AcronymExtractor,2026-02-21 17:21:37,INFO,561,560,0,Chunk 560 processing completed.,72.30
+AcronymExtractor,2026-02-21 17:21:37,INFO,562,560,0,Chunk 561 processing completed.,72.35
+AcronymExtractor,2026-02-21 17:21:37,INFO,563,560,0,Chunk 562 processing completed.,72.39
+AcronymExtractor,2026-02-21 17:21:37,INFO,564,560,0,Chunk 563 processing completed.,72.49
+AcronymExtractor,2026-02-21 17:21:37,INFO,564,564,0,4 documents written to disk.,72.49
+AcronymExtractor,2026-02-21 17:21:37,INFO,565,564,0,Chunk 564 processing completed.,72.59
+AcronymExtractor,2026-02-21 17:21:37,INFO,566,564,0,Chunk 565 processing completed.,72.69
+AcronymExtractor,2026-02-21 17:21:37,INFO,567,564,0,Chunk 566 processing completed.,72.79
+AcronymExtractor,2026-02-21 17:21:37,INFO,568,564,0,Chunk 567 processing completed.,72.85
+AcronymExtractor,2026-02-21 17:21:37,INFO,568,568,0,4 documents written to disk.,72.85
+AcronymExtractor,2026-02-21 17:21:37,INFO,569,568,0,Chunk 568 processing completed.,72.91
+AcronymExtractor,2026-02-21 17:21:37,INFO,570,568,0,Chunk 569 processing completed.,72.98
+AcronymExtractor,2026-02-21 17:21:37,INFO,571,568,0,Chunk 570 processing completed.,73.04
+AcronymExtractor,2026-02-21 17:21:37,INFO,572,568,0,Chunk 571 processing completed.,73.10
+AcronymExtractor,2026-02-21 17:21:37,INFO,572,572,0,4 documents written to disk.,73.10
+AcronymExtractor,2026-02-21 17:21:37,INFO,573,572,0,Chunk 572 processing completed.,73.17
+AcronymExtractor,2026-02-21 17:21:37,INFO,574,572,0,Chunk 573 processing completed.,73.24
+AcronymExtractor,2026-02-21 17:21:37,INFO,575,572,0,Chunk 574 processing completed.,73.31
+AcronymExtractor,2026-02-21 17:21:37,INFO,576,572,0,Chunk 575 processing completed.,73.39
+AcronymExtractor,2026-02-21 17:21:37,INFO,576,576,0,4 documents written to disk.,73.39
+AcronymExtractor,2026-02-21 17:21:37,INFO,577,576,0,Chunk 576 processing completed.,73.50
+AcronymExtractor,2026-02-21 17:21:37,INFO,578,576,0,Chunk 577 processing completed.,73.60
+AcronymExtractor,2026-02-21 17:21:37,INFO,579,576,0,Chunk 578 processing completed.,73.70
+AcronymExtractor,2026-02-21 17:21:37,INFO,580,576,0,Chunk 579 processing completed.,73.80
+AcronymExtractor,2026-02-21 17:21:37,INFO,580,580,0,4 documents written to disk.,73.80
+AcronymExtractor,2026-02-21 17:21:37,INFO,581,580,0,Chunk 580 processing completed.,73.89
+AcronymExtractor,2026-02-21 17:21:37,INFO,582,580,0,Chunk 581 processing completed.,73.98
+AcronymExtractor,2026-02-21 17:21:37,INFO,583,580,0,Chunk 582 processing completed.,74.07
+AcronymExtractor,2026-02-21 17:21:37,INFO,584,580,0,Chunk 583 processing completed.,74.18
+AcronymExtractor,2026-02-21 17:21:37,INFO,584,584,0,4 documents written to disk.,74.18
+AcronymExtractor,2026-02-21 17:21:37,INFO,585,584,0,Chunk 584 processing completed.,74.25
+AcronymExtractor,2026-02-21 17:21:37,INFO,586,584,0,Chunk 585 processing completed.,74.32
+AcronymExtractor,2026-02-21 17:21:37,INFO,587,584,0,Chunk 586 processing completed.,74.38
+AcronymExtractor,2026-02-21 17:21:37,INFO,588,584,0,Chunk 587 processing completed.,74.45
+AcronymExtractor,2026-02-21 17:21:37,INFO,588,588,0,4 documents written to disk.,74.45
+AcronymExtractor,2026-02-21 17:21:38,INFO,589,588,0,Chunk 588 processing completed.,74.55
+AcronymExtractor,2026-02-21 17:21:38,INFO,590,588,0,Chunk 589 processing completed.,74.65
+AcronymExtractor,2026-02-21 17:21:38,INFO,591,588,0,Chunk 590 processing completed.,74.78
+AcronymExtractor,2026-02-21 17:21:38,INFO,592,588,0,Chunk 591 processing completed.,74.92
+AcronymExtractor,2026-02-21 17:21:38,INFO,592,592,0,4 documents written to disk.,74.92
+AcronymExtractor,2026-02-21 17:21:38,INFO,593,592,0,Chunk 592 processing completed.,75.05
+AcronymExtractor,2026-02-21 17:21:38,INFO,594,592,0,Chunk 593 processing completed.,75.19
+AcronymExtractor,2026-02-21 17:21:38,INFO,595,592,0,Chunk 594 processing completed.,75.34
+AcronymExtractor,2026-02-21 17:21:38,INFO,596,592,0,Chunk 595 processing completed.,75.47
+AcronymExtractor,2026-02-21 17:21:38,INFO,596,596,0,4 documents written to disk.,75.47
+AcronymExtractor,2026-02-21 17:21:38,INFO,597,596,0,Chunk 596 processing completed.,75.61
+AcronymExtractor,2026-02-21 17:21:38,INFO,598,596,0,Chunk 597 processing completed.,75.75
+AcronymExtractor,2026-02-21 17:21:38,INFO,599,596,0,Chunk 598 processing completed.,75.89
+AcronymExtractor,2026-02-21 17:21:38,INFO,600,596,0,Chunk 599 processing completed.,76.04
+AcronymExtractor,2026-02-21 17:21:38,INFO,600,600,0,4 documents written to disk.,76.04
+AcronymExtractor,2026-02-21 17:21:38,INFO,601,600,0,Chunk 600 processing completed.,76.20
+AcronymExtractor,2026-02-21 17:21:38,INFO,602,600,0,Chunk 601 processing completed.,76.37
+AcronymExtractor,2026-02-21 17:21:38,INFO,603,600,0,Chunk 602 processing completed.,76.54
+AcronymExtractor,2026-02-21 17:21:38,INFO,604,600,0,Chunk 603 processing completed.,76.71
+AcronymExtractor,2026-02-21 17:21:38,INFO,604,604,0,4 documents written to disk.,76.71
+AcronymExtractor,2026-02-21 17:21:38,INFO,605,604,0,Chunk 604 processing completed.,76.88
+AcronymExtractor,2026-02-21 17:21:38,INFO,606,604,0,Chunk 605 processing completed.,77.07
+AcronymExtractor,2026-02-21 17:21:38,INFO,607,604,0,Chunk 606 processing completed.,77.23
+AcronymExtractor,2026-02-21 17:21:38,INFO,608,604,0,Chunk 607 processing completed.,77.40
+AcronymExtractor,2026-02-21 17:21:38,INFO,608,608,0,4 documents written to disk.,77.40
+AcronymExtractor,2026-02-21 17:21:38,INFO,609,608,0,Chunk 608 processing completed.,77.57
+AcronymExtractor,2026-02-21 17:21:38,INFO,610,608,0,Chunk 609 processing completed.,77.73
+AcronymExtractor,2026-02-21 17:21:38,INFO,611,608,0,Chunk 610 processing completed.,77.89
+AcronymExtractor,2026-02-21 17:21:38,INFO,612,608,0,Chunk 611 processing completed.,78.06
+AcronymExtractor,2026-02-21 17:21:38,INFO,612,612,0,4 documents written to disk.,78.06
+AcronymExtractor,2026-02-21 17:21:39,INFO,613,612,0,Chunk 612 processing completed.,78.16
+AcronymExtractor,2026-02-21 17:21:39,INFO,614,612,0,Chunk 613 processing completed.,78.27
+AcronymExtractor,2026-02-21 17:21:39,INFO,615,612,0,Chunk 614 processing completed.,78.36
+AcronymExtractor,2026-02-21 17:21:39,INFO,616,612,0,Chunk 615 processing completed.,78.46
+AcronymExtractor,2026-02-21 17:21:39,INFO,616,616,0,4 documents written to disk.,78.46
+AcronymExtractor,2026-02-21 17:21:39,INFO,617,616,0,Chunk 616 processing completed.,78.56
+AcronymExtractor,2026-02-21 17:21:40,INFO,618,616,0,Chunk 617 processing completed.,78.67
+AcronymExtractor,2026-02-21 17:21:40,INFO,619,616,0,Chunk 618 processing completed.,78.77
+AcronymExtractor,2026-02-21 17:21:40,INFO,620,616,0,Chunk 619 processing completed.,78.87
+AcronymExtractor,2026-02-21 17:21:40,INFO,620,620,0,4 documents written to disk.,78.87
+AcronymExtractor,2026-02-21 17:21:40,INFO,621,620,0,Chunk 620 processing completed.,78.96
+AcronymExtractor,2026-02-21 17:21:40,INFO,622,620,0,Chunk 621 processing completed.,79.06
+AcronymExtractor,2026-02-21 17:21:40,INFO,623,620,0,Chunk 622 processing completed.,79.16
+AcronymExtractor,2026-02-21 17:21:40,INFO,624,620,0,Chunk 623 processing completed.,79.24
+AcronymExtractor,2026-02-21 17:21:40,INFO,624,624,0,4 documents written to disk.,79.24
+AcronymExtractor,2026-02-21 17:21:40,INFO,625,624,0,Chunk 624 processing completed.,79.33
+AcronymExtractor,2026-02-21 17:21:40,INFO,626,624,0,Chunk 625 processing completed.,79.43
+AcronymExtractor,2026-02-21 17:21:40,INFO,627,624,0,Chunk 626 processing completed.,79.53
+AcronymExtractor,2026-02-21 17:21:40,INFO,628,624,0,Chunk 627 processing completed.,79.62
+AcronymExtractor,2026-02-21 17:21:40,INFO,628,628,0,4 documents written to disk.,79.62
+AcronymExtractor,2026-02-21 17:21:40,INFO,629,628,0,Chunk 628 processing completed.,79.72
+AcronymExtractor,2026-02-21 17:21:40,INFO,630,628,0,Chunk 629 processing completed.,79.86
+AcronymExtractor,2026-02-21 17:21:40,INFO,631,628,0,Chunk 630 processing completed.,80.00
+AcronymExtractor,2026-02-21 17:21:40,INFO,632,628,0,Chunk 631 processing completed.,80.13
+AcronymExtractor,2026-02-21 17:21:40,INFO,632,632,0,4 documents written to disk.,80.13
+AcronymExtractor,2026-02-21 17:21:40,INFO,633,632,0,Chunk 632 processing completed.,80.27
+AcronymExtractor,2026-02-21 17:21:40,INFO,634,632,0,Chunk 633 processing completed.,80.40
+AcronymExtractor,2026-02-21 17:21:40,INFO,635,632,0,Chunk 634 processing completed.,80.53
+AcronymExtractor,2026-02-21 17:21:40,INFO,636,632,0,Chunk 635 processing completed.,80.67
+AcronymExtractor,2026-02-21 17:21:40,INFO,636,636,0,4 documents written to disk.,80.67
+AcronymExtractor,2026-02-21 17:21:40,INFO,637,636,0,Chunk 636 processing completed.,80.80
+AcronymExtractor,2026-02-21 17:21:40,INFO,638,636,0,Chunk 637 processing completed.,80.94
+AcronymExtractor,2026-02-21 17:21:40,INFO,639,636,0,Chunk 638 processing completed.,81.07
+AcronymExtractor,2026-02-21 17:21:40,INFO,640,636,0,Chunk 639 processing completed.,81.21
+AcronymExtractor,2026-02-21 17:21:40,INFO,640,640,0,4 documents written to disk.,81.21
+AcronymExtractor,2026-02-21 17:21:40,INFO,641,640,0,Chunk 640 processing completed.,81.34
+AcronymExtractor,2026-02-21 17:21:40,INFO,642,640,0,Chunk 641 processing completed.,81.48
+AcronymExtractor,2026-02-21 17:21:40,INFO,643,640,0,Chunk 642 processing completed.,81.61
+AcronymExtractor,2026-02-21 17:21:40,INFO,644,640,0,Chunk 643 processing completed.,81.75
+AcronymExtractor,2026-02-21 17:21:40,INFO,644,644,0,4 documents written to disk.,81.75
+AcronymExtractor,2026-02-21 17:21:40,INFO,645,644,0,Chunk 644 processing completed.,81.89
+AcronymExtractor,2026-02-21 17:21:40,INFO,646,644,0,Chunk 645 processing completed.,82.02
+AcronymExtractor,2026-02-21 17:21:40,INFO,647,644,0,Chunk 646 processing completed.,82.15
+AcronymExtractor,2026-02-21 17:21:40,INFO,648,644,0,Chunk 647 processing completed.,82.25
+AcronymExtractor,2026-02-21 17:21:40,INFO,648,648,0,4 documents written to disk.,82.25
+AcronymExtractor,2026-02-21 17:21:40,INFO,649,648,0,Chunk 648 processing completed.,82.35
+AcronymExtractor,2026-02-21 17:21:40,INFO,650,648,0,Chunk 649 processing completed.,82.45
+AcronymExtractor,2026-02-21 17:21:41,INFO,651,648,0,Chunk 650 processing completed.,82.56
+AcronymExtractor,2026-02-21 17:21:41,INFO,652,648,0,Chunk 651 processing completed.,82.66
+AcronymExtractor,2026-02-21 17:21:41,INFO,652,652,0,4 documents written to disk.,82.66
+AcronymExtractor,2026-02-21 17:21:41,INFO,653,652,0,Chunk 652 processing completed.,82.78
+AcronymExtractor,2026-02-21 17:21:41,INFO,654,652,0,Chunk 653 processing completed.,82.90
+AcronymExtractor,2026-02-21 17:21:41,INFO,655,652,0,Chunk 654 processing completed.,83.02
+AcronymExtractor,2026-02-21 17:21:41,INFO,656,652,0,Chunk 655 processing completed.,83.14
+AcronymExtractor,2026-02-21 17:21:41,INFO,656,656,0,4 documents written to disk.,83.14
+AcronymExtractor,2026-02-21 17:21:41,INFO,657,656,0,Chunk 656 processing completed.,83.26
+AcronymExtractor,2026-02-21 17:21:41,INFO,658,656,0,Chunk 657 processing completed.,83.40
+AcronymExtractor,2026-02-21 17:21:41,INFO,659,656,0,Chunk 658 processing completed.,83.52
+AcronymExtractor,2026-02-21 17:21:41,INFO,660,656,0,Chunk 659 processing completed.,83.61
+AcronymExtractor,2026-02-21 17:21:41,INFO,660,660,0,4 documents written to disk.,83.61
+AcronymExtractor,2026-02-21 17:21:41,INFO,661,660,0,Chunk 660 processing completed.,83.70
+AcronymExtractor,2026-02-21 17:21:41,INFO,662,660,0,Chunk 661 processing completed.,83.80
+AcronymExtractor,2026-02-21 17:21:41,INFO,663,660,0,Chunk 662 processing completed.,83.89
+AcronymExtractor,2026-02-21 17:21:41,INFO,664,660,0,Chunk 663 processing completed.,83.98
+AcronymExtractor,2026-02-21 17:21:41,INFO,664,664,0,4 documents written to disk.,83.98
+AcronymExtractor,2026-02-21 17:21:41,INFO,665,664,0,Chunk 664 processing completed.,84.08
+AcronymExtractor,2026-02-21 17:21:41,INFO,666,664,0,Chunk 665 processing completed.,84.18
+AcronymExtractor,2026-02-21 17:21:41,INFO,667,664,0,Chunk 666 processing completed.,84.27
+AcronymExtractor,2026-02-21 17:21:41,INFO,668,664,0,Chunk 667 processing completed.,84.37
+AcronymExtractor,2026-02-21 17:21:41,INFO,668,668,0,4 documents written to disk.,84.37
+AcronymExtractor,2026-02-21 17:21:41,INFO,669,668,0,Chunk 668 processing completed.,84.47
+AcronymExtractor,2026-02-21 17:21:41,INFO,670,668,0,Chunk 669 processing completed.,84.55
+AcronymExtractor,2026-02-21 17:21:41,INFO,671,668,0,Chunk 670 processing completed.,84.65
+AcronymExtractor,2026-02-21 17:21:41,INFO,672,668,0,Chunk 671 processing completed.,84.74
+AcronymExtractor,2026-02-21 17:21:41,INFO,672,672,0,4 documents written to disk.,84.74
+AcronymExtractor,2026-02-21 17:21:41,INFO,673,672,0,Chunk 672 processing completed.,84.83
+AcronymExtractor,2026-02-21 17:21:41,INFO,674,672,0,Chunk 673 processing completed.,84.93
+AcronymExtractor,2026-02-21 17:21:41,INFO,675,672,0,Chunk 674 processing completed.,85.03
+AcronymExtractor,2026-02-21 17:21:41,INFO,676,672,0,Chunk 675 processing completed.,85.13
+AcronymExtractor,2026-02-21 17:21:41,INFO,676,676,0,4 documents written to disk.,85.13
+AcronymExtractor,2026-02-21 17:21:42,INFO,677,676,0,Chunk 676 processing completed.,85.24
+AcronymExtractor,2026-02-21 17:21:42,INFO,678,676,0,Chunk 677 processing completed.,85.36
+AcronymExtractor,2026-02-21 17:21:42,INFO,679,676,0,Chunk 678 processing completed.,85.43
+AcronymExtractor,2026-02-21 17:21:42,INFO,680,676,0,Chunk 679 processing completed.,85.51
+AcronymExtractor,2026-02-21 17:21:42,INFO,680,680,0,4 documents written to disk.,85.51
+AcronymExtractor,2026-02-21 17:21:42,INFO,681,680,0,Chunk 680 processing completed.,85.59
+AcronymExtractor,2026-02-21 17:21:42,INFO,682,680,0,Chunk 681 processing completed.,85.66
+AcronymExtractor,2026-02-21 17:21:42,INFO,683,680,0,Chunk 682 processing completed.,85.75
+AcronymExtractor,2026-02-21 17:21:42,INFO,684,680,0,Chunk 683 processing completed.,85.95
+AcronymExtractor,2026-02-21 17:21:42,INFO,684,684,0,4 documents written to disk.,85.95
+AcronymExtractor,2026-02-21 17:21:42,INFO,685,684,0,Chunk 684 processing completed.,86.15
+AcronymExtractor,2026-02-21 17:21:42,INFO,686,684,0,Chunk 685 processing completed.,86.36
+AcronymExtractor,2026-02-21 17:21:42,INFO,687,684,0,Chunk 686 processing completed.,86.56
+AcronymExtractor,2026-02-21 17:21:42,INFO,688,684,0,Chunk 687 processing completed.,86.77
+AcronymExtractor,2026-02-21 17:21:42,INFO,688,688,0,4 documents written to disk.,86.77
+AcronymExtractor,2026-02-21 17:21:42,INFO,689,688,0,Chunk 688 processing completed.,86.97
+AcronymExtractor,2026-02-21 17:21:42,INFO,690,688,0,Chunk 689 processing completed.,87.18
+AcronymExtractor,2026-02-21 17:21:42,INFO,691,688,0,Chunk 690 processing completed.,87.38
+AcronymExtractor,2026-02-21 17:21:42,INFO,692,688,0,Chunk 691 processing completed.,87.59
+AcronymExtractor,2026-02-21 17:21:42,INFO,692,692,0,4 documents written to disk.,87.59
+AcronymExtractor,2026-02-21 17:21:42,INFO,693,692,0,Chunk 692 processing completed.,87.79
+AcronymExtractor,2026-02-21 17:21:42,INFO,694,692,0,Chunk 693 processing completed.,88.00
+AcronymExtractor,2026-02-21 17:21:42,INFO,695,692,0,Chunk 694 processing completed.,88.21
+AcronymExtractor,2026-02-21 17:21:42,INFO,696,692,0,Chunk 695 processing completed.,88.42
+AcronymExtractor,2026-02-21 17:21:42,INFO,696,696,0,4 documents written to disk.,88.42
+AcronymExtractor,2026-02-21 17:21:42,INFO,697,696,0,Chunk 696 processing completed.,88.62
+AcronymExtractor,2026-02-21 17:21:42,INFO,698,696,0,Chunk 697 processing completed.,88.82
+AcronymExtractor,2026-02-21 17:21:42,INFO,699,696,0,Chunk 698 processing completed.,89.03
+AcronymExtractor,2026-02-21 17:21:42,INFO,700,696,0,Chunk 699 processing completed.,89.24
+AcronymExtractor,2026-02-21 17:21:42,INFO,700,700,0,4 documents written to disk.,89.24
+AcronymExtractor,2026-02-21 17:21:42,INFO,701,700,0,Chunk 700 processing completed.,89.44
+AcronymExtractor,2026-02-21 17:21:42,INFO,702,700,0,Chunk 701 processing completed.,89.66
+AcronymExtractor,2026-02-21 17:21:42,INFO,703,700,0,Chunk 702 processing completed.,89.75
+AcronymExtractor,2026-02-21 17:21:42,INFO,704,700,0,Chunk 703 processing completed.,89.83
+AcronymExtractor,2026-02-21 17:21:42,INFO,704,704,0,4 documents written to disk.,89.83
+AcronymExtractor,2026-02-21 17:21:42,INFO,705,704,0,Chunk 704 processing completed.,89.93
+AcronymExtractor,2026-02-21 17:21:42,INFO,706,704,0,Chunk 705 processing completed.,90.02
+AcronymExtractor,2026-02-21 17:21:43,INFO,707,704,0,Chunk 706 processing completed.,90.13
+AcronymExtractor,2026-02-21 17:21:43,INFO,708,704,0,Chunk 707 processing completed.,90.21
+AcronymExtractor,2026-02-21 17:21:43,INFO,708,708,0,4 documents written to disk.,90.21
+AcronymExtractor,2026-02-21 17:21:43,INFO,709,708,0,Chunk 708 processing completed.,90.29
+AcronymExtractor,2026-02-21 17:21:43,INFO,710,708,0,Chunk 709 processing completed.,90.37
+AcronymExtractor,2026-02-21 17:21:43,INFO,711,708,0,Chunk 710 processing completed.,90.45
+AcronymExtractor,2026-02-21 17:21:43,INFO,712,708,0,Chunk 711 processing completed.,90.53
+AcronymExtractor,2026-02-21 17:21:43,INFO,712,712,0,4 documents written to disk.,90.53
+AcronymExtractor,2026-02-21 17:21:43,INFO,713,712,0,Chunk 712 processing completed.,90.62
+AcronymExtractor,2026-02-21 17:21:43,INFO,714,712,0,Chunk 713 processing completed.,90.71
+AcronymExtractor,2026-02-21 17:21:43,INFO,715,712,0,Chunk 714 processing completed.,90.80
+AcronymExtractor,2026-02-21 17:21:43,INFO,716,712,0,Chunk 715 processing completed.,90.88
+AcronymExtractor,2026-02-21 17:21:43,INFO,716,716,0,4 documents written to disk.,90.88
+AcronymExtractor,2026-02-21 17:21:43,INFO,717,716,0,Chunk 716 processing completed.,90.97
+AcronymExtractor,2026-02-21 17:21:43,INFO,718,716,0,Chunk 717 processing completed.,91.06
+AcronymExtractor,2026-02-21 17:21:43,INFO,719,716,0,Chunk 718 processing completed.,91.16
+AcronymExtractor,2026-02-21 17:21:43,INFO,720,716,0,Chunk 719 processing completed.,91.26
+AcronymExtractor,2026-02-21 17:21:43,INFO,720,720,0,4 documents written to disk.,91.26
+AcronymExtractor,2026-02-21 17:21:43,INFO,721,720,0,Chunk 720 processing completed.,91.38
+AcronymExtractor,2026-02-21 17:21:43,INFO,722,720,0,Chunk 721 processing completed.,91.49
+AcronymExtractor,2026-02-21 17:21:43,INFO,723,720,0,Chunk 722 processing completed.,91.60
+AcronymExtractor,2026-02-21 17:21:43,INFO,724,720,0,Chunk 723 processing completed.,91.71
+AcronymExtractor,2026-02-21 17:21:43,INFO,724,724,0,4 documents written to disk.,91.71
+AcronymExtractor,2026-02-21 17:21:44,INFO,725,724,0,Chunk 724 processing completed.,91.82
+AcronymExtractor,2026-02-21 17:21:44,INFO,726,724,0,Chunk 725 processing completed.,91.94
+AcronymExtractor,2026-02-21 17:21:44,INFO,727,724,0,Chunk 726 processing completed.,92.05
+AcronymExtractor,2026-02-21 17:21:44,INFO,728,724,0,Chunk 727 processing completed.,92.17
+AcronymExtractor,2026-02-21 17:21:44,INFO,728,728,0,4 documents written to disk.,92.17
+AcronymExtractor,2026-02-21 17:21:44,INFO,729,728,0,Chunk 728 processing completed.,92.28
+AcronymExtractor,2026-02-21 17:21:44,INFO,730,728,0,Chunk 729 processing completed.,92.39
+AcronymExtractor,2026-02-21 17:21:44,INFO,731,728,0,Chunk 730 processing completed.,92.49
+AcronymExtractor,2026-02-21 17:21:44,INFO,732,728,0,Chunk 731 processing completed.,92.60
+AcronymExtractor,2026-02-21 17:21:44,INFO,732,732,0,4 documents written to disk.,92.60
+AcronymExtractor,2026-02-21 17:21:44,INFO,733,732,0,Chunk 732 processing completed.,92.71
+AcronymExtractor,2026-02-21 17:21:44,INFO,734,732,0,Chunk 733 processing completed.,92.81
+AcronymExtractor,2026-02-21 17:21:44,INFO,735,732,0,Chunk 734 processing completed.,92.91
+AcronymExtractor,2026-02-21 17:21:44,INFO,736,732,0,Chunk 735 processing completed.,93.02
+AcronymExtractor,2026-02-21 17:21:44,INFO,736,736,0,4 documents written to disk.,93.02
+AcronymExtractor,2026-02-21 17:21:44,INFO,737,736,0,Chunk 736 processing completed.,93.10
+AcronymExtractor,2026-02-21 17:21:44,INFO,738,736,0,Chunk 737 processing completed.,93.19
+AcronymExtractor,2026-02-21 17:21:44,INFO,739,736,0,Chunk 738 processing completed.,93.29
+AcronymExtractor,2026-02-21 17:21:44,INFO,740,736,0,Chunk 739 processing completed.,93.38
+AcronymExtractor,2026-02-21 17:21:44,INFO,740,740,0,4 documents written to disk.,93.38
+AcronymExtractor,2026-02-21 17:21:44,INFO,741,740,0,Chunk 740 processing completed.,93.48
+AcronymExtractor,2026-02-21 17:21:44,INFO,742,740,0,Chunk 741 processing completed.,93.58
+AcronymExtractor,2026-02-21 17:21:44,INFO,743,740,0,Chunk 742 processing completed.,93.67
+AcronymExtractor,2026-02-21 17:21:44,INFO,744,740,0,Chunk 743 processing completed.,93.76
+AcronymExtractor,2026-02-21 17:21:44,INFO,744,744,0,4 documents written to disk.,93.76
+AcronymExtractor,2026-02-21 17:21:44,INFO,745,744,0,Chunk 744 processing completed.,93.86
+AcronymExtractor,2026-02-21 17:21:44,INFO,746,744,0,Chunk 745 processing completed.,93.95
+AcronymExtractor,2026-02-21 17:21:44,INFO,747,744,0,Chunk 746 processing completed.,94.05
+AcronymExtractor,2026-02-21 17:21:44,INFO,748,744,0,Chunk 747 processing completed.,94.15
+AcronymExtractor,2026-02-21 17:21:44,INFO,748,748,0,4 documents written to disk.,94.15
+AcronymExtractor,2026-02-21 17:21:44,INFO,749,748,0,Chunk 748 processing completed.,94.24
+AcronymExtractor,2026-02-21 17:21:44,INFO,750,748,0,Chunk 749 processing completed.,94.35
+AcronymExtractor,2026-02-21 17:21:44,INFO,751,748,0,Chunk 750 processing completed.,94.45
+AcronymExtractor,2026-02-21 17:21:44,INFO,752,748,0,Chunk 751 processing completed.,94.55
+AcronymExtractor,2026-02-21 17:21:44,INFO,752,752,0,4 documents written to disk.,94.55
+AcronymExtractor,2026-02-21 17:21:44,INFO,753,752,0,Chunk 752 processing completed.,94.63
+AcronymExtractor,2026-02-21 17:21:44,INFO,754,752,0,Chunk 753 processing completed.,94.71
+AcronymExtractor,2026-02-21 17:21:44,INFO,755,752,0,Chunk 754 processing completed.,94.80
+AcronymExtractor,2026-02-21 17:21:44,INFO,756,752,0,Chunk 755 processing completed.,94.88
+AcronymExtractor,2026-02-21 17:21:44,INFO,756,756,0,4 documents written to disk.,94.88
+AcronymExtractor,2026-02-21 17:21:44,INFO,757,756,0,Chunk 756 processing completed.,94.97
+AcronymExtractor,2026-02-21 17:21:44,INFO,758,756,0,Chunk 757 processing completed.,95.06
+AcronymExtractor,2026-02-21 17:21:44,INFO,759,756,0,Chunk 758 processing completed.,95.15
+AcronymExtractor,2026-02-21 17:21:44,INFO,760,756,0,Chunk 759 processing completed.,95.25
+AcronymExtractor,2026-02-21 17:21:44,INFO,760,760,0,4 documents written to disk.,95.25
+AcronymExtractor,2026-02-21 17:21:44,INFO,761,760,0,Chunk 760 processing completed.,95.34
+AcronymExtractor,2026-02-21 17:21:44,INFO,762,760,0,Chunk 761 processing completed.,95.44
+AcronymExtractor,2026-02-21 17:21:44,INFO,763,760,0,Chunk 762 processing completed.,95.52
+AcronymExtractor,2026-02-21 17:21:44,INFO,764,760,0,Chunk 763 processing completed.,95.62
+AcronymExtractor,2026-02-21 17:21:44,INFO,764,764,0,4 documents written to disk.,95.62
+AcronymExtractor,2026-02-21 17:21:44,INFO,765,764,0,Chunk 764 processing completed.,95.71
+AcronymExtractor,2026-02-21 17:21:44,INFO,766,764,0,Chunk 765 processing completed.,95.80
+AcronymExtractor,2026-02-21 17:21:44,INFO,767,764,0,Chunk 766 processing completed.,95.90
+AcronymExtractor,2026-02-21 17:21:44,INFO,768,764,0,Chunk 767 processing completed.,95.99
+AcronymExtractor,2026-02-21 17:21:44,INFO,768,768,0,4 documents written to disk.,95.99
+AcronymExtractor,2026-02-21 17:21:44,INFO,769,768,0,Chunk 768 processing completed.,96.08
+AcronymExtractor,2026-02-21 17:21:44,INFO,770,768,0,Chunk 769 processing completed.,96.22
+AcronymExtractor,2026-02-21 17:21:44,INFO,771,768,0,Chunk 770 processing completed.,96.37
+AcronymExtractor,2026-02-21 17:21:44,INFO,772,768,0,Chunk 771 processing completed.,96.52
+AcronymExtractor,2026-02-21 17:21:44,INFO,772,772,0,4 documents written to disk.,96.52
+AcronymExtractor,2026-02-21 17:21:44,INFO,773,772,0,Chunk 772 processing completed.,96.66
+AcronymExtractor,2026-02-21 17:21:44,INFO,774,772,0,Chunk 773 processing completed.,96.80
+AcronymExtractor,2026-02-21 17:21:44,INFO,775,772,0,Chunk 774 processing completed.,96.93
+AcronymExtractor,2026-02-21 17:21:44,INFO,776,772,0,Chunk 775 processing completed.,97.01
+AcronymExtractor,2026-02-21 17:21:44,INFO,776,776,0,4 documents written to disk.,97.01
+AcronymExtractor,2026-02-21 17:21:44,INFO,777,776,0,Chunk 776 processing completed.,97.08
+AcronymExtractor,2026-02-21 17:21:44,INFO,778,776,0,Chunk 777 processing completed.,97.16
+AcronymExtractor,2026-02-21 17:21:44,INFO,779,776,0,Chunk 778 processing completed.,97.23
+AcronymExtractor,2026-02-21 17:21:44,INFO,780,776,0,Chunk 779 processing completed.,97.33
+AcronymExtractor,2026-02-21 17:21:44,INFO,780,780,0,4 documents written to disk.,97.33
+AcronymExtractor,2026-02-21 17:21:44,INFO,781,780,0,Chunk 780 processing completed.,97.42
+AcronymExtractor,2026-02-21 17:21:45,INFO,782,780,0,Chunk 781 processing completed.,97.53
+AcronymExtractor,2026-02-21 17:21:45,INFO,783,780,0,Chunk 782 processing completed.,97.61
+AcronymExtractor,2026-02-21 17:21:45,INFO,784,780,0,Chunk 783 processing completed.,97.68
+AcronymExtractor,2026-02-21 17:21:45,INFO,784,784,0,4 documents written to disk.,97.68
+AcronymExtractor,2026-02-21 17:21:45,INFO,785,784,0,Chunk 784 processing completed.,97.77
+AcronymExtractor,2026-02-21 17:21:45,INFO,786,784,0,Chunk 785 processing completed.,97.85
+AcronymExtractor,2026-02-21 17:21:45,INFO,787,784,0,Chunk 786 processing completed.,97.91
+AcronymExtractor,2026-02-21 17:21:45,INFO,788,784,0,Chunk 787 processing completed.,97.98
+AcronymExtractor,2026-02-21 17:21:45,INFO,788,788,0,4 documents written to disk.,97.98
+AcronymExtractor,2026-02-21 17:21:45,INFO,789,788,0,Chunk 788 processing completed.,98.05
+AcronymExtractor,2026-02-21 17:21:45,INFO,790,788,0,Chunk 789 processing completed.,98.11
+AcronymExtractor,2026-02-21 17:21:45,INFO,791,788,0,Chunk 790 processing completed.,98.19
+AcronymExtractor,2026-02-21 17:21:45,INFO,792,788,0,Chunk 791 processing completed.,98.27
+AcronymExtractor,2026-02-21 17:21:45,INFO,792,792,0,4 documents written to disk.,98.27
+AcronymExtractor,2026-02-21 17:21:45,INFO,793,792,0,Chunk 792 processing completed.,98.34
+AcronymExtractor,2026-02-21 17:21:45,INFO,794,792,0,Chunk 793 processing completed.,98.41
+AcronymExtractor,2026-02-21 17:21:45,INFO,795,792,0,Chunk 794 processing completed.,98.48
+AcronymExtractor,2026-02-21 17:21:45,INFO,796,792,0,Chunk 795 processing completed.,98.55
+AcronymExtractor,2026-02-21 17:21:45,INFO,796,796,0,4 documents written to disk.,98.55
+AcronymExtractor,2026-02-21 17:21:45,INFO,797,796,0,Chunk 796 processing completed.,98.62
+AcronymExtractor,2026-02-21 17:21:45,INFO,798,796,0,Chunk 797 processing completed.,98.69
+AcronymExtractor,2026-02-21 17:21:45,INFO,799,796,0,Chunk 798 processing completed.,98.76
+AcronymExtractor,2026-02-21 17:21:45,INFO,800,796,0,Chunk 799 processing completed.,98.84
+AcronymExtractor,2026-02-21 17:21:45,INFO,800,800,0,4 documents written to disk.,98.84
+AcronymExtractor,2026-02-21 17:21:45,INFO,801,800,0,Chunk 800 processing completed.,98.91
+AcronymExtractor,2026-02-21 17:21:45,INFO,802,800,0,Chunk 801 processing completed.,98.99
+AcronymExtractor,2026-02-21 17:21:45,INFO,803,800,0,Chunk 802 processing completed.,99.09
+AcronymExtractor,2026-02-21 17:21:45,INFO,804,800,0,Chunk 803 processing completed.,99.19
+AcronymExtractor,2026-02-21 17:21:45,INFO,804,804,0,4 documents written to disk.,99.19
+AcronymExtractor,2026-02-21 17:21:45,INFO,805,804,0,Chunk 804 processing completed.,99.29
+AcronymExtractor,2026-02-21 17:21:45,INFO,806,804,0,Chunk 805 processing completed.,99.39
+AcronymExtractor,2026-02-21 17:21:45,INFO,807,804,0,Chunk 806 processing completed.,99.49
+AcronymExtractor,2026-02-21 17:21:45,INFO,808,804,0,Chunk 807 processing completed.,99.59
+AcronymExtractor,2026-02-21 17:21:45,INFO,808,808,0,4 documents written to disk.,99.59
+AcronymExtractor,2026-02-21 17:21:45,INFO,809,808,0,Chunk 808 processing completed.,99.69
+AcronymExtractor,2026-02-21 17:21:45,INFO,810,808,0,Chunk 809 processing completed.,99.79
+AcronymExtractor,2026-02-21 17:21:45,INFO,811,808,0,Chunk 810 processing completed.,99.89
+AcronymExtractor,2026-02-21 17:21:45,INFO,812,808,0,Chunk 811 processing completed.,100.00
+AcronymExtractor,2026-02-21 17:21:45,INFO,812,812,0,4 documents written to disk.,100.00
+AcronymExtractor,2026-02-21 17:21:45,INFO,812,812,0,Job AcronymExtractor has been completed.,100.00

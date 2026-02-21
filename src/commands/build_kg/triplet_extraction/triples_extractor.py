@@ -39,10 +39,9 @@ class TriplesExtractor(Stage):
     def __init__(self, 
         reader : FileReader, 
         writer : FileWriter, 
-        batch_size : int, 
         triple_extractor : BaseTriplesExtractor
     ) -> None:
-        super().__init__(reader, writer, batch_size)
+        super().__init__(reader, writer)
         self.triple_extractor = triple_extractor
 
     def transform(self, doc : Dict) -> Dict:

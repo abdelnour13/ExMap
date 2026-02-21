@@ -21,10 +21,8 @@ class Graph2Triples(Stage):
     def __init__(self, 
         reader : FileReader, 
         writer : FileWriter, 
-        batch_size : int, 
-        buffer_size : int,
     ) -> None:
-        super().__init__(reader, writer, batch_size, buffer_size)
+        super().__init__(reader, writer)
 
         self.entities = {}
         self.documents = {}
@@ -43,6 +41,7 @@ class Graph2Triples(Stage):
 
         ### [Entity]-(Predicate { value })->(Entity)
         records.append({
+            "id" : f"Entity_{head}-{predicate}-Entity_{tail}",
             "n1" : {
                 "type" : "Entity",
                 "proprties" : {
@@ -67,6 +66,7 @@ class Graph2Triples(Stage):
 
         ### [Entity]-(APPEARS-IN)->(ARTICLE)
         records.append({
+            "id" : f"Entity_{head}--Article_{doc['sentence']['document']['id']}",
             "n1" : {
                 "type" : "Entity",
                 "proprties" : {
@@ -91,6 +91,7 @@ class Graph2Triples(Stage):
         })
 
         records.append({
+            "id" : f"Entity_{tail}--Article_{doc['sentence']['document']['id']}",
             "n1" : {
                 "type" : "Entity",
                 "proprties" : {

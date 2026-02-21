@@ -1,0 +1,148 @@
+KeywordExtractor,2026-02-21 17:05:06,INFO,0,0,0,Job KeywordExtractor has started.,None
+KeywordExtractor,2026-02-21 17:05:10,INFO,1,0,0,Chunk 0 processing completed.,0.72
+KeywordExtractor,2026-02-21 17:05:16,INFO,2,0,0,Chunk 1 processing completed.,1.74
+KeywordExtractor,2026-02-21 17:05:19,INFO,3,0,0,Chunk 2 processing completed.,2.43
+KeywordExtractor,2026-02-21 17:05:22,INFO,4,0,0,Chunk 3 processing completed.,3.04
+KeywordExtractor,2026-02-21 17:05:22,INFO,4,4,0,4 documents written to disk.,3.04
+KeywordExtractor,2026-02-21 17:05:27,INFO,5,4,0,Chunk 4 processing completed.,3.92
+KeywordExtractor,2026-02-21 17:05:33,INFO,6,4,0,Chunk 5 processing completed.,4.94
+KeywordExtractor,2026-02-21 17:05:38,INFO,7,4,0,Chunk 6 processing completed.,5.77
+KeywordExtractor,2026-02-21 17:05:42,INFO,8,4,0,Chunk 7 processing completed.,6.75
+KeywordExtractor,2026-02-21 17:05:42,INFO,8,8,0,4 documents written to disk.,6.75
+KeywordExtractor,2026-02-21 17:05:45,INFO,9,8,0,Chunk 8 processing completed.,7.53
+KeywordExtractor,2026-02-21 17:06:00,INFO,10,8,0,Chunk 9 processing completed.,10.34
+KeywordExtractor,2026-02-21 17:06:06,INFO,11,8,0,Chunk 10 processing completed.,11.19
+KeywordExtractor,2026-02-21 17:06:09,INFO,12,8,0,Chunk 11 processing completed.,11.69
+KeywordExtractor,2026-02-21 17:06:09,INFO,12,12,0,4 documents written to disk.,11.69
+KeywordExtractor,2026-02-21 17:06:12,INFO,13,12,0,Chunk 12 processing completed.,12.51
+KeywordExtractor,2026-02-21 17:06:17,INFO,14,12,0,Chunk 13 processing completed.,13.48
+KeywordExtractor,2026-02-21 17:06:24,INFO,15,12,0,Chunk 14 processing completed.,14.60
+KeywordExtractor,2026-02-21 17:06:29,INFO,16,12,0,Chunk 15 processing completed.,15.45
+KeywordExtractor,2026-02-21 17:06:29,INFO,16,16,0,4 documents written to disk.,15.45
+KeywordExtractor,2026-02-21 17:06:33,INFO,17,16,0,Chunk 16 processing completed.,16.30
+KeywordExtractor,2026-02-21 17:06:35,INFO,18,16,0,Chunk 17 processing completed.,17.02
+KeywordExtractor,2026-02-21 17:06:39,INFO,19,16,0,Chunk 18 processing completed.,17.71
+KeywordExtractor,2026-02-21 17:06:42,INFO,20,16,0,Chunk 19 processing completed.,18.28
+KeywordExtractor,2026-02-21 17:06:42,INFO,20,20,0,4 documents written to disk.,18.28
+KeywordExtractor,2026-02-21 17:06:47,INFO,21,20,0,Chunk 20 processing completed.,19.30
+KeywordExtractor,2026-02-21 17:06:51,INFO,22,20,0,Chunk 21 processing completed.,20.19
+KeywordExtractor,2026-02-21 17:06:57,INFO,23,20,0,Chunk 22 processing completed.,21.21
+KeywordExtractor,2026-02-21 17:07:06,INFO,24,20,0,Chunk 23 processing completed.,22.67
+KeywordExtractor,2026-02-21 17:07:06,INFO,24,24,0,4 documents written to disk.,22.67
+KeywordExtractor,2026-02-21 17:07:09,INFO,25,24,0,Chunk 24 processing completed.,23.42
+KeywordExtractor,2026-02-21 17:07:12,INFO,26,24,0,Chunk 25 processing completed.,24.25
+KeywordExtractor,2026-02-21 17:07:19,INFO,27,24,0,Chunk 26 processing completed.,25.43
+KeywordExtractor,2026-02-21 17:07:27,INFO,28,24,0,Chunk 27 processing completed.,26.43
+KeywordExtractor,2026-02-21 17:07:27,INFO,28,28,0,4 documents written to disk.,26.43
+KeywordExtractor,2026-02-21 17:07:32,INFO,29,28,0,Chunk 28 processing completed.,27.46
+KeywordExtractor,2026-02-21 17:07:38,INFO,30,28,0,Chunk 29 processing completed.,28.59
+KeywordExtractor,2026-02-21 17:07:49,INFO,31,28,0,Chunk 30 processing completed.,29.71
+KeywordExtractor,2026-02-21 17:07:53,INFO,32,28,0,Chunk 31 processing completed.,30.45
+KeywordExtractor,2026-02-21 17:07:53,INFO,32,32,0,4 documents written to disk.,30.45
+KeywordExtractor,2026-02-21 17:08:00,INFO,33,32,0,Chunk 32 processing completed.,31.53
+KeywordExtractor,2026-02-21 17:08:04,INFO,34,32,0,Chunk 33 processing completed.,32.21
+KeywordExtractor,2026-02-21 17:08:15,INFO,35,32,0,Chunk 34 processing completed.,33.76
+KeywordExtractor,2026-02-21 17:08:20,INFO,36,32,0,Chunk 35 processing completed.,34.50
+KeywordExtractor,2026-02-21 17:08:20,INFO,36,36,0,4 documents written to disk.,34.50
+KeywordExtractor,2026-02-21 17:08:25,INFO,37,36,0,Chunk 36 processing completed.,35.34
+KeywordExtractor,2026-02-21 17:08:27,INFO,38,36,0,Chunk 37 processing completed.,35.74
+KeywordExtractor,2026-02-21 17:08:36,INFO,39,36,0,Chunk 38 processing completed.,36.93
+KeywordExtractor,2026-02-21 17:08:44,INFO,40,36,0,Chunk 39 processing completed.,37.70
+KeywordExtractor,2026-02-21 17:08:44,INFO,40,40,0,4 documents written to disk.,37.70
+KeywordExtractor,2026-02-21 17:08:51,INFO,41,40,0,Chunk 40 processing completed.,38.67
+KeywordExtractor,2026-02-21 17:08:55,INFO,42,40,0,Chunk 41 processing completed.,39.28
+KeywordExtractor,2026-02-21 17:09:00,INFO,43,40,0,Chunk 42 processing completed.,40.09
+KeywordExtractor,2026-02-21 17:09:04,INFO,44,40,0,Chunk 43 processing completed.,40.70
+KeywordExtractor,2026-02-21 17:09:04,INFO,44,44,0,4 documents written to disk.,40.70
+KeywordExtractor,2026-02-21 17:09:10,INFO,45,44,0,Chunk 44 processing completed.,41.81
+KeywordExtractor,2026-02-21 17:09:16,INFO,46,44,0,Chunk 45 processing completed.,42.74
+KeywordExtractor,2026-02-21 17:09:26,INFO,47,44,0,Chunk 46 processing completed.,44.24
+KeywordExtractor,2026-02-21 17:09:30,INFO,48,44,0,Chunk 47 processing completed.,45.03
+KeywordExtractor,2026-02-21 17:09:30,INFO,48,48,0,4 documents written to disk.,45.03
+KeywordExtractor,2026-02-21 17:09:34,INFO,49,48,0,Chunk 48 processing completed.,45.67
+KeywordExtractor,2026-02-21 17:09:37,INFO,50,48,0,Chunk 49 processing completed.,46.25
+KeywordExtractor,2026-02-21 17:09:43,INFO,51,48,0,Chunk 50 processing completed.,47.20
+KeywordExtractor,2026-02-21 17:09:50,INFO,52,48,0,Chunk 51 processing completed.,48.02
+KeywordExtractor,2026-02-21 17:09:50,INFO,52,52,0,4 documents written to disk.,48.02
+KeywordExtractor,2026-02-21 17:09:53,INFO,53,52,0,Chunk 52 processing completed.,48.68
+KeywordExtractor,2026-02-21 17:09:55,INFO,54,52,0,Chunk 53 processing completed.,49.31
+KeywordExtractor,2026-02-21 17:10:01,INFO,55,52,0,Chunk 54 processing completed.,50.01
+KeywordExtractor,2026-02-21 17:10:14,INFO,56,52,0,Chunk 55 processing completed.,51.34
+KeywordExtractor,2026-02-21 17:10:14,INFO,56,56,0,4 documents written to disk.,51.34
+KeywordExtractor,2026-02-21 17:10:17,INFO,57,56,0,Chunk 56 processing completed.,51.83
+KeywordExtractor,2026-02-21 17:10:22,INFO,58,56,0,Chunk 57 processing completed.,52.45
+KeywordExtractor,2026-02-21 17:10:33,INFO,59,56,0,Chunk 58 processing completed.,53.96
+KeywordExtractor,2026-02-21 17:10:38,INFO,60,56,0,Chunk 59 processing completed.,54.77
+KeywordExtractor,2026-02-21 17:10:38,INFO,60,60,0,4 documents written to disk.,54.77
+KeywordExtractor,2026-02-21 17:10:53,INFO,61,60,0,Chunk 60 processing completed.,56.64
+KeywordExtractor,2026-02-21 17:11:04,INFO,62,60,0,Chunk 61 processing completed.,57.81
+KeywordExtractor,2026-02-21 17:11:07,INFO,63,60,0,Chunk 62 processing completed.,58.34
+KeywordExtractor,2026-02-21 17:11:12,INFO,64,60,0,Chunk 63 processing completed.,59.07
+KeywordExtractor,2026-02-21 17:11:12,INFO,64,64,0,4 documents written to disk.,59.07
+KeywordExtractor,2026-02-21 17:11:17,INFO,65,64,0,Chunk 64 processing completed.,59.95
+KeywordExtractor,2026-02-21 17:11:21,INFO,66,64,0,Chunk 65 processing completed.,60.70
+KeywordExtractor,2026-02-21 17:11:30,INFO,67,64,0,Chunk 66 processing completed.,61.68
+KeywordExtractor,2026-02-21 17:11:35,INFO,68,64,0,Chunk 67 processing completed.,62.51
+KeywordExtractor,2026-02-21 17:11:35,INFO,68,68,0,4 documents written to disk.,62.51
+KeywordExtractor,2026-02-21 17:11:42,INFO,69,68,0,Chunk 68 processing completed.,63.41
+KeywordExtractor,2026-02-21 17:11:45,INFO,70,68,0,Chunk 69 processing completed.,64.29
+KeywordExtractor,2026-02-21 17:11:50,INFO,71,68,0,Chunk 70 processing completed.,65.00
+KeywordExtractor,2026-02-21 17:11:55,INFO,72,68,0,Chunk 71 processing completed.,65.65
+KeywordExtractor,2026-02-21 17:11:55,INFO,72,72,0,4 documents written to disk.,65.65
+KeywordExtractor,2026-02-21 17:11:58,INFO,73,72,0,Chunk 72 processing completed.,66.22
+KeywordExtractor,2026-02-21 17:12:04,INFO,74,72,0,Chunk 73 processing completed.,67.00
+KeywordExtractor,2026-02-21 17:12:05,INFO,75,72,0,Chunk 74 processing completed.,67.35
+KeywordExtractor,2026-02-21 17:12:11,INFO,76,72,0,Chunk 75 processing completed.,68.06
+KeywordExtractor,2026-02-21 17:12:11,INFO,76,76,0,4 documents written to disk.,68.06
+KeywordExtractor,2026-02-21 17:12:12,INFO,77,76,0,Chunk 76 processing completed.,68.55
+KeywordExtractor,2026-02-21 17:12:15,INFO,78,76,0,Chunk 77 processing completed.,69.10
+KeywordExtractor,2026-02-21 17:12:20,INFO,79,76,0,Chunk 78 processing completed.,69.88
+KeywordExtractor,2026-02-21 17:12:23,INFO,80,76,0,Chunk 79 processing completed.,70.59
+KeywordExtractor,2026-02-21 17:12:23,INFO,80,80,0,4 documents written to disk.,70.59
+KeywordExtractor,2026-02-21 17:12:27,INFO,81,80,0,Chunk 80 processing completed.,71.07
+KeywordExtractor,2026-02-21 17:12:34,INFO,82,80,0,Chunk 81 processing completed.,71.89
+KeywordExtractor,2026-02-21 17:12:43,INFO,83,80,0,Chunk 82 processing completed.,73.00
+KeywordExtractor,2026-02-21 17:12:51,INFO,84,80,0,Chunk 83 processing completed.,74.44
+KeywordExtractor,2026-02-21 17:12:51,INFO,84,84,0,4 documents written to disk.,74.44
+KeywordExtractor,2026-02-21 17:12:59,INFO,85,84,0,Chunk 84 processing completed.,75.19
+KeywordExtractor,2026-02-21 17:13:04,INFO,86,84,0,Chunk 85 processing completed.,75.93
+KeywordExtractor,2026-02-21 17:13:09,INFO,87,84,0,Chunk 86 processing completed.,76.67
+KeywordExtractor,2026-02-21 17:13:16,INFO,88,84,0,Chunk 87 processing completed.,77.81
+KeywordExtractor,2026-02-21 17:13:16,INFO,88,88,0,4 documents written to disk.,77.81
+KeywordExtractor,2026-02-21 17:13:22,INFO,89,88,0,Chunk 88 processing completed.,78.59
+KeywordExtractor,2026-02-21 17:13:32,INFO,90,88,0,Chunk 89 processing completed.,79.52
+KeywordExtractor,2026-02-21 17:13:37,INFO,91,88,0,Chunk 90 processing completed.,80.21
+KeywordExtractor,2026-02-21 17:13:44,INFO,92,88,0,Chunk 91 processing completed.,80.95
+KeywordExtractor,2026-02-21 17:13:44,INFO,92,92,0,4 documents written to disk.,80.95
+KeywordExtractor,2026-02-21 17:13:48,INFO,93,92,0,Chunk 92 processing completed.,81.66
+KeywordExtractor,2026-02-21 17:13:53,INFO,94,92,0,Chunk 93 processing completed.,82.46
+KeywordExtractor,2026-02-21 17:13:57,INFO,95,92,0,Chunk 94 processing completed.,83.06
+KeywordExtractor,2026-02-21 17:14:15,INFO,96,92,0,Chunk 95 processing completed.,84.87
+KeywordExtractor,2026-02-21 17:14:15,INFO,96,96,0,4 documents written to disk.,84.87
+KeywordExtractor,2026-02-21 17:14:20,INFO,97,96,0,Chunk 96 processing completed.,85.61
+KeywordExtractor,2026-02-21 17:14:24,INFO,98,96,0,Chunk 97 processing completed.,86.18
+KeywordExtractor,2026-02-21 17:14:29,INFO,99,96,0,Chunk 98 processing completed.,86.87
+KeywordExtractor,2026-02-21 17:14:36,INFO,100,96,0,Chunk 99 processing completed.,87.65
+KeywordExtractor,2026-02-21 17:14:36,INFO,100,100,0,4 documents written to disk.,87.65
+KeywordExtractor,2026-02-21 17:14:42,INFO,101,100,0,Chunk 100 processing completed.,88.53
+KeywordExtractor,2026-02-21 17:14:47,INFO,102,100,0,Chunk 101 processing completed.,89.34
+KeywordExtractor,2026-02-21 17:14:50,INFO,103,100,0,Chunk 102 processing completed.,90.12
+KeywordExtractor,2026-02-21 17:14:54,INFO,104,100,0,Chunk 103 processing completed.,90.84
+KeywordExtractor,2026-02-21 17:14:54,INFO,104,104,0,4 documents written to disk.,90.84
+KeywordExtractor,2026-02-21 17:14:59,INFO,105,104,0,Chunk 104 processing completed.,91.63
+KeywordExtractor,2026-02-21 17:15:01,INFO,106,104,0,Chunk 105 processing completed.,92.32
+KeywordExtractor,2026-02-21 17:15:07,INFO,107,104,0,Chunk 106 processing completed.,93.03
+KeywordExtractor,2026-02-21 17:15:10,INFO,108,104,0,Chunk 107 processing completed.,93.78
+KeywordExtractor,2026-02-21 17:15:10,INFO,108,108,0,4 documents written to disk.,93.78
+KeywordExtractor,2026-02-21 17:15:18,INFO,109,108,0,Chunk 108 processing completed.,94.93
+KeywordExtractor,2026-02-21 17:15:21,INFO,110,108,0,Chunk 109 processing completed.,95.53
+KeywordExtractor,2026-02-21 17:15:24,INFO,111,108,0,Chunk 110 processing completed.,96.27
+KeywordExtractor,2026-02-21 17:15:27,INFO,112,108,0,Chunk 111 processing completed.,96.87
+KeywordExtractor,2026-02-21 17:15:27,INFO,112,112,0,4 documents written to disk.,96.87
+KeywordExtractor,2026-02-21 17:15:31,INFO,113,112,0,Chunk 112 processing completed.,97.39
+KeywordExtractor,2026-02-21 17:15:33,INFO,114,112,0,Chunk 113 processing completed.,97.98
+KeywordExtractor,2026-02-21 17:15:36,INFO,115,112,0,Chunk 114 processing completed.,98.55
+KeywordExtractor,2026-02-21 17:15:41,INFO,116,112,0,Chunk 115 processing completed.,99.35
+KeywordExtractor,2026-02-21 17:15:41,INFO,116,116,0,4 documents written to disk.,99.35
+KeywordExtractor,2026-02-21 17:15:43,INFO,117,116,0,Chunk 116 processing completed.,100.00
+KeywordExtractor,2026-02-21 17:15:43,INFO,117,117,0,Job KeywordExtractor has been completed.,100.00

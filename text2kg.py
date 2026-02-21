@@ -1,4 +1,3 @@
-import os
 import time
 import yaml
 import tomllib
@@ -8,6 +7,7 @@ from pycli import Example
 from pydantic import BaseModel
 from instance import cli
 from src.commands.pipeline import Pipeline
+from src.commands.download.download import DataDownloader
 
 class RPCService(BaseModel):
     add : bool
@@ -23,6 +23,14 @@ class Config(BaseModel):
     def load(cls) -> 'Config':
         with open('config.toml', 'rb') as f:
             return Config(**tomllib.load(f))
+        
+def setup(
+    build : bool = False, # If True runs docker compose -up
+    create_envs : bool = False, # If True create conda envirenments
+    download_resources : bool = False, # If True downloads all the needed huggingface models + openie6 models
+    download_neo4j_plugins : bool = False, # If True downloads neo4j plugins
+) -> None:
+    pass
 
 @cli.register_command(
     name="dockerize",

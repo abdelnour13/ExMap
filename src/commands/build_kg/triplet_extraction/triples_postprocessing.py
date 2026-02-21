@@ -126,11 +126,10 @@ class TriplesPostprocessor(Stage):
         self,
         reader: FileReader,
         writer: FileWriter,
-        batch_size: int,
         language_detector: LanguageDetector,
         domain_nlp : Nlp
     ) -> None:
-        super().__init__(reader, writer, batch_size)
+        super().__init__(reader, writer)
         self.domain_nlp = domain_nlp
         self.nlp = spacy.load("en_core_web_sm")
         self.language_detector = language_detector
@@ -402,8 +401,8 @@ class TriplesPostprocessor(Stage):
         predicate = self.make_predicate(predicate)
 
         ### Pre-Cleaning validation
-        if len(predicate.tags) == 1 and predicate.tokens[0].value.endswith('ing'):
-            return None
+        # if len(predicate.tags) == 1 and predicate.tokens[0].value.endswith('ing'):
+        #     return None
 
         ### Clean Predicate
         predicate, is_passive, e2 = self.clean_predicate(predicate)

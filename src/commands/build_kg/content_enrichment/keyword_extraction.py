@@ -1,7 +1,6 @@
-from keyphrasetransformer import KeyPhraseTransformer
 from typing import Dict, List
 from src.shared.command_tools import Stage, StageConfig, add_handlers
-from src.shared.file_tools import FileWriter, FileReader
+from src.shared.file_tools import FileWriter, FileReader, TextfileCache
 from definitions import hf_model_dir
 from instance import cli
 
@@ -19,9 +18,11 @@ class KeywordExtractor(Stage):
     def __init__(self, 
         reader : FileReader, 
         writer : FileWriter, 
-        batch_size : int, 
     ) -> None:
-        super().__init__(reader, writer, batch_size)
+        
+        from keyphrasetransformer import KeyPhraseTransformer
+
+        super().__init__(reader, writer)
         self.key_phrase_transformer = KeyPhraseTransformer(model_name=hf_model_dir("snrspeaks/KeyPhraseTransformer"))
     
     def transform(self, doc : Dict) -> List[Dict]:
@@ -34,11 +35,14 @@ class KeywordExtractor(Stage):
 
     @classmethod
     def from_config(cls, config : StageConfig) -> Stage:
+
+        cache = TextfileCache(checkpoint_filename=config.checkpoint_filename)
         
         return KeywordExtractor(
-            reader=FileReader.from_filename(config.input_filename),
+            reader=FileReader
+                .from_filename(config.input_filename, cache)
+                .batched(config.batch_size),
             writer=FileWriter
                 .from_filename(config.output_filename)
-                .buffered(config.buffer_size),
-            batch_size=config.batch_size,
+                .buffered(config.buffer_size, cache),
         )

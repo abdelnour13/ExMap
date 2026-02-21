@@ -60,12 +60,11 @@ class DocumentsAnnotator(Stage):
     def __init__(self, 
         reader : FileReader, 
         writer : FileWriter, 
-        batch_size : int, 
         client : OpenAI,
         domains : List[Domain],
         model : str
     ) -> None:
-        super().__init__(reader, writer, batch_size)
+        super().__init__(reader, writer)
 
         self.client = client
         self.domains = domains

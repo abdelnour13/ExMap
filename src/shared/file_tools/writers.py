@@ -23,10 +23,15 @@ class BufferedWriter:
         self.buffer.extend(docs)
 
         if len(self.buffer) >= self.buffer_size:
+
             buff = self.buffer[:self.buffer_size]
             self.writer.write(buff)
-            self.cache.update(buff)
-            self.buffer = self.buffer_size[self.buffer_size:]
+
+            if self.cache is not None:
+                self.cache.update(buff)
+
+            self.buffer = self.buffer[self.buffer_size:]
+
             return self.buffer_size
 
         return 0
@@ -34,8 +39,11 @@ class BufferedWriter:
     def flush(self) -> int:
 
         if len(self.buffer) > 0:
+
             self.writer.write(self.buffer)
-            self.cache.update(self.buffer)
+
+            if self.cache is not None:
+                self.cache.update(self.buffer)
         
         return len(self.buffer)
 
@@ -48,7 +56,7 @@ class Writer(ABC):
     def write(self, docs : Iterable[Dict]) -> None:
         ...
 
-    def buffered(self, buffer_size : int, cache : Cache) -> BufferedWriter:
+    def buffered(self, buffer_size : int, cache : Optional[Cache] = None) -> BufferedWriter:
         return BufferedWriter(self, buffer_size, cache)
 
 class FileWriter(Writer):

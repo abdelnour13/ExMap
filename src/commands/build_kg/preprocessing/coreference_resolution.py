@@ -35,11 +35,10 @@ class CoreferenceResolver(Stage):
     def __init__(self, 
         reader : FileReader, 
         writer : FileWriter, 
-        batch_size : int, 
         model : str,
         device : int
     ) -> None:
-        super().__init__(reader, writer, batch_size)
+        super().__init__(reader, writer)
         self.model = model
         self.device = device
 
