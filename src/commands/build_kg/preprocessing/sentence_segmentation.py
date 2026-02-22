@@ -66,6 +66,6 @@ class SentenceSegmenter(Stage):
                 .batched(config.batch_size),
             writer=FileWriter
                 .from_filename(config.output_filename)
-                .buffered(config.buffer_size),
+                .buffered(config.buffer_size, cache),
             use_gpu=config.use_gpu
         )

@@ -32,7 +32,7 @@ class LLMBasedTripleExtractor(BaseTriplesExtractor):
 
     async def make_request(self, messages : List[Dict]):
 
-        return make_openai_request(
+        return await make_openai_request(
             self.client,
             self.model,
             messages,

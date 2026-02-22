@@ -1,11 +1,13 @@
 import asyncio
 import multiprocessing
-from typing import Generator, Dict, Iterable, Union, List, Type, Literal, Optional
+from typing import Dict, Iterable, Union, List, Type, Literal, Optional, Tuple, Generator
 from src.shared.handlers import SocketHandler, ConsoleLogger, FileLogger
 from abc import abstractmethod
 from src.shared.file_tools import BufferedWriter, BatchedReader
 from src.shared.handlers import Event, EventLevel
 from functools import wraps
+from returns.result import Result
+from returns.pipeline import is_successful
 from .base_command import BaseCommand, OutputDirOption, InputFileOption, ConnectionOption
 
 class StageConfig(OutputDirOption, InputFileOption, ConnectionOption):
@@ -31,6 +33,8 @@ def add_handlers(cls : Type['Stage']):
     cls.from_config = classmethod(new_from_config)
 
     return cls
+
+TransformReturn = Union[Dict, List[Dict]]
 
 class Stage(BaseCommand):
 
@@ -63,7 +67,7 @@ class Stage(BaseCommand):
         return False
 
     @abstractmethod
-    def transform(self, doc : Dict) -> Union[Dict, List[Dict]]:
+    def transform(self, doc : Dict) -> TransformReturn:
         """
         Transforms a document, yielding one or many documents.
         
@@ -74,13 +78,20 @@ class Stage(BaseCommand):
         """
         ...
 
-    async def async_transform_chunk(self, chunk : Iterable[Dict]) -> Union[Dict, List[Dict]]:
-        return await asyncio.gather(*[asyncio.to_thread(self.transform, document) for document in chunk])
+    def safe_transform(self, doc : Dict) -> Result[TransformReturn, Exception]:
+
+        try:
+            return Result.from_value(self.transform(doc))
+        except Exception as e:
+            return Result.from_failure(e)
+
+    async def async_transform_chunk(self, chunk : Iterable[Dict]) -> List[Result[TransformReturn, Exception]]:
+        return await asyncio.gather(*[self.safe_transform(document) for document in chunk])
     
-    def mp_transform_chunk(self, chunk : Iterable[Dict]) -> Union[Dict, List[Dict]]:
+    def mp_transform_chunk(self, chunk : Iterable[Dict]) -> List[Result[TransformReturn, Exception]]:
         
         with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
-            return pool.map(self.transform, chunk)
+            return pool.map(self.safe_transform, chunk)
 
     def make_event(self,
         progress : Optional[float],
@@ -121,7 +132,7 @@ class Stage(BaseCommand):
     ) -> Event:
         return self.make_event(progress, EventLevel.WARN, message)
 
-    def transform_chunk(self, chunk : Iterable[Dict]) -> List[Dict]:
+    def transform_chunk(self, chunk : Iterable[Dict]) -> Tuple[List[Dict], List[Exception]]:
         """
         Transforms a chunk of documents, bu default it runs a self.transform on
         each document individually but can be overriden for a specific task that 
@@ -134,92 +145,80 @@ class Stage(BaseCommand):
         """
 
         if self.parallelism_mode == 'async':
-            chunk = asyncio.run(self.async_transform_chunk(chunk))
+            transformed_chunk = asyncio.run(self.async_transform_chunk(chunk))
         elif self.parallelism_mode == 'multiprocessing':
-            chunk = self.mp_transform_chunk(chunk)
+            transformed_chunk = self.mp_transform_chunk(chunk)
         else:
-            chunk = [self.transform(document) for document in chunk]
+            transformed_chunk = [self.safe_transform(document) for document in chunk]
 
-        transformed_chunk = []
+        results = []
+        errors = []
 
-        for document in chunk:
+        for result in transformed_chunk:
 
-            if isinstance(document, list):
-                transformed_chunk.extend(document)
+            if is_successful(result):
+
+                result = result.unwrap()
+
+                if isinstance(result, list):
+                    results.extend(result)
+                else:
+                    results.append(result)
+
             else:
-                transformed_chunk.append(document)
+                error = result.failure()
+                errors.append(error)
 
-        return transformed_chunk
+        return results, errors
 
     def __iter__(self) -> Generator[Event, None, None]:
 
         ### Notify Job started
-        yield Event(
+        yield self.make_info_event(
             progress=0.0,
-            level=EventLevel.INFO,
-            total_processed=self.total_processed,
-            total_saved=self.total_saved,
-            total_skipped=self.total_skipped,
             message=f"Job {self.__class__.__name__} has started."
         )
         
         for i,(chunk,progress) in enumerate(self.reader):
 
-            error = None
+            records, errors = self.transform_chunk(chunk)
+            self.total_processed += len(chunk)
 
-            try:
+            yield self.make_info_event(
+                progress=progress,
+                message=f"Chunk {i} processing completed."
+            )
 
-                transformed_chunk = self.transform_chunk(chunk)
-                self.total_processed += len(chunk)
+            ### Filter results :
+            records = [item for item in records if not self.skip(item)]
 
-                yield Event(
-                    progress=progress,
-                    level=EventLevel.INFO,
-                    total_processed=self.total_processed,
-                    total_saved=self.total_saved,
-                    total_skipped=self.total_skipped,
-                    message=f"Chunk {i} processing completed."
-                )
+            if len(records) > 0:
 
-            except Exception as e:
-                self.total_skipped += 1
-                error = e
-
-            if error is None:
-
-                transformed_chunk = [item for item in transformed_chunk if not self.skip(item)]
-                written_documents = self.writer.write(transformed_chunk)
+                written_documents = self.writer.write(records)
                 self.total_saved += written_documents
 
                 if written_documents > 0:
 
-                    yield Event(
+                    yield self.make_info_event(
                         progress=progress,
-                        level=EventLevel.INFO,
-                        total_processed=self.total_processed,
-                        total_saved=self.total_saved,
-                        total_skipped=self.total_skipped,
                         message=f"{written_documents} documents written to disk."
                     )
 
-            else:
- 
-                yield Event(
-                    progress=progress,
-                    level=EventLevel.ERROR,
-                    total_processed=self.total_processed,
-                    total_saved=self.total_saved,
-                    total_skipped=self.total_skipped,
-                    message=f"An error has occurred during processing chunk {i}, error : {error}"
-                )
+            ### Handle errors :
+            if len(errors) > 0:
 
+                self.total_skipped += len(errors)
+
+                for error in errors:
+
+                    yield self.make_error_event(
+                        progress=progress,
+                        message=f"An error has occurred during processing chunk {i}, error : {error}"
+                    )
+            
         self.total_saved += self.writer.flush()
 
-        yield Event(
+        yield self.make_info_event(
             progress=1.0,
-            level=EventLevel.INFO,
-            total_processed=self.total_processed,
-            total_saved=self.total_saved,
-            total_skipped=self.total_skipped,
             message=f"Job {self.__class__.__name__} has been completed."
         )

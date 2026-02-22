@@ -175,7 +175,7 @@ class Neo4J(Stage):
 
             yield Event(
                 progress=0.0,
-                level=EventLevel.ERROR,
+                level=EventLevel.CRITICAL,
                 message="Connection to Neo4j failed."
             )
 
@@ -210,7 +210,7 @@ class Neo4J(Stage):
 
     def transform_chunk(self, chunk : List[str]) -> List[str]:
 
-        chunk = super().transform_chunk(chunk)
+        chunk, errors = super().transform_chunk(chunk)
 
         with self.driver.session() as session:
 
@@ -218,7 +218,7 @@ class Neo4J(Stage):
                 for query in chunk:
                     trx.run(query=query)
 
-        return chunk
+        return chunk, errors
 
     @classmethod
     def from_config(cls, config : Config) -> 'Neo4J':

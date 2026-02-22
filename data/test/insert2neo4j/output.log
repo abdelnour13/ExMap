@@ -1,78 +1,319 @@
-Neo4J,2026-02-19 20:59:56,DEBUG,0,0,0,Connection to Neo4j established successfully.,None
-Neo4J,2026-02-19 20:59:57,DEBUG,0,0,0,Deleted all rows in the database.,None
-Neo4J,2026-02-19 20:59:58,DEBUG,0,0,0,Unique constraints created.,None
-Neo4J,2026-02-19 20:59:58,INFO,0,0,0,Job Neo4J has started.,None
-Neo4J,2026-02-19 20:59:58,INFO,1,0,0,Chunk 0 processing completed.,0.47
-Neo4J,2026-02-19 20:59:58,INFO,2,0,0,Chunk 1 processing completed.,3.77
-Neo4J,2026-02-19 20:59:58,INFO,2,4,0,Results buffer saved to disk.,3.77
-Neo4J,2026-02-19 20:59:58,INFO,3,4,0,Chunk 2 processing completed.,7.09
-Neo4J,2026-02-19 20:59:58,INFO,3,8,0,Results buffer saved to disk.,7.09
-Neo4J,2026-02-19 20:59:58,INFO,4,8,0,Chunk 3 processing completed.,7.52
-Neo4J,2026-02-19 20:59:58,INFO,4,12,0,Results buffer saved to disk.,7.52
-Neo4J,2026-02-19 20:59:58,INFO,5,12,0,Chunk 4 processing completed.,10.82
-Neo4J,2026-02-19 20:59:59,INFO,6,12,0,Chunk 5 processing completed.,14.11
-Neo4J,2026-02-19 20:59:59,INFO,6,16,0,Results buffer saved to disk.,14.11
-Neo4J,2026-02-19 20:59:59,INFO,7,16,0,Chunk 6 processing completed.,14.62
-Neo4J,2026-02-19 20:59:59,INFO,7,20,0,Results buffer saved to disk.,14.62
-Neo4J,2026-02-19 20:59:59,INFO,8,20,0,Chunk 7 processing completed.,17.96
-Neo4J,2026-02-19 20:59:59,INFO,8,24,0,Results buffer saved to disk.,17.96
-Neo4J,2026-02-19 20:59:59,INFO,9,24,0,Chunk 8 processing completed.,21.29
-Neo4J,2026-02-19 20:59:59,INFO,10,24,0,Chunk 9 processing completed.,21.78
-Neo4J,2026-02-19 20:59:59,INFO,10,28,0,Results buffer saved to disk.,21.78
-Neo4J,2026-02-19 20:59:59,INFO,11,28,0,Chunk 10 processing completed.,25.12
-Neo4J,2026-02-19 20:59:59,INFO,11,32,0,Results buffer saved to disk.,25.12
-Neo4J,2026-02-19 20:59:59,INFO,12,32,0,Chunk 11 processing completed.,28.42
-Neo4J,2026-02-19 20:59:59,INFO,12,36,0,Results buffer saved to disk.,28.42
-Neo4J,2026-02-19 20:59:59,INFO,13,36,0,Chunk 12 processing completed.,28.99
-Neo4J,2026-02-19 20:59:59,INFO,14,36,0,Chunk 13 processing completed.,32.33
-Neo4J,2026-02-19 20:59:59,INFO,14,40,0,Results buffer saved to disk.,32.33
-Neo4J,2026-02-19 20:59:59,INFO,15,40,0,Chunk 14 processing completed.,35.71
-Neo4J,2026-02-19 20:59:59,INFO,15,44,0,Results buffer saved to disk.,35.71
-Neo4J,2026-02-19 20:59:59,INFO,16,44,0,Chunk 15 processing completed.,36.23
-Neo4J,2026-02-19 20:59:59,INFO,16,48,0,Results buffer saved to disk.,36.23
-Neo4J,2026-02-19 20:59:59,INFO,17,48,0,Chunk 16 processing completed.,39.57
-Neo4J,2026-02-19 20:59:59,INFO,18,48,0,Chunk 17 processing completed.,42.92
-Neo4J,2026-02-19 20:59:59,INFO,18,52,0,Results buffer saved to disk.,42.92
-Neo4J,2026-02-19 20:59:59,INFO,19,52,0,Chunk 18 processing completed.,43.43
-Neo4J,2026-02-19 20:59:59,INFO,19,56,0,Results buffer saved to disk.,43.43
-Neo4J,2026-02-19 20:59:59,INFO,20,56,0,Chunk 19 processing completed.,46.78
-Neo4J,2026-02-19 20:59:59,INFO,20,60,0,Results buffer saved to disk.,46.78
-Neo4J,2026-02-19 20:59:59,INFO,21,60,0,Chunk 20 processing completed.,50.11
-Neo4J,2026-02-19 20:59:59,INFO,22,60,0,Chunk 21 processing completed.,50.61
-Neo4J,2026-02-19 20:59:59,INFO,22,64,0,Results buffer saved to disk.,50.61
-Neo4J,2026-02-19 20:59:59,INFO,23,64,0,Chunk 22 processing completed.,53.95
-Neo4J,2026-02-19 20:59:59,INFO,23,68,0,Results buffer saved to disk.,53.95
-Neo4J,2026-02-19 20:59:59,INFO,24,68,0,Chunk 23 processing completed.,57.27
-Neo4J,2026-02-19 20:59:59,INFO,24,72,0,Results buffer saved to disk.,57.27
-Neo4J,2026-02-19 20:59:59,INFO,25,72,0,Chunk 24 processing completed.,57.73
-Neo4J,2026-02-19 20:59:59,INFO,26,72,0,Chunk 25 processing completed.,61.07
-Neo4J,2026-02-19 20:59:59,INFO,26,76,0,Results buffer saved to disk.,61.07
-Neo4J,2026-02-19 20:59:59,INFO,27,76,0,Chunk 26 processing completed.,64.36
-Neo4J,2026-02-19 20:59:59,INFO,27,80,0,Results buffer saved to disk.,64.36
-Neo4J,2026-02-19 20:59:59,INFO,28,80,0,Chunk 27 processing completed.,64.77
-Neo4J,2026-02-19 20:59:59,INFO,28,84,0,Results buffer saved to disk.,64.77
-Neo4J,2026-02-19 20:59:59,INFO,29,84,0,Chunk 28 processing completed.,68.05
-Neo4J,2026-02-19 20:59:59,INFO,30,84,0,Chunk 29 processing completed.,71.34
-Neo4J,2026-02-19 20:59:59,INFO,30,88,0,Results buffer saved to disk.,71.34
-Neo4J,2026-02-19 20:59:59,INFO,31,88,0,Chunk 30 processing completed.,71.85
-Neo4J,2026-02-19 20:59:59,INFO,31,92,0,Results buffer saved to disk.,71.85
-Neo4J,2026-02-19 20:59:59,INFO,32,92,0,Chunk 31 processing completed.,75.15
-Neo4J,2026-02-19 20:59:59,INFO,32,96,0,Results buffer saved to disk.,75.15
-Neo4J,2026-02-19 20:59:59,INFO,33,96,0,Chunk 32 processing completed.,78.52
-Neo4J,2026-02-19 20:59:59,INFO,34,96,0,Chunk 33 processing completed.,78.97
-Neo4J,2026-02-19 20:59:59,INFO,34,100,0,Results buffer saved to disk.,78.97
-Neo4J,2026-02-19 20:59:59,INFO,35,100,0,Chunk 34 processing completed.,82.25
-Neo4J,2026-02-19 20:59:59,INFO,35,104,0,Results buffer saved to disk.,82.25
-Neo4J,2026-02-19 20:59:59,INFO,36,104,0,Chunk 35 processing completed.,85.59
-Neo4J,2026-02-19 21:00:00,INFO,36,108,0,Results buffer saved to disk.,85.59
-Neo4J,2026-02-19 21:00:00,INFO,37,108,0,Chunk 36 processing completed.,86.06
-Neo4J,2026-02-19 21:00:00,INFO,38,108,0,Chunk 37 processing completed.,89.34
-Neo4J,2026-02-19 21:00:00,INFO,38,112,0,Results buffer saved to disk.,89.34
-Neo4J,2026-02-19 21:00:00,INFO,39,112,0,Chunk 38 processing completed.,92.69
-Neo4J,2026-02-19 21:00:00,INFO,39,116,0,Results buffer saved to disk.,92.69
-Neo4J,2026-02-19 21:00:00,INFO,40,116,0,Chunk 39 processing completed.,93.27
-Neo4J,2026-02-19 21:00:00,INFO,40,120,0,Results buffer saved to disk.,93.27
-Neo4J,2026-02-19 21:00:00,INFO,41,120,0,Chunk 40 processing completed.,96.63
-Neo4J,2026-02-19 21:00:00,INFO,42,120,0,Chunk 41 processing completed.,100.00
-Neo4J,2026-02-19 21:00:00,INFO,42,124,0,Results buffer saved to disk.,100.00
-Neo4J,2026-02-19 21:00:00,INFO,42,126,0,Job Neo4J has been completed.,100.00
+Neo4J,2026-02-23 00:12:47,DEBUG,0,0,0,Connection to Neo4j established successfully.,None
+Neo4J,2026-02-23 00:12:49,DEBUG,0,0,0,Deleted all rows in the database.,None
+Neo4J,2026-02-23 00:12:49,DEBUG,0,0,0,Unique constraints created.,None
+Neo4J,2026-02-23 00:12:49,INFO,0,0,0,Job Neo4J has started.,None
+Neo4J,2026-02-23 00:18:21,DEBUG,0,0,0,Connection to Neo4j established successfully.,None
+Neo4J,2026-02-23 00:18:21,DEBUG,0,0,0,Deleted all rows in the database.,None
+Neo4J,2026-02-23 00:18:21,DEBUG,0,0,0,Unique constraints created.,None
+Neo4J,2026-02-23 00:18:21,INFO,0,0,0,Job Neo4J has started.,None
+Neo4J,2026-02-23 00:18:21,INFO,1,0,0,Chunk 0 processing completed.,0.16
+Neo4J,2026-02-23 00:18:21,INFO,2,0,0,Chunk 1 processing completed.,0.94
+Neo4J,2026-02-23 00:18:21,INFO,2,4,0,4 documents written to disk.,0.94
+Neo4J,2026-02-23 00:18:21,INFO,3,4,0,Chunk 2 processing completed.,1.73
+Neo4J,2026-02-23 00:18:21,INFO,3,8,0,4 documents written to disk.,1.73
+Neo4J,2026-02-23 00:18:21,INFO,4,8,0,Chunk 3 processing completed.,1.90
+Neo4J,2026-02-23 00:18:21,INFO,4,12,0,4 documents written to disk.,1.90
+Neo4J,2026-02-23 00:18:21,INFO,5,12,0,Chunk 4 processing completed.,2.67
+Neo4J,2026-02-23 00:18:21,INFO,6,12,0,Chunk 5 processing completed.,3.47
+Neo4J,2026-02-23 00:18:21,INFO,6,16,0,4 documents written to disk.,3.47
+Neo4J,2026-02-23 00:18:21,INFO,7,16,0,Chunk 6 processing completed.,3.62
+Neo4J,2026-02-23 00:18:21,INFO,7,20,0,4 documents written to disk.,3.62
+Neo4J,2026-02-23 00:18:22,INFO,8,20,0,Chunk 7 processing completed.,4.40
+Neo4J,2026-02-23 00:18:22,INFO,8,24,0,4 documents written to disk.,4.40
+Neo4J,2026-02-23 00:18:22,INFO,9,24,0,Chunk 8 processing completed.,5.18
+Neo4J,2026-02-23 00:18:22,INFO,10,24,0,Chunk 9 processing completed.,5.34
+Neo4J,2026-02-23 00:18:22,INFO,10,28,0,4 documents written to disk.,5.34
+Neo4J,2026-02-23 00:18:22,INFO,11,28,0,Chunk 10 processing completed.,6.12
+Neo4J,2026-02-23 00:18:22,INFO,11,32,0,4 documents written to disk.,6.12
+Neo4J,2026-02-23 00:18:22,INFO,12,32,0,Chunk 11 processing completed.,6.91
+Neo4J,2026-02-23 00:18:22,INFO,12,36,0,4 documents written to disk.,6.91
+Neo4J,2026-02-23 00:18:22,INFO,13,36,0,Chunk 12 processing completed.,7.07
+Neo4J,2026-02-23 00:18:22,INFO,14,36,0,Chunk 13 processing completed.,7.87
+Neo4J,2026-02-23 00:18:22,INFO,14,40,0,4 documents written to disk.,7.87
+Neo4J,2026-02-23 00:18:22,INFO,15,40,0,Chunk 14 processing completed.,8.65
+Neo4J,2026-02-23 00:18:22,INFO,15,44,0,4 documents written to disk.,8.65
+Neo4J,2026-02-23 00:18:22,INFO,16,44,0,Chunk 15 processing completed.,8.78
+Neo4J,2026-02-23 00:18:22,INFO,16,48,0,4 documents written to disk.,8.78
+Neo4J,2026-02-23 00:18:22,INFO,17,48,0,Chunk 16 processing completed.,9.54
+Neo4J,2026-02-23 00:18:22,INFO,18,48,0,Chunk 17 processing completed.,10.33
+Neo4J,2026-02-23 00:18:22,INFO,18,52,0,4 documents written to disk.,10.33
+Neo4J,2026-02-23 00:18:22,INFO,19,52,0,Chunk 18 processing completed.,10.48
+Neo4J,2026-02-23 00:18:22,INFO,19,56,0,4 documents written to disk.,10.48
+Neo4J,2026-02-23 00:18:22,INFO,20,56,0,Chunk 19 processing completed.,11.26
+Neo4J,2026-02-23 00:18:22,INFO,20,60,0,4 documents written to disk.,11.26
+Neo4J,2026-02-23 00:18:22,INFO,21,60,0,Chunk 20 processing completed.,12.05
+Neo4J,2026-02-23 00:18:22,INFO,22,60,0,Chunk 21 processing completed.,12.20
+Neo4J,2026-02-23 00:18:22,INFO,22,64,0,4 documents written to disk.,12.20
+Neo4J,2026-02-23 00:18:22,INFO,23,64,0,Chunk 22 processing completed.,12.99
+Neo4J,2026-02-23 00:18:22,INFO,23,68,0,4 documents written to disk.,12.99
+Neo4J,2026-02-23 00:18:22,INFO,24,68,0,Chunk 23 processing completed.,13.77
+Neo4J,2026-02-23 00:18:22,INFO,24,72,0,4 documents written to disk.,13.77
+Neo4J,2026-02-23 00:18:22,INFO,25,72,0,Chunk 24 processing completed.,13.92
+Neo4J,2026-02-23 00:18:22,INFO,26,72,0,Chunk 25 processing completed.,14.71
+Neo4J,2026-02-23 00:18:22,INFO,26,76,0,4 documents written to disk.,14.71
+Neo4J,2026-02-23 00:18:22,INFO,27,76,0,Chunk 26 processing completed.,15.49
+Neo4J,2026-02-23 00:18:22,INFO,27,80,0,4 documents written to disk.,15.49
+Neo4J,2026-02-23 00:18:22,INFO,28,80,0,Chunk 27 processing completed.,15.63
+Neo4J,2026-02-23 00:18:22,INFO,28,84,0,4 documents written to disk.,15.63
+Neo4J,2026-02-23 00:18:22,INFO,29,84,0,Chunk 28 processing completed.,16.41
+Neo4J,2026-02-23 00:18:22,INFO,30,84,0,Chunk 29 processing completed.,17.18
+Neo4J,2026-02-23 00:18:22,INFO,30,88,0,4 documents written to disk.,17.18
+Neo4J,2026-02-23 00:18:22,INFO,31,88,0,Chunk 30 processing completed.,17.32
+Neo4J,2026-02-23 00:18:22,INFO,31,92,0,4 documents written to disk.,17.32
+Neo4J,2026-02-23 00:18:22,INFO,32,92,0,Chunk 31 processing completed.,18.11
+Neo4J,2026-02-23 00:18:22,INFO,32,96,0,4 documents written to disk.,18.11
+Neo4J,2026-02-23 00:18:22,INFO,33,96,0,Chunk 32 processing completed.,18.88
+Neo4J,2026-02-23 00:18:22,INFO,34,96,0,Chunk 33 processing completed.,19.02
+Neo4J,2026-02-23 00:18:22,INFO,34,100,0,4 documents written to disk.,19.02
+Neo4J,2026-02-23 00:18:22,INFO,35,100,0,Chunk 34 processing completed.,19.80
+Neo4J,2026-02-23 00:18:22,INFO,35,104,0,4 documents written to disk.,19.80
+Neo4J,2026-02-23 00:18:22,INFO,36,104,0,Chunk 35 processing completed.,20.57
+Neo4J,2026-02-23 00:18:22,INFO,36,108,0,4 documents written to disk.,20.57
+Neo4J,2026-02-23 00:18:22,INFO,37,108,0,Chunk 36 processing completed.,20.71
+Neo4J,2026-02-23 00:18:22,INFO,38,108,0,Chunk 37 processing completed.,21.49
+Neo4J,2026-02-23 00:18:22,INFO,38,112,0,4 documents written to disk.,21.49
+Neo4J,2026-02-23 00:18:22,INFO,39,112,0,Chunk 38 processing completed.,22.26
+Neo4J,2026-02-23 00:18:22,INFO,39,116,0,4 documents written to disk.,22.26
+Neo4J,2026-02-23 00:18:22,INFO,40,116,0,Chunk 39 processing completed.,22.40
+Neo4J,2026-02-23 00:18:22,INFO,40,120,0,4 documents written to disk.,22.40
+Neo4J,2026-02-23 00:18:22,INFO,41,120,0,Chunk 40 processing completed.,23.19
+Neo4J,2026-02-23 00:18:22,INFO,42,120,0,Chunk 41 processing completed.,23.96
+Neo4J,2026-02-23 00:18:22,INFO,42,124,0,4 documents written to disk.,23.96
+Neo4J,2026-02-23 00:18:22,INFO,43,124,0,Chunk 42 processing completed.,24.10
+Neo4J,2026-02-23 00:18:22,INFO,43,128,0,4 documents written to disk.,24.10
+Neo4J,2026-02-23 00:18:22,INFO,44,128,0,Chunk 43 processing completed.,24.88
+Neo4J,2026-02-23 00:18:22,INFO,44,132,0,4 documents written to disk.,24.88
+Neo4J,2026-02-23 00:18:22,INFO,45,132,0,Chunk 44 processing completed.,25.65
+Neo4J,2026-02-23 00:18:22,INFO,46,132,0,Chunk 45 processing completed.,25.80
+Neo4J,2026-02-23 00:18:22,INFO,46,136,0,4 documents written to disk.,25.80
+Neo4J,2026-02-23 00:18:22,INFO,47,136,0,Chunk 46 processing completed.,26.59
+Neo4J,2026-02-23 00:18:23,INFO,47,140,0,4 documents written to disk.,26.59
+Neo4J,2026-02-23 00:18:23,INFO,48,140,0,Chunk 47 processing completed.,27.37
+Neo4J,2026-02-23 00:18:23,INFO,48,144,0,4 documents written to disk.,27.37
+Neo4J,2026-02-23 00:18:23,INFO,49,144,0,Chunk 48 processing completed.,27.53
+Neo4J,2026-02-23 00:18:23,INFO,50,144,0,Chunk 49 processing completed.,28.31
+Neo4J,2026-02-23 00:18:23,INFO,50,148,0,4 documents written to disk.,28.31
+Neo4J,2026-02-23 00:18:23,INFO,51,148,0,Chunk 50 processing completed.,29.09
+Neo4J,2026-02-23 00:18:23,INFO,51,152,0,4 documents written to disk.,29.09
+Neo4J,2026-02-23 00:18:23,INFO,52,152,0,Chunk 51 processing completed.,29.25
+Neo4J,2026-02-23 00:18:23,INFO,52,156,0,4 documents written to disk.,29.25
+Neo4J,2026-02-23 00:18:23,INFO,53,156,0,Chunk 52 processing completed.,30.03
+Neo4J,2026-02-23 00:18:23,INFO,54,156,0,Chunk 53 processing completed.,30.82
+Neo4J,2026-02-23 00:18:23,INFO,54,160,0,4 documents written to disk.,30.82
+Neo4J,2026-02-23 00:18:23,INFO,55,160,0,Chunk 54 processing completed.,30.96
+Neo4J,2026-02-23 00:18:23,INFO,55,164,0,4 documents written to disk.,30.96
+Neo4J,2026-02-23 00:18:23,INFO,56,164,0,Chunk 55 processing completed.,31.74
+Neo4J,2026-02-23 00:18:23,INFO,56,168,0,4 documents written to disk.,31.74
+Neo4J,2026-02-23 00:18:23,INFO,57,168,0,Chunk 56 processing completed.,32.51
+Neo4J,2026-02-23 00:18:23,INFO,58,168,0,Chunk 57 processing completed.,32.65
+Neo4J,2026-02-23 00:18:23,INFO,58,172,0,4 documents written to disk.,32.65
+Neo4J,2026-02-23 00:18:23,INFO,59,172,0,Chunk 58 processing completed.,33.43
+Neo4J,2026-02-23 00:18:23,INFO,59,176,0,4 documents written to disk.,33.43
+Neo4J,2026-02-23 00:18:23,INFO,60,176,0,Chunk 59 processing completed.,34.20
+Neo4J,2026-02-23 00:18:23,INFO,60,180,0,4 documents written to disk.,34.20
+Neo4J,2026-02-23 00:18:23,INFO,61,180,0,Chunk 60 processing completed.,34.34
+Neo4J,2026-02-23 00:18:23,INFO,62,180,0,Chunk 61 processing completed.,35.13
+Neo4J,2026-02-23 00:18:23,INFO,62,184,0,4 documents written to disk.,35.13
+Neo4J,2026-02-23 00:18:23,INFO,63,184,0,Chunk 62 processing completed.,35.90
+Neo4J,2026-02-23 00:18:23,INFO,63,188,0,4 documents written to disk.,35.90
+Neo4J,2026-02-23 00:18:23,INFO,64,188,0,Chunk 63 processing completed.,36.04
+Neo4J,2026-02-23 00:18:23,INFO,64,192,0,4 documents written to disk.,36.04
+Neo4J,2026-02-23 00:18:23,INFO,65,192,0,Chunk 64 processing completed.,36.82
+Neo4J,2026-02-23 00:18:23,INFO,66,192,0,Chunk 65 processing completed.,37.59
+Neo4J,2026-02-23 00:18:23,INFO,66,196,0,4 documents written to disk.,37.59
+Neo4J,2026-02-23 00:18:23,INFO,67,196,0,Chunk 66 processing completed.,37.73
+Neo4J,2026-02-23 00:18:23,INFO,67,200,0,4 documents written to disk.,37.73
+Neo4J,2026-02-23 00:18:23,INFO,68,200,0,Chunk 67 processing completed.,38.51
+Neo4J,2026-02-23 00:18:23,INFO,68,204,0,4 documents written to disk.,38.51
+Neo4J,2026-02-23 00:18:23,INFO,69,204,0,Chunk 68 processing completed.,39.28
+Neo4J,2026-02-23 00:18:23,INFO,70,204,0,Chunk 69 processing completed.,39.42
+Neo4J,2026-02-23 00:18:23,INFO,70,208,0,4 documents written to disk.,39.42
+Neo4J,2026-02-23 00:18:23,INFO,71,208,0,Chunk 70 processing completed.,40.21
+Neo4J,2026-02-23 00:18:23,INFO,71,212,0,4 documents written to disk.,40.21
+Neo4J,2026-02-23 00:18:23,INFO,72,212,0,Chunk 71 processing completed.,40.98
+Neo4J,2026-02-23 00:18:23,INFO,72,216,0,4 documents written to disk.,40.98
+Neo4J,2026-02-23 00:18:23,INFO,73,216,0,Chunk 72 processing completed.,41.13
+Neo4J,2026-02-23 00:18:23,INFO,74,216,0,Chunk 73 processing completed.,41.91
+Neo4J,2026-02-23 00:18:23,INFO,74,220,0,4 documents written to disk.,41.91
+Neo4J,2026-02-23 00:18:23,INFO,75,220,0,Chunk 74 processing completed.,42.70
+Neo4J,2026-02-23 00:18:23,INFO,75,224,0,4 documents written to disk.,42.70
+Neo4J,2026-02-23 00:18:23,INFO,76,224,0,Chunk 75 processing completed.,42.85
+Neo4J,2026-02-23 00:18:23,INFO,76,228,0,4 documents written to disk.,42.85
+Neo4J,2026-02-23 00:18:23,INFO,77,228,0,Chunk 76 processing completed.,43.64
+Neo4J,2026-02-23 00:18:23,INFO,78,228,0,Chunk 77 processing completed.,44.42
+Neo4J,2026-02-23 00:18:23,INFO,78,232,0,4 documents written to disk.,44.42
+Neo4J,2026-02-23 00:18:23,INFO,79,232,0,Chunk 78 processing completed.,44.57
+Neo4J,2026-02-23 00:18:23,INFO,79,236,0,4 documents written to disk.,44.57
+Neo4J,2026-02-23 00:18:23,INFO,80,236,0,Chunk 79 processing completed.,45.36
+Neo4J,2026-02-23 00:18:23,INFO,80,240,0,4 documents written to disk.,45.36
+Neo4J,2026-02-23 00:18:23,INFO,81,240,0,Chunk 80 processing completed.,46.14
+Neo4J,2026-02-23 00:18:23,INFO,82,240,0,Chunk 81 processing completed.,46.27
+Neo4J,2026-02-23 00:18:23,INFO,82,244,0,4 documents written to disk.,46.27
+Neo4J,2026-02-23 00:18:23,INFO,83,244,0,Chunk 82 processing completed.,47.04
+Neo4J,2026-02-23 00:18:23,INFO,83,248,0,4 documents written to disk.,47.04
+Neo4J,2026-02-23 00:18:23,INFO,84,248,0,Chunk 83 processing completed.,47.81
+Neo4J,2026-02-23 00:18:23,INFO,84,252,0,4 documents written to disk.,47.81
+Neo4J,2026-02-23 00:18:23,INFO,85,252,0,Chunk 84 processing completed.,47.93
+Neo4J,2026-02-23 00:18:23,INFO,86,252,0,Chunk 85 processing completed.,48.70
+Neo4J,2026-02-23 00:18:23,INFO,86,256,0,4 documents written to disk.,48.70
+Neo4J,2026-02-23 00:18:23,INFO,87,256,0,Chunk 86 processing completed.,49.47
+Neo4J,2026-02-23 00:18:23,INFO,87,260,0,4 documents written to disk.,49.47
+Neo4J,2026-02-23 00:18:23,INFO,88,260,0,Chunk 87 processing completed.,49.60
+Neo4J,2026-02-23 00:18:23,INFO,88,264,0,4 documents written to disk.,49.60
+Neo4J,2026-02-23 00:18:23,INFO,89,264,0,Chunk 88 processing completed.,50.37
+Neo4J,2026-02-23 00:18:23,INFO,90,264,0,Chunk 89 processing completed.,51.14
+Neo4J,2026-02-23 00:18:23,INFO,90,268,0,4 documents written to disk.,51.14
+Neo4J,2026-02-23 00:18:23,INFO,91,268,0,Chunk 90 processing completed.,51.28
+Neo4J,2026-02-23 00:18:23,INFO,91,272,0,4 documents written to disk.,51.28
+Neo4J,2026-02-23 00:18:23,INFO,92,272,0,Chunk 91 processing completed.,52.05
+Neo4J,2026-02-23 00:18:23,INFO,92,276,0,4 documents written to disk.,52.05
+Neo4J,2026-02-23 00:18:23,INFO,93,276,0,Chunk 92 processing completed.,52.83
+Neo4J,2026-02-23 00:18:23,INFO,94,276,0,Chunk 93 processing completed.,52.97
+Neo4J,2026-02-23 00:18:23,INFO,94,280,0,4 documents written to disk.,52.97
+Neo4J,2026-02-23 00:18:23,INFO,95,280,0,Chunk 94 processing completed.,53.74
+Neo4J,2026-02-23 00:18:23,INFO,95,284,0,4 documents written to disk.,53.74
+Neo4J,2026-02-23 00:18:23,INFO,96,284,0,Chunk 95 processing completed.,54.52
+Neo4J,2026-02-23 00:18:23,INFO,96,288,0,4 documents written to disk.,54.52
+Neo4J,2026-02-23 00:18:23,INFO,97,288,0,Chunk 96 processing completed.,54.66
+Neo4J,2026-02-23 00:18:23,INFO,98,288,0,Chunk 97 processing completed.,55.43
+Neo4J,2026-02-23 00:18:23,INFO,98,292,0,4 documents written to disk.,55.43
+Neo4J,2026-02-23 00:18:23,INFO,99,292,0,Chunk 98 processing completed.,56.22
+Neo4J,2026-02-23 00:18:23,INFO,99,296,0,4 documents written to disk.,56.22
+Neo4J,2026-02-23 00:18:23,INFO,100,296,0,Chunk 99 processing completed.,56.36
+Neo4J,2026-02-23 00:18:23,INFO,100,300,0,4 documents written to disk.,56.36
+Neo4J,2026-02-23 00:18:23,INFO,101,300,0,Chunk 100 processing completed.,57.13
+Neo4J,2026-02-23 00:18:23,INFO,102,300,0,Chunk 101 processing completed.,57.91
+Neo4J,2026-02-23 00:18:23,INFO,102,304,0,4 documents written to disk.,57.91
+Neo4J,2026-02-23 00:18:23,INFO,103,304,0,Chunk 102 processing completed.,58.05
+Neo4J,2026-02-23 00:18:23,INFO,103,308,0,4 documents written to disk.,58.05
+Neo4J,2026-02-23 00:18:23,INFO,104,308,0,Chunk 103 processing completed.,58.82
+Neo4J,2026-02-23 00:18:23,INFO,104,312,0,4 documents written to disk.,58.82
+Neo4J,2026-02-23 00:18:23,INFO,105,312,0,Chunk 104 processing completed.,59.60
+Neo4J,2026-02-23 00:18:23,INFO,106,312,0,Chunk 105 processing completed.,59.75
+Neo4J,2026-02-23 00:18:23,INFO,106,316,0,4 documents written to disk.,59.75
+Neo4J,2026-02-23 00:18:24,INFO,107,316,0,Chunk 106 processing completed.,60.51
+Neo4J,2026-02-23 00:18:24,INFO,107,320,0,4 documents written to disk.,60.51
+Neo4J,2026-02-23 00:18:24,INFO,108,320,0,Chunk 107 processing completed.,61.30
+Neo4J,2026-02-23 00:18:24,INFO,108,324,0,4 documents written to disk.,61.30
+Neo4J,2026-02-23 00:18:24,INFO,109,324,0,Chunk 108 processing completed.,61.44
+Neo4J,2026-02-23 00:18:24,INFO,110,324,0,Chunk 109 processing completed.,62.21
+Neo4J,2026-02-23 00:18:24,INFO,110,328,0,4 documents written to disk.,62.21
+Neo4J,2026-02-23 00:18:24,INFO,111,328,0,Chunk 110 processing completed.,62.98
+Neo4J,2026-02-23 00:18:24,INFO,111,332,0,4 documents written to disk.,62.98
+Neo4J,2026-02-23 00:18:24,INFO,112,332,0,Chunk 111 processing completed.,63.13
+Neo4J,2026-02-23 00:18:24,INFO,112,336,0,4 documents written to disk.,63.13
+Neo4J,2026-02-23 00:18:24,INFO,113,336,0,Chunk 112 processing completed.,63.90
+Neo4J,2026-02-23 00:18:24,INFO,114,336,0,Chunk 113 processing completed.,64.68
+Neo4J,2026-02-23 00:18:24,INFO,114,340,0,4 documents written to disk.,64.68
+Neo4J,2026-02-23 00:18:24,INFO,115,340,0,Chunk 114 processing completed.,64.81
+Neo4J,2026-02-23 00:18:24,INFO,115,344,0,4 documents written to disk.,64.81
+Neo4J,2026-02-23 00:18:24,INFO,116,344,0,Chunk 115 processing completed.,65.59
+Neo4J,2026-02-23 00:18:24,INFO,116,348,0,4 documents written to disk.,65.59
+Neo4J,2026-02-23 00:18:24,INFO,117,348,0,Chunk 116 processing completed.,66.36
+Neo4J,2026-02-23 00:18:24,INFO,118,348,0,Chunk 117 processing completed.,66.49
+Neo4J,2026-02-23 00:18:24,INFO,118,352,0,4 documents written to disk.,66.49
+Neo4J,2026-02-23 00:18:24,INFO,119,352,0,Chunk 118 processing completed.,67.27
+Neo4J,2026-02-23 00:18:24,INFO,119,356,0,4 documents written to disk.,67.27
+Neo4J,2026-02-23 00:18:24,INFO,120,356,0,Chunk 119 processing completed.,68.04
+Neo4J,2026-02-23 00:18:24,INFO,120,360,0,4 documents written to disk.,68.04
+Neo4J,2026-02-23 00:18:24,INFO,121,360,0,Chunk 120 processing completed.,68.18
+Neo4J,2026-02-23 00:18:24,INFO,122,360,0,Chunk 121 processing completed.,68.96
+Neo4J,2026-02-23 00:18:24,INFO,122,364,0,4 documents written to disk.,68.96
+Neo4J,2026-02-23 00:18:24,INFO,123,364,0,Chunk 122 processing completed.,69.72
+Neo4J,2026-02-23 00:18:24,INFO,123,368,0,4 documents written to disk.,69.72
+Neo4J,2026-02-23 00:18:24,INFO,124,368,0,Chunk 123 processing completed.,69.88
+Neo4J,2026-02-23 00:18:24,INFO,124,372,0,4 documents written to disk.,69.88
+Neo4J,2026-02-23 00:18:24,INFO,125,372,0,Chunk 124 processing completed.,70.66
+Neo4J,2026-02-23 00:18:24,INFO,126,372,0,Chunk 125 processing completed.,71.43
+Neo4J,2026-02-23 00:18:24,INFO,126,376,0,4 documents written to disk.,71.43
+Neo4J,2026-02-23 00:18:24,INFO,127,376,0,Chunk 126 processing completed.,71.56
+Neo4J,2026-02-23 00:18:24,INFO,127,380,0,4 documents written to disk.,71.56
+Neo4J,2026-02-23 00:18:24,INFO,128,380,0,Chunk 127 processing completed.,72.35
+Neo4J,2026-02-23 00:18:24,INFO,128,384,0,4 documents written to disk.,72.35
+Neo4J,2026-02-23 00:18:24,INFO,129,384,0,Chunk 128 processing completed.,73.10
+Neo4J,2026-02-23 00:18:24,INFO,130,384,0,Chunk 129 processing completed.,73.27
+Neo4J,2026-02-23 00:18:24,INFO,130,388,0,4 documents written to disk.,73.27
+Neo4J,2026-02-23 00:18:24,INFO,131,388,0,Chunk 130 processing completed.,74.06
+Neo4J,2026-02-23 00:18:24,INFO,131,392,0,4 documents written to disk.,74.06
+Neo4J,2026-02-23 00:18:24,INFO,132,392,0,Chunk 131 processing completed.,74.86
+Neo4J,2026-02-23 00:18:24,INFO,132,396,0,4 documents written to disk.,74.86
+Neo4J,2026-02-23 00:18:24,INFO,133,396,0,Chunk 132 processing completed.,74.98
+Neo4J,2026-02-23 00:18:24,INFO,134,396,0,Chunk 133 processing completed.,75.75
+Neo4J,2026-02-23 00:18:24,INFO,134,400,0,4 documents written to disk.,75.75
+Neo4J,2026-02-23 00:18:24,INFO,135,400,0,Chunk 134 processing completed.,76.51
+Neo4J,2026-02-23 00:18:24,INFO,135,404,0,4 documents written to disk.,76.51
+Neo4J,2026-02-23 00:18:24,INFO,136,404,0,Chunk 135 processing completed.,76.65
+Neo4J,2026-02-23 00:18:24,INFO,136,408,0,4 documents written to disk.,76.65
+Neo4J,2026-02-23 00:18:24,INFO,137,408,0,Chunk 136 processing completed.,77.42
+Neo4J,2026-02-23 00:18:24,INFO,138,408,0,Chunk 137 processing completed.,78.19
+Neo4J,2026-02-23 00:18:24,INFO,138,412,0,4 documents written to disk.,78.19
+Neo4J,2026-02-23 00:18:24,INFO,139,412,0,Chunk 138 processing completed.,78.30
+Neo4J,2026-02-23 00:18:24,INFO,139,416,0,4 documents written to disk.,78.30
+Neo4J,2026-02-23 00:18:24,INFO,140,416,0,Chunk 139 processing completed.,79.07
+Neo4J,2026-02-23 00:18:24,INFO,140,420,0,4 documents written to disk.,79.07
+Neo4J,2026-02-23 00:18:24,INFO,141,420,0,Chunk 140 processing completed.,79.83
+Neo4J,2026-02-23 00:18:24,INFO,142,420,0,Chunk 141 processing completed.,79.98
+Neo4J,2026-02-23 00:18:24,INFO,142,424,0,4 documents written to disk.,79.98
+Neo4J,2026-02-23 00:18:24,INFO,143,424,0,Chunk 142 processing completed.,80.75
+Neo4J,2026-02-23 00:18:24,INFO,143,428,0,4 documents written to disk.,80.75
+Neo4J,2026-02-23 00:18:24,INFO,144,428,0,Chunk 143 processing completed.,81.55
+Neo4J,2026-02-23 00:18:24,INFO,144,432,0,4 documents written to disk.,81.55
+Neo4J,2026-02-23 00:18:24,INFO,145,432,0,Chunk 144 processing completed.,81.69
+Neo4J,2026-02-23 00:18:24,INFO,146,432,0,Chunk 145 processing completed.,82.48
+Neo4J,2026-02-23 00:18:24,INFO,146,436,0,4 documents written to disk.,82.48
+Neo4J,2026-02-23 00:18:24,INFO,147,436,0,Chunk 146 processing completed.,83.23
+Neo4J,2026-02-23 00:18:24,INFO,147,440,0,4 documents written to disk.,83.23
+Neo4J,2026-02-23 00:18:24,INFO,148,440,0,Chunk 147 processing completed.,83.39
+Neo4J,2026-02-23 00:18:24,INFO,148,444,0,4 documents written to disk.,83.39
+Neo4J,2026-02-23 00:18:24,INFO,149,444,0,Chunk 148 processing completed.,84.17
+Neo4J,2026-02-23 00:18:24,INFO,150,444,0,Chunk 149 processing completed.,84.94
+Neo4J,2026-02-23 00:18:24,INFO,150,448,0,4 documents written to disk.,84.94
+Neo4J,2026-02-23 00:18:24,INFO,151,448,0,Chunk 150 processing completed.,85.07
+Neo4J,2026-02-23 00:18:24,INFO,151,452,0,4 documents written to disk.,85.07
+Neo4J,2026-02-23 00:18:24,INFO,152,452,0,Chunk 151 processing completed.,85.85
+Neo4J,2026-02-23 00:18:24,INFO,152,456,0,4 documents written to disk.,85.85
+Neo4J,2026-02-23 00:18:24,INFO,153,456,0,Chunk 152 processing completed.,86.61
+Neo4J,2026-02-23 00:18:24,INFO,154,456,0,Chunk 153 processing completed.,86.78
+Neo4J,2026-02-23 00:18:24,INFO,154,460,0,4 documents written to disk.,86.78
+Neo4J,2026-02-23 00:18:24,INFO,155,460,0,Chunk 154 processing completed.,87.56
+Neo4J,2026-02-23 00:18:25,INFO,155,464,0,4 documents written to disk.,87.56
+Neo4J,2026-02-23 00:18:25,INFO,156,464,0,Chunk 155 processing completed.,88.36
+Neo4J,2026-02-23 00:18:25,INFO,156,468,0,4 documents written to disk.,88.36
+Neo4J,2026-02-23 00:18:25,INFO,157,468,0,Chunk 156 processing completed.,88.47
+Neo4J,2026-02-23 00:18:25,INFO,158,468,0,Chunk 157 processing completed.,89.23
+Neo4J,2026-02-23 00:18:25,INFO,158,472,0,4 documents written to disk.,89.23
+Neo4J,2026-02-23 00:18:25,INFO,159,472,0,Chunk 158 processing completed.,89.99
+Neo4J,2026-02-23 00:18:25,INFO,159,476,0,4 documents written to disk.,89.99
+Neo4J,2026-02-23 00:18:25,INFO,160,476,0,Chunk 159 processing completed.,90.12
+Neo4J,2026-02-23 00:18:25,INFO,160,480,0,4 documents written to disk.,90.12
+Neo4J,2026-02-23 00:18:25,INFO,161,480,0,Chunk 160 processing completed.,90.87
+Neo4J,2026-02-23 00:18:25,INFO,162,480,0,Chunk 161 processing completed.,91.65
+Neo4J,2026-02-23 00:18:25,INFO,162,484,0,4 documents written to disk.,91.65
+Neo4J,2026-02-23 00:18:25,INFO,163,484,0,Chunk 162 processing completed.,91.75
+Neo4J,2026-02-23 00:18:25,INFO,163,488,0,4 documents written to disk.,91.75
+Neo4J,2026-02-23 00:18:25,INFO,164,488,0,Chunk 163 processing completed.,92.51
+Neo4J,2026-02-23 00:18:25,INFO,164,492,0,4 documents written to disk.,92.51
+Neo4J,2026-02-23 00:18:25,INFO,165,492,0,Chunk 164 processing completed.,93.26
+Neo4J,2026-02-23 00:18:25,INFO,166,492,0,Chunk 165 processing completed.,93.41
+Neo4J,2026-02-23 00:18:25,INFO,166,496,0,4 documents written to disk.,93.41
+Neo4J,2026-02-23 00:18:25,INFO,167,496,0,Chunk 166 processing completed.,94.16
+Neo4J,2026-02-23 00:18:25,INFO,167,500,0,4 documents written to disk.,94.16
+Neo4J,2026-02-23 00:18:25,INFO,168,500,0,Chunk 167 processing completed.,94.96
+Neo4J,2026-02-23 00:18:25,INFO,168,504,0,4 documents written to disk.,94.96
+Neo4J,2026-02-23 00:18:25,INFO,169,504,0,Chunk 168 processing completed.,95.11
+Neo4J,2026-02-23 00:18:25,INFO,170,504,0,Chunk 169 processing completed.,95.88
+Neo4J,2026-02-23 00:18:25,INFO,170,508,0,4 documents written to disk.,95.88
+Neo4J,2026-02-23 00:18:25,INFO,171,508,0,Chunk 170 processing completed.,96.66
+Neo4J,2026-02-23 00:18:25,INFO,171,512,0,4 documents written to disk.,96.66
+Neo4J,2026-02-23 00:18:25,INFO,172,512,0,Chunk 171 processing completed.,96.79
+Neo4J,2026-02-23 00:18:25,INFO,172,516,0,4 documents written to disk.,96.79
+Neo4J,2026-02-23 00:18:25,INFO,173,516,0,Chunk 172 processing completed.,97.56
+Neo4J,2026-02-23 00:18:25,INFO,174,516,0,Chunk 173 processing completed.,98.33
+Neo4J,2026-02-23 00:18:25,INFO,174,520,0,4 documents written to disk.,98.33
+Neo4J,2026-02-23 00:18:25,INFO,175,520,0,Chunk 174 processing completed.,98.46
+Neo4J,2026-02-23 00:18:25,INFO,175,524,0,4 documents written to disk.,98.46
+Neo4J,2026-02-23 00:18:25,INFO,176,524,0,Chunk 175 processing completed.,99.24
+Neo4J,2026-02-23 00:18:25,INFO,176,528,0,4 documents written to disk.,99.24
+Neo4J,2026-02-23 00:18:25,INFO,177,528,0,Chunk 176 processing completed.,100.00
+Neo4J,2026-02-23 00:18:25,INFO,177,531,0,Job Neo4J has been completed.,100.00
+Neo4J,2026-02-23 00:18:25,DEBUG,177,531,0,Exported graph to json.,100.00

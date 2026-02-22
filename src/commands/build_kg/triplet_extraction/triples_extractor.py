@@ -50,6 +50,8 @@ class TriplesExtractor(Stage):
     def transform_chunk(self, chunk : List[Dict]) -> List[Dict]:
 
         responses = self.triple_extractor.extract([doc['sentence'] for doc in chunk])
+
+        errors = []
         records = []
 
         for doc,response in zip(chunk, responses):
@@ -69,10 +71,9 @@ class TriplesExtractor(Stage):
                     })
                     
             else:
-                ### Update number of failed attempts stats
-                pass
+                errors.append(response.failure())
 
-        return records
+        return records, errors
     
     @classmethod
     def from_config(cls, config : Config) -> 'TriplesExtractor':

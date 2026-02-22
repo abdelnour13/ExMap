@@ -10,6 +10,7 @@ class EventLevel(Enum):
     WARN = logging.WARNING
     ERROR = logging.ERROR
     DEBUG = logging.DEBUG
+    CRITICAL = logging.CRITICAL
 
 @dataclass
 class Event:

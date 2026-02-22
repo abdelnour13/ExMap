@@ -1,0 +1,2634 @@
+[
+    {
+        "type": "relationship",
+        "id": "5",
+        "label": "Predicate",
+        "properties": {
+            "type": "train"
+        },
+        "start": {
+            "id": "1786",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "artificial_neural_network",
+                "id": "Entity_artificial_neural_network"
+            }
+        },
+        "end": {
+            "id": "1789",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "random_forest",
+                "id": "Entity_random_forest"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "7",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "1789",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "random_forest",
+                "id": "Entity_random_forest"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "8",
+        "label": "Predicate",
+        "properties": {
+            "type": "optimize"
+        },
+        "start": {
+            "id": "1786",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "artificial_neural_network",
+                "id": "Entity_artificial_neural_network"
+            }
+        },
+        "end": {
+            "id": "1789",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "random_forest",
+                "id": "Entity_random_forest"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "9",
+        "label": "Predicate",
+        "properties": {
+            "type": "compare"
+        },
+        "start": {
+            "id": "1786",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "artificial_neural_network",
+                "id": "Entity_artificial_neural_network"
+            }
+        },
+        "end": {
+            "id": "1789",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "random_forest",
+                "id": "Entity_random_forest"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "10",
+        "label": "Predicate",
+        "properties": {
+            "type": "train"
+        },
+        "start": {
+            "id": "1786",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "artificial_neural_network",
+                "id": "Entity_artificial_neural_network"
+            }
+        },
+        "end": {
+            "id": "1790",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "extreme_gradient_boosting",
+                "id": "Entity_extreme_gradient_boosting"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "11",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "1790",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "extreme_gradient_boosting",
+                "id": "Entity_extreme_gradient_boosting"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "12",
+        "label": "Predicate",
+        "properties": {
+            "type": "optimize"
+        },
+        "start": {
+            "id": "1786",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "artificial_neural_network",
+                "id": "Entity_artificial_neural_network"
+            }
+        },
+        "end": {
+            "id": "1790",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "extreme_gradient_boosting",
+                "id": "Entity_extreme_gradient_boosting"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "14",
+        "label": "Predicate",
+        "properties": {
+            "type": "compare"
+        },
+        "start": {
+            "id": "1786",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "artificial_neural_network",
+                "id": "Entity_artificial_neural_network"
+            }
+        },
+        "end": {
+            "id": "1790",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "extreme_gradient_boosting",
+                "id": "Entity_extreme_gradient_boosting"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "15",
+        "label": "Predicate",
+        "properties": {
+            "type": "train"
+        },
+        "start": {
+            "id": "1787",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "support_vector_regression",
+                "id": "Entity_support_vector_regression"
+            }
+        },
+        "end": {
+            "id": "1788",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "decision_tree",
+                "id": "Entity_decision_tree"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "16",
+        "label": "Predicate",
+        "properties": {
+            "type": "optimize"
+        },
+        "start": {
+            "id": "1787",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "support_vector_regression",
+                "id": "Entity_support_vector_regression"
+            }
+        },
+        "end": {
+            "id": "1788",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "decision_tree",
+                "id": "Entity_decision_tree"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "18",
+        "label": "Predicate",
+        "properties": {
+            "type": "compare"
+        },
+        "start": {
+            "id": "1787",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "support_vector_regression",
+                "id": "Entity_support_vector_regression"
+            }
+        },
+        "end": {
+            "id": "1788",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "decision_tree",
+                "id": "Entity_decision_tree"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "20",
+        "label": "Predicate",
+        "properties": {
+            "type": "train"
+        },
+        "start": {
+            "id": "1787",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "support_vector_regression",
+                "id": "Entity_support_vector_regression"
+            }
+        },
+        "end": {
+            "id": "1789",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "random_forest",
+                "id": "Entity_random_forest"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "21",
+        "label": "Predicate",
+        "properties": {
+            "type": "optimize"
+        },
+        "start": {
+            "id": "1787",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "support_vector_regression",
+                "id": "Entity_support_vector_regression"
+            }
+        },
+        "end": {
+            "id": "1789",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "random_forest",
+                "id": "Entity_random_forest"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "22",
+        "label": "Predicate",
+        "properties": {
+            "type": "compare"
+        },
+        "start": {
+            "id": "1787",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "support_vector_regression",
+                "id": "Entity_support_vector_regression"
+            }
+        },
+        "end": {
+            "id": "1789",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "random_forest",
+                "id": "Entity_random_forest"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "23",
+        "label": "Predicate",
+        "properties": {
+            "type": "train"
+        },
+        "start": {
+            "id": "1787",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "support_vector_regression",
+                "id": "Entity_support_vector_regression"
+            }
+        },
+        "end": {
+            "id": "1790",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "extreme_gradient_boosting",
+                "id": "Entity_extreme_gradient_boosting"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "25",
+        "label": "Predicate",
+        "properties": {
+            "type": "optimize"
+        },
+        "start": {
+            "id": "1787",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "support_vector_regression",
+                "id": "Entity_support_vector_regression"
+            }
+        },
+        "end": {
+            "id": "1790",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "extreme_gradient_boosting",
+                "id": "Entity_extreme_gradient_boosting"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "26",
+        "label": "Predicate",
+        "properties": {
+            "type": "compare"
+        },
+        "start": {
+            "id": "1787",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "support_vector_regression",
+                "id": "Entity_support_vector_regression"
+            }
+        },
+        "end": {
+            "id": "1790",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "extreme_gradient_boosting",
+                "id": "Entity_extreme_gradient_boosting"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "27",
+        "label": "Predicate",
+        "properties": {
+            "type": "train"
+        },
+        "start": {
+            "id": "1788",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "decision_tree",
+                "id": "Entity_decision_tree"
+            }
+        },
+        "end": {
+            "id": "1789",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "random_forest",
+                "id": "Entity_random_forest"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "28",
+        "label": "Predicate",
+        "properties": {
+            "type": "optimize"
+        },
+        "start": {
+            "id": "1788",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "decision_tree",
+                "id": "Entity_decision_tree"
+            }
+        },
+        "end": {
+            "id": "1789",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "random_forest",
+                "id": "Entity_random_forest"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "29",
+        "label": "Predicate",
+        "properties": {
+            "type": "compare"
+        },
+        "start": {
+            "id": "1788",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "decision_tree",
+                "id": "Entity_decision_tree"
+            }
+        },
+        "end": {
+            "id": "1789",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "random_forest",
+                "id": "Entity_random_forest"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "30",
+        "label": "Predicate",
+        "properties": {
+            "type": "train"
+        },
+        "start": {
+            "id": "1788",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "decision_tree",
+                "id": "Entity_decision_tree"
+            }
+        },
+        "end": {
+            "id": "1790",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "extreme_gradient_boosting",
+                "id": "Entity_extreme_gradient_boosting"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "31",
+        "label": "Predicate",
+        "properties": {
+            "type": "optimize"
+        },
+        "start": {
+            "id": "1788",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "decision_tree",
+                "id": "Entity_decision_tree"
+            }
+        },
+        "end": {
+            "id": "1790",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "extreme_gradient_boosting",
+                "id": "Entity_extreme_gradient_boosting"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "32",
+        "label": "Predicate",
+        "properties": {
+            "type": "compare"
+        },
+        "start": {
+            "id": "1788",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "decision_tree",
+                "id": "Entity_decision_tree"
+            }
+        },
+        "end": {
+            "id": "1790",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "extreme_gradient_boosting",
+                "id": "Entity_extreme_gradient_boosting"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3488",
+        "label": "Predicate",
+        "properties": {
+            "type": "contribute_to"
+        },
+        "start": {
+            "id": "1777",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "construction_sector",
+                "id": "Entity_construction_sector"
+            }
+        },
+        "end": {
+            "id": "1778",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "global_greenhouse_gas_emissions",
+                "id": "Entity_global_greenhouse_gas_emissions"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "33",
+        "label": "Predicate",
+        "properties": {
+            "type": "train"
+        },
+        "start": {
+            "id": "1789",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "random_forest",
+                "id": "Entity_random_forest"
+            }
+        },
+        "end": {
+            "id": "1790",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "extreme_gradient_boosting",
+                "id": "Entity_extreme_gradient_boosting"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3489",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "1777",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "construction_sector",
+                "id": "Entity_construction_sector"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "34",
+        "label": "Predicate",
+        "properties": {
+            "type": "optimize"
+        },
+        "start": {
+            "id": "1789",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "random_forest",
+                "id": "Entity_random_forest"
+            }
+        },
+        "end": {
+            "id": "1790",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "extreme_gradient_boosting",
+                "id": "Entity_extreme_gradient_boosting"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3490",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "1778",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "global_greenhouse_gas_emissions",
+                "id": "Entity_global_greenhouse_gas_emissions"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "35",
+        "label": "Predicate",
+        "properties": {
+            "type": "compare"
+        },
+        "start": {
+            "id": "1789",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "random_forest",
+                "id": "Entity_random_forest"
+            }
+        },
+        "end": {
+            "id": "1790",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "extreme_gradient_boosting",
+                "id": "Entity_extreme_gradient_boosting"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3491",
+        "label": "Predicate",
+        "properties": {
+            "type": "create_need_for"
+        },
+        "start": {
+            "id": "1777",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "construction_sector",
+                "id": "Entity_construction_sector"
+            }
+        },
+        "end": {
+            "id": "1780",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "environmental_impact_assessment_methods",
+                "id": "Entity_environmental_impact_assessment_methods"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "36",
+        "label": "Predicate",
+        "properties": {
+            "type": "involve"
+        },
+        "start": {
+            "id": "1791",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "data_preprocessing",
+                "id": "Entity_data_preprocessing"
+            }
+        },
+        "end": {
+            "id": "0",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "feature_selection",
+                "id": "Entity_feature_selection"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3492",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "1780",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "environmental_impact_assessment_methods",
+                "id": "Entity_environmental_impact_assessment_methods"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "37",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "1791",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "data_preprocessing",
+                "id": "Entity_data_preprocessing"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3493",
+        "label": "Predicate",
+        "properties": {
+            "type": "predict"
+        },
+        "start": {
+            "id": "1781",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "construction_products",
+                "id": "Entity_construction_products"
+            }
+        },
+        "end": {
+            "id": "1782",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "global_warming_potential",
+                "id": "Entity_global_warming_potential"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "38",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "0",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "feature_selection",
+                "id": "Entity_feature_selection"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3494",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "1781",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "construction_products",
+                "id": "Entity_construction_products"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "39",
+        "label": "Predicate",
+        "properties": {
+            "type": "involve"
+        },
+        "start": {
+            "id": "1791",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "data_preprocessing",
+                "id": "Entity_data_preprocessing"
+            }
+        },
+        "end": {
+            "id": "1",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "correlation_analysis",
+                "id": "Entity_correlation_analysis"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3495",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "1782",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "global_warming_potential",
+                "id": "Entity_global_warming_potential"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "40",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "1",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "correlation_analysis",
+                "id": "Entity_correlation_analysis"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3496",
+        "label": "Predicate",
+        "properties": {
+            "type": "use"
+        },
+        "start": {
+            "id": "1781",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "construction_products",
+                "id": "Entity_construction_products"
+            }
+        },
+        "end": {
+            "id": "1783",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "environmental_product_declaration",
+                "id": "Entity_environmental_product_declaration"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "41",
+        "label": "Predicate",
+        "properties": {
+            "type": "involve"
+        },
+        "start": {
+            "id": "1791",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "data_preprocessing",
+                "id": "Entity_data_preprocessing"
+            }
+        },
+        "end": {
+            "id": "2",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "missing_values",
+                "id": "Entity_missing_values"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3497",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "1783",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "environmental_product_declaration",
+                "id": "Entity_environmental_product_declaration"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "42",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "2",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "missing_values",
+                "id": "Entity_missing_values"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3498",
+        "label": "Predicate",
+        "properties": {
+            "type": "be_from"
+        },
+        "start": {
+            "id": "1783",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "environmental_product_declaration",
+                "id": "Entity_environmental_product_declaration"
+            }
+        },
+        "end": {
+            "id": "1784",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "\u00f6kobaudat_database",
+                "id": "Entity_\u00f6kobaudat_database"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "43",
+        "label": "Predicate",
+        "properties": {
+            "type": "involve"
+        },
+        "start": {
+            "id": "1791",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "data_preprocessing",
+                "id": "Entity_data_preprocessing"
+            }
+        },
+        "end": {
+            "id": "3",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "outlier_removal",
+                "id": "Entity_outlier_removal"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3499",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "1784",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "\u00f6kobaudat_database",
+                "id": "Entity_\u00f6kobaudat_database"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "44",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "3",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "outlier_removal",
+                "id": "Entity_outlier_removal"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3500",
+        "label": "Predicate",
+        "properties": {
+            "type": "be_from"
+        },
+        "start": {
+            "id": "1785",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "epd_data",
+                "id": "Entity_epd_data"
+            }
+        },
+        "end": {
+            "id": "1784",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "\u00f6kobaudat_database",
+                "id": "Entity_\u00f6kobaudat_database"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "45",
+        "label": "Predicate",
+        "properties": {
+            "type": "perform_good_achieving"
+        },
+        "start": {
+            "id": "4",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "ensemble_tree_based_models",
+                "id": "Entity_ensemble_tree_based_models"
+            }
+        },
+        "end": {
+            "id": "5",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "r",
+                "id": "Entity_r"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3501",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "1785",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "epd_data",
+                "id": "Entity_epd_data"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "46",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "4",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "ensemble_tree_based_models",
+                "id": "Entity_ensemble_tree_based_models"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3502",
+        "label": "Predicate",
+        "properties": {
+            "type": "train"
+        },
+        "start": {
+            "id": "1786",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "artificial_neural_network",
+                "id": "Entity_artificial_neural_network"
+            }
+        },
+        "end": {
+            "id": "1787",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "support_vector_regression",
+                "id": "Entity_support_vector_regression"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "47",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "5",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "r",
+                "id": "Entity_r"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3503",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "1786",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "artificial_neural_network",
+                "id": "Entity_artificial_neural_network"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "48",
+        "label": "Predicate",
+        "properties": {
+            "type": "perform_good_achieving"
+        },
+        "start": {
+            "id": "4",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "ensemble_tree_based_models",
+                "id": "Entity_ensemble_tree_based_models"
+            }
+        },
+        "end": {
+            "id": "6",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "held_out_dataset",
+                "id": "Entity_held_out_dataset"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3504",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "1787",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "support_vector_regression",
+                "id": "Entity_support_vector_regression"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "49",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "6",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "held_out_dataset",
+                "id": "Entity_held_out_dataset"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3505",
+        "label": "Predicate",
+        "properties": {
+            "type": "optimize"
+        },
+        "start": {
+            "id": "1786",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "artificial_neural_network",
+                "id": "Entity_artificial_neural_network"
+            }
+        },
+        "end": {
+            "id": "1787",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "support_vector_regression",
+                "id": "Entity_support_vector_regression"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "50",
+        "label": "Predicate",
+        "properties": {
+            "type": "retain"
+        },
+        "start": {
+            "id": "4",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "ensemble_tree_based_models",
+                "id": "Entity_ensemble_tree_based_models"
+            }
+        },
+        "end": {
+            "id": "5",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "r",
+                "id": "Entity_r"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3506",
+        "label": "Predicate",
+        "properties": {
+            "type": "compare"
+        },
+        "start": {
+            "id": "1786",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "artificial_neural_network",
+                "id": "Entity_artificial_neural_network"
+            }
+        },
+        "end": {
+            "id": "1787",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "support_vector_regression",
+                "id": "Entity_support_vector_regression"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "51",
+        "label": "Predicate",
+        "properties": {
+            "type": "retain"
+        },
+        "start": {
+            "id": "4",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "ensemble_tree_based_models",
+                "id": "Entity_ensemble_tree_based_models"
+            }
+        },
+        "end": {
+            "id": "7",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "independent_external_epd_validation_set",
+                "id": "Entity_independent_external_epd_validation_set"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3507",
+        "label": "Predicate",
+        "properties": {
+            "type": "train"
+        },
+        "start": {
+            "id": "1786",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "artificial_neural_network",
+                "id": "Entity_artificial_neural_network"
+            }
+        },
+        "end": {
+            "id": "1788",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "decision_tree",
+                "id": "Entity_decision_tree"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "52",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "7",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "independent_external_epd_validation_set",
+                "id": "Entity_independent_external_epd_validation_set"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3508",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "1788",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "decision_tree",
+                "id": "Entity_decision_tree"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "53",
+        "label": "Predicate",
+        "properties": {
+            "type": "perform_good_achieving"
+        },
+        "start": {
+            "id": "1789",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "random_forest",
+                "id": "Entity_random_forest"
+            }
+        },
+        "end": {
+            "id": "5",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "r",
+                "id": "Entity_r"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3509",
+        "label": "Predicate",
+        "properties": {
+            "type": "optimize"
+        },
+        "start": {
+            "id": "1786",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "artificial_neural_network",
+                "id": "Entity_artificial_neural_network"
+            }
+        },
+        "end": {
+            "id": "1788",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "decision_tree",
+                "id": "Entity_decision_tree"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "54",
+        "label": "Predicate",
+        "properties": {
+            "type": "perform_good_achieving"
+        },
+        "start": {
+            "id": "1789",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "random_forest",
+                "id": "Entity_random_forest"
+            }
+        },
+        "end": {
+            "id": "6",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "held_out_dataset",
+                "id": "Entity_held_out_dataset"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "3510",
+        "label": "Predicate",
+        "properties": {
+            "type": "compare"
+        },
+        "start": {
+            "id": "1786",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "artificial_neural_network",
+                "id": "Entity_artificial_neural_network"
+            }
+        },
+        "end": {
+            "id": "1788",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "decision_tree",
+                "id": "Entity_decision_tree"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "55",
+        "label": "Predicate",
+        "properties": {
+            "type": "retain"
+        },
+        "start": {
+            "id": "1789",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "random_forest",
+                "id": "Entity_random_forest"
+            }
+        },
+        "end": {
+            "id": "5",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "r",
+                "id": "Entity_r"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "56",
+        "label": "Predicate",
+        "properties": {
+            "type": "retain"
+        },
+        "start": {
+            "id": "1789",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "random_forest",
+                "id": "Entity_random_forest"
+            }
+        },
+        "end": {
+            "id": "7",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "independent_external_epd_validation_set",
+                "id": "Entity_independent_external_epd_validation_set"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "57",
+        "label": "Predicate",
+        "properties": {
+            "type": "perform_good_achieving"
+        },
+        "start": {
+            "id": "1790",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "extreme_gradient_boosting",
+                "id": "Entity_extreme_gradient_boosting"
+            }
+        },
+        "end": {
+            "id": "5",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "r",
+                "id": "Entity_r"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "58",
+        "label": "Predicate",
+        "properties": {
+            "type": "perform_good_achieving"
+        },
+        "start": {
+            "id": "1790",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "extreme_gradient_boosting",
+                "id": "Entity_extreme_gradient_boosting"
+            }
+        },
+        "end": {
+            "id": "6",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "held_out_dataset",
+                "id": "Entity_held_out_dataset"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "59",
+        "label": "Predicate",
+        "properties": {
+            "type": "retain"
+        },
+        "start": {
+            "id": "1790",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "extreme_gradient_boosting",
+                "id": "Entity_extreme_gradient_boosting"
+            }
+        },
+        "end": {
+            "id": "5",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "r",
+                "id": "Entity_r"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "60",
+        "label": "Predicate",
+        "properties": {
+            "type": "retain"
+        },
+        "start": {
+            "id": "1790",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "extreme_gradient_boosting",
+                "id": "Entity_extreme_gradient_boosting"
+            }
+        },
+        "end": {
+            "id": "7",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "independent_external_epd_validation_set",
+                "id": "Entity_independent_external_epd_validation_set"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "61",
+        "label": "Predicate",
+        "properties": {
+            "type": "perform_good_achieving"
+        },
+        "start": {
+            "id": "8",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "xgb",
+                "id": "Entity_xgb"
+            }
+        },
+        "end": {
+            "id": "5",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "r",
+                "id": "Entity_r"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "62",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "8",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "xgb",
+                "id": "Entity_xgb"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "63",
+        "label": "Predicate",
+        "properties": {
+            "type": "perform_good_achieving"
+        },
+        "start": {
+            "id": "8",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "xgb",
+                "id": "Entity_xgb"
+            }
+        },
+        "end": {
+            "id": "6",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "held_out_dataset",
+                "id": "Entity_held_out_dataset"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "64",
+        "label": "Predicate",
+        "properties": {
+            "type": "retain"
+        },
+        "start": {
+            "id": "8",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "xgb",
+                "id": "Entity_xgb"
+            }
+        },
+        "end": {
+            "id": "5",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "r",
+                "id": "Entity_r"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "65",
+        "label": "Predicate",
+        "properties": {
+            "type": "retain"
+        },
+        "start": {
+            "id": "8",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "xgb",
+                "id": "Entity_xgb"
+            }
+        },
+        "end": {
+            "id": "7",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "independent_external_epd_validation_set",
+                "id": "Entity_independent_external_epd_validation_set"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "66",
+        "label": "Predicate",
+        "properties": {
+            "type": "approximate"
+        },
+        "start": {
+            "id": "9",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "ml_capability",
+                "id": "Entity_ml_capability"
+            }
+        },
+        "end": {
+            "id": "10",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "product_life_cycle_impacts",
+                "id": "Entity_product_life_cycle_impacts"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "67",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "9",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "ml_capability",
+                "id": "Entity_ml_capability"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "68",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "10",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "product_life_cycle_impacts",
+                "id": "Entity_product_life_cycle_impacts"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "69",
+        "label": "Predicate",
+        "properties": {
+            "type": "provide"
+        },
+        "start": {
+            "id": "9",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "ml_capability",
+                "id": "Entity_ml_capability"
+            }
+        },
+        "end": {
+            "id": "11",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "rapid_estimates",
+                "id": "Entity_rapid_estimates"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "70",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "11",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "rapid_estimates",
+                "id": "Entity_rapid_estimates"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "71",
+        "label": "Predicate",
+        "properties": {
+            "type": "abbreviate_as"
+        },
+        "start": {
+            "id": "12",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "life_cycle_assessments",
+                "id": "Entity_life_cycle_assessments"
+            }
+        },
+        "end": {
+            "id": "13",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "lca",
+                "id": "Entity_lca"
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "72",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "12",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "life_cycle_assessments",
+                "id": "Entity_life_cycle_assessments"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    },
+    {
+        "type": "relationship",
+        "id": "73",
+        "label": "APPEARS_IN",
+        "start": {
+            "id": "13",
+            "labels": [
+                "Entity"
+            ],
+            "properties": {
+                "name": "lca",
+                "id": "Entity_lca"
+            }
+        },
+        "end": {
+            "id": "1779",
+            "labels": [
+                "Article"
+            ],
+            "properties": {
+                "teams": [
+                    "LS2N",
+                    "LS2N-OGRE",
+                    "LS2N-CPS3"
+                ],
+                "id": "Article_5420658",
+                "abstract": "The construction sector significantly contributes to global greenhouse gas emissions , creating an urgent need for efficient environmental impact assessment methods . This study evaluates machine learning ( ML ) models to rapidly predict the Global Warming Potential ( GWP ) of construction products using standardized Environmental Product Declaration ( EPD ) data from the \u00d6KOBAUDAT database . Five regression models-Artificial Neural Network ( ANN ) , Support Vector Regression ( SVR ) , Decision Tree ( DT ) , Random Forest ( RF ) , and Extreme Gradient Boosting ( XGB ) were trained , optimized , and compared . Data preprocessing involved careful feature selection through correlation analysis , management of missing values , and outlier removal . Model performance was assessed using the coefficient of determination R2 , root mean square error ( RMSE ) , and mean absolute error ( MAE ) . Results demonstrated that ensemble tree-based models ( Random Forest ( RF ) and Extreme Gradient Boosting ( XGB ) performed best achieving R2 ~ 0.90 on held-out dataset and retaining R2 ~ 0.81\u20130.83 on an independent external EPD validation set with mean error of almost 10 % of a typical product footprint . Results demonstrate ML capability to effectively approximate product life-cycle impacts , providing rapid estimates for early-stage sustainability decision-making . However , detailed Life Cycle Assessments ( LCA ) remain essential for critical decisions .",
+                "title": "Machine Learning Based Environmental Impact Prediction of Construction Products Using EPD Data",
+                "labels": [
+                    "Eco-design",
+                    "Industrial Digitalization"
+                ]
+            }
+        }
+    }
+]
