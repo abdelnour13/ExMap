@@ -1,23 +1,15 @@
 import asyncio
 import multiprocessing
-from src.helpers.config import assert_file_exists
-from typing import Generator, Dict, Iterable, Union, List, Annotated, Type, Literal, Optional
+from typing import Generator, Dict, Iterable, Union, List, Type, Literal, Optional
 from src.shared.handlers import SocketHandler, ConsoleLogger, FileLogger
 from abc import abstractmethod
 from src.shared.file_tools import BufferedWriter, BatchedReader
 from src.shared.handlers import Event, EventLevel
-from pydantic import Field, BeforeValidator
 from functools import wraps
-from .base_command import BaseCommand, BaseConfig
+from .base_command import BaseCommand, OutputDirOption, InputFileOption, ConnectionOption
 
-class StageConfig(BaseConfig):
-
-    input_filename : Annotated[str, BeforeValidator(assert_file_exists)] = Field(
-        description="The path to the file holding the data."
-    )
-    
-    batch_size : int = Field(default=1,description="How many documents to process on a single pass.")
-    buffer_size : int = Field(default=4,description="The size of the buffer used to update the file on the disk.")
+class StageConfig(OutputDirOption, InputFileOption, ConnectionOption):
+    pass
 
 def add_handlers(cls : Type['Stage']):
 
@@ -89,6 +81,45 @@ class Stage(BaseCommand):
         
         with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
             return pool.map(self.transform, chunk)
+
+    def make_event(self,
+        progress : Optional[float],
+        level : EventLevel,
+        message : str
+    ) -> Event:
+        
+        return Event(
+            progress=progress,
+            level=level,
+            total_processed=self.total_processed,
+            total_saved=self.total_saved,
+            total_skipped=self.total_skipped,
+            message=message
+        )
+    
+    def make_debug_event(self,
+        progress : Optional[float],
+        message : str
+    ) -> Event:
+        return self.make_event(progress, EventLevel.DEBUG, message)
+    
+    def make_info_event(self,
+        progress : Optional[float],
+        message : str
+    ) -> Event:
+        return self.make_event(progress, EventLevel.INFO, message)
+    
+    def make_error_event(self,
+        progress : Optional[float],
+        message : str
+    ) -> Event:
+        return self.make_event(progress, EventLevel.ERROR, message)
+    
+    def make_warn_event(self,
+        progress : Optional[float],
+        message : str
+    ) -> Event:
+        return self.make_event(progress, EventLevel.WARN, message)
 
     def transform_chunk(self, chunk : Iterable[Dict]) -> List[Dict]:
         """

@@ -1,4 +1,6 @@
 import dotenv
+import os
+import json
 from src.shared.command_tools import Stage, StageConfig, add_handlers
 from src.shared.handlers import EventLevel, Event
 from src.shared.file_tools import FileReader, FileWriter, TextfileCache
@@ -26,6 +28,11 @@ class Config(StageConfig):
     @property
     def neo4j_pwd(self) -> str:
         return dotenv.get_key(ENV, "NEO4J_PWD")
+    
+    @computed_field
+    @property
+    def graph_filename(self) -> str:
+        return os.path.join(self.output_dir, 'graph.json')
 
 @cli.register_stage(
     name="insert2neo4j",
@@ -41,13 +48,15 @@ class Neo4J(Stage):
     def __init__(self, 
         reader : FileReader, 
         writer : FileWriter, 
-        driver : Driver
+        driver : Driver,
+        graph  : str
     ) -> None:
         super().__init__(reader, writer)
 
         self.entities = {}
         self.documents = {}
         self.driver = driver
+        self.graph = graph
 
     def format_value(self, value : Any) -> Any:
 
@@ -170,6 +179,35 @@ class Neo4J(Stage):
                 message="Connection to Neo4j failed."
             )
 
+    def after_end(self) -> Generator[Event,None,None]:
+        
+        with self.driver.session() as session:
+            
+            result = session.run("""
+                MATCH (subject)-[predicate]->(object)
+                WITH collect(subject) as subjects, collect(predicate) as predicates, collect(object) as objects
+
+                WITH apoc.coll.toSet(subjects + objects) as allNodes, predicates as allRels
+
+                CALL apoc.export.json.data(allNodes, allRels, null, {stream:true, jsonFormat:"JSON"})
+                YIELD data
+                RETURN data
+            """)
+
+            records = [record['data'] for record in result]
+
+            with open(self.graph, 'w') as f:
+                json.dump(json.loads(records[0])['rels'], f, indent=4)
+
+            yield Event(
+                progress=1.0,
+                level=EventLevel.DEBUG,
+                message="Exported graph to json.",
+                total_processed=self.total_processed,
+                total_saved=self.total_saved,
+                total_skipped=self.total_skipped
+            )
+
     def transform_chunk(self, chunk : List[str]) -> List[str]:
 
         chunk = super().transform_chunk(chunk)
@@ -185,7 +223,8 @@ class Neo4J(Stage):
     @classmethod
     def from_config(cls, config : Config) -> 'Neo4J':
 
-        cache = TextfileCache(config.checkpoint_filename)
+        # cache = TextfileCache(config.checkpoint_filename)
+        cache = None
 
         driver = GraphDatabase.driver(
             uri=config.neo4j_uri,
@@ -199,5 +238,6 @@ class Neo4J(Stage):
             writer=FileWriter
                 .from_filename(config.output_filename)
                 .buffered(config.buffer_size, cache),
-            driver=driver
+            driver=driver,
+            graph=config.graph_filename
         )

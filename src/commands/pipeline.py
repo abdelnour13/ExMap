@@ -16,7 +16,7 @@ from src.commands.build_kg.cleaning import cleaning
 from src.commands.build_kg.preprocessing import coreference_resolution
 from src.commands.build_kg.content_enrichment import annotate, acronym_extraction, keyword_extraction
 from src.commands.build_kg.preprocessing import sentence_segmentation
-from src.commands.build_kg.triplet_extraction import triples_extractor, triples_postprocessing, validation
+from src.commands.build_kg.triplet_extraction import triples_extractor, triples_postprocessing, validation, entities_metadata, entities_mapping
 from src.commands.build_kg.graph_construction import triples, neo4j
 
 STAGES : Dict[str, Tuple[Stage, StageConfig]] = {
@@ -29,6 +29,7 @@ STAGES : Dict[str, Tuple[Stage, StageConfig]] = {
     "extract_triples" : (triples_extractor.TriplesExtractor, triples_extractor.Config),
     "triples_validation" : (validation.TriplesLLMValidator, triples_extractor.Config),
     "clean_triples" : (triples_postprocessing.TriplesPostprocessor, triples_postprocessing.Config),
+    "entities_mapping" : (entities_mapping.EntityMapper, entities_mapping.Config),
     "graph2triples" : (triples.Graph2Triples, triples.StageConfig),
     "insert2neo4j"  : (neo4j.Neo4J, neo4j.Config)
 }

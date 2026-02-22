@@ -1,2 +1,2 @@
-from .stage import Stage, BaseConfig, StageConfig, add_handlers
+from .stage import Stage, StageConfig, add_handlers, ConnectionOption, InputFileOption, OutputDirOption
 from .base_command import BaseCommand, Connection

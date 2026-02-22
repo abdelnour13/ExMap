@@ -62,6 +62,10 @@
             "args" : {}
         },
         {
+            "name" : "entities_mapping",
+            "args" : {}
+        },
+        {
             "name" : "graph2triples",
             "args" : {}
         },

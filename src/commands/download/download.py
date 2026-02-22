@@ -4,7 +4,7 @@ import time
 import json
 from typing import Optional, Generator, Dict, Union, List, Self
 from src.helpers import load_json_file
-from src.shared.command_tools import BaseCommand, BaseConfig
+from src.shared.command_tools import BaseCommand, OutputDirOption, ConnectionOption
 from src.shared.handlers import ConsoleLogger, Event, EventLevel
 from src.shared.file_tools import BufferedWriter, FileWriter
 from returns.result import Result, safe
@@ -23,7 +23,7 @@ class HALConfig(BaseModel):
     page_size : int
     num_pages : Optional[int]
 
-class Config(BaseConfig):
+class Config(OutputDirOption, ConnectionOption):
 
     hal_config : str = Field(description="Path to a config.json file.")
 
