@@ -1,6 +1,7 @@
 import os
 import shutil
 from src.helpers.config import makedirs, assert_file_exists
+from src.shared.handlers import Event, EventLevel
 from typing import Any, Generator,Protocol,List, TypeVar, Self, Optional, Annotated
 from abc import ABC,abstractmethod
 from itertools import chain
@@ -91,13 +92,13 @@ class BaseCommand(ABC):
         return self
 
     @abstractmethod
-    def __iter__(self) -> Generator[Any, None, None]:
+    def __iter__(self) -> Generator[Event, None, None]:
         ...
 
-    def before_start(self) -> Generator[Any, None, None]:
+    def before_start(self) -> Generator[Event, None, None]:
         yield from []
 
-    def after_end(self) -> Generator[Any, None, None]:
+    def after_end(self) -> Generator[Event, None, None]:
         yield from []
 
     @classmethod
@@ -106,6 +107,19 @@ class BaseCommand(ABC):
 
     def run(self) -> None:
 
+        stop = False
+
         for event in chain(self.before_start(), self, self.after_end()):
+
+            if stop:
+                break
+
             for handler in self.handlers:
+
                 handler.consume(event)
+
+                if event.level == EventLevel.CRITICAL:
+                    event = Event(**dict(event))
+                    event.message = "Stopping job due to a critical error, check logs for details."
+                    handler.consume(event)
+                    stop = True
