@@ -4,6 +4,7 @@ from typing import List, Optional, TypeVar, Type, Callable
 from src.shared.command_tools import BaseCommand
 
 T = TypeVar('T')
+E = TypeVar('E')
 
 class Cli(PyCli):
 
@@ -15,9 +16,9 @@ class Cli(PyCli):
         add_save_to : bool = True,
         add_from_conf : bool = True,
         strict : bool = True,
-    ) -> Callable[[Type[BaseCommand]], Type[BaseCommand]]:
+    ) -> Callable[[E], E]:
         
-        def __wrap__(cls : Type[BaseCommand]) -> Type[BaseCommand]:
+        def __wrap__(cls : E) -> E:
             
             def _cmd(config : T) -> None:
                 instance = cls.from_config(config)

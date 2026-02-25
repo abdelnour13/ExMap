@@ -1,4 +1,5 @@
 import re
+from nltk import word_tokenize
 from bs4 import BeautifulSoup
 from src.shared.command_tools import Stage, StageConfig, add_handlers
 from src.shared.file_tools import FileReader, FileWriter, TextfileCache
@@ -89,7 +90,11 @@ class CorpusCleaner(Stage):
         if not self.language_detector.is_english(doc['abstract']):
             doc['abstract'] = None
         else:
-            doc['abstract'] = self.clean_text(doc['abstract'])
+
+            if len(doc['abstract']) == 0 or word_tokenize(doc['abstract']) <= 10:
+                doc['abstract'] = None
+            else:
+                doc['abstract'] = self.clean_text(doc['abstract'])
 
         doc['keywords'] = self.clean_keywords(doc['keywords'])
 

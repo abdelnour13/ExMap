@@ -7,7 +7,7 @@ from src.helpers import load_json_file
 from pydantic import computed_field
 from pycli import Field
 from dataclasses import dataclass
-from openai import OpenAI
+from openai import AsyncClient
 from definitions import ENV, domain_dir
 from instance import cli
 
@@ -60,7 +60,7 @@ class DocumentsAnnotator(Stage):
     def __init__(self, 
         reader : FileReader, 
         writer : FileWriter, 
-        client : OpenAI,
+        client : AsyncClient,
         domains : List[Domain],
         model : str
     ) -> None:
@@ -87,7 +87,7 @@ class DocumentsAnnotator(Stage):
             "Does the article in question belong to this label"
         )
         
-    def transform(self, doc: Dict) -> Dict:
+    async def transform(self, doc: Dict) -> Dict:
 
         labels = []
 
@@ -107,7 +107,7 @@ class DocumentsAnnotator(Stage):
             prompt = self.get_prompt(domain)
             messages.append({"role": "user", "content": prompt})
 
-        response = self.client.chat.completions.create(
+        response = await self.client.chat.completions.create(
             model=self.model,
             messages=messages,
             stream=False,
@@ -136,17 +136,19 @@ class DocumentsAnnotator(Stage):
 
         cache = TextfileCache(config.checkpoint_filename)
         
-        return DocumentsAnnotator(
+        cmd = DocumentsAnnotator(
             reader=FileReader
                 .from_filename(config.input_filename, cache)
                 .batched(config.batch_size),
             writer=FileWriter
                 .from_filename(config.output_filename)
                 .buffered(config.buffer_size, cache),
-            client=OpenAI(
+            client=AsyncClient(
                 api_key=config.api_key,
                 base_url=MODELS[config.model]['url']
             ),
             domains=config.domains,
             model=config.model
-        )
+        ).set_parallelism_mode('async')
+
+        return cmd

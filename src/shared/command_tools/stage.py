@@ -1,6 +1,7 @@
 import asyncio
 import multiprocessing
-from typing import Dict, Iterable, Union, List, Type, Literal, Optional, Tuple, Generator
+import inspect
+from typing import Dict, Iterable, Union, List, Type, Literal, Optional, Tuple, Generator,Self, TypeVar, Callable
 from src.shared.handlers import SocketHandler, ConsoleLogger, FileLogger
 from abc import abstractmethod
 from src.shared.file_tools import BufferedWriter, BatchedReader
@@ -13,7 +14,9 @@ from .base_command import BaseCommand, OutputDirOption, InputFileOption, Connect
 class StageConfig(OutputDirOption, InputFileOption, ConnectionOption):
     pass
 
-def add_handlers(cls : Type['Stage']):
+T = TypeVar('T')
+
+def add_handlers(cls : T):
 
     from_config = cls.__dict__['from_config'].__func__    
 
@@ -36,6 +39,30 @@ def add_handlers(cls : Type['Stage']):
 
 TransformReturn = Union[Dict, List[Dict]]
 
+def safe(func : Callable) -> Callable:
+
+    if inspect.iscoroutinefunction(func):
+
+        @wraps(func)
+        async def __wraper__(*args, **kwargs):
+
+            try:
+                return Result.from_value(await func(*args,**kwargs))
+            except Exception as e:
+                return Result.from_failure(e)
+            
+    else:
+
+        @wraps(func)
+        def __wraper__(*args, **kwargs):
+
+            try:
+                return Result.from_value(func(*args,**kwargs))
+            except Exception as e:
+                return Result.from_failure(e)
+            
+    return func
+
 class Stage(BaseCommand):
 
     def __init__(self,
@@ -52,8 +79,9 @@ class Stage(BaseCommand):
         self.total_saved = 0
         self.total_skipped = 0
 
-    def set_parallelism_mode(self, mode : Optional[Literal['async', 'multiprocessing']]) -> None:
+    def set_parallelism_mode(self, mode : Optional[Literal['async', 'multiprocessing']]) -> Self:
         self.parallelism_mode = mode
+        return self
 
     def skip(self, doc : Dict) -> bool:
         """
@@ -84,9 +112,16 @@ class Stage(BaseCommand):
             return Result.from_value(self.transform(doc))
         except Exception as e:
             return Result.from_failure(e)
+        
+    async def async_safe_transform(self, doc : Dict) -> Result[TransformReturn, Exception]:
+
+        try:
+            return Result.from_value(await self.transform(doc))
+        except Exception as e:
+            return Result.from_failure(e)
 
     async def async_transform_chunk(self, chunk : Iterable[Dict]) -> List[Result[TransformReturn, Exception]]:
-        return await asyncio.gather(*[self.safe_transform(document) for document in chunk])
+        return await asyncio.gather(*[self.async_safe_transform(document) for document in chunk])
     
     def mp_transform_chunk(self, chunk : Iterable[Dict]) -> List[Result[TransformReturn, Exception]]:
         
@@ -213,7 +248,7 @@ class Stage(BaseCommand):
 
                     yield self.make_error_event(
                         progress=progress,
-                        message=f"An error has occurred during processing chunk {i}, error : {error}"
+                        message=f"An error has occurred during processing chunk {i}. error : {error}"
                     )
             
         self.total_saved += self.writer.flush()
