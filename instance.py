@@ -1,7 +1,6 @@
 import inspect
 from pycli import Cli as PyCli, Example, Model
-from typing import List, Optional, TypeVar, Type, Callable
-from src.shared.command_tools import BaseCommand
+from typing import List, Optional, TypeVar, Callable
 
 T = TypeVar('T')
 E = TypeVar('E')

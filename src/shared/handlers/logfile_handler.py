@@ -36,9 +36,7 @@ class FileLogger(Handler):
                 "_name" : self.name,
                 "_timestamp" : event.timestamp,
                 "_level" : event.level.name,
-                "total_processed" : event.total_processed,
-                "total_saved" : event.total_saved,
-                "total_skipped" : event.total_skipped,
+                **event.extra,
                 "progress" : f"{(100 * event.progress):.2f}" if event.progress else None
             }
         )

@@ -2,7 +2,7 @@ import os
 import shutil
 from src.helpers.config import makedirs, assert_file_exists
 from src.shared.handlers import Event, EventLevel
-from typing import Any, Generator,Protocol,List, TypeVar, Self, Optional, Annotated
+from typing import Any, Generator,Protocol,List, TypeVar, Self, Optional, Annotated, Dict
 from abc import ABC,abstractmethod
 from itertools import chain
 from pycli import toml_parser
@@ -123,3 +123,45 @@ class BaseCommand(ABC):
                     event.message = "Stopping job due to a critical error, check logs for details."
                     handler.consume(event)
                     stop = True
+
+    def make_event(self,
+        progress : Optional[float],
+        level : EventLevel,
+        message : str,
+        extra : Dict
+    ) -> Event:
+        
+        return Event(
+            progress=progress,
+            level=level,
+            message=message,
+            extra=extra
+        )
+    
+    def make_debug_event(self,
+        progress : Optional[float],
+        message : str,
+        extra : Dict
+    ) -> Event:
+        return self.make_event(progress, EventLevel.DEBUG, message, extra)
+    
+    def make_info_event(self,
+        progress : Optional[float],
+        message : str,
+        extra : Dict
+    ) -> Event:
+        return self.make_event(progress, EventLevel.INFO, message, extra)
+    
+    def make_error_event(self,
+        progress : Optional[float],
+        message : str,
+        extra : Dict
+    ) -> Event:
+        return self.make_event(progress, EventLevel.ERROR, message, extra)
+    
+    def make_warn_event(self,
+        progress : Optional[float],
+        message : str,
+        extra : Dict
+    ) -> Event:
+        return self.make_event(progress, EventLevel.WARN, message, extra)

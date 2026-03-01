@@ -15,6 +15,6 @@ class SocketHandler(Handler):
     def consume(self, event : Event) -> None:
         
         event_data = asdict(event)
-        event_data['level'] = event_data['level'].name
+        event_data['level'] = event.level.name
 
         self.client.send(event_data)

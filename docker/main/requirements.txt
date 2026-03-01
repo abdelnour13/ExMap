@@ -16,3 +16,4 @@ plotly==6.5.2
 SPARQLWrapper==2.0.0
 sentence-transformers==5.2.3
 kaleido==1.2.0
+wget==3.2

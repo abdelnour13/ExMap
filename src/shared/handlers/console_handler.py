@@ -33,14 +33,26 @@ class ConsoleLogger(Handler):
 
     def consume(self, event : Event) -> None:
 
-        message = "[bold]{} - Total Processed {} - Total Saved {} - Total Skipped {} - Message : {} - Progress : {}".format(
-            self.name,
-            event.total_processed,
-            event.total_saved,
-            event.total_skipped,
-            event.message,
-            f"{100 * event.progress:.2f}"
-        )
+        if event.progress is not None:
+
+            fmt = "[bold]{} - " + " - ".join([f"{key} : {{}}" for key in event.extra]) + " - Message : {} - Progress : {}"
+
+            message = fmt.format(
+                self.name,
+                *event.extra.values(),
+                event.message,
+                f"{100 * event.progress:.2f}"
+            )
+
+        else :
+
+            fmt = "[bold]{} - " + " - ".join([f"{key} : {{}}" for key in event.extra]) + " - Message : {}"
+
+            message = fmt.format(
+                self.name,
+                *event.extra.values(),
+                event.message,
+            )            
 
         self.logger.log(level=event.level.value,msg=message)
 

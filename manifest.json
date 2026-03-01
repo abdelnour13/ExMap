@@ -1,0 +1,30 @@
+{
+    "docker" : {
+        "neo4j" : {
+            "add" : true
+        },
+        "allennlp" : {
+            "add" : true,
+            "port" : 8080,
+            "enable_gpu_access" : false
+        },
+        "openie6" : {
+            "add" : true,
+            "port" : 8081,
+            "enable_gpu_access" : true   
+        }
+    },
+    "models" : [
+        "timpal0l/mdeberta-v3-base-squad2",
+        "SpanBERT/spanbert-large-cased",
+        "snrspeaks/KeyPhraseTransformer",
+        "sentence-transformers/all-MiniLM-L6-v2"
+    ],
+    "external_repos" : [
+        "https://github.com/abdelnour13/pycli.git",
+        "https://github.com/dair-iitd/openie6.git"
+    ],
+    "neo4j_plugins" : [
+        "https://github.com/neo4j/apoc/releases/download/2025.11.2/apoc-2025.11.2-core.jar"
+    ]
+}

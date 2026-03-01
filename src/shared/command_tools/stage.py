@@ -134,38 +134,16 @@ class Stage(BaseCommand):
         message : str
     ) -> Event:
         
-        return Event(
-            progress=progress,
-            level=level,
-            total_processed=self.total_processed,
-            total_saved=self.total_saved,
-            total_skipped=self.total_skipped,
-            message=message
+        super().make_event(
+            progress=progress, 
+            level=level, 
+            message=message,
+            extra={
+                'total_processed' : self.total_processed,
+                'total_saved' : self.total_saved,
+                'total_skipped' : self.total_skipped,
+            }
         )
-    
-    def make_debug_event(self,
-        progress : Optional[float],
-        message : str
-    ) -> Event:
-        return self.make_event(progress, EventLevel.DEBUG, message)
-    
-    def make_info_event(self,
-        progress : Optional[float],
-        message : str
-    ) -> Event:
-        return self.make_event(progress, EventLevel.INFO, message)
-    
-    def make_error_event(self,
-        progress : Optional[float],
-        message : str
-    ) -> Event:
-        return self.make_event(progress, EventLevel.ERROR, message)
-    
-    def make_warn_event(self,
-        progress : Optional[float],
-        message : str
-    ) -> Event:
-        return self.make_event(progress, EventLevel.WARN, message)
 
     def transform_chunk(self, chunk : Iterable[Dict]) -> Tuple[List[Dict], List[Exception]]:
         """
