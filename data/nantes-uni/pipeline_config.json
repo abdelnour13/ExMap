@@ -9,8 +9,8 @@
         {
             "name" : "cleaning",
             "args" : {
-                "batch_size" : 128,
-                "buffer_size" : 128
+                "batch_size" : 4,
+                "buffer_size" : 4
             }
         },
         {

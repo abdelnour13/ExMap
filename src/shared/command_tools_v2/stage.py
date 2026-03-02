@@ -141,11 +141,11 @@ class Stage(BaseCommand):
                 
                 ### Custom or sequential (default)
                 if self.parallelism_mode is None:
-                    transformed = self.transform_chunk([doc for doc, _ in self.chunk])
+                    transformed = await asyncio.to_thread(self.transform_chunk, [doc for doc, _ in self.chunk])
 
                 ### Using multiprocessing
                 else:
-                    transformed = self.mp_transform_chunk(self.chunk)
+                    transformed = await asyncio.to_thread(self.mp_transform_chunk, self.chunk)
 
                 for result, (doc, progress) in zip(transformed, self.chunk):
                     await self.results_queue.put((doc, result, progress))
@@ -162,6 +162,7 @@ class Stage(BaseCommand):
 
         if len(self.chunk) > 0:
 
+            ### custom
             if self.parallelism_mode is None or self.parallelism_mode == 'multiprocessing':
                     
                 if self.parallelism_mode is None:
@@ -182,6 +183,8 @@ class Stage(BaseCommand):
 
     async def result_consumer(self) -> None:
 
+        print('from consumer')
+
         while True:
 
             doc, result, progress = await self.results_queue.get()
@@ -191,7 +194,6 @@ class Stage(BaseCommand):
 
                 value = result.unwrap()
 
-                # don't worry about this for now
                 if self.skip(value):
                     self.total_skipped += 1
                 else:

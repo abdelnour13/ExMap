@@ -17,7 +17,6 @@ class BaseCommand(ABC):
         super().__init__()
         self.handlers : List[Handler] = []
         self.events_queue = asyncio.Queue[Event](100)
-        self.events_tasks = []
 
     def add_handler(self, handler : Handler) -> 'BaseCommand':
         self.handlers.append(handler)
@@ -49,15 +48,15 @@ class BaseCommand(ABC):
         consume_task = asyncio.create_task(self.event_consumer())
 
         try:
-            await self.before_start(),
-            await self.generate(),
+            await self.before_start()
+            await self.generate()
             await self.after_end()
 
         except Exception as e:
 
             await self.emit_warn_event(
                 progress=0.0,
-                message=f"Shutting down due to an unexpected error waiting for remaining events to complete. error : {e}."
+                message=f"Shutting down due to an unexpected error waiting for remaining events to be processed. error : {e}."
             )
 
         finally:
