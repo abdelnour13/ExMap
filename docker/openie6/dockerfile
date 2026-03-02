@@ -7,4 +7,4 @@ COPY ../../external/openie6/openie6/requirements.txt setup.sh ./
 RUN chmod +x setup.sh && bash setup.sh
 
 # Command to run your application
-CMD ["python3", "-m", "src.rpc.openie6"]
+CMD ["python3", "-m", "src.rpc.servers.openie6"]

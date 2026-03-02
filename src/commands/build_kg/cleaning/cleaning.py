@@ -91,7 +91,7 @@ class CorpusCleaner(Stage):
             doc['abstract'] = None
         else:
 
-            if len(doc['abstract']) == 0 or word_tokenize(doc['abstract']) <= 10:
+            if len(doc['abstract']) == 0 or len(word_tokenize(doc['abstract'])) <= 10:
                 doc['abstract'] = None
             else:
                 doc['abstract'] = self.clean_text(doc['abstract'])

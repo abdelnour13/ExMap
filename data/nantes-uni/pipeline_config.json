@@ -1,0 +1,82 @@
+{
+    "glob" : {
+        "domain" : "computer_science",
+        "batch_size" : 1,
+        "buffer_size" : 4,
+        "resume" : true
+    },
+    "overrides" : [
+        {
+            "name" : "cleaning",
+            "args" : {
+                "batch_size" : 128,
+                "buffer_size" : 128
+            }
+        },
+        {
+            "name" : "coreference_resolution",
+            "args" : {
+                "model" : "spanbert-large",
+                "device" : -1
+            }
+        },
+        {
+            "name" : "annotate",
+            "args" : {
+                "model" : "deepseek-chat",
+                "batch_size" : 8,
+                "buffer_size" : 8
+            }
+        },
+        {
+            "name" : "keyword_extraction",
+            "args" : {}
+        },
+        {
+            "name" : "sentence_segmentation",
+            "args" : {
+                "use_gpu" : false
+            }
+        },
+        {
+            "name" : "acronym_extraction",
+            "args" : {
+                "qa_model" : "timpal0l/mdeberta-v3-base-squad2",
+                "threshold" : 0.5
+            }
+        },
+        {
+            "name" : "extract_triples",
+            "args" : {
+                "batch_size" : 16,
+                "buffer_size" : 16,
+                "type" : "two-step",
+                "llm" : "deepseek-chat"
+            }
+        },
+        {
+            "name" : "triples_validation",
+            "args" : {
+                "batch_size" : 16,
+                "buffer_size" : 16,
+                "llm" : "deepseek-chat"
+            }
+        },
+        {
+            "name" : "clean_triples",
+            "args" : {}
+        },
+        {
+            "name" : "entities_mapping",
+            "args" : {}
+        },
+        {
+            "name" : "graph2triples",
+            "args" : {}
+        },
+        {
+            "name" : "insert2neo4j",
+            "args" : {}
+        }
+    ]
+}

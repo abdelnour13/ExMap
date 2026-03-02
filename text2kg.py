@@ -48,7 +48,7 @@ def start_rpc(servers : List[str]):
             try:
 
                 process = subprocess.Popen(
-                    args = ["conda", "run", "-n", f"text2kg-{server}", "python3", "-m", f"src.rpc.{server}"],
+                    args = ["conda", "run", "-n", f"text2kg-{server}", "python3", "-m", f"src.rpc.servers.{server}"],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
                     text=True,

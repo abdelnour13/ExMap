@@ -128,40 +128,40 @@ class BaseCommand(ABC):
         progress : Optional[float],
         level : EventLevel,
         message : str,
-        extra : Dict
+        extra : Optional[Dict] = None
     ) -> Event:
         
         return Event(
             progress=progress,
             level=level,
             message=message,
-            extra=extra
+            extra=(extra or {})
         )
     
     def make_debug_event(self,
         progress : Optional[float],
         message : str,
-        extra : Dict
+        extra : Optional[Dict] = None
     ) -> Event:
         return self.make_event(progress, EventLevel.DEBUG, message, extra)
     
     def make_info_event(self,
         progress : Optional[float],
         message : str,
-        extra : Dict
+        extra : Optional[Dict] = None
     ) -> Event:
         return self.make_event(progress, EventLevel.INFO, message, extra)
     
     def make_error_event(self,
         progress : Optional[float],
         message : str,
-        extra : Dict
+        extra : Optional[Dict] = None
     ) -> Event:
         return self.make_event(progress, EventLevel.ERROR, message, extra)
     
     def make_warn_event(self,
         progress : Optional[float],
         message : str,
-        extra : Dict
+        extra : Optional[Dict] = None
     ) -> Event:
         return self.make_event(progress, EventLevel.WARN, message, extra)

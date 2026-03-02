@@ -5,15 +5,15 @@ from src.shared.file_tools import FileWriter, FileReader, TextfileCache
 from SPARQLWrapper import SPARQLWrapper, JSON
 from instance import cli
 
-@cli.register_stage(
-    name="entities_metadata",
-    description=(
-        "Perform entity mapping using Wikidata aliases attributes combined with Semantic similarity using a language model."
-    ),
-    add_from_conf=False,
-    add_save_to=False
-) 
-@add_handlers
+# @cli.register_stage(
+#     name="entities_metadata",
+#     description=(
+#         "Perform entity mapping using Wikidata aliases attributes combined with Semantic similarity using a language model."
+#     ),
+#     add_from_conf=False,
+#     add_save_to=False
+# ) 
+# @add_handlers
 class TriplesExtractor(Stage):
 
     ENDPOINT : str = "https://query.wikidata.org/sparql"

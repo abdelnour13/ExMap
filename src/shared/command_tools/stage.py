@@ -1,7 +1,7 @@
 import asyncio
 import multiprocessing
 import inspect
-from typing import Dict, Iterable, Union, List, Type, Literal, Optional, Tuple, Generator,Self, TypeVar, Callable
+from typing import Dict, Iterable, Union, List, Literal, Optional, Tuple, Generator,Self, TypeVar, Callable
 from src.shared.handlers import SocketHandler, ConsoleLogger, FileLogger
 from abc import abstractmethod
 from src.shared.file_tools import BufferedWriter, BatchedReader
@@ -38,30 +38,6 @@ def add_handlers(cls : T):
     return cls
 
 TransformReturn = Union[Dict, List[Dict]]
-
-def safe(func : Callable) -> Callable:
-
-    if inspect.iscoroutinefunction(func):
-
-        @wraps(func)
-        async def __wraper__(*args, **kwargs):
-
-            try:
-                return Result.from_value(await func(*args,**kwargs))
-            except Exception as e:
-                return Result.from_failure(e)
-            
-    else:
-
-        @wraps(func)
-        def __wraper__(*args, **kwargs):
-
-            try:
-                return Result.from_value(func(*args,**kwargs))
-            except Exception as e:
-                return Result.from_failure(e)
-            
-    return func
 
 class Stage(BaseCommand):
 
@@ -113,6 +89,13 @@ class Stage(BaseCommand):
         except Exception as e:
             return Result.from_failure(e)
         
+    def mp_safe_transform(self, doc : Dict):
+
+        try:
+            return { "value" : self.transform(doc) }
+        except Exception as e:
+            return { "error" : e }
+        
     async def async_safe_transform(self, doc : Dict) -> Result[TransformReturn, Exception]:
 
         try:
@@ -126,15 +109,20 @@ class Stage(BaseCommand):
     def mp_transform_chunk(self, chunk : Iterable[Dict]) -> List[Result[TransformReturn, Exception]]:
         
         with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
-            return pool.map(self.safe_transform, chunk)
+            
+            return [
+                Result.from_failure(result['error']) if "error" in result else Result.from_failure(result['value'])
+                for result in pool.map(self.mp_safe_transform, chunk)
+            ]
 
     def make_event(self,
         progress : Optional[float],
         level : EventLevel,
-        message : str
+        message : str,
+        extra : Optional[Dict] = None
     ) -> Event:
         
-        super().make_event(
+        return super().make_event(
             progress=progress, 
             level=level, 
             message=message,
@@ -142,6 +130,7 @@ class Stage(BaseCommand):
                 'total_processed' : self.total_processed,
                 'total_saved' : self.total_saved,
                 'total_skipped' : self.total_skipped,
+                **(extra or {})
             }
         )
 
