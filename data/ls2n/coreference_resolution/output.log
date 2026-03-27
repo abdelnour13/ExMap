@@ -10290,3 +10290,172 @@ CoreferenceResolver,2026-02-25 21:38:15,INFO,1986,1688,294,Chunk 1985 processing
 CoreferenceResolver,2026-02-25 21:38:15,INFO,1986,1692,294,4 documents written to disk.,99.99
 CoreferenceResolver,2026-02-25 21:38:18,INFO,1987,1692,294,Chunk 1986 processing completed.,100.00
 CoreferenceResolver,2026-02-25 21:38:18,INFO,1987,1693,294,Job CoreferenceResolver has been completed.,100.00
+CoreferenceResolver,2026-03-25 15:02:07,INFO,0,0,0,Loading AllenNLP-Coreference resolver...,None
+CoreferenceResolver,2026-03-25 15:02:20,INFO,0,0,0,AllenNLP-Coreference Loaded.,None
+CoreferenceResolver,2026-03-25 15:02:20,INFO,0,0,0,Job CoreferenceResolver has started.,None
+CoreferenceResolver,2026-03-25 15:02:20,INFO,1,0,0,Chunk 0 processing completed.,57.03
+CoreferenceResolver,2026-03-25 15:02:20,ERROR,1,0,1,An error has occurred during processing chunk 0. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,57.03
+CoreferenceResolver,2026-03-25 15:02:20,INFO,2,0,1,Chunk 1 processing completed.,60.86
+CoreferenceResolver,2026-03-25 15:02:20,ERROR,2,0,2,An error has occurred during processing chunk 1. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,60.86
+CoreferenceResolver,2026-03-25 15:02:20,INFO,3,0,2,Chunk 2 processing completed.,61.27
+CoreferenceResolver,2026-03-25 15:02:20,ERROR,3,0,3,An error has occurred during processing chunk 2. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,61.27
+CoreferenceResolver,2026-03-25 15:02:20,INFO,4,0,3,Chunk 3 processing completed.,61.28
+CoreferenceResolver,2026-03-25 15:02:20,ERROR,4,0,4,An error has occurred during processing chunk 3. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,61.28
+CoreferenceResolver,2026-03-25 15:02:20,INFO,5,0,4,Chunk 4 processing completed.,65.60
+CoreferenceResolver,2026-03-25 15:02:20,ERROR,5,0,5,An error has occurred during processing chunk 4. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,65.60
+CoreferenceResolver,2026-03-25 15:02:21,INFO,6,0,5,Chunk 5 processing completed.,66.25
+CoreferenceResolver,2026-03-25 15:02:21,ERROR,6,0,6,An error has occurred during processing chunk 5. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,66.25
+CoreferenceResolver,2026-03-25 15:02:21,INFO,7,0,6,Chunk 6 processing completed.,70.91
+CoreferenceResolver,2026-03-25 15:02:21,ERROR,7,0,7,An error has occurred during processing chunk 6. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,70.91
+CoreferenceResolver,2026-03-25 15:02:21,INFO,8,0,7,Chunk 7 processing completed.,71.04
+CoreferenceResolver,2026-03-25 15:02:21,ERROR,8,0,8,An error has occurred during processing chunk 7. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,71.04
+CoreferenceResolver,2026-03-25 15:02:21,INFO,9,0,8,Chunk 8 processing completed.,74.02
+CoreferenceResolver,2026-03-25 15:02:21,ERROR,9,0,9,An error has occurred during processing chunk 8. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,74.02
+CoreferenceResolver,2026-03-25 15:02:21,INFO,10,0,9,Chunk 9 processing completed.,75.60
+CoreferenceResolver,2026-03-25 15:02:21,ERROR,10,0,10,An error has occurred during processing chunk 9. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,75.60
+CoreferenceResolver,2026-03-25 15:02:21,INFO,11,0,10,Chunk 10 processing completed.,77.72
+CoreferenceResolver,2026-03-25 15:02:21,ERROR,11,0,11,An error has occurred during processing chunk 10. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,77.72
+CoreferenceResolver,2026-03-25 15:02:22,INFO,12,0,11,Chunk 11 processing completed.,80.18
+CoreferenceResolver,2026-03-25 15:02:22,ERROR,12,0,12,An error has occurred during processing chunk 11. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,80.18
+CoreferenceResolver,2026-03-25 15:02:22,INFO,13,0,12,Chunk 12 processing completed.,84.66
+CoreferenceResolver,2026-03-25 15:02:22,ERROR,13,0,13,An error has occurred during processing chunk 12. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,84.66
+CoreferenceResolver,2026-03-25 15:02:22,INFO,14,0,13,Chunk 13 processing completed.,86.68
+CoreferenceResolver,2026-03-25 15:02:22,ERROR,14,0,14,An error has occurred during processing chunk 13. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,86.68
+CoreferenceResolver,2026-03-25 15:02:22,INFO,15,0,14,Chunk 14 processing completed.,86.84
+CoreferenceResolver,2026-03-25 15:02:22,ERROR,15,0,15,An error has occurred during processing chunk 14. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,86.84
+CoreferenceResolver,2026-03-25 15:02:22,INFO,16,0,15,Chunk 15 processing completed.,88.02
+CoreferenceResolver,2026-03-25 15:02:22,ERROR,16,0,16,An error has occurred during processing chunk 15. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,88.02
+CoreferenceResolver,2026-03-25 15:02:22,INFO,17,0,16,Chunk 16 processing completed.,88.15
+CoreferenceResolver,2026-03-25 15:02:22,ERROR,17,0,17,An error has occurred during processing chunk 16. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,88.15
+CoreferenceResolver,2026-03-25 15:02:22,INFO,18,0,17,Chunk 17 processing completed.,88.41
+CoreferenceResolver,2026-03-25 15:02:22,ERROR,18,0,18,An error has occurred during processing chunk 17. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,88.41
+CoreferenceResolver,2026-03-25 15:02:23,INFO,19,0,18,Chunk 18 processing completed.,88.52
+CoreferenceResolver,2026-03-25 15:02:23,ERROR,19,0,19,An error has occurred during processing chunk 18. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,88.52
+CoreferenceResolver,2026-03-25 15:02:23,INFO,20,0,19,Chunk 19 processing completed.,89.10
+CoreferenceResolver,2026-03-25 15:02:23,ERROR,20,0,20,An error has occurred during processing chunk 19. error : <Fault 1: "<class 'ValueError'>:`input_` and `mask` must have the same shape.">,89.10
+CoreferenceResolver,2026-03-25 15:02:23,INFO,21,0,20,Chunk 20 processing completed.,89.11
+CoreferenceResolver,2026-03-25 15:02:23,ERROR,21,0,21,An error has occurred during processing chunk 20. error : <Fault 1: "<class 'ValueError'>:`input_` and `mask` must have the same shape.">,89.11
+CoreferenceResolver,2026-03-25 15:02:23,INFO,22,0,21,Chunk 21 processing completed.,89.40
+CoreferenceResolver,2026-03-25 15:02:23,ERROR,22,0,22,An error has occurred during processing chunk 21. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,89.40
+CoreferenceResolver,2026-03-25 15:02:23,INFO,23,0,22,Chunk 22 processing completed.,89.57
+CoreferenceResolver,2026-03-25 15:02:23,ERROR,23,0,23,An error has occurred during processing chunk 22. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,89.57
+CoreferenceResolver,2026-03-25 15:02:23,INFO,24,0,23,Chunk 23 processing completed.,90.04
+CoreferenceResolver,2026-03-25 15:02:23,ERROR,24,0,24,An error has occurred during processing chunk 23. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,90.04
+CoreferenceResolver,2026-03-25 15:02:23,INFO,25,0,24,Chunk 24 processing completed.,90.07
+CoreferenceResolver,2026-03-25 15:02:23,ERROR,25,0,25,An error has occurred during processing chunk 24. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,90.07
+CoreferenceResolver,2026-03-25 15:02:23,INFO,26,0,25,Chunk 25 processing completed.,90.55
+CoreferenceResolver,2026-03-25 15:02:23,ERROR,26,0,26,An error has occurred during processing chunk 25. error : <Fault 1: "<class 'ValueError'>:`input_` and `mask` must have the same shape.">,90.55
+CoreferenceResolver,2026-03-25 15:02:24,INFO,27,0,26,Chunk 26 processing completed.,90.62
+CoreferenceResolver,2026-03-25 15:02:24,ERROR,27,0,27,An error has occurred during processing chunk 26. error : <Fault 1: "<class 'ValueError'>:`input_` and `mask` must have the same shape.">,90.62
+CoreferenceResolver,2026-03-25 15:02:24,INFO,28,0,27,Chunk 27 processing completed.,90.83
+CoreferenceResolver,2026-03-25 15:02:24,ERROR,28,0,28,An error has occurred during processing chunk 27. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,90.83
+CoreferenceResolver,2026-03-25 15:02:24,INFO,29,0,28,Chunk 28 processing completed.,90.86
+CoreferenceResolver,2026-03-25 15:02:24,ERROR,29,0,29,An error has occurred during processing chunk 28. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,90.86
+CoreferenceResolver,2026-03-25 15:02:24,INFO,30,0,29,Chunk 29 processing completed.,90.91
+CoreferenceResolver,2026-03-25 15:02:24,ERROR,30,0,30,An error has occurred during processing chunk 29. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,90.91
+CoreferenceResolver,2026-03-25 15:02:24,INFO,31,0,30,Chunk 30 processing completed.,91.02
+CoreferenceResolver,2026-03-25 15:02:24,ERROR,31,0,31,An error has occurred during processing chunk 30. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,91.02
+CoreferenceResolver,2026-03-25 15:02:24,INFO,32,0,31,Chunk 31 processing completed.,92.06
+CoreferenceResolver,2026-03-25 15:02:24,ERROR,32,0,32,An error has occurred during processing chunk 31. error : <Fault 1: "<class 'ValueError'>:`input_` and `mask` must have the same shape.">,92.06
+CoreferenceResolver,2026-03-25 15:02:24,INFO,33,0,32,Chunk 32 processing completed.,92.28
+CoreferenceResolver,2026-03-25 15:02:24,ERROR,33,0,33,An error has occurred during processing chunk 32. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,92.28
+CoreferenceResolver,2026-03-25 15:02:25,INFO,34,0,33,Chunk 33 processing completed.,92.32
+CoreferenceResolver,2026-03-25 15:02:25,ERROR,34,0,34,An error has occurred during processing chunk 33. error : <Fault 1: "<class 'ValueError'>:`input_` and `mask` must have the same shape.">,92.32
+CoreferenceResolver,2026-03-25 15:02:25,INFO,35,0,34,Chunk 34 processing completed.,92.41
+CoreferenceResolver,2026-03-25 15:02:25,ERROR,35,0,35,An error has occurred during processing chunk 34. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,92.41
+CoreferenceResolver,2026-03-25 15:02:25,INFO,36,0,35,Chunk 35 processing completed.,92.43
+CoreferenceResolver,2026-03-25 15:02:25,ERROR,36,0,36,An error has occurred during processing chunk 35. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,92.43
+CoreferenceResolver,2026-03-25 15:02:25,INFO,37,0,36,Chunk 36 processing completed.,92.60
+CoreferenceResolver,2026-03-25 15:02:25,ERROR,37,0,37,An error has occurred during processing chunk 36. error : <Fault 1: "<class 'ValueError'>:`input_` and `mask` must have the same shape.">,92.60
+CoreferenceResolver,2026-03-25 15:02:25,INFO,38,0,37,Chunk 37 processing completed.,92.81
+CoreferenceResolver,2026-03-25 15:02:25,ERROR,38,0,38,An error has occurred during processing chunk 37. error : <Fault 1: "<class 'ValueError'>:`input_` and `mask` must have the same shape.">,92.81
+CoreferenceResolver,2026-03-25 15:02:25,INFO,39,0,38,Chunk 38 processing completed.,92.81
+CoreferenceResolver,2026-03-25 15:02:25,ERROR,39,0,39,An error has occurred during processing chunk 38. error : <Fault 1: "<class 'ValueError'>:`input_` and `mask` must have the same shape.">,92.81
+CoreferenceResolver,2026-03-25 15:02:25,INFO,40,0,39,Chunk 39 processing completed.,93.07
+CoreferenceResolver,2026-03-25 15:02:25,ERROR,40,0,40,An error has occurred during processing chunk 39. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,93.07
+CoreferenceResolver,2026-03-25 15:02:26,INFO,41,0,40,Chunk 40 processing completed.,93.13
+CoreferenceResolver,2026-03-25 15:02:26,ERROR,41,0,41,An error has occurred during processing chunk 40. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,93.13
+CoreferenceResolver,2026-03-25 15:02:26,INFO,42,0,41,Chunk 41 processing completed.,93.21
+CoreferenceResolver,2026-03-25 15:02:26,ERROR,42,0,42,An error has occurred during processing chunk 41. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,93.21
+CoreferenceResolver,2026-03-25 15:02:26,INFO,43,0,42,Chunk 42 processing completed.,93.29
+CoreferenceResolver,2026-03-25 15:02:26,ERROR,43,0,43,An error has occurred during processing chunk 42. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,93.29
+CoreferenceResolver,2026-03-25 15:02:26,INFO,44,0,43,Chunk 43 processing completed.,93.35
+CoreferenceResolver,2026-03-25 15:02:26,ERROR,44,0,44,An error has occurred during processing chunk 43. error : <Fault 1: "<class 'ValueError'>:`input_` and `mask` must have the same shape.">,93.35
+CoreferenceResolver,2026-03-25 15:02:26,INFO,45,0,44,Chunk 44 processing completed.,93.36
+CoreferenceResolver,2026-03-25 15:02:26,ERROR,45,0,45,An error has occurred during processing chunk 44. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,93.36
+CoreferenceResolver,2026-03-25 15:02:26,INFO,46,0,45,Chunk 45 processing completed.,93.47
+CoreferenceResolver,2026-03-25 15:02:26,ERROR,46,0,46,An error has occurred during processing chunk 45. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,93.47
+CoreferenceResolver,2026-03-25 15:02:26,INFO,47,0,46,Chunk 46 processing completed.,93.48
+CoreferenceResolver,2026-03-25 15:02:26,ERROR,47,0,47,An error has occurred during processing chunk 46. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,93.48
+CoreferenceResolver,2026-03-25 15:02:27,INFO,48,0,47,Chunk 47 processing completed.,93.56
+CoreferenceResolver,2026-03-25 15:02:27,ERROR,48,0,48,An error has occurred during processing chunk 47. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,93.56
+CoreferenceResolver,2026-03-25 15:02:27,INFO,49,0,48,Chunk 48 processing completed.,93.57
+CoreferenceResolver,2026-03-25 15:02:27,ERROR,49,0,49,An error has occurred during processing chunk 48. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,93.57
+CoreferenceResolver,2026-03-25 15:02:27,INFO,50,0,49,Chunk 49 processing completed.,93.59
+CoreferenceResolver,2026-03-25 15:02:27,ERROR,50,0,50,An error has occurred during processing chunk 49. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,93.59
+CoreferenceResolver,2026-03-25 15:02:27,INFO,51,0,50,Chunk 50 processing completed.,94.52
+CoreferenceResolver,2026-03-25 15:02:27,ERROR,51,0,51,An error has occurred during processing chunk 50. error : <Fault 1: "<class 'ValueError'>:`input_` and `mask` must have the same shape.">,94.52
+CoreferenceResolver,2026-03-25 15:02:27,INFO,52,0,51,Chunk 51 processing completed.,94.73
+CoreferenceResolver,2026-03-25 15:02:27,ERROR,52,0,52,An error has occurred during processing chunk 51. error : <Fault 1: "<class 'ValueError'>:`input_` and `mask` must have the same shape.">,94.73
+CoreferenceResolver,2026-03-25 15:02:27,INFO,53,0,52,Chunk 52 processing completed.,94.98
+CoreferenceResolver,2026-03-25 15:02:27,ERROR,53,0,53,An error has occurred during processing chunk 52. error : <Fault 1: "<class 'ValueError'>:`input_` and `mask` must have the same shape.">,94.98
+CoreferenceResolver,2026-03-25 15:02:27,INFO,54,0,53,Chunk 53 processing completed.,94.99
+CoreferenceResolver,2026-03-25 15:02:27,ERROR,54,0,54,An error has occurred during processing chunk 53. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,94.99
+CoreferenceResolver,2026-03-25 15:02:28,INFO,55,0,54,Chunk 54 processing completed.,95.01
+CoreferenceResolver,2026-03-25 15:02:28,ERROR,55,0,55,An error has occurred during processing chunk 54. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.01
+CoreferenceResolver,2026-03-25 15:02:28,INFO,56,0,55,Chunk 55 processing completed.,95.04
+CoreferenceResolver,2026-03-25 15:02:28,ERROR,56,0,56,An error has occurred during processing chunk 55. error : <Fault 1: "<class 'ValueError'>:`input_` and `mask` must have the same shape.">,95.04
+CoreferenceResolver,2026-03-25 15:02:28,INFO,57,0,56,Chunk 56 processing completed.,95.05
+CoreferenceResolver,2026-03-25 15:02:28,ERROR,57,0,57,An error has occurred during processing chunk 56. error : <Fault 1: "<class 'ValueError'>:`input_` and `mask` must have the same shape.">,95.05
+CoreferenceResolver,2026-03-25 15:02:28,INFO,58,0,57,Chunk 57 processing completed.,95.06
+CoreferenceResolver,2026-03-25 15:02:28,ERROR,58,0,58,An error has occurred during processing chunk 57. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.06
+CoreferenceResolver,2026-03-25 15:02:28,INFO,59,0,58,Chunk 58 processing completed.,95.12
+CoreferenceResolver,2026-03-25 15:02:28,ERROR,59,0,59,An error has occurred during processing chunk 58. error : <Fault 1: "<class 'ValueError'>:`input_` and `mask` must have the same shape.">,95.12
+CoreferenceResolver,2026-03-25 15:02:28,INFO,60,0,59,Chunk 59 processing completed.,95.18
+CoreferenceResolver,2026-03-25 15:02:28,ERROR,60,0,60,An error has occurred during processing chunk 59. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.18
+CoreferenceResolver,2026-03-25 15:02:28,INFO,61,0,60,Chunk 60 processing completed.,95.19
+CoreferenceResolver,2026-03-25 15:02:28,ERROR,61,0,61,An error has occurred during processing chunk 60. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.19
+CoreferenceResolver,2026-03-25 15:02:29,INFO,62,0,61,Chunk 61 processing completed.,95.26
+CoreferenceResolver,2026-03-25 15:02:29,ERROR,62,0,62,An error has occurred during processing chunk 61. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.26
+CoreferenceResolver,2026-03-25 15:02:29,INFO,63,0,62,Chunk 62 processing completed.,95.26
+CoreferenceResolver,2026-03-25 15:02:29,ERROR,63,0,63,An error has occurred during processing chunk 62. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.26
+CoreferenceResolver,2026-03-25 15:02:29,INFO,64,0,63,Chunk 63 processing completed.,95.26
+CoreferenceResolver,2026-03-25 15:02:29,ERROR,64,0,64,An error has occurred during processing chunk 63. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.26
+CoreferenceResolver,2026-03-25 15:02:29,INFO,65,0,64,Chunk 64 processing completed.,95.33
+CoreferenceResolver,2026-03-25 15:02:29,ERROR,65,0,65,An error has occurred during processing chunk 64. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.33
+CoreferenceResolver,2026-03-25 15:02:29,INFO,66,0,65,Chunk 65 processing completed.,95.33
+CoreferenceResolver,2026-03-25 15:02:29,ERROR,66,0,66,An error has occurred during processing chunk 65. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.33
+CoreferenceResolver,2026-03-25 15:02:29,INFO,67,0,66,Chunk 66 processing completed.,95.33
+CoreferenceResolver,2026-03-25 15:02:29,ERROR,67,0,67,An error has occurred during processing chunk 66. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.33
+CoreferenceResolver,2026-03-25 15:02:29,INFO,68,0,67,Chunk 67 processing completed.,95.33
+CoreferenceResolver,2026-03-25 15:02:29,ERROR,68,0,68,An error has occurred during processing chunk 67. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.33
+CoreferenceResolver,2026-03-25 15:02:30,INFO,69,0,68,Chunk 68 processing completed.,95.35
+CoreferenceResolver,2026-03-25 15:02:30,ERROR,69,0,69,An error has occurred during processing chunk 68. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.35
+CoreferenceResolver,2026-03-25 15:02:30,INFO,70,0,69,Chunk 69 processing completed.,95.41
+CoreferenceResolver,2026-03-25 15:02:30,ERROR,70,0,70,An error has occurred during processing chunk 69. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.41
+CoreferenceResolver,2026-03-25 15:02:30,INFO,71,0,70,Chunk 70 processing completed.,95.45
+CoreferenceResolver,2026-03-25 15:02:30,ERROR,71,0,71,An error has occurred during processing chunk 70. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.45
+CoreferenceResolver,2026-03-25 15:02:30,INFO,72,0,71,Chunk 71 processing completed.,95.45
+CoreferenceResolver,2026-03-25 15:02:30,ERROR,72,0,72,An error has occurred during processing chunk 71. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.45
+CoreferenceResolver,2026-03-25 15:02:30,INFO,73,0,72,Chunk 72 processing completed.,95.47
+CoreferenceResolver,2026-03-25 15:02:30,ERROR,73,0,73,An error has occurred during processing chunk 72. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.47
+CoreferenceResolver,2026-03-25 15:02:30,INFO,74,0,73,Chunk 73 processing completed.,95.48
+CoreferenceResolver,2026-03-25 15:02:30,ERROR,74,0,74,An error has occurred during processing chunk 73. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.48
+CoreferenceResolver,2026-03-25 15:02:30,INFO,75,0,74,Chunk 74 processing completed.,95.48
+CoreferenceResolver,2026-03-25 15:02:30,ERROR,75,0,75,An error has occurred during processing chunk 74. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.48
+CoreferenceResolver,2026-03-25 15:02:31,INFO,76,0,75,Chunk 75 processing completed.,95.50
+CoreferenceResolver,2026-03-25 15:02:31,ERROR,76,0,76,An error has occurred during processing chunk 75. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.50
+CoreferenceResolver,2026-03-25 15:02:31,INFO,77,0,76,Chunk 76 processing completed.,95.50
+CoreferenceResolver,2026-03-25 15:02:31,ERROR,77,0,77,An error has occurred during processing chunk 76. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.50
+CoreferenceResolver,2026-03-25 15:02:31,INFO,78,0,77,Chunk 77 processing completed.,95.50
+CoreferenceResolver,2026-03-25 15:02:31,ERROR,78,0,78,An error has occurred during processing chunk 77. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.50
+CoreferenceResolver,2026-03-25 15:02:31,INFO,79,0,78,Chunk 78 processing completed.,95.61
+CoreferenceResolver,2026-03-25 15:02:31,ERROR,79,0,79,An error has occurred during processing chunk 78. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.61
+CoreferenceResolver,2026-03-25 15:02:31,INFO,80,0,79,Chunk 79 processing completed.,95.61
+CoreferenceResolver,2026-03-25 15:02:31,ERROR,80,0,80,An error has occurred during processing chunk 79. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.61
+CoreferenceResolver,2026-03-25 15:02:31,INFO,81,0,80,Chunk 80 processing completed.,95.61
+CoreferenceResolver,2026-03-25 15:02:31,ERROR,81,0,81,An error has occurred during processing chunk 80. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,95.61
+CoreferenceResolver,2026-03-25 15:02:31,INFO,82,0,81,Chunk 81 processing completed.,96.38
+CoreferenceResolver,2026-03-25 15:02:31,ERROR,82,0,82,An error has occurred during processing chunk 81. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,96.38
+CoreferenceResolver,2026-03-25 15:02:32,INFO,83,0,82,Chunk 82 processing completed.,96.38
+CoreferenceResolver,2026-03-25 15:02:32,ERROR,83,0,83,An error has occurred during processing chunk 82. error : <Fault 1: "<class 'IndexError'>:max(): Expected reduction dim 1 to have non-zero size.">,96.38

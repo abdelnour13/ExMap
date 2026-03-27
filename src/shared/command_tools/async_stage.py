@@ -1,6 +1,5 @@
 import asyncio
-import multiprocessing
-from typing import Dict, Iterable, Union, List, Literal, Optional, Self, TypeVar, Tuple
+from typing import Dict, Union, List, Optional, TypeVar, Tuple
 from src.shared.handlers import SocketHandler, ConsoleLogger, FileLogger
 from abc import abstractmethod
 from src.shared.file_tools import BufferedWriter, BatchedReader
@@ -8,7 +7,7 @@ from src.shared.handlers import EventLevel
 from functools import wraps
 from returns.result import Result
 from returns.pipeline import is_successful
-from .base_command import BaseCommand
+from .async_base_command import BaseCommand
 from .config import OutputDirOption, InputFileOption, ConnectionOption
 
 class StageConfig(OutputDirOption, InputFileOption, ConnectionOption):
@@ -50,21 +49,15 @@ class Stage(BaseCommand):
 
         self.reader = reader
         self.writer = writer
-        self.parallelism_mode : Optional[Literal['async', 'multiprocessing']] = None
 
         self.total_processed = 0
         self.total_saved = 0
         self.total_skipped = 0
         self.total_errors = 0
 
-        self.chunk : List[Tuple[Dict, float | None]] = []
         self.max_concurent_tasks = reader.batch_size # child class can change this to depend on other factors
         self.results_queue = asyncio.Queue[Tuple[Dict, SafeTransformReturn, float | None]](0)
         self.lock = asyncio.Semaphore(self.max_concurent_tasks)
-
-    def set_parallelism_mode(self, mode : Optional[Literal['async', 'multiprocessing']]) -> Self:
-        self.parallelism_mode = mode
-        return self
 
     def skip(self, doc : Dict) -> bool:
         """
@@ -88,13 +81,6 @@ class Stage(BaseCommand):
         :rtype: Dict | List[Dict]
         """
         ...
-
-    def safe_transform(self, doc : Dict) -> SafeTransformReturn:
-
-        try:
-            return Result.from_value(self.transform(doc))
-        except Exception as e:
-            return Result.from_failure(e)
         
     async def async_safe_transform(self, doc : Dict) -> Result[TransformReturn, Exception]:
 
@@ -102,25 +88,6 @@ class Stage(BaseCommand):
             return Result.from_value(await self.transform(doc)) # Should be async when overriden by child class
         except Exception as e:
             return Result.from_failure(e)
-
-    def transform_chunk(self, chunk : List[Dict]) -> List[SafeTransformReturn]:
-        """
-        Transforms a chunk of documents, bu default it runs a self.transform on
-        each document individually but can be overriden for a specific task that 
-        supports parallelism (Like deep learning models).
-        
-        :param chunk: An Iterable of documents.
-        :type chunk: Iterable[Dict]
-        :return: A list containing the transformed documents
-        :rtype: List[Dict]
-        """
-
-        return [self.safe_transform(document) for document in chunk]
-    
-    def mp_transform_chunk(self, chunk : Iterable[Dict]) -> List[SafeTransformReturn]:
-        
-        with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
-            return pool.map(self.safe_transform, chunk)
         
     async def async_transform_task(self, doc : Dict, progress : float | None) -> None:
         result = await self.async_safe_transform(doc)
@@ -131,59 +98,10 @@ class Stage(BaseCommand):
         doc : Dict, 
         progress : float | None,
     ) -> None:
-
-        if self.parallelism_mode is None or self.parallelism_mode == 'multiprocessing':
-
-            if len(self.chunk) < self.max_concurent_tasks:
-                self.chunk.append((doc, progress))
-
-            if len(self.chunk) == self.max_concurent_tasks:
-                
-                ### Custom or sequential (default)
-                if self.parallelism_mode is None:
-                    transformed = await asyncio.to_thread(self.transform_chunk, [doc for doc, _ in self.chunk])
-
-                ### Using multiprocessing
-                else:
-                    transformed = await asyncio.to_thread(self.mp_transform_chunk, self.chunk)
-
-                for result, (doc, progress) in zip(transformed, self.chunk):
-                    await self.results_queue.put((doc, result, progress))
-
-                self.chunk.clear()
-
-        ### asyncio
-        else:
-            # Seperate lock and release because i don't want to load more documents and create tasks until a slot is available.
-            await self.lock.acquire()
-            asyncio.create_task(self.async_transform_task(doc, progress))
-
-    async def process_remaining(self) -> None:
-
-        if len(self.chunk) > 0:
-
-            ### custom
-            if self.parallelism_mode is None or self.parallelism_mode == 'multiprocessing':
-                    
-                if self.parallelism_mode is None:
-                    transformed = self.transform_chunk([doc for doc, _ in self.chunk])
-                else:
-                    transformed = self.mp_transform_chunk(self.chunk)
-
-                for result, (doc, progress) in zip(transformed, self.chunk):
-                    await self.results_queue.put((doc, result, progress))
-
-                self.chunk.clear()
-
-            ### asyncio
-            else:
-                for doc, progress in self.chunk:
-                    await self.lock.acquire()
-                    asyncio.create_task(self.async_transform_task(doc, progress))
+        await self.lock.acquire()
+        asyncio.create_task(self.async_transform_task(doc, progress))
 
     async def result_consumer(self) -> None:
-
-        print('from consumer')
 
         while True:
 
@@ -249,8 +167,6 @@ class Stage(BaseCommand):
             )
 
         finally:
-
-            # await self.process_remaining()
 
             await self.results_queue.join()
             consume_task.cancel()

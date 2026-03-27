@@ -9,7 +9,8 @@ from src.shared.handlers import Event, EventLevel
 from functools import wraps
 from returns.result import Result
 from returns.pipeline import is_successful
-from .base_command import BaseCommand, OutputDirOption, InputFileOption, ConnectionOption
+from .base_command import BaseCommand
+from .config import OutputDirOption, InputFileOption, ConnectionOption
 
 class StageConfig(OutputDirOption, InputFileOption, ConnectionOption):
     pass

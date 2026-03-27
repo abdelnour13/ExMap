@@ -47,9 +47,11 @@ class CoreferenceResolver(Stage):
         yield Event(
             progress=0.0,
             level=EventLevel.INFO,
-            total_processed=0,
-            total_saved=0,
-            total_skipped=0,
+            extra={
+                'total_processed' : 0,
+                'total_saved' : 0,
+                'total_skipped' : 0
+            },
             message=f"Loading AllenNLP-Coreference resolver..."
         )
 
@@ -58,9 +60,11 @@ class CoreferenceResolver(Stage):
         yield Event(
             progress=0.0,
             level=EventLevel.INFO,
-            total_processed=0,
-            total_saved=0,
-            total_skipped=0,
+            extra={
+                'total_processed' : 0,
+                'total_saved' : 0,
+                'total_skipped' : 0
+            },
             message=f"AllenNLP-Coreference Loaded."
         )
 

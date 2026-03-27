@@ -127,6 +127,8 @@ class HAL_API:
 
             response = self.make_request(0)
 
+            # print(httpx.Response.json(response.unwrap()))
+
             num_pages = response.map(httpx.Response.json) \
                 .map(lambda x : x['response']['numFound']) \
                 .map(lambda x : math.ceil(x / self.config.page_size)) \
@@ -197,10 +199,12 @@ class DataDownloader(BaseCommand):
         return Event(
             progress=progress,
             level=level,
-            total_processed=self._num_processed,
-            total_skipped=self._num_skipped,
-            total_saved=self._num_saved,
-            message=message
+            message=message,
+            extra={
+                'num_processed' : self._num_processed,
+                'total_skipped' : self._num_skipped,
+                'total_saved' : self._num_saved
+            }
         )
             
     def _handle_fetch_page(self) -> Generator[Event, None, None]:

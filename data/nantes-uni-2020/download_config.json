@@ -1,0 +1,33 @@
+{
+    "page_size" : 32,
+    "num_pages" : null,
+    "teams" : [
+        "AAU",
+        "CEISAM",
+        "GEM",
+        "GEPEA",
+        "IECM",
+        "IETR",
+        "IMN",
+        "IRT",
+        "LEMNA",
+        "LS2N",
+        "LTEN",
+        "SECALIM"
+    ],
+    "format" : "json",
+    "attributes" : [
+        "docid",
+        "title_s",
+        "keyword_s",
+        "abstract_s",
+        "authFullName_s",
+        "producedDate_tdate",
+        "domainAllCode_s",
+        "collCode_s"
+    ],
+    "from_" : "2020-01-01T00:00:00Z",
+    "to" : "*",
+    "languages" : ["en"],
+    "sort" : "producedDate_tdate desc"
+}

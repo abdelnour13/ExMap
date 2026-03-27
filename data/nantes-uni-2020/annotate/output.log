@@ -1,0 +1,200 @@
+DocumentsAnnotator,2026-03-26 23:20:48,INFO,0,0,0,Job DocumentsAnnotator has started.,None
+DocumentsAnnotator,2026-03-26 23:20:52,INFO,8,0,0,Chunk 0 processing completed.,0.10
+DocumentsAnnotator,2026-03-26 23:20:52,INFO,8,8,0,8 documents written to disk.,0.10
+DocumentsAnnotator,2026-03-26 23:20:55,INFO,16,8,0,Chunk 1 processing completed.,0.20
+DocumentsAnnotator,2026-03-26 23:20:55,INFO,16,16,0,8 documents written to disk.,0.20
+DocumentsAnnotator,2026-03-26 23:20:57,INFO,24,16,0,Chunk 2 processing completed.,0.30
+DocumentsAnnotator,2026-03-26 23:20:57,INFO,24,24,0,8 documents written to disk.,0.30
+DocumentsAnnotator,2026-03-26 23:21:01,INFO,32,24,0,Chunk 3 processing completed.,0.39
+DocumentsAnnotator,2026-03-26 23:21:01,INFO,32,32,0,8 documents written to disk.,0.39
+DocumentsAnnotator,2026-03-26 23:21:04,INFO,40,32,0,Chunk 4 processing completed.,0.48
+DocumentsAnnotator,2026-03-26 23:21:04,INFO,40,40,0,8 documents written to disk.,0.48
+DocumentsAnnotator,2026-03-26 23:21:08,INFO,48,40,0,Chunk 5 processing completed.,0.59
+DocumentsAnnotator,2026-03-26 23:21:08,INFO,48,48,0,8 documents written to disk.,0.59
+DocumentsAnnotator,2026-03-26 23:21:11,INFO,56,48,0,Chunk 6 processing completed.,0.71
+DocumentsAnnotator,2026-03-26 23:21:11,INFO,56,56,0,8 documents written to disk.,0.71
+DocumentsAnnotator,2026-03-26 23:21:14,INFO,64,56,0,Chunk 7 processing completed.,0.80
+DocumentsAnnotator,2026-03-26 23:21:14,INFO,64,64,0,8 documents written to disk.,0.80
+DocumentsAnnotator,2026-03-26 23:21:17,INFO,72,64,0,Chunk 8 processing completed.,0.89
+DocumentsAnnotator,2026-03-26 23:21:17,INFO,72,72,0,8 documents written to disk.,0.89
+DocumentsAnnotator,2026-03-26 23:21:20,INFO,80,72,0,Chunk 9 processing completed.,1.01
+DocumentsAnnotator,2026-03-26 23:21:20,INFO,80,80,0,8 documents written to disk.,1.01
+DocumentsAnnotator,2026-03-26 23:21:23,INFO,88,80,0,Chunk 10 processing completed.,1.11
+DocumentsAnnotator,2026-03-26 23:21:23,INFO,88,88,0,8 documents written to disk.,1.11
+DocumentsAnnotator,2026-03-26 23:21:26,INFO,96,88,0,Chunk 11 processing completed.,1.21
+DocumentsAnnotator,2026-03-26 23:21:26,INFO,96,96,0,8 documents written to disk.,1.21
+DocumentsAnnotator,2026-03-26 23:21:38,INFO,104,96,0,Chunk 12 processing completed.,1.31
+DocumentsAnnotator,2026-03-26 23:21:38,ERROR,104,96,8,An error has occurred during processing chunk 12. error : Request timed out.,1.31
+DocumentsAnnotator,2026-03-26 23:21:38,ERROR,104,96,8,An error has occurred during processing chunk 12. error : Request timed out.,1.31
+DocumentsAnnotator,2026-03-26 23:21:38,ERROR,104,96,8,An error has occurred during processing chunk 12. error : Request timed out.,1.31
+DocumentsAnnotator,2026-03-26 23:21:38,ERROR,104,96,8,An error has occurred during processing chunk 12. error : Request timed out.,1.31
+DocumentsAnnotator,2026-03-26 23:21:38,ERROR,104,96,8,An error has occurred during processing chunk 12. error : Request timed out.,1.31
+DocumentsAnnotator,2026-03-26 23:21:38,ERROR,104,96,8,An error has occurred during processing chunk 12. error : Request timed out.,1.31
+DocumentsAnnotator,2026-03-26 23:21:38,ERROR,104,96,8,An error has occurred during processing chunk 12. error : Request timed out.,1.31
+DocumentsAnnotator,2026-03-26 23:21:38,ERROR,104,96,8,An error has occurred during processing chunk 12. error : Request timed out.,1.31
+DocumentsAnnotator,2026-03-26 23:21:40,INFO,112,96,8,Chunk 13 processing completed.,1.41
+DocumentsAnnotator,2026-03-26 23:21:40,INFO,112,104,8,8 documents written to disk.,1.41
+DocumentsAnnotator,2026-03-26 23:21:44,INFO,120,104,8,Chunk 14 processing completed.,1.52
+DocumentsAnnotator,2026-03-26 23:21:44,INFO,120,112,8,8 documents written to disk.,1.52
+DocumentsAnnotator,2026-03-26 23:21:47,INFO,128,112,8,Chunk 15 processing completed.,1.62
+DocumentsAnnotator,2026-03-26 23:21:47,INFO,128,120,8,8 documents written to disk.,1.62
+DocumentsAnnotator,2026-03-26 23:21:50,INFO,136,120,8,Chunk 16 processing completed.,1.75
+DocumentsAnnotator,2026-03-26 23:21:50,INFO,136,128,8,8 documents written to disk.,1.75
+DocumentsAnnotator,2026-03-26 23:21:54,INFO,144,128,8,Chunk 17 processing completed.,1.86
+DocumentsAnnotator,2026-03-26 23:21:54,INFO,144,136,8,8 documents written to disk.,1.86
+DocumentsAnnotator,2026-03-26 23:21:58,INFO,152,136,8,Chunk 18 processing completed.,1.97
+DocumentsAnnotator,2026-03-26 23:21:58,INFO,152,144,8,8 documents written to disk.,1.97
+DocumentsAnnotator,2026-03-26 23:22:02,INFO,160,144,8,Chunk 19 processing completed.,2.07
+DocumentsAnnotator,2026-03-26 23:22:02,INFO,160,152,8,8 documents written to disk.,2.07
+DocumentsAnnotator,2026-03-26 23:22:04,INFO,168,152,8,Chunk 20 processing completed.,2.17
+DocumentsAnnotator,2026-03-26 23:22:04,INFO,168,160,8,8 documents written to disk.,2.17
+DocumentsAnnotator,2026-03-26 23:22:08,INFO,176,160,8,Chunk 21 processing completed.,2.28
+DocumentsAnnotator,2026-03-26 23:22:08,INFO,176,168,8,8 documents written to disk.,2.28
+DocumentsAnnotator,2026-03-26 23:22:10,INFO,184,168,8,Chunk 22 processing completed.,2.39
+DocumentsAnnotator,2026-03-26 23:22:10,INFO,184,176,8,8 documents written to disk.,2.39
+DocumentsAnnotator,2026-03-26 23:22:13,INFO,192,176,8,Chunk 23 processing completed.,2.48
+DocumentsAnnotator,2026-03-26 23:22:13,INFO,192,184,8,8 documents written to disk.,2.48
+DocumentsAnnotator,2026-03-26 23:22:16,INFO,200,184,8,Chunk 24 processing completed.,2.59
+DocumentsAnnotator,2026-03-26 23:22:16,INFO,200,192,8,8 documents written to disk.,2.59
+DocumentsAnnotator,2026-03-26 23:22:21,INFO,208,192,8,Chunk 25 processing completed.,2.70
+DocumentsAnnotator,2026-03-26 23:22:21,INFO,208,200,8,8 documents written to disk.,2.70
+DocumentsAnnotator,2026-03-26 23:22:26,INFO,216,200,8,Chunk 26 processing completed.,2.80
+DocumentsAnnotator,2026-03-26 23:22:26,INFO,216,208,8,8 documents written to disk.,2.80
+DocumentsAnnotator,2026-03-26 23:22:29,INFO,224,208,8,Chunk 27 processing completed.,2.91
+DocumentsAnnotator,2026-03-26 23:22:29,INFO,224,216,8,8 documents written to disk.,2.91
+DocumentsAnnotator,2026-03-26 23:22:32,INFO,232,216,8,Chunk 28 processing completed.,3.01
+DocumentsAnnotator,2026-03-26 23:22:32,INFO,232,224,8,8 documents written to disk.,3.01
+DocumentsAnnotator,2026-03-26 23:22:35,INFO,240,224,8,Chunk 29 processing completed.,3.07
+DocumentsAnnotator,2026-03-26 23:22:35,INFO,240,232,8,8 documents written to disk.,3.07
+DocumentsAnnotator,2026-03-26 23:22:45,INFO,248,232,8,Chunk 30 processing completed.,3.17
+DocumentsAnnotator,2026-03-26 23:22:45,INFO,248,240,8,8 documents written to disk.,3.17
+DocumentsAnnotator,2026-03-26 23:22:48,INFO,256,240,8,Chunk 31 processing completed.,3.27
+DocumentsAnnotator,2026-03-26 23:22:48,INFO,256,248,8,8 documents written to disk.,3.27
+DocumentsAnnotator,2026-03-26 23:22:52,INFO,264,248,8,Chunk 32 processing completed.,3.36
+DocumentsAnnotator,2026-03-26 23:22:52,INFO,264,256,8,8 documents written to disk.,3.36
+DocumentsAnnotator,2026-03-26 23:22:58,INFO,272,256,8,Chunk 33 processing completed.,3.46
+DocumentsAnnotator,2026-03-26 23:22:58,INFO,272,264,8,8 documents written to disk.,3.46
+DocumentsAnnotator,2026-03-26 23:23:03,INFO,280,264,8,Chunk 34 processing completed.,3.57
+DocumentsAnnotator,2026-03-26 23:23:03,INFO,280,272,8,8 documents written to disk.,3.57
+DocumentsAnnotator,2026-03-26 23:23:08,INFO,288,272,8,Chunk 35 processing completed.,3.70
+DocumentsAnnotator,2026-03-26 23:23:08,INFO,288,280,8,8 documents written to disk.,3.70
+DocumentsAnnotator,2026-03-26 23:23:11,INFO,296,280,8,Chunk 36 processing completed.,3.81
+DocumentsAnnotator,2026-03-26 23:23:11,INFO,296,288,8,8 documents written to disk.,3.81
+DocumentsAnnotator,2026-03-26 23:23:15,INFO,304,288,8,Chunk 37 processing completed.,3.89
+DocumentsAnnotator,2026-03-26 23:23:15,INFO,304,296,8,8 documents written to disk.,3.89
+DocumentsAnnotator,2026-03-26 23:23:17,INFO,312,296,8,Chunk 38 processing completed.,3.99
+DocumentsAnnotator,2026-03-26 23:23:17,INFO,312,304,8,8 documents written to disk.,3.99
+DocumentsAnnotator,2026-03-26 23:23:20,INFO,320,304,8,Chunk 39 processing completed.,4.08
+DocumentsAnnotator,2026-03-26 23:23:20,INFO,320,312,8,8 documents written to disk.,4.08
+DocumentsAnnotator,2026-03-26 23:23:25,INFO,328,312,8,Chunk 40 processing completed.,4.17
+DocumentsAnnotator,2026-03-26 23:23:25,INFO,328,320,8,8 documents written to disk.,4.17
+DocumentsAnnotator,2026-03-26 23:23:30,INFO,336,320,8,Chunk 41 processing completed.,4.28
+DocumentsAnnotator,2026-03-26 23:23:30,INFO,336,328,8,8 documents written to disk.,4.28
+DocumentsAnnotator,2026-03-26 23:23:33,INFO,344,328,8,Chunk 42 processing completed.,4.39
+DocumentsAnnotator,2026-03-26 23:23:33,INFO,344,336,8,8 documents written to disk.,4.39
+DocumentsAnnotator,2026-03-26 23:23:36,INFO,352,336,8,Chunk 43 processing completed.,4.48
+DocumentsAnnotator,2026-03-26 23:23:36,INFO,352,344,8,8 documents written to disk.,4.48
+DocumentsAnnotator,2026-03-27 09:00:55,INFO,0,0,0,Job DocumentsAnnotator has started.,None
+DocumentsAnnotator,2026-03-27 09:00:59,INFO,8,0,0,Chunk 0 processing completed.,1.31
+DocumentsAnnotator,2026-03-27 09:00:59,INFO,8,8,0,8 documents written to disk.,1.31
+DocumentsAnnotator,2026-03-27 09:01:03,INFO,16,8,0,Chunk 1 processing completed.,4.58
+DocumentsAnnotator,2026-03-27 09:01:03,INFO,16,16,0,8 documents written to disk.,4.58
+DocumentsAnnotator,2026-03-27 09:01:06,INFO,24,16,0,Chunk 2 processing completed.,4.68
+DocumentsAnnotator,2026-03-27 09:01:06,INFO,24,24,0,8 documents written to disk.,4.68
+DocumentsAnnotator,2026-03-27 09:01:11,INFO,32,24,0,Chunk 3 processing completed.,4.79
+DocumentsAnnotator,2026-03-27 09:01:11,INFO,32,32,0,8 documents written to disk.,4.79
+DocumentsAnnotator,2026-03-27 09:01:15,INFO,40,32,0,Chunk 4 processing completed.,4.89
+DocumentsAnnotator,2026-03-27 09:01:15,INFO,40,40,0,8 documents written to disk.,4.89
+DocumentsAnnotator,2026-03-27 09:01:19,INFO,48,40,0,Chunk 5 processing completed.,4.98
+DocumentsAnnotator,2026-03-27 09:01:19,INFO,48,48,0,8 documents written to disk.,4.98
+DocumentsAnnotator,2026-03-27 09:01:23,INFO,56,48,0,Chunk 6 processing completed.,5.07
+DocumentsAnnotator,2026-03-27 09:01:23,INFO,56,56,0,8 documents written to disk.,5.07
+DocumentsAnnotator,2026-03-27 09:01:27,INFO,64,56,0,Chunk 7 processing completed.,5.17
+DocumentsAnnotator,2026-03-27 09:01:27,INFO,64,64,0,8 documents written to disk.,5.17
+DocumentsAnnotator,2026-03-27 09:01:32,INFO,72,64,0,Chunk 8 processing completed.,5.28
+DocumentsAnnotator,2026-03-27 09:01:32,INFO,72,72,0,8 documents written to disk.,5.28
+DocumentsAnnotator,2026-03-27 09:01:36,INFO,80,72,0,Chunk 9 processing completed.,5.38
+DocumentsAnnotator,2026-03-27 09:01:36,INFO,80,80,0,8 documents written to disk.,5.38
+DocumentsAnnotator,2026-03-27 09:01:40,INFO,88,80,0,Chunk 10 processing completed.,5.49
+DocumentsAnnotator,2026-03-27 09:01:40,INFO,88,88,0,8 documents written to disk.,5.49
+DocumentsAnnotator,2026-03-27 09:01:44,INFO,96,88,0,Chunk 11 processing completed.,5.59
+DocumentsAnnotator,2026-03-27 09:01:44,INFO,96,96,0,8 documents written to disk.,5.59
+DocumentsAnnotator,2026-03-27 09:01:48,INFO,104,96,0,Chunk 12 processing completed.,5.69
+DocumentsAnnotator,2026-03-27 09:01:48,INFO,104,104,0,8 documents written to disk.,5.69
+DocumentsAnnotator,2026-03-27 09:01:52,INFO,112,104,0,Chunk 13 processing completed.,5.80
+DocumentsAnnotator,2026-03-27 09:01:52,INFO,112,112,0,8 documents written to disk.,5.80
+DocumentsAnnotator,2026-03-27 09:01:55,INFO,120,112,0,Chunk 14 processing completed.,5.90
+DocumentsAnnotator,2026-03-27 09:01:55,INFO,120,120,0,8 documents written to disk.,5.90
+DocumentsAnnotator,2026-03-27 09:01:59,INFO,128,120,0,Chunk 15 processing completed.,5.98
+DocumentsAnnotator,2026-03-27 09:01:59,INFO,128,128,0,8 documents written to disk.,5.98
+DocumentsAnnotator,2026-03-27 09:02:03,INFO,136,128,0,Chunk 16 processing completed.,6.08
+DocumentsAnnotator,2026-03-27 09:02:03,INFO,136,136,0,8 documents written to disk.,6.08
+DocumentsAnnotator,2026-03-27 09:02:07,INFO,144,136,0,Chunk 17 processing completed.,6.18
+DocumentsAnnotator,2026-03-27 09:02:07,INFO,144,144,0,8 documents written to disk.,6.18
+DocumentsAnnotator,2026-03-27 09:02:11,INFO,152,144,0,Chunk 18 processing completed.,6.27
+DocumentsAnnotator,2026-03-27 09:02:11,INFO,152,152,0,8 documents written to disk.,6.27
+DocumentsAnnotator,2026-03-27 09:02:15,INFO,160,152,0,Chunk 19 processing completed.,6.40
+DocumentsAnnotator,2026-03-27 09:02:15,INFO,160,160,0,8 documents written to disk.,6.40
+DocumentsAnnotator,2026-03-27 09:02:19,INFO,168,160,0,Chunk 20 processing completed.,6.52
+DocumentsAnnotator,2026-03-27 09:02:19,INFO,168,168,0,8 documents written to disk.,6.52
+DocumentsAnnotator,2026-03-27 09:02:22,INFO,176,168,0,Chunk 21 processing completed.,6.62
+DocumentsAnnotator,2026-03-27 09:02:22,INFO,176,176,0,8 documents written to disk.,6.62
+DocumentsAnnotator,2026-03-27 09:02:26,INFO,184,176,0,Chunk 22 processing completed.,6.72
+DocumentsAnnotator,2026-03-27 09:02:26,INFO,184,184,0,8 documents written to disk.,6.72
+DocumentsAnnotator,2026-03-27 09:02:29,INFO,192,184,0,Chunk 23 processing completed.,6.80
+DocumentsAnnotator,2026-03-27 09:02:29,INFO,192,192,0,8 documents written to disk.,6.80
+DocumentsAnnotator,2026-03-27 09:02:33,INFO,200,192,0,Chunk 24 processing completed.,6.88
+DocumentsAnnotator,2026-03-27 09:02:33,INFO,200,200,0,8 documents written to disk.,6.88
+DocumentsAnnotator,2026-03-27 09:02:36,INFO,208,200,0,Chunk 25 processing completed.,6.98
+DocumentsAnnotator,2026-03-27 09:02:36,INFO,208,208,0,8 documents written to disk.,6.98
+DocumentsAnnotator,2026-03-27 09:02:40,INFO,216,208,0,Chunk 26 processing completed.,7.06
+DocumentsAnnotator,2026-03-27 09:02:40,INFO,216,216,0,8 documents written to disk.,7.06
+DocumentsAnnotator,2026-03-27 09:02:44,INFO,224,216,0,Chunk 27 processing completed.,7.16
+DocumentsAnnotator,2026-03-27 09:02:44,INFO,224,224,0,8 documents written to disk.,7.16
+DocumentsAnnotator,2026-03-27 09:02:48,INFO,232,224,0,Chunk 28 processing completed.,7.26
+DocumentsAnnotator,2026-03-27 09:02:48,INFO,232,232,0,8 documents written to disk.,7.26
+DocumentsAnnotator,2026-03-27 09:02:51,INFO,240,232,0,Chunk 29 processing completed.,7.37
+DocumentsAnnotator,2026-03-27 09:02:51,INFO,240,240,0,8 documents written to disk.,7.37
+DocumentsAnnotator,2026-03-27 09:02:55,INFO,248,240,0,Chunk 30 processing completed.,7.47
+DocumentsAnnotator,2026-03-27 09:02:55,INFO,248,248,0,8 documents written to disk.,7.47
+DocumentsAnnotator,2026-03-27 09:02:59,INFO,256,248,0,Chunk 31 processing completed.,7.56
+DocumentsAnnotator,2026-03-27 09:02:59,INFO,256,256,0,8 documents written to disk.,7.56
+DocumentsAnnotator,2026-03-27 09:03:04,INFO,264,256,0,Chunk 32 processing completed.,7.66
+DocumentsAnnotator,2026-03-27 09:03:04,INFO,264,264,0,8 documents written to disk.,7.66
+DocumentsAnnotator,2026-03-27 09:03:08,INFO,272,264,0,Chunk 33 processing completed.,7.75
+DocumentsAnnotator,2026-03-27 09:03:08,INFO,272,272,0,8 documents written to disk.,7.75
+DocumentsAnnotator,2026-03-27 09:03:12,INFO,280,272,0,Chunk 34 processing completed.,7.85
+DocumentsAnnotator,2026-03-27 09:03:13,INFO,280,280,0,8 documents written to disk.,7.85
+DocumentsAnnotator,2026-03-27 09:03:16,INFO,288,280,0,Chunk 35 processing completed.,7.96
+DocumentsAnnotator,2026-03-27 09:03:16,INFO,288,288,0,8 documents written to disk.,7.96
+DocumentsAnnotator,2026-03-27 09:03:21,INFO,296,288,0,Chunk 36 processing completed.,8.07
+DocumentsAnnotator,2026-03-27 09:03:21,INFO,296,296,0,8 documents written to disk.,8.07
+DocumentsAnnotator,2026-03-27 09:03:24,INFO,304,296,0,Chunk 37 processing completed.,8.18
+DocumentsAnnotator,2026-03-27 09:03:24,INFO,304,304,0,8 documents written to disk.,8.18
+DocumentsAnnotator,2026-03-27 09:03:28,INFO,312,304,0,Chunk 38 processing completed.,8.28
+DocumentsAnnotator,2026-03-27 09:03:28,INFO,312,312,0,8 documents written to disk.,8.28
+DocumentsAnnotator,2026-03-27 09:03:32,INFO,320,312,0,Chunk 39 processing completed.,8.38
+DocumentsAnnotator,2026-03-27 09:03:32,INFO,320,320,0,8 documents written to disk.,8.38
+DocumentsAnnotator,2026-03-27 09:03:36,INFO,328,320,0,Chunk 40 processing completed.,8.50
+DocumentsAnnotator,2026-03-27 09:03:36,INFO,328,328,0,8 documents written to disk.,8.50
+DocumentsAnnotator,2026-03-27 09:03:40,INFO,336,328,0,Chunk 41 processing completed.,8.59
+DocumentsAnnotator,2026-03-27 09:03:40,INFO,336,336,0,8 documents written to disk.,8.59
+DocumentsAnnotator,2026-03-27 09:04:37,INFO,0,0,0,Job DocumentsAnnotator has started.,None
+DocumentsAnnotator,2026-03-27 09:04:43,INFO,8,0,0,Chunk 0 processing completed.,8.68
+DocumentsAnnotator,2026-03-27 09:04:43,INFO,8,8,0,8 documents written to disk.,8.68
+DocumentsAnnotator,2026-03-27 09:04:48,INFO,16,8,0,Chunk 1 processing completed.,8.77
+DocumentsAnnotator,2026-03-27 09:04:48,INFO,16,16,0,8 documents written to disk.,8.77
+DocumentsAnnotator,2026-03-27 09:04:53,INFO,24,16,0,Chunk 2 processing completed.,8.87
+DocumentsAnnotator,2026-03-27 09:04:53,INFO,24,24,0,8 documents written to disk.,8.87
+DocumentsAnnotator,2026-03-27 09:04:56,INFO,32,24,0,Chunk 3 processing completed.,8.97
+DocumentsAnnotator,2026-03-27 09:04:56,INFO,32,32,0,8 documents written to disk.,8.97
+DocumentsAnnotator,2026-03-27 09:05:01,INFO,40,32,0,Chunk 4 processing completed.,9.06
+DocumentsAnnotator,2026-03-27 09:05:01,INFO,40,40,0,8 documents written to disk.,9.06
+DocumentsAnnotator,2026-03-27 09:05:05,INFO,48,40,0,Chunk 5 processing completed.,9.19
+DocumentsAnnotator,2026-03-27 09:05:05,INFO,48,48,0,8 documents written to disk.,9.19
+DocumentsAnnotator,2026-03-27 09:05:08,INFO,56,48,0,Chunk 6 processing completed.,9.30
+DocumentsAnnotator,2026-03-27 09:05:08,INFO,56,56,0,8 documents written to disk.,9.30
+DocumentsAnnotator,2026-03-27 09:05:12,INFO,64,56,0,Chunk 7 processing completed.,9.40
+DocumentsAnnotator,2026-03-27 09:05:12,INFO,64,64,0,8 documents written to disk.,9.40
+DocumentsAnnotator,2026-03-27 09:05:19,INFO,72,64,0,Chunk 8 processing completed.,9.49
+DocumentsAnnotator,2026-03-27 09:05:19,INFO,72,72,0,8 documents written to disk.,9.49

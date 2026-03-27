@@ -1,7 +1,7 @@
 import re
 import dotenv
 from typing import Dict, List
-from src.shared.command_tools import Stage, StageConfig, add_handlers
+from src.shared.command_tools.vasync import Stage, StageConfig, add_handlers
 from src.shared.file_tools import FileWriter, FileReader, TextfileCache
 from src.helpers import load_json_file
 from pydantic import computed_field

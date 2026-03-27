@@ -1,7 +1,7 @@
 import re
 from nltk import word_tokenize
 from bs4 import BeautifulSoup
-from src.shared.command_tools_v2 import Stage, StageConfig, add_handlers
+from src.shared.command_tools import Stage, StageConfig, add_handlers
 from src.shared.file_tools import FileReader, FileWriter, TextfileCache
 from src.shared.language_detectors import LanguageDetector
 from typing import Dict
