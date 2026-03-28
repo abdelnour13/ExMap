@@ -1,3 +1,6 @@
+# PyTorch
+pip install torch==2.5.1 torchvision --index-url https://download.pytorch.org/whl/cu118
+
 # requirements
 pip install --no-cache-dir -r requirements.txt
 
@@ -13,6 +16,3 @@ python -m nltk.downloader punkt averaged_perceptron_tagger_en
 
 # hf-cli
 curl -LsSf https://hf.co/cli/install.sh | bash
-
-# PyTorch
-pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
