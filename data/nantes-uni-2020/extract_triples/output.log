@@ -1,7 +1,0 @@
-TriplesExtractor,2026-03-28 10:08:32,INFO,0,0,0,Job TriplesExtractor has started.,None
-TriplesExtractor,2026-03-28 10:08:48,INFO,16,0,0,Chunk 0 processing completed.,0.03
-TriplesExtractor,2026-03-28 10:08:48,INFO,16,16,0,16 documents written to disk.,0.03
-TriplesExtractor,2026-03-28 10:09:00,INFO,32,16,0,Chunk 1 processing completed.,0.05
-TriplesExtractor,2026-03-28 10:09:00,INFO,32,32,0,16 documents written to disk.,0.05
-TriplesExtractor,2026-03-28 10:09:08,INFO,48,32,0,Chunk 2 processing completed.,0.08
-TriplesExtractor,2026-03-28 10:09:08,INFO,48,48,0,16 documents written to disk.,0.08
