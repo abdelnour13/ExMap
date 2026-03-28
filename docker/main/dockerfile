@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y curl
 
 # Install Python Packages
 COPY setup.sh .
+COPY requirements.txt .
 RUN chmod +x setup.sh && bash setup.sh
 
 # To prevent container from exiting

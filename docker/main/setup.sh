@@ -1,7 +1,10 @@
 # requirements
 pip install --no-cache-dir -r requirements.txt
-cd ../../external && git clone git@github.com:abdelnour13/pycli.git
-pip install -e .
+
+# pycli
+apt-get update && apt-get install -y git
+pip install git+https://github.com/abdelnour13/pycli.git#egg=pycli
+
 
 # resources
 python -m spacy download en_core_web_sm
