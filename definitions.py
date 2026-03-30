@@ -5,6 +5,7 @@ ROOT_DIR = os.path.dirname(__file__)
 DATA_DIR = os.path.join(ROOT_DIR, "data")
 SCRIPTS_DIR = os.path.join(ROOT_DIR, "scripts")
 EXTERNAL_DIR = os.path.join(ROOT_DIR, 'external')
+EXPERIMENTS_DIR = os.path.join(ROOT_DIR, 'experiments')
 RESOURCES_DIR = os.path.join(ROOT_DIR, "resources")
 NEO4J_DIR = os.path.join(ROOT_DIR, '.neo4j')
 

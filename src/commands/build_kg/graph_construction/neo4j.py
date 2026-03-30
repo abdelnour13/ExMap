@@ -3,7 +3,7 @@ import os
 import json
 from src.shared.command_tools import Stage, StageConfig, add_handlers
 from src.shared.handlers import EventLevel, Event
-from src.shared.file_tools import FileReader, FileWriter, TextfileCache
+from src.shared.file_tools import FileReader, FileWriter
 from typing import Dict, Any, Tuple, Union, Optional, List, Generator
 from neo4j import GraphDatabase, Driver
 from definitions import ENV
@@ -61,12 +61,12 @@ class Neo4J(Stage):
     def format_value(self, value : Any) -> Any:
 
         if isinstance(value, str):
-            return f'"{value}"'
+            return f'"{value.replace('"', '\\"')}"'
         elif isinstance(value, bool):
             return "true" if value else "false"
         elif isinstance(value, (int, float)):
             return str(value)
-        elif isinstance(value, (list, set)):
+        elif isinstance(value, (list, set, tuple)):
             return "[" + ", ".join(self.format_value(v) for v in value) + "]"
         elif value is None:
             return "null"
@@ -131,9 +131,8 @@ class Neo4J(Stage):
 
             self.driver.verify_connectivity()
 
-            yield Event(
+            yield self.make_debug_event(
                 progress=0.0,
-                level=EventLevel.DEBUG,
                 message="Connection to Neo4j established successfully."
             )
 
@@ -147,9 +146,8 @@ class Neo4J(Stage):
                     } in TRANSACTIONS OF 100 ROWS
                 """)
 
-                yield Event(
+                yield self.make_debug_event(
                     progress=0.0,
-                    level=EventLevel.DEBUG,
                     message="Deleted all rows in the database."
                 )
 
@@ -165,15 +163,14 @@ class Neo4J(Stage):
                     REQUIRE a.id IS UNIQUE;
                 """)
 
-                yield Event(
+                yield self.make_debug_event(
                     progress=0.0,
-                    level=EventLevel.DEBUG,
                     message="Unique constraints created."
                 )
 
         except Exception as e:
 
-            yield Event(
+            yield self.make_event(
                 progress=0.0,
                 level=EventLevel.CRITICAL,
                 message="Connection to Neo4j failed."
@@ -199,13 +196,9 @@ class Neo4J(Stage):
             with open(self.graph, 'w') as f:
                 json.dump(json.loads(records[0])['rels'], f, indent=4)
 
-            yield Event(
+            yield self.make_debug_event(
                 progress=1.0,
-                level=EventLevel.DEBUG,
                 message="Exported graph to json.",
-                total_processed=self.total_processed,
-                total_saved=self.total_saved,
-                total_skipped=self.total_skipped
             )
 
     def transform_chunk(self, chunk : List[str]) -> List[str]:

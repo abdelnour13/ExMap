@@ -6,6 +6,7 @@ from instance import cli
 from src.commands.pipeline import Pipeline
 from src.commands.download import DataDownloader
 from src.commands.setup import Setup
+from src.commands.feature_extraction import FeatureExtractor
 
 @cli.register_command(
     name="start_rpc",
