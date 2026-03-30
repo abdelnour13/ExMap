@@ -8,7 +8,6 @@ pip install --no-cache-dir -r requirements.txt
 apt-get update && apt-get install -y git
 pip install git+https://github.com/abdelnour13/pycli.git#egg=pycli
 
-
 # resources
 python -m spacy download en_core_web_sm
 python -m nltk.downloader punkt_tab
