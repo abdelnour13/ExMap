@@ -1,5 +1,5 @@
 import os
-from typing import Dict
+from typing import Dict, TypeVar
 from pydantic_core import PydanticCustomError
 
 def assert_file_exists(path : str) -> str:

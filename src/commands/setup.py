@@ -133,6 +133,7 @@ class Setup(BaseCommand):
         text2kg_service = {
             "build" : "./docker/text2kg",
             "volumes" : [".:/text2kg"],
+            "deploy" : deploy,
             "depends_on" : list(services.keys())
         }
 
