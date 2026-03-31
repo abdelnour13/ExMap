@@ -85,7 +85,10 @@ class Graph2Triples(Stage):
                     "title" : doc['sentence']['document']['title'],
                     "abstract" : doc['sentence']['document']['abstract'],
                     "labels" : doc['sentence']['document']['labels'],
-                    "teams" : doc['sentence']['document']['teams']
+                    "teams" : doc['sentence']['document']['teams'],
+                    "authors" : doc['sentence']['document']['authors'],
+                    "venues" : doc['sentence']['document']['venues'],
+                    "keywords" : doc['sentence']['document']['keywords']
                 }
             }
         })

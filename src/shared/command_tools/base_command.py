@@ -98,3 +98,36 @@ class BaseCommand(ABC):
         extra : Optional[Dict] = None
     ) -> Event:
         return self.make_event(progress, EventLevel.WARN, message, extra)
+    
+    def send_event(self, event : Event) -> None:
+
+        for handler in self.handlers:
+            handler.consume(event)
+
+    def send_debug_event(self,
+        progress : Optional[float],
+        message : str,
+        extra : Optional[Dict] = None
+    ) -> Event:
+        self.send_event(self.make_event(progress, EventLevel.DEBUG, message, extra))
+    
+    def send_info_event(self,
+        progress : Optional[float],
+        message : str,
+        extra : Optional[Dict] = None
+    ) -> Event:
+        self.send_event(self.make_event(progress, EventLevel.INFO, message, extra))
+    
+    def send_error_event(self,
+        progress : Optional[float],
+        message : str,
+        extra : Optional[Dict] = None
+    ) -> Event:
+        self.send_event(self.make_event(progress, EventLevel.ERROR, message, extra))
+    
+    def send_warn_event(self,
+        progress : Optional[float],
+        message : str,
+        extra : Optional[Dict] = None
+    ) -> Event:
+        self.send_event(self.make_event(progress, EventLevel.WARN, message, extra))

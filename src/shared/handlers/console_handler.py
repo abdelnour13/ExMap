@@ -24,6 +24,8 @@ class ConsoleLogger(Handler):
         logger = getLogger(self.name)
         logger.setLevel(logging.DEBUG)
 
+        logger.propagate = False
+
         ### Terminal Handler
         handler = RichHandler(markup=True)
         handler.setLevel(logging.DEBUG)
@@ -57,7 +59,6 @@ class ConsoleLogger(Handler):
         self.logger.log(level=event.level.value,msg=message)
 
         if event.progress is not None:
-
             progress = 100 * event.progress - self.previous
             self.previous += progress
             self.pbar.update(self.progress_task, advance=progress, refresh=True)

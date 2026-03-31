@@ -1,8 +1,7 @@
 .vscode
 .neo4j
 
-external
-__pycache__/*
+__pycache__/**/*
 
 RPC/openie6/openie6
 RPC/openie6/carb
@@ -14,11 +13,9 @@ resources/models
 
 .env
 
-order.txt
-
-ls2n_duke.csv
-test.ipynb
-
+external/*
 data/*
-
 ui/*
+
+*.pt
+*.pth
