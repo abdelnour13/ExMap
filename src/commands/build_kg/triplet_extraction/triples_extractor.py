@@ -1,7 +1,7 @@
 import dotenv
 from typing import List, Dict
 from src.shared.command_tools import Stage, StageConfig, add_handlers
-from src.shared.file_tools import FileWriter, FileReader, TextfileCache
+from src.shared.file_tools import FileWriter, FileReader, TextfileCache, Cache
 from returns.pipeline import is_successful
 from src.shared.triples_extractors import BaseTriplesExtractor, TriplesExtractorFactory
 from pycli import Field
@@ -39,9 +39,10 @@ class TriplesExtractor(Stage):
     def __init__(self, 
         reader : FileReader, 
         writer : FileWriter, 
+        cache : Cache,
         triple_extractor : BaseTriplesExtractor
     ) -> None:
-        super().__init__(reader, writer)
+        super().__init__(reader, writer, cache)
         self.triple_extractor = triple_extractor
 
     def transform(self, doc : Dict) -> Dict:
@@ -53,12 +54,14 @@ class TriplesExtractor(Stage):
 
         errors = []
         records = []
+        docs = []
 
         for doc,response in zip(chunk, responses):
 
             if is_successful(response):
 
                 triples = response.unwrap()
+                docs.append(doc)
                 
                 for i,triple in enumerate(triples):
 
@@ -73,7 +76,7 @@ class TriplesExtractor(Stage):
             else:
                 errors.append(response.failure())
 
-        return records, errors
+        return docs, records, errors
     
     @classmethod
     def from_config(cls, config : Config) -> 'TriplesExtractor':
@@ -87,6 +90,7 @@ class TriplesExtractor(Stage):
             writer=FileWriter
                 .from_filename(config.output_filename)
                 .buffered(config.buffer_size),
+            cache=cache,
             triple_extractor=TriplesExtractorFactory.from_llm(
                 api_key=config.api_key,
                 type=config.type,

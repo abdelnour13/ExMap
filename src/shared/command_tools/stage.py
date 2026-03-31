@@ -1,10 +1,10 @@
 import asyncio
 import multiprocessing
 import inspect
-from typing import Dict, Iterable, Union, List, Literal, Optional, Tuple, Generator,Self, TypeVar, Callable
+from typing import Dict, Iterable, Union, List, Literal, Optional, Tuple, Generator,Self, TypeVar
 from src.shared.handlers import SocketHandler, ConsoleLogger, FileLogger
 from abc import abstractmethod
-from src.shared.file_tools import BufferedWriter, BatchedReader
+from src.shared.file_tools import BufferedWriter, BatchedReader, Cache
 from src.shared.handlers import Event, EventLevel
 from functools import wraps
 from returns.result import Result
@@ -45,11 +45,13 @@ class Stage(BaseCommand):
     def __init__(self,
         reader : BatchedReader,
         writer : BufferedWriter,
+        cache : Optional[Cache] = None
     ) -> None:
         super().__init__()
 
         self.reader = reader
         self.writer = writer
+        self.cache = cache
         self.parallelism_mode : Optional[Literal['async', 'multiprocessing']] = None
 
         self.total_processed = 0
@@ -135,7 +137,7 @@ class Stage(BaseCommand):
             }
         )
 
-    def transform_chunk(self, chunk : Iterable[Dict]) -> Tuple[List[Dict], List[Exception]]:
+    def transform_chunk(self, chunk : Iterable[Dict]) -> Tuple[List[Dict], List[Dict], List[Exception]]:
         """
         Transforms a chunk of documents, bu default it runs a self.transform on
         each document individually but can be overriden for a specific task that 
@@ -156,8 +158,9 @@ class Stage(BaseCommand):
 
         results = []
         errors = []
+        docs = []
 
-        for result in transformed_chunk:
+        for doc, result in zip(chunk, transformed_chunk):
 
             if is_successful(result):
 
@@ -168,11 +171,13 @@ class Stage(BaseCommand):
                 else:
                     results.append(result)
 
+                docs.append(doc)
+
             else:
                 error = result.failure()
                 errors.append(error)
 
-        return results, errors
+        return docs, results, errors
 
     def __iter__(self) -> Generator[Event, None, None]:
 
@@ -184,7 +189,11 @@ class Stage(BaseCommand):
         
         for i,(chunk,progress) in enumerate(self.reader):
 
-            records, errors = self.transform_chunk(chunk)
+            docs, records, errors = self.transform_chunk(chunk)
+
+            if self.cache is not None:
+                self.cache.update(docs)
+                
             self.total_processed += len(chunk)
 
             yield self.make_info_event(

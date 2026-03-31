@@ -24,15 +24,18 @@ class BufferedWriter:
 
         if len(self.buffer) >= self.buffer_size:
 
-            buff = self.buffer[:self.buffer_size]
-            self.writer.write(buff)
+            # buff = self.buffer[:self.buffer_size]
+            self.writer.write(self.buffer)
+            n_saved = len(self.buffer)
 
             if self.cache is not None:
-                self.cache.update(buff)
+                self.cache.update(self.buffer)
+
+            self.buffer = []
 
             self.buffer = self.buffer[self.buffer_size:]
 
-            return self.buffer_size
+            return n_saved
 
         return 0
 
