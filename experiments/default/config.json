@@ -1,0 +1,26 @@
+{
+    "seed" : 44,
+
+    "graph" : "ls2n-duke",
+    "num_splits" : 4,
+    "keep_largest_cc" : true,
+
+    "add_ssl_loss" : true,
+
+    "batch_size" : 16,
+    "num_articles_neighbors" : [10, 6],
+    "num_entities_neighbors" : [5, 5],
+
+    "model_params" : {
+        "norm" : true
+    },
+
+    "lr" : 0.000075,
+    "num_epochs" : 10,
+    "accumelation_steps" : 1,
+    "weight_decay" : 1e-4,
+
+    "device" : "cpu",
+
+    "log_every" : 1
+}

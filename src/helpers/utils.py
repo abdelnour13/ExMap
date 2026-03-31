@@ -1,10 +1,16 @@
 import json
 import torch
 import asyncio
-from typing import List, Dict, Any, TypeVar
+import numpy as np
+from typing import List, Dict, Any, TypeVar, Union, Optional
 from openai import AsyncOpenAI, RateLimitError, APIError
 from returns.result import Result
 from dataclasses import fields
+from torch import Tensor
+from scipy.sparse import csgraph, csr_matrix
+from torch_sparse import SparseTensor
+from torch_geometric.data import Data
+from src.gnn import ArticleAsKG
 
 DS = TypeVar('DS')
 
@@ -72,3 +78,83 @@ def create_toy_graph(
         "edge_index" : edge_index,
         "edge_type" : edge_type
     }
+
+def override_dict(arg1 : dict, arg2 : dict) -> dict:
+
+    result = {}
+
+    for key, value in arg1.items():
+
+        if key in arg2:
+
+            if not isinstance(value, dict):
+                result[key] = arg2[key]
+            elif not isinstance(arg2[key], dict):
+                result[key] = arg2[key]
+            else:
+                result[key] = override_dict(value, arg2[key])
+
+        else:
+
+            result[key] = value
+
+    for key, value in arg2.items():
+
+        if key not in arg1:
+            result[key] = value
+
+    return result
+
+def torch_connected_components(edge_index : Tensor, num_nodes : int) -> Tensor:
+    
+    row, col = edge_index.numpy()
+    data = np.ones_like(row)
+
+    adj = csr_matrix(
+        (data, (row, col)),
+        shape=(num_nodes, num_nodes),
+        dtype=int
+    )
+
+    _, labels = csgraph.connected_components(adj, directed=False)
+
+    return torch.tensor(labels)
+
+def model_size_mb(model : torch.nn.Module) -> float:
+
+    param_size = 0
+
+    for param in model.parameters():
+        param_size += param.nelement() * param.element_size()
+
+    buffer_size = 0
+
+    for buffer in model.buffers():
+        buffer_size += buffer.nelement() * buffer.element_size()
+
+    size_all_mb = (param_size + buffer_size) / 1024**2
+
+    return size_all_mb
+
+def move_data_to_device(
+    data : Any,
+    device : Union[str,torch.device]                 
+) -> Any:
+        
+    if isinstance(data, (Tensor,SparseTensor,Data,ArticleAsKG)):
+        return data.to(device)
+    
+    if isinstance(data, list):
+        return [move_data_to_device(item, device) for item in data]
+    
+    if isinstance(data, tuple):
+        return tuple([move_data_to_device(item, device) for item in data])
+    
+    if isinstance(data, dict):
+
+        return {
+            key : move_data_to_device(item, device) 
+            for key,item in data.items()
+        }
+
+    raise Exception(f"{type(data)} is not supported.")

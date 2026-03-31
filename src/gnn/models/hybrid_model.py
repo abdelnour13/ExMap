@@ -3,9 +3,10 @@ from torch import nn, Tensor
 from torch.nn import functional as F
 from torch_geometric import nn as gnn
 from typing import Literal, Optional, Dict, Tuple, List
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from torch_scatter import scatter
 from src import helpers
+from pydantic import BaseModel
 from src.gnn.layers import RGATConv, TransGNN, KGScoringFn, create_scoring_fn, MLP, Activation
 from src.gnn.sampler import ArticleAsKG, ArticlesGraph, KnowledgeGraph
 
@@ -269,8 +270,7 @@ class HetConv(nn.Module):
 
         return kg_x, kg_e, art_x
     
-@dataclass
-class HetGNNConfig:
+class HetGNNConfig(BaseModel):
     channels : Optional[List[int]] = None
     variant: Literal["conv", "attn"] = "conv"
     readout : Literal['mean','max','attn'] = 'max' 
@@ -407,7 +407,7 @@ class HetModel(nn.Module):
             in_channels = in_channels,
             num_labels = num_labels,
             num_relations = num_relations,
-            **asdict(config)
+            **config.model_dump()
         )
     
     def encode(self, batch : ArticleAsKG) -> Tuple[Tensor, Tensor, Tensor]:
