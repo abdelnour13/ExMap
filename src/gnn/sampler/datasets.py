@@ -19,6 +19,10 @@ class ArticlesGraph(Data):
         self.edge_id = torch.arange(edge_index.size(-1)) if edge_index is not None else None
         self.edge_type = edge_type
 
+        # print(self.is_node_attr('article_id'))
+        # print(self.is_edge_attr('edge_id'))
+        # print(self.is_edge_attr('edge_type'))
+
     @property
     def num_nodes(self) -> int:
         return self.x.size(0)
@@ -68,7 +72,7 @@ class KnowledgeGraph(Data):
     
     @property
     def num_relations(self) -> int:
-        return len(self.edge_type.unique())
+        return self.r.size(0)
     
     @property
     def num_edges(self) -> int:
@@ -114,16 +118,16 @@ class ArticleAsKG:
     def cuda(self) -> 'ArticleAsKG':
         return self.to('cuda')
 
-    def subgraph(self, article_ids : Tensor) -> 'ArticleAsKG':
+    def subgraph_articles(self, ids : Tensor) -> 'ArticleAsKG':
     
         ### Get Articles Subset
-        articles = self.articles.subgraph(subset = article_ids)
+        articles = self.articles.subgraph(subset = ids)
 
         ### Keep Only Triples and entities belonging to the article subset
         edge_article = self.edge_article
         triple_ids, article_ids = edge_article
         mask = torch.isin(article_ids, articles.article_id)
-        triple_ids = triple_ids[mask]
+        triple_ids = torch.unique(triple_ids[mask])
         entity_ids = torch.unique(self.kg.edge_index[:,triple_ids])
 
         ### Get KG Subset & Remove Triples not extracted from the articles
@@ -153,10 +157,9 @@ class ArticleAsKG:
         }
 
         ### 2- Map Edge<->Article
-        edge_article = edge_article.t().tolist()
         edge_article = torch.tensor([
             [edge_map[e],articles_map[a]]
-            for e, a in edge_article
+            for e, a in edge_article.t().tolist()
         ]).t().long()
 
         ### 3- Map Triple Id

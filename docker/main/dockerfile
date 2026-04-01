@@ -5,6 +5,7 @@ WORKDIR /text2kg
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
 
+# Python 3.12
 RUN apt-get update && \
     apt-get install -y curl git software-properties-common && \
     add-apt-repository ppa:deadsnakes/ppa && \

@@ -219,7 +219,7 @@ class FeatureExtractor(BaseCommand):
 
         yield self.make_debug_event(
             progress=None,
-            message=f"entities.size = {data['entities'].size()}, articles.size = {data['articles'].size()}, predicates.size = {data['predicates'].size()}."
+            message=f"entities.size = {data['entities'].size()}, articles.size = {data['articles'].size()}, predicates.size = {data['predicates'].size()} == {data['edge_type'].max()}."
         )
 
         yield self.make_debug_event(

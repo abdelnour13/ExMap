@@ -1,7 +1,9 @@
+import random
 import json
 import torch
 import asyncio
 import numpy as np
+import pandas as pd
 from typing import List, Dict, Any, TypeVar, Union, Optional
 from openai import AsyncOpenAI, RateLimitError, APIError
 from returns.result import Result
@@ -158,3 +160,12 @@ def move_data_to_device(
         }
 
     raise Exception(f"{type(data)} is not supported.")
+
+def seed_everything(seed : int) -> None:
+
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False

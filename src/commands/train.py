@@ -31,43 +31,39 @@ class Config(BaseModel):
 class BaseTrainingConfig(BaseModel):
 
     ### Data
-    graph : str = 'ls2n-duke' # Graph found at $DATA_DIR/$graph/graph.pt
-    num_splits : int = 4 # number of splits used in KFold
-    keep_largest_cc : bool = True
+    graph : str = 'ls2n-duke'      # Graph found at $DATA_DIR/$graph/graph.pt
+    keep_largest_cc : bool = True  # Whether to keep only largest connected component or not
 
     ### Losses
-    add_ssl_loss : bool = False
+    add_ssl_loss : bool = False    # Whether to add self-supervised (reconstruction) loss or not.
 
     ### Sampling
     batch_size : int = 8
-    num_articles_neighbors : tuple[int,int] = (10,6)
-    num_entities_neighbors : tuple[int,int] = ()
+    num_articles_neighbors : tuple[int,int] = (10,6)  # SAGE sampling for articles
+    num_entities_neighbors : tuple[int,int] = ()      # SAGE sampling for entities
 
     ### Model
-    model_params : HetGNNConfig = Field(default_factory=HetGNNConfig)
+    model_params : HetGNNConfig = Field(default_factory=HetGNNConfig) # Model parameters
 
-    ### Learning Rate
-    lr : float = 0.00075
-    num_epochs : int = 10
-    accumelation_steps : int = 1
-    weight_decay : float = 1e-4
+    ### Hyper-parameters
+    lr : float = 0.00075          # Learning rate        
+    num_epochs : int = 10         # Number of epochs
+    accumelation_steps : int = 1  # Accumelation steps
+    weight_decay : float = 1e-4   # Weight decay
 
     ### Device
-    device : str = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device : str = 'cuda' if torch.cuda.is_available() else 'cpu'  # Device
 
     ### Negative Sampling
-    do_negative_sampling : bool = False
+    do_negative_sampling : bool = False # Whether to do negative sampling when learning connections between articles & labels
 
     ### Logging
-    log_every : int = 1
+    log_every : int = 1 # Logging frequency
 
 class TrainingConfig(BaseTrainingConfig):
-
-    ### SEED & Reproducibility
-    seed : int = 56
-
-    ### Grid-Search
-    hparams : Dict[str,Dict[str, Any]] = Field(default_factory = lambda : { "default" : {} })
+    seed : int = 56      # SEED for reproducibility
+    num_splits : int = 4 # number of splits used in KFold
+    hparams : Dict[str,Dict[str, Any]] = Field(default_factory = lambda : { "default" : {} }) # Variations for hyper-parameters
 
 
 @cli.register_stage(
@@ -195,7 +191,7 @@ class Trainer(BaseCommand):
             message=f"Number of articles before/after filtering : {mask.size(0)}/{mask.sum()}."
         )
 
-        return data.subgraph(indices[mask])
+        return data.subgraph_articles(data.articles.article_id[mask])
     
     def create_samplers(self, data : ArticleAsKG) -> List[Tuple[HybridSampler, HybridSampler]]:
 
@@ -219,8 +215,8 @@ class Trainer(BaseCommand):
                 message=f"Fold {fold} : N training samples = {train_mask.sum()}, N validation samples = {val_mask.sum()}."
             )
 
-            train_split = data.subgraph(data.articles.article_id[train_mask])
-            val_split = data.subgraph(data.articles.article_id[val_mask])
+            train_split = data.subgraph_articles(data.articles.article_id[train_mask])
+            val_split = data.subgraph_articles(data.articles.article_id[val_mask])
 
             ### Create Sampler
             samplers.append(tuple([
@@ -397,7 +393,7 @@ class Trainer(BaseCommand):
                 task='multiclass', 
                 num_classes=batch.kg.r.size(0),
                 top_k = 5
-            )
+            ).item()
 
             metrics['HITS@10'] = accuracy(
                 r_hat, 
@@ -405,12 +401,12 @@ class Trainer(BaseCommand):
                 task='multiclass', 
                 num_classes=batch.kg.r.size(0),
                 top_k = 10
-            )
+            ).item()
 
         return metrics
     
     def run_experiment(self,
-        config : TrainingConfig,
+        config : BaseTrainingConfig,
         data : ArticleAsKG,
         train_loader : HybridSampler,
         val_loader : HybridSampler
@@ -539,7 +535,19 @@ class Trainer(BaseCommand):
                     if not col.endswith('loss'):
                         local_history[col] = local_history[col].apply(lambda x : f'{100 * x:.2f}%')
 
-                print(tabulate(local_history, headers=local_history.columns))
+                # print(tabulate(local_history, headers=local_history.columns))
+
+                self.send_info_event(
+                    progress=0.0,
+                    message=f"Epoch {epoch}/{config.num_epochs} | Phase : Training",
+                    extra=local_history.loc['train'].to_dict()
+                )
+
+                self.send_info_event(
+                    progress=0.0,
+                    message=f"Epoch {epoch}/{config.num_epochs} | Phase : Validation",
+                    extra=local_history.loc['val'].to_dict()
+                )
 
                 # self.send_info_event(
                 #     progress=0.0,
@@ -584,16 +592,15 @@ class Trainer(BaseCommand):
         return Y_hat
     
     def __iter__(self):
+
+        ### Seed everything
+        helpers.seed_everything(self.config.seed)
         
-        ### Configs :
+        ### Load all Configs :
         configs = self.get_configs()
 
         ### Data Loading
         data = self.load_data()
-
-        ### Preprocessing
-        # data = self.filter_data(data)
-        # data = self.keep_largest_cc(data)
 
         MODELS_DIR = os.path.join(EXPERIMENTS_DIR, self.experiment, 'models')
         RESULTS_DIR = os.path.join(EXPERIMENTS_DIR, self.experiment, 'results')
@@ -605,6 +612,12 @@ class Trainer(BaseCommand):
         history = []
 
         for config_name, config in configs.items():
+
+            ### Preprocessing
+            data = self.filter_data(data)
+
+            if config.keep_largest_cc:
+                data = self.keep_largest_cc(data)
 
             self.send_info_event(
                 progress=0.0,
@@ -618,7 +631,7 @@ class Trainer(BaseCommand):
 
                 self.send_info_event(
                     progress=0.0,
-                    message=f"Starting trial {trail_id} of experiment {config_name}"
+                    message=f"Starting trial {trail_id} of experiment \"{config_name}\""
                 )
 
                 trial_history, model = self.run_experiment(
@@ -653,7 +666,7 @@ class Trainer(BaseCommand):
                     message=f"Model & inference results saved to disk."
                 )
 
-        history = pd.concat(history)
+        history : pd.DataFrame = pd.concat(history)
 
         history.to_csv(
             path_or_buf = HISTORY_PATH,
