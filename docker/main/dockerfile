@@ -1,17 +1,26 @@
 FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
-FROM python:3.12.12-slim
 
 WORKDIR /text2kg
 
-RUN apt-get update && \\ 
-    apt-get install -y curl
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Etc/UTC
 
-RUN apt update && \\
-    apt install python3
+RUN apt-get update && \
+    apt-get install -y curl git software-properties-common && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    apt-get install -y \
+        python3.12 \
+        python3.12-dev \
+        python3.12-venv && \
+    python3.12 -m ensurepip --upgrade && \
+    python3.12 -m pip install --upgrade pip && \
+    ln -sf /usr/bin/python3.12 /usr/bin/python && \
+    ln -sf /usr/bin/python3.12 /usr/bin/python3 && \
+    ln -sf /usr/local/bin/pip3.12 /usr/bin/pip
 
-# Install Python Packages
+# Install Python packages
 COPY setup.sh requirements.txt ./
 RUN chmod +x setup.sh && bash setup.sh
 
-# To prevent container from exiting
 CMD ["tail", "-f", "/dev/null"]
