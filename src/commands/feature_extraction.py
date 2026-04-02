@@ -39,8 +39,6 @@ class FeatureExtractor(BaseCommand):
         num_nodes : Tuple[int, int]
     ) -> SparseTensor:
         
-        # edges = gnn_utils.coalesce(edges, sort_by_row = False)
-
         return SparseTensor(
             row = edges[:,0],
             col = edges[:,1],
@@ -49,7 +47,7 @@ class FeatureExtractor(BaseCommand):
 
     def __iter__(self):
 
-        data_path = os.path.join(DATA_DIR, self.config.corpus, "clean_triples", "data.jsonl")
+        data_path = os.path.join(DATA_DIR, self.config.corpus, "entities_mapping", "data.jsonl")
 
         yield self.make_info_event(
             progress=None,

@@ -31,8 +31,9 @@ class Config(BaseModel):
 class BaseTrainingConfig(BaseModel):
 
     ### Data
-    graph : str = 'ls2n-duke'      # Graph found at $DATA_DIR/$graph/graph.pt
-    keep_largest_cc : bool = True  # Whether to keep only largest connected component or not
+    graph : str = 'ls2n-duke'           # Graph found at $DATA_DIR/$graph/graph.pt
+    keep_largest_cc : bool = True       # Whether to keep only largest connected component or not
+    min_entities_per_article : int = 5  # The minimum number of entities for an article to be considered
 
     ### Losses
     add_ssl_loss : bool = False    # Whether to add self-supervised (reconstruction) loss or not.
@@ -173,10 +174,17 @@ class Trainer(BaseCommand):
         return data
     
     def keep_largest_cc(self, data : ArticleAsKG) -> ArticleAsKG:
+
         labels = helpers.torch_connected_components(edge_index=data.kg.edge_index, num_nodes=data.kg.num_nodes)
         ccs, counts = labels.unique(return_counts=True)
         largest_cc = ccs[counts.argmax()]
         indices = torch.arange(data.kg.num_nodes)
+
+        self.send_info_event(
+            progress=0.0,
+            message=f"Largest Connected Componenet contains {counts.argmax()} entities."
+        )
+
         return data.subgraph_entities(indices[labels == largest_cc])
     
     def filter_data(self, data : ArticleAsKG) -> Generator[Event, None, None]:
@@ -539,13 +547,13 @@ class Trainer(BaseCommand):
 
                 self.send_info_event(
                     progress=0.0,
-                    message=f"Epoch {epoch}/{config.num_epochs} | Phase : Training",
+                    message=f"Epoch {epoch+1}/{config.num_epochs} | Phase : Training",
                     extra=local_history.loc['train'].to_dict()
                 )
 
                 self.send_info_event(
                     progress=0.0,
-                    message=f"Epoch {epoch}/{config.num_epochs} | Phase : Validation",
+                    message=f"Epoch {epoch+1}/{config.num_epochs} | Phase : Validation",
                     extra=local_history.loc['val'].to_dict()
                 )
 

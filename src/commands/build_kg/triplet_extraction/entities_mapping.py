@@ -202,7 +202,7 @@ class EntityMapper(Stage):
         )
 
         with open(self.map_filename, 'a') as f:
-            json.dump(self.entities_map, f)
+            json.dump(self.entities_map, f, indent=4)
 
         yield self.make_info_event(
             progress=0.0,

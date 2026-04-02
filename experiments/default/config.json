@@ -1,11 +1,12 @@
 {
     "seed" : 44,
 
-    "graph" : "ls2n-duke",
+    "graph" : "nantes-uni-2020",
     "num_splits" : 4,
     "keep_largest_cc" : true,
+    "min_entities_per_article" : 5,
 
-    "add_ssl_loss" : true,
+    "add_ssl_loss" : false,
 
     "batch_size" : 16,
     "num_articles_neighbors" : [10, 6],
@@ -15,12 +16,14 @@
         "norm" : true
     },
 
-    "lr" : 0.000075,
+    "lr" : 0.001,
     "num_epochs" : 10,
     "accumelation_steps" : 1,
     "weight_decay" : 1e-4,
 
-    "device" : "cpu",
+    "device" : "cuda",
+
+    "do_negative_sampling" : false,
 
     "log_every" : 1
 }
