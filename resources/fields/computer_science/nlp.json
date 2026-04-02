@@ -52,7 +52,9 @@
             "n't",
             "unable",
             "difficult",
+            "rarely",
             "negatively",
+            "negative",
             "fail",
             "no",
             "became",
@@ -65,7 +67,14 @@
             "incomplete",
             "lack",
             "unavailable",
-            "investigate", "investigates"
+            "investigate", 
+            "investigates",
+            "inability",
+            "need",
+            "needs",
+            "insights",
+            "insight",
+            "attention"
         ],
         "standard_verbs" : [
             "be",
@@ -77,8 +86,17 @@
             "an", 
             "also", 
             "key", 
-            "challenge", 
-            "new"
+            "new",
+            "us"
+        ],
+        "tail" : [
+            "through",
+            "across",
+            "between",
+            "under",
+            "above",
+            "over",
+            "as"
         ]
     },
     "propositions" : [
@@ -108,7 +126,22 @@
         "is abbreviation of": ["have abbreviation", true],
         "is useful for": ["used for", false],
         "find applications in": ["used for", false],
+        "finds applications in": ["used for", false],
+        "found applications in": ["used for", false],
         "are solution for": ["solve", false],
-        "is referred to as": ["have abbreviation", false]
+        "is referred to as": ["have abbreviation", false],
+        "is referred to": ["have abbreviation", false],
+        "referred to as": ["have abbreviation", false],
+        "is also known as" : ["have abbreviation", false],
+        "because" : ["causes", true],
+        "because of" : ["causes", true],
+        "is because" : ["causes", true],
+        "is because of" : ["causes", true],
+        "due to" : ["causes", true],
+        "is due to" : ["causes", true],
+        "same" : ["is equivelant to", true],
+        "is same" : ["is equivelant to", true],
+        "same as" : ["is equivelant to", true],
+        "is same as" : ["is equivelant to", true]
     }
 }

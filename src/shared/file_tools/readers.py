@@ -150,6 +150,7 @@ class JSONlFileReader(FileReader):
 
     def generate(self) -> Generator[ReaderOutput, None, None]:
 
+        self.bytes_read = 0.0
         bytes = os.path.getsize(self.filename)
         
         with open(self.filename, "r") as f:

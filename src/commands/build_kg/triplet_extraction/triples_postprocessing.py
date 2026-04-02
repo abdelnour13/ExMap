@@ -2,7 +2,7 @@ import re
 import string
 import spacy
 from nltk import pos_tag, word_tokenize
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Callable
 from dataclasses import dataclass
 from src.helpers import load_json_file
 from src.shared.command_tools import StageConfig, Stage, add_handlers
@@ -19,6 +19,7 @@ class Stop(BaseModel):
     predicates : List[str]
     standard_verbs : List[str]
     tokens : List[str]
+    tail : List[str]
 
 class Nlp(BaseModel):
     stop : Stop
@@ -27,7 +28,10 @@ class Nlp(BaseModel):
 
 class Config(StageConfig):
 
-    domain : str = Field(default="computer_science", description="The domain that describes nature of the topics discussed articles used to create the graph.")
+    domain : str = Field(
+        default="computer_science", 
+        description="The domain that describes nature of the topics discussed articles used to create the graph."
+    )
 
     @computed_field
     @property
@@ -159,30 +163,43 @@ class TriplesPostprocessor(Stage):
         return " ".join([token.lemma_ for token in self.nlp(predicate)])
 
     def make_predicate(self, predicate: str) -> Predicate:
-
         tokens = pos_tag(word_tokenize(predicate))
         tokens = [Token(token, tag) for token, tag in tokens]
-
         return Predicate(tokens)
 
-    def clean_predicate(self, predicate: Predicate) -> Tuple[Predicate, bool, str]:
+    def normalize_predicate(self, predicate: Predicate) -> Tuple[Predicate, bool, str]:
 
         is_passive = False
         E2 = None
 
+        to_be_forms = ["is", "was", "are", "be", "were", "being"]
+
+        def make(*tokens : Token):
+            return Predicate(list(tokens))
+        
+        def select(predicate : Predicate, *indices : int) -> Predicate:
+            return make(*[token for i,token in enumerate(predicate.tokens) if i in indices])
+        
+        def filter_predicate(predicate : Predicate, condition : Callable[[int, Token], bool]) -> Predicate:
+            return make(*[token for i,token in enumerate(predicate.tokens) if condition(i, token)])
+
         ### Remove stop words
-        predicate = Predicate(
-            [
-                token
-                for token in predicate.tokens
-                if token.tag != "DT"
-                and token.value not in self.domain_nlp.stop.tokens
-            ]
+        predicate = filter_predicate(
+            predicate, 
+            lambda i, token : (token.tag != "DT") and (token.value not in self.domain_nlp.stop.tokens)
         )
+
+        ### Remove tail stop words
+        if len(predicate.tokens) >= 1:
+            
+            predicate = filter_predicate(
+                predicate,
+                lambda i, token : (i != len(predicate.tokens) - 1) or (token.value not in self.domain_nlp.stop.tail)
+            )
 
         if len(predicate.tags) == 0:
             return predicate, is_passive, E2
-
+        
         ### Passive Form
         if predicate.values[-1] in ["by", "using"]:
             is_passive = True
@@ -191,67 +208,74 @@ class TriplesPostprocessor(Stage):
         ### Retain core action
         if len(predicate.tokens) >= 2:
 
-            if predicate.values[0] in ["is", "was", "are", "be", "were", "being"] and (
+            if (predicate.values[0] in ["have", "has", "had"] and 
+                predicate.values[1] in ["been"]
+            ):
+                predicate = self.make_predicate(" ".join(["be"] + predicate.values[2:]))
+
+        if len(predicate.tokens) >= 2:
+
+            if predicate.values[0] in to_be_forms and (
                 predicate.tags[1][:2] == "VB" 
                 or predicate.values[1] in ["more", "less"]
             ):
                 predicate = Predicate(tokens=predicate.tokens[1:])
 
-            if len(predicate.tokens) >= 3:
+        if len(predicate.tokens) >= 3:
 
-                if (
-                    predicate.tags[0] == "MD"
-                    and predicate.tags[1] in ["is", "be", "was", "are", "were", "being"]
-                    and predicate.tags[2][:2] == "VB"
-                ):
-                    predicate = Predicate(tokens=predicate.tokens[2:])
+            if (
+                predicate.tags[0] == "MD"
+                and predicate.tokens[1].value in to_be_forms
+                and predicate.tags[2][:2] == "VB"
+            ):
+                predicate = Predicate(tokens=predicate.tokens[2:])
 
-                if predicate.tags[0] in ["MD", "TO"]:
-                    predicate = Predicate(tokens=predicate.tokens[1:])
+            if predicate.tags[0] in ["MD", "TO"]:
+                predicate = Predicate(tokens=predicate.tokens[1:])
 
-                if (
-                    predicate.predicate.startswith("used to")
-                    and predicate.predicate.startswith("use for")
-                    and predicate.predicate.startswith("use to")
-                    and predicate.predicate.startswith("used for")
-                    and predicate.predicate.startswith("used to")
-                    and predicate.predicate.startswith("proposed to")
-                    and predicate.predicate.startswith("applied to")
-                    and predicate.predicate.startswith("managed to")
-                    and predicate.predicate.startswith("proved to")
-                    and predicate.predicate.startswith("aims to")
-                    and predicate.predicate.startswith("aims at")
-                    and predicate.predicate.startswith("focus on")
-                    and predicate.predicate.startswith("appropriate for")
-                    and predicate.predicate.startswith("able to")
-                    and predicate.predicate.startswith("allowing to")
-                    and predicate.predicate.startswith("consists in")
-                    and predicate.predicate.startswith("has potential")
-                    and predicate.predicate.startswith("design to")
-                ):
-                    predicate = Predicate(tokens=predicate.tokens[2:])
+            if (
+                predicate.predicate.startswith("used to")
+                or predicate.predicate.startswith("use for")
+                or predicate.predicate.startswith("use to")
+                or predicate.predicate.startswith("used for")
+                or predicate.predicate.startswith("used to")
+                or predicate.predicate.startswith("proposed to")
+                or predicate.predicate.startswith("applied to")
+                or predicate.predicate.startswith("managed to")
+                or predicate.predicate.startswith("proved to")
+                or predicate.predicate.startswith("aims to")
+                or predicate.predicate.startswith("aims at")
+                or predicate.predicate.startswith("focus on")
+                or predicate.predicate.startswith("appropriate for")
+                or predicate.predicate.startswith("able to")
+                or predicate.predicate.startswith("allowing to")
+                or predicate.predicate.startswith("consists in")
+                or predicate.predicate.startswith("has potential")
+                or predicate.predicate.startswith("design to")
+            ):
+                predicate = Predicate(tokens=predicate.tokens[2:])
 
-                if predicate.pattern.startswith("JJ TO") and len(predicate.tags):
-                    predicate = Predicate(tokens=predicate.tokens[2:])
+            if predicate.pattern.startswith("JJ TO") and len(predicate.tags) >= 3:
+                predicate = Predicate(tokens=predicate.tokens[2:])
 
-                if predicate.pattern == "IN NN TO":
-                    predicate = Predicate(tokens=predicate.tokens[1:])
+            if predicate.pattern == "IN NN TO":
+                predicate = Predicate(tokens=predicate.tokens[1:])
 
-                if (  ### TODO: check this rule
-                    len(predicate.tags) > 4 and predicate.tokens[4].simple_tag == "VB"
-                ):
-                    predicate = Predicate(tokens=predicate.tokens[4:])
+            if (  ### TODO: check this rule
+                len(predicate.tags) > 4 and 
+                predicate.tokens[4].simple_tag == "VB"
+            ):
+                predicate = Predicate(tokens=predicate.tokens[4:])
 
         if len(predicate.tags) > 1:
 
             if predicate.values[0] in [
                 "enable",
-                "enables" "allow",
+                "enables" 
+                "allow",
                 "allows",
                 "permit",
                 "permits",
-                "allow",
-                "allows",
                 "help",
                 "helps",
             ]:
@@ -259,6 +283,13 @@ class TriplesPostprocessor(Stage):
 
             if predicate.tags[0] in ["MD", "TO"]:
                 predicate = Predicate(tokens=predicate.tokens[1:])
+
+        if (
+            len(predicate.tags) >= 4 and 
+            predicate.matches("#VB #JJ") and 
+            predicate.values[1] not in ["similar", "superior"]
+        ):
+            return select(predicate, 0, *range(2, len(predicate.tags))), is_passive, E2
 
         ### Special Maps
         if predicate.predicate in self.domain_nlp.mapping:
@@ -303,32 +334,31 @@ class TriplesPostprocessor(Stage):
             [token.value in self.domain_nlp.propositions for token in pred.tokens]
         )
 
-        is_valid = is_valid and pred.pattern not in [
+        is_valid = is_valid and pred.simple_pattern not in [
             "IN",
             "TO",
             "JJ NN IN",
             "NN IN NN IN",
-            # 'JJ IN',
-            # 'MD VB',
-            # 'VB RB',
-            # 'JJ NN',
-            # 'NN RB',
-            # 'RB TO',
-            # 'NN JJ',
-            # 'IN NN',
-            # 'IN IN',
-            # 'NN WR',
-            # 'VB WR',
-            # 'JJ VB',
-            # 'RB JJ',
-            # 'WR VB',
-            # 'NN NN CD NN',
-            # 'VB DT',
-            # 'IN JJ',
-            # 'FW NN',
-            # 'JJ JJ'
+            'JJ IN',
+            'MD VB',
+            'VB RB',
+            'JJ NN',
+            'NN RB',
+            'RB TO',
+            'NN JJ',
+            'IN NN',
+            'IN IN',
+            'NN WR',
+            'VB WR',
+            'JJ VB',
+            'RB JJ',
+            'WR VB',
+            'NN NN CD NN',
+            'VB DT',
+            'IN JJ',
+            'FW NN',
+            'JJ JJ'
         ]
-
 
         is_valid = is_valid
 
@@ -405,7 +435,7 @@ class TriplesPostprocessor(Stage):
         #     return None
 
         ### Clean Predicate
-        predicate, is_passive, e2 = self.clean_predicate(predicate)
+        predicate, is_passive, e2 = self.normalize_predicate(predicate) # self.clean_predicate(predicate)
 
         ### Handle Passive Form & E2
         if is_passive:

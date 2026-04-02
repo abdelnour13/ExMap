@@ -57,6 +57,7 @@ class Stage(BaseCommand):
         self.total_processed = 0
         self.total_saved = 0
         self.total_skipped = 0
+        self.total_errors = 0
 
     def set_parallelism_mode(self, mode : Optional[Literal['async', 'multiprocessing']]) -> Self:
         self.parallelism_mode = mode
@@ -133,6 +134,7 @@ class Stage(BaseCommand):
                 'total_processed' : self.total_processed,
                 'total_saved' : self.total_saved,
                 'total_skipped' : self.total_skipped,
+                'total_errors' : self.total_errors,
                 **(extra or {})
             }
         )
@@ -202,7 +204,9 @@ class Stage(BaseCommand):
             )
 
             ### Filter results :
+            self.total_skipped += len(records)
             records = [item for item in records if not self.skip(item)]
+            self.total_skipped -= len(records)
 
             if len(records) > 0:
 
@@ -219,7 +223,7 @@ class Stage(BaseCommand):
             ### Handle errors :
             if len(errors) > 0:
 
-                self.total_skipped += len(errors)
+                self.total_errors += len(errors)
 
                 for error in errors:
 
