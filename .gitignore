@@ -2,6 +2,7 @@
 .neo4j
 
 __pycache__/**/*
+*.pyc
 
 RPC/openie6/openie6
 RPC/openie6/carb
