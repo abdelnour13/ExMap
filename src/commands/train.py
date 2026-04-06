@@ -67,15 +67,6 @@ class TrainingConfig(BaseTrainingConfig):
     hparams : Dict[str,Dict[str, Any]] = Field(default_factory = lambda : { "default" : {} }) # Variations for hyper-parameters
 
 
-@cli.register_stage(
-    name="train",
-    description=(
-        "Trains the Knowledge Representation Learning module based on the configuration specified in "
-        "the experiment path."
-    ),
-    add_from_conf=False,
-    add_save_to=False
-)
 class Trainer(BaseCommand):
 
     def __init__(self, experiment : str, config : TrainingConfig):
@@ -130,6 +121,7 @@ class Trainer(BaseCommand):
             r = raw['predicates'],
             edge_index = raw[('entity','has-relation-with', 'entity')].t(),
             edge_type = raw['edge_type'],
+            entity_names=raw['metadata']['entities']
         )
 
         edge_index = torch.cat([
@@ -154,6 +146,8 @@ class Trainer(BaseCommand):
             kg = kg,
             edge_article = raw['triple_article'].t()
         )
+
+        data.metadata = raw['metadata']
 
         return self.normalize_data(data)
 
@@ -201,15 +195,41 @@ class Trainer(BaseCommand):
 
         return data.subgraph_articles(data.articles.article_id[mask])
     
+    def create_or_load_split(self, data : ArticleAsKG) -> Tensor:
+
+        split_path = os.path.join(EXPERIMENTS_DIR, self.experiment, f'split_{self.config.graph}_{self.config.num_splits}.pt')
+
+        if os.path.exists(split_path):
+
+            self.send_debug_event(
+                progress=0.0,
+                message="Loading split tensor from disk"
+            )
+
+            split_tensor = torch.load(split_path, map_location='cpu', weights_only=False)
+
+        else:
+
+            k_fold = KFold(n_splits = self.config.num_splits, shuffle = True)
+
+            split_tensor = torch.zeros((data.articles.num_nodes)).long() - 1
+            indices = torch.arange(data.articles.num_nodes)
+
+            for fold,(_, val_indices) in enumerate(k_fold.split(indices)):
+                split_tensor[val_indices] = fold
+
+            torch.save(split_tensor, split_path)
+
+            self.send_info_event(
+                progress=0.0,
+                message="Split tensor saved to disk."
+            )
+
+        return split_tensor
+    
     def create_samplers(self, data : ArticleAsKG) -> List[Tuple[HybridSampler, HybridSampler]]:
 
-        k_fold = KFold(n_splits = self.config.num_splits, shuffle = True)
-
-        split_tensor = torch.zeros((data.articles.num_nodes)).long() - 1
-        indices = torch.arange(data.articles.num_nodes)
-
-        for fold,(_, val_indices) in enumerate(k_fold.split(indices)):
-            split_tensor[val_indices] = fold
+        split_tensor = self.create_or_load_split(data)
         
         samplers = []
 
@@ -619,7 +639,9 @@ class Trainer(BaseCommand):
 
         history = []
 
-        for config_name, config in configs.items():
+        total = len(self.config.hparams) * self.config.num_splits
+
+        for exp_id, (config_name, config) in enumerate(configs.items()):
 
             ### Preprocessing
             data = self.filter_data(data)
@@ -638,7 +660,7 @@ class Trainer(BaseCommand):
             for trail_id, (train_sampler, val_sampler) in enumerate(samplers):
 
                 self.send_info_event(
-                    progress=0.0,
+                    progress=(exp_id * self.config.num_splits + trail_id + 1) / total,
                     message=f"Starting trial {trail_id} of experiment \"{config_name}\""
                 )
 
@@ -650,7 +672,7 @@ class Trainer(BaseCommand):
                 )
 
                 self.send_info_event(
-                    progress=0.0,
+                    progress=(exp_id * self.config.num_splits + trail_id + 1) / total,
                     message=f"Trial {trail_id} of experiment {config_name} completed."
                 )
 
@@ -662,7 +684,7 @@ class Trainer(BaseCommand):
                 torch.save(model.state_dict(), f = os.path.join(MODELS_DIR, f'model_{config_name}_{trail_id}.pt'))
 
                 self.send_info_event(
-                    progress=0.0,
+                    progress=(exp_id * self.config.num_splits + trail_id + 1) / total,
                     message=f"Making inference..."
                 )
 
@@ -670,7 +692,7 @@ class Trainer(BaseCommand):
                 torch.save(predictions, f = os.path.join(RESULTS_DIR, f'predictions_{config_name}_{trail_id}.pt'))
 
                 self.send_info_event(
-                    progress=0.0,
+                    progress=(exp_id * self.config.num_splits + trail_id + 1) / total,
                     message=f"Model & inference results saved to disk."
                 )
 
@@ -682,7 +704,7 @@ class Trainer(BaseCommand):
         )
 
         self.send_info_event(
-            progress=0.0,
+            progress=1.0,
             message=f"History saved to disk"
         )
 
@@ -691,9 +713,22 @@ class Trainer(BaseCommand):
     @classmethod
     def from_config(cls, config : Config) -> Self:
 
-        downloader = Trainer(experiment=config.experiment, config=config.training_config)
+        trainer = Trainer(experiment=config.experiment, config=config.training_config)
         
-        downloader \
+        trainer \
             .add_handler(ConsoleLogger("Trainer"))
 
-        return downloader
+        return trainer
+    
+
+@cli.register_stage(
+    name="train",
+    description=(
+        "Trains the Knowledge Representation Learning module based on the configuration specified in "
+        "the experiment path."
+    ),
+    add_from_conf=False,
+    add_save_to=False
+)
+class _Trainer(Trainer):
+    pass

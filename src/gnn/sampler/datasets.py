@@ -1,9 +1,12 @@
 import torch
+import numpy as np
 from torch import Tensor
 from torch_geometric.data import Data
+from torch_geometric.data.storage import AttrType 
 from torch_geometric.typing import OptTensor
 from torch_geometric import utils as gnn_utils
-from torch_scatter import scatter
+from typing import Optional, Any
+from collections import defaultdict
 
 class ArticlesGraph(Data):
 
@@ -11,7 +14,7 @@ class ArticlesGraph(Data):
         x : OptTensor = None, 
         edge_index : OptTensor = None,
         edge_type : OptTensor = None,
-        y : OptTensor = None    
+        y : OptTensor = None, 
     ):
         super().__init__(x, edge_index, y = y)
 
@@ -52,7 +55,8 @@ class KnowledgeGraph(Data):
         r : OptTensor = None,
         edge_index : OptTensor = None,
         edge_type : OptTensor = None,
-        y : OptTensor = None
+        y : OptTensor = None,
+        entity_names : Optional[list[str]] = None,
     ) -> None:
         super().__init__(x, edge_index, e, y)
 
@@ -61,6 +65,15 @@ class KnowledgeGraph(Data):
         self.triple_id = torch.arange(edge_index.size(-1)) if edge_index is not None else None
         self.r = r
         self.edge_type = edge_type
+        self.entity_names = entity_names
+
+        # print(self.is_node_attr('entity_names'))
+
+    def subgraph(self, subset : Tensor):
+        graph = super().subgraph(subset)
+        # print(len(graph.entity_names), subset.shape, subset.max())
+        # graph.entity_names = np.array(graph.entity_names)[subset.cpu().numpy()].tolist() if graph.entity_names is not None else None
+        return graph
 
     @property
     def num_nodes(self) -> int:
@@ -87,12 +100,14 @@ class ArticleAsKG:
     def __init__(self, 
         articles : ArticlesGraph,
         kg : KnowledgeGraph,
-        edge_article : Tensor,        
+        edge_article : Tensor, 
+        metadata : Any = None          
     ) -> None:
         
         self.articles = articles
         self.kg = kg
         self.edge_article = edge_article
+        self.metadata = metadata
 
         ### Compute Entity<->Article
         triple_id, article_id = edge_article
@@ -171,7 +186,8 @@ class ArticleAsKG:
         return ArticleAsKG(
             articles = articles,
             kg = kg,
-            edge_article = edge_article
+            edge_article = edge_article,
+            metadata = self.metadata
         )
     
     def subgraph_entities(self, entity_ids : Tensor) -> 'ArticleAsKG':
@@ -218,7 +234,8 @@ class ArticleAsKG:
         return ArticleAsKG(
             articles = articles,
             kg = kg,
-            edge_article = edge_article
+            edge_article = edge_article,
+            metadata = self.metadata
         )
         
     
