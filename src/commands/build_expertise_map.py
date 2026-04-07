@@ -6,15 +6,16 @@ import networkx as nx
 from torch_scatter import scatter
 from rich.progress import Progress
 from pydantic import BaseModel, computed_field
-from typing import Self, Dict, List, Tuple, Optional, Literal
+from typing import Self, Dict, List, Tuple, Optional, Literal, Any
 from definitions import EXPERIMENTS_DIR, DATA_DIR
 from torch_geometric import utils as gnn_utils
 from torch import Tensor
 from src.shared.command_tools import BaseCommand
-from src.gnn import ArticleAsKG, HetModel, HetModelReturn
+from src.gnn import ArticleAsKG, HetModel, HetModelReturn, KnowledgeGraph
 from src.shared.handlers import ConsoleLogger
 from src.commands.train import Trainer, Config as TrainerConfig
-from src.shared.file_tools import FileWriter
+from src.shared.file_tools import FileWriter, FileReader
+from src.commands.build_kg.graph_construction.neo4j import Neo4J, Config as Neo4JConfig
 from instance import cli
 from sknetwork.clustering import Leiden, Louvain
 from sknetwork.data import from_edge_list
@@ -26,20 +27,28 @@ class Config(BaseModel):
     experiment : str = 'default'
     model : str = 'default'
 
+    def model_post_init(self, context : Any) -> None:
+        os.makedirs(self.map_dir, exist_ok=True)
+
+    @computed_field
+    @property
+    def map_dir(self) -> str:
+        return os.path.join(DATA_DIR, self.corpus, 'expertise_map')
+
     @computed_field
     @property
     def map_filename(self) -> str:
-        return os.path.join(DATA_DIR, self.corpus, 'expertise_map.jsonl')
+        return os.path.join(self.map_dir, 'expertise_map.jsonl')
     
     @computed_field
     @property
     def nodes_metadata_filename(self) -> str:
-        return os.path.join(DATA_DIR, self.corpus, 'nodes_metadata.csv')
+        return os.path.join(self.map_dir, 'nodes_metadata.csv')
     
     @computed_field
     @property
     def community_metadata_filename(self) -> str:
-        return os.path.join(DATA_DIR, self.corpus, 'community_metadata.csv')
+        return os.path.join(self.map_dir, 'community_metadata.csv')
 
 
 @cli.register_stage(
@@ -321,6 +330,8 @@ class ExpertiseMapBuilder(BaseCommand):
         return df
     
     def build_graph(self,
+        kg : KnowledgeGraph,
+        predicates : List[str],
         nodes_metadata : pd.DataFrame,
         communities_metadata : pd.DataFrame,
         labels : list[str],
@@ -341,7 +352,7 @@ class ExpertiseMapBuilder(BaseCommand):
         task1 = pbar.add_task("Linking Between Domains and Sub-Domains", total=len(mapping))
         task2 = pbar.add_task("Linking Expertise to their domains", total=len(communities_metadata))
         task3 = pbar.add_task("Adding Graph Nodes", total=len(nodes_metadata))
-        # task4 = pbar.add_task("Adding Knowledge Graph Relations", total=len(mapping))
+        task4 = pbar.add_task("Adding Knowledeg Graph Nodes", total=kg.edge_index.shape[1])
 
         pbar.start()
         
@@ -361,9 +372,9 @@ class ExpertiseMapBuilder(BaseCommand):
             nodes[f"Domain_{domain}"] = {
                 "type" : "Domain",
                 "proprties" : {
-                    "id" : f"SubDomain_{sub_domain}",
-                    "name" : sub_domain,
-                    "labels" : [domain, sub_domain],
+                    "id" : f"Domain_{domain}",
+                    "name" : domain,
+                    "labels" : [domain, "univ-nantes-2020"],
                     "score" : 1.0
                 }
             }
@@ -371,7 +382,7 @@ class ExpertiseMapBuilder(BaseCommand):
             relations.append({
                 "id" : f"SubDomain_{sub_domain}--Domain_{domain}",
                 "relation" : {
-                    "type" : "is-subdomain-of",
+                    "type" : "isSubdomainOf",
                     "properties" : {}
                 },
                 "n1" : nodes[f"SubDomain_{sub_domain}"],
@@ -401,7 +412,7 @@ class ExpertiseMapBuilder(BaseCommand):
                 relations.append({
                 "id" : f"Expertise_{idx}--SubDomain_{sub_domain}",
                 "relation" : {
-                    "type" : "has-subdomain",
+                    "type" : "hasSubdomain",
                     "properties" : {}
                 },
                 "n1" : nodes[f"Expertise_{idx}"],
@@ -416,41 +427,46 @@ class ExpertiseMapBuilder(BaseCommand):
             labels = set(domains[nodes_metadata[domains].loc[idx].values])
             sub_labels = set([mapping[label] for label in labels])
 
-            if node['community'] in communities_metadata['id']:
+            nodes[f"Node_{i}"] = {
+                "type" : "Node",
+                "proprties" : {
+                    "id" : f"Node_{i}",
+                    "name" : idx,
+                    "labels" : [*labels,*sub_labels],
+                    "score" : node["specifity_weighted_page_rank"]
+                },
+            }
 
-                nodes[f"Node_{i}"] = {
-                    "type" : "Node",
-                    "proprties" : {
-                        "id" : f"Node_{i}",
-                        "name" : idx,
-                        "labels" : [*labels,*sub_labels],
-                        "score" : node["specifity_weighted_page_rank"]
-                    },
-                }
+            if node['community'] in communities_metadata['id']:
 
                 relations.append({
                     "id" : f"Node_{i}--Expertise_{node['community']}",
                     "relation" : {
-                        "type" : "has-subdomain",
+                        "type" : "hasSubdomain",
                         "properties" : {}
                     },
-                    "src" : nodes[f"Node_{i}"],
-                    "dst" : nodes[f"Expertise_{node['community']}"]
+                    "n1" : nodes[f"Node_{i}"],
+                    "n2" : nodes[f"Expertise_{node['community']}"]
                 })
 
-            # for label in labels:
-
-            #     relations.append({
-            #         "id" : f"Node_{i}--SubDomain_{label}",
-            #         "relation" : {
-            #             "type" : "has-subdomain",
-            #             "properties" : {}
-            #         },
-            #         "src" : f"Node_{i}",
-            #         "dst" : f"SubDomain_{label}"
-            #     })
-
             pbar.update(task3, advance=1, refresh=True)
+
+        ### Link Nodes With Other Nodes
+        for (src, dst), edge_type in zip(kg.edge_index.t(), kg.edge_type):
+            
+            relations.append({
+                "id" : f"Node_{src.item()}--Node_{dst.item()}",
+                "relation" : {
+                    "type" : "isRelatedTo",
+                    "properties" : {
+                        "predicate" : predicates[edge_type.item()]
+                    }
+                },
+                "n1" : nodes[f"Node_{src.item()}"],
+                "n2" : nodes[f"Node_{dst.item()}"]
+            })
+
+            pbar.update(task4, advance=1, refresh=True)
 
         return relations
             
@@ -480,6 +496,8 @@ class ExpertiseMapBuilder(BaseCommand):
         )
 
         relations = self.build_graph(
+            kg=graph.kg,
+            predicates=graph.metadata['predicates'],
             nodes_metadata=nodes_metadata,
             communities_metadata=communities_metadata,
             labels=graph.metadata['labels'],
@@ -505,7 +523,7 @@ class ExpertiseMapBuilder(BaseCommand):
             },
         )
 
-        nodes_metadata.to_csv(self.config.nodes_metadata_filename,index=False)
+        nodes_metadata.to_csv(self.config.nodes_metadata_filename,index=True)
         communities_metadata.to_csv(self.config.community_metadata_filename,index=False)
         
         writer = FileWriter.from_filename(self.config.map_filename).buffered(128)
@@ -514,6 +532,13 @@ class ExpertiseMapBuilder(BaseCommand):
             writer.write([rel])
 
         writer.flush()
+
+        neo4j = Neo4J.from_config(Neo4JConfig(
+            input_filename=self.config.map_filename,
+            output_dir=os.path.join(self.config.map_dir, "neo4j")
+        ))
+
+        neo4j.run()
 
         yield from []
 
