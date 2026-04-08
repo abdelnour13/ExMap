@@ -252,6 +252,9 @@ class TriplesPostprocessor(Stage):
                 or predicate.predicate.startswith("consists in")
                 or predicate.predicate.startswith("has potential")
                 or predicate.predicate.startswith("design to")
+                or predicate.predicate.startswith("allow to")
+                # or predicate.predicate.startswith("allows to")
+                # or predicate.predicate.startswith("allowed to")
             ):
                 predicate = Predicate(tokens=predicate.tokens[2:])
 

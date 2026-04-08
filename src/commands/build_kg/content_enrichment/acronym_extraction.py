@@ -36,6 +36,7 @@ class AcronymExtractor(Stage):
         qa_model : str,
         threshold : float
     ) -> None:
+        
         from transformers import pipeline
 
         super().__init__(reader, writer)

@@ -203,7 +203,7 @@ class Neo4J(Stage):
 
     def transform_chunk(self, chunk : List[str]) -> List[str]:
 
-        chunk, errors = super().transform_chunk(chunk)
+        docs, chunk, errors = super().transform_chunk(chunk)
 
         with self.driver.session() as session:
 
@@ -211,7 +211,7 @@ class Neo4J(Stage):
                 for query in chunk:
                     trx.run(query=query)
 
-        return chunk, errors
+        return docs, chunk, errors
 
     @classmethod
     def from_config(cls, config : Config) -> 'Neo4J':
