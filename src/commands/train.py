@@ -19,6 +19,7 @@ from instance import cli
 from tabulate import tabulate
 
 class Config(BaseModel):
+    
     experiment : str = 'default'
 
     @computed_field
@@ -323,10 +324,9 @@ class Trainer(BaseCommand):
         ### Supervised Loss
         if negative_sample is not None:
             row, col = negative_sample
-            y_hat = y_hat[row, col]
-            y = y[row, col]
-
-        losses['guidance_loss'] = F.binary_cross_entropy_with_logits(y_hat, y.float())
+            losses['guidance_loss'] = F.binary_cross_entropy_with_logits(y_hat[row, col], y[row, col].float())
+        else:
+            losses['guidance_loss'] = F.binary_cross_entropy_with_logits(y_hat, y.float())
 
         ### Structure Loss
         if config.add_ssl_loss:
