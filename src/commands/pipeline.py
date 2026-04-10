@@ -16,7 +16,7 @@ from src.commands.build_kg.cleaning import cleaning
 from src.commands.build_kg.preprocessing import coreference_resolution
 from src.commands.build_kg.content_enrichment import annotate, acronym_extraction, keyword_extraction
 from src.commands.build_kg.preprocessing import sentence_segmentation
-from src.commands.build_kg.triplet_extraction import triples_extractor, triples_postprocessing, validation, entities_metadata, entities_mapping
+from src.commands.build_kg.triplet_extraction import triples_extractor, triples_postprocessing, validation, entities_metadata, entities_mapping, knowledge_completion
 from src.commands.build_kg.graph_construction import triples, neo4j
 
 STAGES : Dict[str, Tuple[Stage, StageConfig]] = {
