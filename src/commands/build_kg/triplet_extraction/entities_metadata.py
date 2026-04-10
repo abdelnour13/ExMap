@@ -1,9 +1,25 @@
 import time
-from typing import Dict, List
+from typing import Dict, List, Optional
 from src.shared.command_tools import Stage, StageConfig, add_handlers
-from src.shared.file_tools import FileWriter, FileReader, TextfileCache
+from src.shared.file_tools import FileWriter, FileReader, TextfileCache, Reader, Cache
 from SPARQLWrapper import SPARQLWrapper, JSON
 from instance import cli
+
+class EntitiesReader(Reader):
+
+    def __init__(self, reader : Reader, cache : Optional[Cache] = None):
+        super().__init__(cache)
+        self.reader = reader
+
+    def generate(self):
+
+        p = 0
+
+        for record, progress in self.reader:
+            yield { "id" : record["head"], "name" : record["head"] }, p + (progress - p) / 2
+            yield { "id" : record["tail"], "name" : record["tail"] }, progress
+            p = progress
+
 
 @cli.register_stage(
     name="entities_metadata",
@@ -24,7 +40,7 @@ class TriplesExtractor(Stage):
     ) -> None:
         super().__init__(reader, writer)
 
-        self.sparql = SPARQLWrapper(self.ENDPOINT)
+        self.sparql = SPARQLWrapper(self.ENDPOINT, agent="KG2ExpertiseMap (abdelnour13.github.io/ab.fellah@esi-sba.dz)")
 
     def get_wikidata_info(self, label : str, language : str = "en") -> Dict:
 
@@ -90,12 +106,9 @@ class TriplesExtractor(Stage):
 
         raise error
                 
-    def transform(self, doc : Dict) -> List[Dict]:
-
-        return [
-            self.get_wikidata_info(doc["head"]),
-            self.get_wikidata_info(doc["tail"])
-        ]
+    def transform(self, doc : Dict) -> Dict:
+        return self.get_wikidata_info(doc["name"])
+        
         
     @classmethod
     def from_config(cls, config : StageConfig) -> 'TriplesExtractor':
@@ -104,8 +117,7 @@ class TriplesExtractor(Stage):
         # cache = None
         
         return TriplesExtractor(
-            reader=FileReader
-                .from_filename(config.input_filename, cache)
+            reader=EntitiesReader(FileReader.from_filename(config.input_filename), cache)
                 .batched(config.batch_size),
             writer=FileWriter
                 .from_filename(config.output_filename)
