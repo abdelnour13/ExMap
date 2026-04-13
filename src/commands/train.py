@@ -66,7 +66,15 @@ class TrainingConfig(BaseTrainingConfig):
     num_splits : int = 4 # number of splits used in KFold
     hparams : Dict[str,Dict[str, Any]] = Field(default_factory = lambda : { "default" : {} }) # Variations for hyper-parameters
 
-
+@cli.register_stage(
+    name="train",
+    description=(
+        "Trains the Knowledge Representation Learning module based on the configuration specified in "
+        "the experiment path."
+    ),
+    add_from_conf=False,
+    add_save_to=False
+)
 class Trainer(BaseCommand):
 
     def __init__(self, experiment : str, config : TrainingConfig):
@@ -106,7 +114,7 @@ class Trainer(BaseCommand):
     
     def load_data(self) -> ArticleAsKG:
 
-        data_path = os.path.join(DATA_DIR, *self.config.graph.split('/'))
+        data_path = os.path.join(DATA_DIR, *self.config.graph.split('/')) # os.path.join(DATA_DIR, *self.config.graph.split('/'), "graph.pt")
 
         self.send_debug_event(
             progress=0.0,
@@ -639,7 +647,11 @@ class Trainer(BaseCommand):
 
             for trail_id, (train_sampler, val_sampler) in enumerate(samplers):
 
-                if os.path.exists(os.path.join(RESULTS_DIR, f'predictions_{config_name}_{trail_id}.pt')):
+                history_path = os.path.join(HISTORIES_PATH, f'history_{config_name}_{trail_id}.csv')
+                model_path = os.path.join(MODELS_DIR, f'model_{config_name}_{trail_id}.pt')
+                result_path = os.path.join(RESULTS_DIR, f'predictions_{config_name}_{trail_id}.pt')
+
+                if os.path.exists(result_path):
                     continue
 
                 self.send_info_event(
@@ -665,9 +677,9 @@ class Trainer(BaseCommand):
                 trial_history['exp'] = config_name
                 trial_history['trial'] = trail_id
 
-                trial_history.to_csv(os.path.join(HISTORIES_PATH, f'history_{config_name}_{trail_id}.csv'))
+                trial_history.to_csv(history_path)
 
-                torch.save(model.state_dict(), f = os.path.join(MODELS_DIR, f'model_{config_name}_{trail_id}.pt'))
+                torch.save(model.state_dict(), f = model_path)
 
                 self.send_info_event(
                     progress=(exp_id * self.config.num_splits + trail_id + 1) / total,
@@ -675,7 +687,7 @@ class Trainer(BaseCommand):
                 )
 
                 predictions = self.inference(model, data)
-                torch.save(predictions, f = os.path.join(RESULTS_DIR, f'predictions_{config_name}_{trail_id}.pt'))
+                torch.save(predictions, f = result_path)
 
                 self.send_info_event(
                     progress=(exp_id * self.config.num_splits + trail_id + 1) / total,
@@ -698,15 +710,3 @@ class Trainer(BaseCommand):
             .add_handler(ConsoleLogger("Trainer"))
 
         return trainer
-
-@cli.register_stage(
-    name="train",
-    description=(
-        "Trains the Knowledge Representation Learning module based on the configuration specified in "
-        "the experiment path."
-    ),
-    add_from_conf=False,
-    add_save_to=False
-)
-class _Trainer(Trainer):
-    pass

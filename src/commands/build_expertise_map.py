@@ -50,24 +50,6 @@ class Config(BaseModel):
     def community_metadata_filename(self) -> str:
         return os.path.join(self.map_dir, 'community_metadata.csv')
 
-def jaccard_index(
-    edge_index : Tensor, 
-    probas : Tensor, 
-    mode : Literal['soft','hard'] = "soft",
-    threshold : float = 0.5
-) -> Tensor:
-    
-    if mode == 'hard':
-        probas = probas.gt(threshold).float()
-
-    row, col = edge_index
-    a = torch.stack([probas[row], probas[col]], dim = 0)
-    intersection = a.min(0).values.sum(-1)
-    union = a.max(0).values.sum(-1)
-    jacc_idx = intersection / union
-    jacc_idx = torch.where(jacc_idx.isnan(), 0.0, jacc_idx)
-    return jacc_idx
-
 @cli.register_stage(
     name="build_map",
     description=(
@@ -182,6 +164,25 @@ class ExpertiseMapBuilder(BaseCommand):
         metadata['num_labels'] = metadata[data.metadata['labels']].sum(1)
 
         return metadata
+    
+    @staticmethod
+    def jaccard_index(
+        edge_index : Tensor, 
+        probas : Tensor, 
+        mode : Literal['soft','hard'] = "soft",
+        threshold : float = 0.5
+    ) -> Tensor:
+        
+        if mode == 'hard':
+            probas = probas.gt(threshold).float()
+
+        row, col = edge_index
+        a = torch.stack([probas[row], probas[col]], dim = 0)
+        intersection = a.min(0).values.sum(-1)
+        union = a.max(0).values.sum(-1)
+        jacc_idx = intersection / union
+        jacc_idx = torch.where(jacc_idx.isnan(), 0.0, jacc_idx)
+        return jacc_idx
     
     def inference(self,
         model : HetModel,
@@ -306,12 +307,14 @@ class ExpertiseMapBuilder(BaseCommand):
 
             for domain in community_domains:
                 condidates = condidates[condidates[domain]]
+                condidates = condidates.head(min(50, condidates.shape[0]))
 
             if condidates.shape[0] > 0:
 
                 centroids_df.append({
                     "id" : community,
                     "name" : condidates.head(1).index.tolist()[0],
+                    "candidates" : condidates.index.tolist(),
                     "domains" : community_domains,
                 })
                 
