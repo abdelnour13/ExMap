@@ -3,7 +3,7 @@ import dotenv
 import pandas as pd
 import numpy as np
 from typing import Self
-from src.shared.command_tools import BaseCommand, OutputDirOption, ConnectionOption, InputFileOption
+from src.shared.command_tools import BaseCommand, OutputDirOption, ConnectionOption, InputFileOption, add_handlers
 from src.shared.handlers import ConsoleLogger
 from src.shared.file_tools import BufferedWriter, FileWriter, FileReader, TextfileCache
 from pydantic import computed_field
@@ -26,6 +26,7 @@ class Config(InputFileOption, OutputDirOption, ConnectionOption):
     add_from_conf=False,
     add_save_to=False
 )
+@add_handlers()
 class KnowledgeCompletion(BaseCommand):
     
     def __init__(self, 
@@ -103,11 +104,11 @@ class KnowledgeCompletion(BaseCommand):
 
                 t = {
                     "head" : subj.replace('_',' '),
-                    "predicate" : rel.replace('-', ' '),
+                    "predicate" : rel,
                     "tail" : obj.replace('_', ' ')
                 }
 
-                t['predicate'] = mapper.get(t['predicate'], t['predicate'])
+                t['predicate'] = mapper.get(t['predicate'], t['predicate']).replace('-',' ')
                 t['predicate_group'] = t['predicate'] # TODO: change based on the step
                 t['sentence'] = None
                 t['id'] = f'cskg_{i}_{triple_id}'

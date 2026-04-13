@@ -14,7 +14,7 @@ from src.shared.command_tools import BaseCommand
 from src.gnn import ArticleAsKG, HetModel, HetModelReturn, KnowledgeGraph
 from src.shared.handlers import ConsoleLogger
 from src.commands.train import Trainer, Config as TrainerConfig
-from src.shared.file_tools import FileWriter, FileReader
+from src.shared.file_tools import FileWriter
 from src.commands.build_kg.graph_construction.neo4j import Neo4J, Config as Neo4JConfig
 from instance import cli
 from sknetwork.clustering import Leiden, Louvain
@@ -50,6 +50,23 @@ class Config(BaseModel):
     def community_metadata_filename(self) -> str:
         return os.path.join(self.map_dir, 'community_metadata.csv')
 
+def jaccard_index(
+    edge_index : Tensor, 
+    probas : Tensor, 
+    mode : Literal['soft','hard'] = "soft",
+    threshold : float = 0.5
+) -> Tensor:
+    
+    if mode == 'hard':
+        probas = probas.gt(threshold).float()
+
+    row, col = edge_index
+    a = torch.stack([probas[row], probas[col]], dim = 0)
+    intersection = a.min(0).values.sum(-1)
+    union = a.max(0).values.sum(-1)
+    jacc_idx = intersection / union
+    jacc_idx = torch.where(jacc_idx.isnan(), 0.0, jacc_idx)
+    return jacc_idx
 
 @cli.register_stage(
     name="build_map",
@@ -184,25 +201,6 @@ class ExpertiseMapBuilder(BaseCommand):
 
         with torch.no_grad():
             return model.forward(data)
-    
-    @staticmethod
-    def jaccard_index(
-        edge_index : Tensor, 
-        probas : Tensor, 
-        mode : Literal['soft','hard'] = "soft",
-        threshold : float = 0.5
-    ) -> Tensor:
-        
-        if mode == 'hard':
-            probas = probas.gt(threshold).float()
-
-        row, col = edge_index
-        a = torch.stack([probas[row], probas[col]], dim = 0)
-        intersection = a.min(0).values.sum(-1)
-        union = a.max(0).values.sum(-1)
-        jacc_idx = intersection / union
-        jacc_idx = torch.where(jacc_idx.isnan(), 0.0, jacc_idx)
-        return jacc_idx
         
     def cluster(self,
         model : HetModel,

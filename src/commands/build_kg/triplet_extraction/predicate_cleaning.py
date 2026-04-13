@@ -7,7 +7,6 @@ from dataclasses import dataclass
 from src.helpers import load_json_file
 from src.shared.command_tools import StageConfig, Stage, add_handlers
 from src.shared.file_tools import FileWriter, FileReader, TextfileCache
-from src.shared.language_detectors import LanguageDetector
 from dataclasses import dataclass
 from pycli import Field
 from pydantic import computed_field, BaseModel
@@ -113,15 +112,15 @@ class Predicate:
         return True
 
 @cli.register_stage(
-    name="clean_triples",
+    name="predicates_normalization",
     description=(
         "Apply a set of rules to clean the triples and retain the main verb in the predicate."
     ),
     add_from_conf=False,
     add_save_to=False
 )
-@add_handlers
-class TriplesPostprocessor(Stage):
+@add_handlers()
+class PredicatesNormalizer(Stage):
 
     MAX_PRED_LEN = 4
     MAX_ENTITY_LEN = 6
@@ -130,32 +129,29 @@ class TriplesPostprocessor(Stage):
         self,
         reader: FileReader,
         writer: FileWriter,
-        language_detector: LanguageDetector,
         domain_nlp : Nlp
     ) -> None:
         super().__init__(reader, writer)
         self.domain_nlp = domain_nlp
         self.nlp = spacy.load("en_core_web_sm")
-        self.language_detector = language_detector
 
     def base_normalize(self, entity: str) -> str:
 
+        # Remove punctuations
         translator = str.maketrans("", "", string.punctuation)
 
+        # Remove hyphen and back-slash
         entity = entity.replace("-", " ")
         entity = entity.replace("/", " ")
 
+        # Remove numbers & handle multiple spaces
         entity = re.sub("[0-9]+", "", entity)
         entity = re.sub(r"\s+", " ", entity)
         entity = entity.translate(translator)
 
+        # Lower-casing & stripping leading and trailing white spaces
         entity = entity.lower()
         entity = entity.strip()
-
-        parts = entity.split(" ")
-
-        if parts[0] in ["a", "as", "the", "an"]:
-            entity = " ".join(parts[1:])
 
         return entity
 
@@ -253,8 +249,10 @@ class TriplesPostprocessor(Stage):
                 or predicate.predicate.startswith("has potential")
                 or predicate.predicate.startswith("design to")
                 or predicate.predicate.startswith("allow to")
-                # or predicate.predicate.startswith("allows to")
-                # or predicate.predicate.startswith("allowed to")
+                or predicate.predicate.startswith("allows to")
+                or predicate.predicate.startswith("allowed to")
+                or predicate.predicate.startswith("allows for")
+                or predicate.predicate.startswith("allowed for")
             ):
                 predicate = Predicate(tokens=predicate.tokens[2:])
 
@@ -373,9 +371,9 @@ class TriplesPostprocessor(Stage):
 
         tokens = word_tokenize(entity)
 
-        is_valid = len(tokens) > 0 and len(tokens) <= self.MAX_ENTITY_LEN
+        is_valid = len(tokens) > 0 and len(tokens) <= self.MAX_ENTITY_LEN and len(entity) > 1
 
-        is_valid = is_valid and not entity.isnumeric()
+        is_valid = is_valid and entity.replace(' ', '').isalpha()
 
         is_valid = is_valid = is_valid and not any(
             [stopword in tokens for stopword in self.domain_nlp.stop.entities]
@@ -427,15 +425,8 @@ class TriplesPostprocessor(Stage):
         head, tail, predicate = doc["head"], doc["tail"], doc["predicate"]
 
         ### Initial Normalization
-        head = self.base_normalize(head)
-        tail = self.base_normalize(tail)
         predicate = self.base_normalize(predicate)
-
         predicate = self.make_predicate(predicate)
-
-        ### Pre-Cleaning validation
-        # if len(predicate.tags) == 1 and predicate.tokens[0].value.endswith('ing'):
-        #     return None
 
         ### Clean Predicate
         predicate, is_passive, e2 = self.normalize_predicate(predicate) # self.clean_predicate(predicate)
@@ -470,17 +461,16 @@ class TriplesPostprocessor(Stage):
         return triple
 
     @classmethod
-    def from_config(cls, config: Config) -> "TriplesPostprocessor":
+    def from_config(cls, config: Config) -> Stage:
 
         cache = TextfileCache(config.checkpoint_filename)
 
-        return TriplesPostprocessor(
+        return PredicatesNormalizer(
             reader=FileReader
                 .from_filename(config.input_filename, cache)
                 .batched(config.batch_size),
             writer=FileWriter
                 .from_filename(config.output_filename)
                 .buffered(config.buffer_size, cache),
-            language_detector=LanguageDetector.create("lingua"),
             domain_nlp=config.nlp
         )

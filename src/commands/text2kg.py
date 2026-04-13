@@ -1,7 +1,7 @@
 import os
 from typing import Generator, List, OrderedDict, Dict, Optional, Self, Tuple, Type
 from src.shared.command_tools import Stage, StageConfig, BaseCommand
-from src.shared.handlers import Event
+from src.shared.handlers import Event, ConsoleLogger
 from src.helpers import load_json_file
 from src.helpers.config import override
 from pydantic import BaseModel, computed_field
@@ -16,20 +16,31 @@ from src.commands.build_kg.cleaning import cleaning
 from src.commands.build_kg.preprocessing import coreference_resolution
 from src.commands.build_kg.content_enrichment import annotate, acronym_extraction, keyword_extraction
 from src.commands.build_kg.preprocessing import sentence_segmentation
-from src.commands.build_kg.triplet_extraction import triples_extractor, triples_postprocessing, validation, entities_metadata, entities_mapping, knowledge_completion
 from src.commands.build_kg.graph_construction import triples, neo4j
+from src.commands.build_kg.triplet_extraction import (
+    triples_extractor, 
+    validation, 
+    entities_mapping, 
+    knowledge_completion,
+    entities_cleaning,
+    predicate_cleaning
+)
+
+from pycli.field import Field
 
 STAGES : Dict[str, Tuple[Stage, StageConfig]] = {
-    "cleaning" : (cleaning.CorpusCleaner, cleaning.StageConfig),
+    "corpus_cleaning" : (cleaning.CorpusCleaner, cleaning.StageConfig),
     "coreference_resolution" : (coreference_resolution.CoreferenceResolver, coreference_resolution.Config),
-    "annotate" : (annotate.DocumentsAnnotator, annotate.Config),
-    "keyword_extraction" : (keyword_extraction.KeywordExtractor, keyword_extraction.StageConfig),
-    "sentence_segmentation" : (sentence_segmentation.SentenceSegmenter, sentence_segmentation.Config),
-    "acronym_extraction" : (acronym_extraction.AcronymExtractor, acronym_extraction.Config),
-    "extract_triples" : (triples_extractor.TriplesExtractor, triples_extractor.Config),
-    "triples_validation" : (validation.TriplesLLMValidator, triples_extractor.Config),
-    "clean_triples" : (triples_postprocessing.TriplesPostprocessor, triples_postprocessing.Config),
-    "entities_mapping" : (entities_mapping.EntityMapper, entities_mapping.Config),
+    "corpus_annotation" : (annotate.CorpusAnnotatator, annotate.Config),
+    "keywords_extraction" : (keyword_extraction.KeywordsExtractor, keyword_extraction.StageConfig),
+    "sentence_segmentation" : (sentence_segmentation.SentenceSegmentor, sentence_segmentation.Config),
+    "acronyms_extraction" : (acronym_extraction.AcronymsExtractor, acronym_extraction.Config),
+    "triples_extraction" : (triples_extractor.TriplesExtractor, triples_extractor.Config),
+    "triples_validation" : (validation.TriplesValidator, triples_extractor.Config),
+    "entities_normalization" : (entities_cleaning.EntitiesNormalizer, entities_cleaning.Config),
+    "knowledge_completion" : (knowledge_completion.KnowledgeCompletion, knowledge_completion.Config),
+    "predicates_normalization" : (predicate_cleaning.PredicatesNormalizer, predicate_cleaning.Config),
+    "entities_mapping" : (entities_mapping.EntitiesMapping, entities_mapping.Config),
     "graph2triples" : (triples.Graph2Triples, triples.StageConfig),
     "insert2neo4j"  : (neo4j.Neo4J, neo4j.Config)
 }
@@ -49,8 +60,8 @@ class PipeConfig(BaseModel):
     overrides : List[Override]
 
 class Config(BaseModel):
-    graph : str
-    stage : Optional[str]
+    graph : str = Field(description="The corpus name the config file is expected to found at $DATA_DIR/$corpus/pipeline_config.json")
+    stage : Optional[str] = Field(description="The stage to run, otherwise it will run the whole pipeline.")
 
     @computed_field
     @property
@@ -63,16 +74,14 @@ class StageInfo:
     config : StageConfig
 
 @cli.register_stage(
-    name="pipeline",
-    description="Run the pipeline based on the provided config file.",
+    name="text2kg",
+    description="Run the knowledge graph building pipeline based on the provided config file.",
     add_from_conf=False,
     add_save_to=False
 )
 class Pipeline(BaseCommand):
 
-    def __init__(self, 
-        stages : OrderedDict[str, StageInfo]
-    ) -> None:
+    def __init__(self, stages : OrderedDict[str, StageInfo]) -> None:
         self.stages = stages
 
     def __iter__(self) -> Generator[Event, None, None]:
@@ -118,7 +127,8 @@ class Pipeline(BaseCommand):
             if stage_name == config.stage:
                 break
 
-        return Pipeline(stages={ config.stage : commands[config.stage]})
+        return Pipeline(stages={ config.stage : commands[config.stage]}) \
+            .add_handler(ConsoleLogger("Text2KG"))
     
     @staticmethod
     def create_and_run(cmd_cls : Type[BaseCommand], cmd_config : StageConfig) -> None:

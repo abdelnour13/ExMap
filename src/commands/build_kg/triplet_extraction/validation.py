@@ -33,8 +33,8 @@ class Config(StageConfig):
     add_from_conf=False,
     add_save_to=False
 ) 
-@add_handlers
-class TriplesLLMValidator(Stage):
+@add_handlers()
+class TriplesValidator(Stage):
 
     def __init__(self, 
         reader : FileReader, 
@@ -122,12 +122,12 @@ class TriplesLLMValidator(Stage):
         return records
     
     @classmethod
-    def from_config(cls, config : Config) -> 'TriplesLLMValidator':
+    def from_config(cls, config : Config) -> Stage:
 
         cache = TextfileCache(config.checkpoint_filename)
         llm = get_by_name(config.llm)
         
-        return TriplesLLMValidator(
+        return TriplesValidator(
             reader=FileReader
                 .from_filename(config.input_filename, cache)
                 .batched(config.batch_size),

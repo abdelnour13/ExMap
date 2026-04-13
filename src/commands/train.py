@@ -16,7 +16,6 @@ from src.shared.handlers import Event
 from src.gnn import HetGNNConfig, ArticleAsKG, ArticlesGraph, KnowledgeGraph, HybridSampler, HetModel, HetModelReturn
 from src.shared.handlers import ConsoleLogger
 from instance import cli
-from tabulate import tabulate
 
 class Config(BaseModel):
     
@@ -107,7 +106,7 @@ class Trainer(BaseCommand):
     
     def load_data(self) -> ArticleAsKG:
 
-        data_path = os.path.join(DATA_DIR, self.config.graph, 'graph.pt')
+        data_path = os.path.join(DATA_DIR, *self.config.graph.split('/'))
 
         self.send_debug_event(
             progress=0.0,
@@ -198,7 +197,7 @@ class Trainer(BaseCommand):
     
     def create_or_load_split(self, data : ArticleAsKG) -> Tensor:
 
-        split_path = os.path.join(EXPERIMENTS_DIR, self.experiment, f'split_{self.config.graph}_{self.config.num_splits}.pt')
+        split_path = os.path.join(EXPERIMENTS_DIR, self.experiment, f'split_{self.config.graph.split('/')[-1]}_{self.config.num_splits}.pt')
 
         if os.path.exists(split_path):
 
@@ -563,8 +562,6 @@ class Trainer(BaseCommand):
                     if not col.endswith('loss'):
                         local_history[col] = local_history[col].apply(lambda x : f'{100 * x:.2f}%')
 
-                # print(tabulate(local_history, headers=local_history.columns))
-
                 self.send_info_event(
                     progress=0.0,
                     message=f"Epoch {epoch+1}/{config.num_epochs} | Phase : Training",
@@ -576,22 +573,6 @@ class Trainer(BaseCommand):
                     message=f"Epoch {epoch+1}/{config.num_epochs} | Phase : Validation",
                     extra=local_history.loc['val'].to_dict()
                 )
-
-                # self.send_info_event(
-                #     progress=0.0,
-                #     message=' | '.join([
-                #         f"{key} = {value:.3f}" if isinstance(value, float) else f"{key} = {value}"
-                #         for key, value in train_local_history.items()
-                #     ])
-                # )
-
-                # self.send_info_event(
-                #     progress=0.0,
-                #     message=' | '.join([
-                #         f"{key} = {value:.3f}" if isinstance(value, float) else f"{key} = {value}"
-                #         for key, value in val_local_history.items()
-                #     ])
-                # )
 
                 self.send_info_event(
                     progress=0.0,
@@ -632,12 +613,11 @@ class Trainer(BaseCommand):
 
         MODELS_DIR = os.path.join(EXPERIMENTS_DIR, self.experiment, 'models')
         RESULTS_DIR = os.path.join(EXPERIMENTS_DIR, self.experiment, 'results')
-        HISTORY_PATH = os.path.join(EXPERIMENTS_DIR, self.experiment, 'history.csv')
+        HISTORIES_PATH = os.path.join(EXPERIMENTS_DIR, self.experiment, 'histories')
 
         os.makedirs(MODELS_DIR, exist_ok=True)
         os.makedirs(RESULTS_DIR, exist_ok=True)
-
-        history = []
+        os.makedirs(HISTORIES_PATH, exist_ok=True)
 
         total = len(self.config.hparams) * self.config.num_splits
 
@@ -659,6 +639,9 @@ class Trainer(BaseCommand):
 
             for trail_id, (train_sampler, val_sampler) in enumerate(samplers):
 
+                if os.path.exists(os.path.join(RESULTS_DIR, f'predictions_{config_name}_{trail_id}.pt')):
+                    continue
+
                 self.send_info_event(
                     progress=(exp_id * self.config.num_splits + trail_id + 1) / total,
                     message=f"Starting trial {trail_id} of experiment \"{config_name}\""
@@ -671,6 +654,9 @@ class Trainer(BaseCommand):
                     val_loader=val_sampler
                 )
 
+                ### TODO: redefine triples membership to articles for triples that are added from
+                ### external knowledge base.
+
                 self.send_info_event(
                     progress=(exp_id * self.config.num_splits + trail_id + 1) / total,
                     message=f"Trial {trail_id} of experiment {config_name} completed."
@@ -679,7 +665,7 @@ class Trainer(BaseCommand):
                 trial_history['exp'] = config_name
                 trial_history['trial'] = trail_id
 
-                history.append(trial_history)
+                trial_history.to_csv(os.path.join(HISTORIES_PATH, f'history_{config_name}_{trail_id}.csv'))
 
                 torch.save(model.state_dict(), f = os.path.join(MODELS_DIR, f'model_{config_name}_{trail_id}.pt'))
 
@@ -693,15 +679,8 @@ class Trainer(BaseCommand):
 
                 self.send_info_event(
                     progress=(exp_id * self.config.num_splits + trail_id + 1) / total,
-                    message=f"Model & inference results saved to disk."
+                    message=f"Model, inference results and history saved to disk."
                 )
-
-        history : pd.DataFrame = pd.concat(history)
-
-        history.to_csv(
-            path_or_buf = HISTORY_PATH,
-            index = False
-        )
 
         self.send_info_event(
             progress=1.0,
@@ -719,7 +698,6 @@ class Trainer(BaseCommand):
             .add_handler(ConsoleLogger("Trainer"))
 
         return trainer
-    
 
 @cli.register_stage(
     name="train",

@@ -8,7 +8,7 @@ from typing import Dict
 from instance import cli
 
 @cli.register_stage(
-    name="clean",
+    name="corpus_cleaning",
     description=(
         "Performs an initial cleaning on the corpus, including : removing HTML tags and links, filtering non-english "
         "documents and keywords."
@@ -16,7 +16,7 @@ from instance import cli
     add_from_conf=False,
     add_save_to=False
 )
-@add_handlers
+@add_handlers()
 class CorpusCleaner(Stage):
 
     def __init__(self, 

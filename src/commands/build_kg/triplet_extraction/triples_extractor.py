@@ -26,14 +26,14 @@ class Config(StageConfig):
         return dotenv.get_key(ENV, f"{self.llm.upper()}_API_KEY")
 
 @cli.register_stage(
-    name="extract_triples",
+    name="triples_extraction",
     description=(
         "Extract triples from sentences json file using an LLM-Based triples extractor componenet."
     ),
     add_from_conf=False,
     add_save_to=False
 ) 
-@add_handlers
+@add_handlers()
 class TriplesExtractor(Stage):
 
     def __init__(self, 

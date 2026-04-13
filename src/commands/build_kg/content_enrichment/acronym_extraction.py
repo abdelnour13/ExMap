@@ -19,7 +19,7 @@ class Config(StageConfig):
     )
 
 @cli.register_stage(
-    name="extract_acronyms",
+    name="acronyms_extraction",
     description=(
         "Extract acronyms from the documents relying on a method that combines regular expressions "
         "and QA models."
@@ -27,8 +27,8 @@ class Config(StageConfig):
     add_from_conf=False,
     add_save_to=False
 )
-@add_handlers
-class AcronymExtractor(Stage):
+@add_handlers()
+class AcronymsExtractor(Stage):
 
     def __init__(self, 
         reader : FileReader, 
@@ -123,7 +123,7 @@ class AcronymExtractor(Stage):
 
         cache = TextfileCache(config.checkpoint_filename)
         
-        return AcronymExtractor(
+        return AcronymsExtractor(
             reader=FileReader
                 .from_filename(config.input_filename, cache)
                 .batched(config.batch_size),

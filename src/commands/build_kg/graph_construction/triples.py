@@ -15,7 +15,7 @@ dotenv.load_dotenv(ENV)
     add_from_conf=False,
     add_save_to=False
 ) 
-@add_handlers
+@add_handlers()
 class Graph2Triples(Stage):
 
     def __init__(self, 

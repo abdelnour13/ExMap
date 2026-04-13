@@ -47,15 +47,15 @@ MODELS = {
 }
 
 @cli.register_stage(
-    name="annotate",
+    name="corpus_annotation",
     description=(
         "Classify using the provided LLM each document into one of the domains defined in the json file passed."
     ),
     add_from_conf=False,
     add_save_to=False
 )
-@add_handlers
-class DocumentsAnnotator(Stage):
+@add_handlers()
+class CorpusAnnotatator(Stage):
 
     def __init__(self, 
         reader : FileReader, 
@@ -132,11 +132,11 @@ class DocumentsAnnotator(Stage):
         }
     
     @classmethod
-    def from_config(cls, config : Config) -> 'DocumentsAnnotator':
+    def from_config(cls, config : Config) -> 'CorpusAnnotatator':
 
         cache = TextfileCache(config.checkpoint_filename)
         
-        cmd = DocumentsAnnotator(
+        cmd = CorpusAnnotatator(
             reader=FileReader
                 .from_filename(config.input_filename, cache)
                 .batched(config.batch_size),

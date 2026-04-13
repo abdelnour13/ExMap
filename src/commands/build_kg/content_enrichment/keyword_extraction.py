@@ -55,15 +55,15 @@ def getkeyphrasetransformerClass():
     return KeyPhraseTransformer
 
 @cli.register_stage(
-    name="extract_keywords",
+    name="keywords_extraction",
     description=(
         "Extract additional keywords using 'KeyPhraseTransformer' T5 based keyword / topic extractor."
     ),
     add_from_conf=False,
     add_save_to=False
 )
-@add_handlers
-class KeywordExtractor(Stage):
+@add_handlers()
+class KeywordsExtractor(Stage):
 
     def __init__(self, 
         reader : FileReader, 
@@ -74,10 +74,6 @@ class KeywordExtractor(Stage):
 
         cls = getkeyphrasetransformerClass()
         self.key_phrase_transformer = cls(model_name=hf_model_dir("snrspeaks/KeyPhraseTransformer"), device='cuda')
-
-        # self.key_phrase_transformer.model # .to("cuda")
-
-        # print(f"Device : {self.key_phrase_transformer.model.device}.\n")
     
     def transform(self, doc : Dict) -> List[Dict]:
         
@@ -92,7 +88,7 @@ class KeywordExtractor(Stage):
 
         cache = TextfileCache(checkpoint_filename=config.checkpoint_filename)
         
-        return KeywordExtractor(
+        return KeywordsExtractor(
             reader=FileReader
                 .from_filename(config.input_filename, cache)
                 .batched(config.batch_size),

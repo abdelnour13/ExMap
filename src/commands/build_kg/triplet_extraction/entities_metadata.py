@@ -22,15 +22,15 @@ class EntitiesReader(Reader):
 
 
 @cli.register_stage(
-    name="entities_metadata",
+    name="entities_metadata_retrieval",
     description=(
         "Perform entity mapping using Wikidata aliases attributes combined with Semantic similarity using a language model."
     ),
     add_from_conf=False,
     add_save_to=False
 ) 
-@add_handlers
-class TriplesExtractor(Stage):
+@add_handlers()
+class EntitiesMetadataRetrieval(Stage):
 
     ENDPOINT : str = "https://query.wikidata.org/sparql"
 
@@ -111,12 +111,12 @@ class TriplesExtractor(Stage):
         
         
     @classmethod
-    def from_config(cls, config : StageConfig) -> 'TriplesExtractor':
+    def from_config(cls, config : StageConfig) -> 'EntitiesMetadataRetrieval':
 
         cache = TextfileCache(config.checkpoint_filename)
         # cache = None
         
-        return TriplesExtractor(
+        return EntitiesMetadataRetrieval(
             reader=EntitiesReader(FileReader.from_filename(config.input_filename), cache)
                 .batched(config.batch_size),
             writer=FileWriter

@@ -86,36 +86,38 @@ class FeatureExtractor(BaseCommand):
                 entities[record['tail']] = len(entities)
                 entities_names.append(record['tail'])
 
-            ### Article
-            article_id = record['sentence']['document']["id"]
+            if record['sentence'] is not None:
 
-            if article_id not in articles:
-                articles[article_id] = len(articles)
-                articles_abstracts.append(record['sentence']['document']['abstract'])
+                ### Article
+                article_id = record['sentence']['document']["id"]
 
-            ### Keywords
-            for keyword in record['sentence']['document']["keywords"]:
+                if article_id not in articles:
+                    articles[article_id] = len(articles)
+                    articles_abstracts.append(record['sentence']['document']['abstract'])
 
-                if keyword not in keywords:
-                    keywords[keyword] = len(keywords)
+                ### Keywords
+                for keyword in record['sentence']['document']["keywords"]:
 
-                article_keyword.add((articles[article_id], keywords[keyword]))
+                    if keyword not in keywords:
+                        keywords[keyword] = len(keywords)
 
-            ### Authors
-            for author in record['sentence']['document']["authors"]:
+                    article_keyword.add((articles[article_id], keywords[keyword]))
 
-                if author not in authors:
-                    authors[author] = len(authors)
+                ### Authors
+                for author in record['sentence']['document']["authors"]:
 
-                article_author.add((articles[article_id], authors[author]))
+                    if author not in authors:
+                        authors[author] = len(authors)
 
-            ### Authors
-            for label in record['sentence']['document']["labels"]:
+                    article_author.add((articles[article_id], authors[author]))
 
-                if label not in labels:
-                    labels[label] = len(labels)
+                ### Authors
+                for label in record['sentence']['document']["labels"]:
 
-                article_label.add((articles[article_id], labels[label]))
+                    if label not in labels:
+                        labels[label] = len(labels)
+
+                    article_label.add((articles[article_id], labels[label]))
 
             ### Predicate
             if record['predicate'] not in predicates:
@@ -129,7 +131,8 @@ class FeatureExtractor(BaseCommand):
                 edge_type.append(predicates[record['predicate']])
                 entity_entity.append((entities[record['head']], entities[record['tail']]))
 
-            triple_article.add((triples[t], articles[article_id]))
+            if record['sentence'] is not None:
+                triple_article.add((triples[t], articles[article_id]))
 
             self.make_debug_event(
                 progress=None,
@@ -242,7 +245,7 @@ class FeatureExtractor(BaseCommand):
             "labels" : list(labels.keys())
         }
 
-        torch.save(data, os.path.join(DATA_DIR, self.config.corpus, 'graph.pt'))
+        torch.save(data, os.path.join(DATA_DIR, self.config.corpus, f'graph_{self.config.model_name.replace('/','--')}.pt'))
 
     @classmethod
     def from_config(cls, config : Config) -> Self:
@@ -250,6 +253,6 @@ class FeatureExtractor(BaseCommand):
         downloader = FeatureExtractor(config=config)
         
         downloader \
-            .add_handler(ConsoleLogger("DataDownloader"))
+            .add_handler(ConsoleLogger("FeatureExtraction"))
 
         return downloader

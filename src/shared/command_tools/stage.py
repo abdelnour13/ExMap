@@ -1,14 +1,13 @@
 import asyncio
 import multiprocessing
-import inspect
 from typing import Dict, Iterable, Union, List, Literal, Optional, Tuple, Generator,Self, TypeVar
-from src.shared.handlers import SocketHandler, ConsoleLogger, FileLogger
 from abc import abstractmethod
-from src.shared.file_tools import BufferedWriter, BatchedReader, Cache
-from src.shared.handlers import Event, EventLevel
 from functools import wraps
 from returns.result import Result
 from returns.pipeline import is_successful
+from src.shared.handlers import SocketHandler, ConsoleLogger, FileLogger
+from src.shared.file_tools import BufferedWriter, BatchedReader, Cache
+from src.shared.handlers import Event, EventLevel
 from .base_command import BaseCommand
 from .config import OutputDirOption, InputFileOption, ConnectionOption
 
@@ -17,26 +16,34 @@ class StageConfig(OutputDirOption, InputFileOption, ConnectionOption):
 
 T = TypeVar('T')
 
-def add_handlers(cls : T):
+def add_handlers(handlers : Optional[List[Literal['ConsoleLogger', 'SocketLogger', 'FileLogger']]] = None):
 
-    from_config = cls.__dict__['from_config'].__func__    
+    handlers = handlers if handlers is not None else ['ConsoleLogger','FileLogger','SocketLogger']
 
-    @wraps(from_config)
-    def new_from_config(cls, config : StageConfig):
+    def _add_handlers(cls : T):
 
-        instance : 'Stage' = from_config(cls, config)
+        from_config = cls.__dict__['from_config'].__func__    
 
-        if config.connection is not None:
-            instance.add_handler(SocketHandler(host=config.connection.host, port=config.connection.port))
+        @wraps(from_config)
+        def new_from_config(cls, config : StageConfig):
 
-        instance.add_handler(ConsoleLogger(cls.__name__))
-        instance.add_handler(FileLogger(name=cls.__name__, log_file=config.log_filename))
+            instance : 'Stage' = from_config(cls, config)
 
-        return instance
+            if config.connection is not None and 'SocketLogger' in handlers:
+                instance.add_handler(SocketHandler(host=config.connection.host, port=config.connection.port))
 
-    cls.from_config = classmethod(new_from_config)
+            instance.add_handler(ConsoleLogger(cls.__name__))
 
-    return cls
+            if config.log:
+                instance.add_handler(FileLogger(name=cls.__name__, log_file=config.log_filename))
+
+            return instance
+
+        cls.from_config = classmethod(new_from_config)
+
+        return cls
+    
+    return _add_handlers
 
 TransformReturn = Union[Dict, List[Dict]]
 

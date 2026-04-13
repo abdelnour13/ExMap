@@ -16,8 +16,8 @@ class Config(StageConfig):
     add_from_conf=False,
     add_save_to=False
 )
-@add_handlers
-class SentenceSegmenter(Stage):
+@add_handlers()
+class SentenceSegmentor(Stage):
 
     def __init__(self, 
         reader : FileReader, 
@@ -60,7 +60,7 @@ class SentenceSegmenter(Stage):
 
         cache = TextfileCache(config.checkpoint_filename)
         
-        return SentenceSegmenter(
+        return SentenceSegmentor(
             reader=FileReader
                 .from_filename(config.input_filename, cache)
                 .batched(config.batch_size),

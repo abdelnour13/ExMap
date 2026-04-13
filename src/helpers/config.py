@@ -26,9 +26,7 @@ def override(dict1 : Dict, dict2 : Dict) -> Dict:
 
     dict1 = dict1.copy()
 
-    for key in dict1:
-
-        if key in dict2:
-            dict1[key] = dict2[key]
+    for key in dict2:
+        dict1[key] = dict2[key]
 
     return dict1

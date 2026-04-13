@@ -44,8 +44,8 @@ class Config(StageConfig):
     add_from_conf=False,
     add_save_to=False
 ) 
-@add_handlers
-class EntityMapper(Stage):
+@add_handlers()
+class EntitiesMapping(Stage):
 
     def __init__(self, 
         reader : BatchedReader, 
@@ -102,18 +102,20 @@ class EntityMapper(Stage):
 
             ### Acronyms
             for item in batch:
+                    
+                if 'sentence' in item and item['sentence'] is not None:
 
-                for acronym in item['sentence']['acronyms']:
-                        
-                    if acronym['score'] >= 0.8:
-                        
-                        if acronym['acronym'].lower() not in entities_dict:
-                            entities_dict[acronym['acronym'].lower()] = [len(entities_dict), None]
+                    for acronym in item['sentence']['acronyms']:
+                            
+                        if acronym['score'] >= 0.8:
+                            
+                            if acronym['acronym'].lower() not in entities_dict:
+                                entities_dict[acronym['acronym'].lower()] = [len(entities_dict), None]
 
-                        if acronym['expansion'].lower() not in entities_dict:
-                            entities_dict[acronym['expansion'].lower()] = [len(entities_dict), None]
+                            if acronym['expansion'].lower() not in entities_dict:
+                                entities_dict[acronym['expansion'].lower()] = [len(entities_dict), None]
 
-                        edges.add((entities_dict[acronym['acronym'].lower()][0], entities_dict[acronym['expansion'].lower()][0]))
+                            edges.add((entities_dict[acronym['acronym'].lower()][0], entities_dict[acronym['expansion'].lower()][0]))
 
             for t in batch:
 
@@ -242,11 +244,11 @@ class EntityMapper(Stage):
         )
     
     @classmethod
-    def from_config(cls, config : Config) -> 'EntityMapper':
+    def from_config(cls, config : Config) -> 'EntitiesMapping':
 
         cache = TextfileCache(config.checkpoint_filename)
         
-        return EntityMapper(
+        return EntitiesMapping(
             reader=FileReader
                 .from_filename(config.input_filename, cache)
                 .batched(config.batch_size),

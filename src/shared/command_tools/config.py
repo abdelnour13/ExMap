@@ -12,33 +12,21 @@ class Connection(BaseModel):
     port : str = Field(description="The port of the socket connection.")
 
 class InputFileOption(BaseModel):
-
-    input_filename : Annotated[str, BeforeValidator(assert_file_exists)] = Field(
-        description="The path to the file holding the data."
-    )
-    
+    input_filename : Annotated[str, BeforeValidator(assert_file_exists)] = Field(description="The path to the file holding the data.")
     batch_size : int = Field(default=1,description="How many documents to process on a single pass.")
     buffer_size : int = Field(default=4,description="The size of the buffer used to update the file on the disk.")
 
 class ConnectionOption(BaseModel):
-
     connection : Optional[Annotated[Connection, BeforeValidator(toml_parser)]] = Field(
         default=None, 
         description="The socket connection used to send updates through."
     )
 
 class OutputDirOption(BaseModel):
-
-    output_dir : Annotated[str, BeforeValidator(makedirs)] = Field(
-        description="The path of the directory to save the result to."
-    )
-
+    output_dir : Annotated[str, BeforeValidator(makedirs)] = Field(description="The path of the directory to save the result to.")
     format : str = Field(default="jsonl", description="The format to save result.")
-
     resume : bool = Field(default=False, description="If true it resumes the job skipping the documents already processed.")
-
     cache : bool = Field(default=True, description="If true it saves a stage checkpoint that will be used to resume the job later.")
-
     log : bool = Field(default=True, description="If true it logs to a file.")
 
     @computed_field
