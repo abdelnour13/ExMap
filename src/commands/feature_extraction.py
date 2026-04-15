@@ -17,15 +17,15 @@ class Config(BaseModel):
     batch_size : int = 128
     device : str = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-@cli.register_stage(
-    name="feature_extraction",
-    description=(
-        "Transofrms the graph nodes (entities & articles) into a tensor representation ready to be fed to "
-        "gnn models using the provided `model_name` to map text to vectors."
-    ),
-    add_from_conf=False,
-    add_save_to=False
-)
+# @cli.register_stage(
+#     name="feature_extraction",
+#     description=(
+#         "Transofrms the graph nodes (entities & articles) into a tensor representation ready to be fed to "
+#         "gnn models using the provided `model_name` to map text to vectors."
+#     ),
+#     add_from_conf=False,
+#     add_save_to=False
+# )
 class FeatureExtractor(BaseCommand):
 
     def __init__(self, config : Config) -> None:

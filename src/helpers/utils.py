@@ -21,6 +21,11 @@ def load_json_file(path : str) -> List[Dict] | Dict[str, Any]:
     with open(path, "r") as f:
         return json.load(f)
     
+def save_json_file(path : str, data : List[Dict] | Dict[str, Any]) -> None:
+
+    with open(path, "a") as f:
+        return json.dump(data, f, indent=4)
+    
 async def make_openai_request(
     client : AsyncOpenAI,
     model : str,
@@ -162,7 +167,6 @@ def move_data_to_device(
     raise Exception(f"{type(data)} is not supported.")
 
 def seed_everything(seed : int) -> None:
-
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
