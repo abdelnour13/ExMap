@@ -8,18 +8,21 @@ from src.shared.command_tools import BaseCommand
 from src.shared.handlers import ConsoleLogger
 from src import helpers
 from definitions import DATA_DIR, hf_model_dir
-from typing import Tuple, Self
+from typing import Tuple, Self, Dict, List
 from pydantic import BaseModel
 from instance import cli
 from collections import defaultdict
+from functools import partial
+from rich.progress import Progress
+from dataclasses import dataclass
 
 class Config(BaseModel):
     corpus : str = 'ls2n-duke'
-    model_name : str = 'intfloat/e5-base'
+    model_name : str = 'sentence-transformers/all-MiniLM-L6-v2'
     batch_size : int = 128
     device : str = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-def hashabledict(key : str, d : dict) -> dict:
+def hashabledict(d : dict, key : str) -> dict:
 
     class _hashabledict(dict):
 
@@ -30,6 +33,14 @@ def hashabledict(key : str, d : dict) -> dict:
             return hash(self[key])
     
     return _hashabledict(d)
+
+@dataclass
+class Graph:
+    nodes : Dict[str, List[Dict]]
+    relations : Dict[str, List[Dict]]
+    predicates : Dict[str, int]
+    node2id : Dict[str, List[str]]
+    id2incid : Dict[str, Dict[str, int]]
 
 @cli.register_stage(
     name="feature_extraction",
@@ -58,12 +69,12 @@ class FeatureExtractor(BaseCommand):
             col = edges[:,1],
             sparse_sizes = num_nodes
         )
-
-    def __iter__(self):
+    
+    def process_triples(self) -> Graph:
 
         data_path = os.path.join(DATA_DIR, self.config.corpus, "entities_mapping", "data.jsonl")
 
-        yield self.make_info_event(
+        self.send_info_event(
             progress=None,
             message=f"Loading data file : {data_path}"
         )
@@ -74,14 +85,22 @@ class FeatureExtractor(BaseCommand):
         relations = defaultdict(set)
         predicates = {}
 
-        for record, _ in reader:
+        Record = partial(hashabledict, key='id')
+
+        pbar = Progress()
+        task1 = pbar.add_task("Triples Processing", total=100)
+        pbar.start()
+
+        previous = 0.0
+        
+        for record, prog in reader:
 
             document = record['sentence']['document']
             
-            nodes['Article'].add(hashabledict('id', {
+            nodes['Article'].add(Record({
                 "id" : document['id'],
                 "title" : document['title'],
-                "abstract" : document['title'],
+                "abstract" : document['abstract'],
                 "date" : document['date'],
                 "type" : "Article"
             }))
@@ -90,13 +109,13 @@ class FeatureExtractor(BaseCommand):
 
                 author_id = author.replace(' ','_')
 
-                nodes['Author'].add(hashabledict('id', {
+                nodes['Author'].add(Record({
                     "id" : author_id,
                     "name" : author,
                     "type" : "Author"
                 }))
 
-                relations['Article_WrittenBy_Author'].add(hashabledict('id', {
+                relations['Article_WrittenBy_Author'].add(Record({
                     "id"  : f"{document['id']}-{author_id}",
                     "src" : document['id'],
                     "dst" : author_id,
@@ -106,13 +125,13 @@ class FeatureExtractor(BaseCommand):
 
                 venue_id = venue
 
-                nodes['Venue'].add(hashabledict('id', {
+                nodes['Venue'].add(Record({
                     "id" : venue_id,
                     "name" : venue,
                     "type" : "Venue"
                 }))
 
-                relations['Article_BelongsTo_Venue'].add(hashabledict('id', {
+                relations['Article_BelongsTo_Venue'].add(Record({
                     "id"  : f"{document['id']}-{venue_id}",
                     "src" : document['id'],
                     "dst" : venue_id
@@ -122,13 +141,13 @@ class FeatureExtractor(BaseCommand):
 
                 lab_id = team
 
-                nodes['Lab'].add(hashabledict('id', {
+                nodes['Lab'].add(Record({
                     "id" : lab_id,
                     "name" : team,
                     "type" : "Lab"
                 }))
 
-                relations['Article_BelongsTo_Lab'].add(hashabledict('id', {
+                relations['Article_BelongsTo_Lab'].add(Record({
                     "id"  : f"{document['id']}-{lab_id}",
                     "src" : document['id'],
                     "dst" : lab_id
@@ -138,29 +157,45 @@ class FeatureExtractor(BaseCommand):
 
                 domain_id = label.replace('', '_')
 
-                nodes['SubDomain'].add(hashabledict('id', {
+                nodes['SubDomain'].add(Record({
                     "id" : domain_id,
                     "name" : label,
                     "type" : "SubDomain"
                 }))
 
-                relations['Article_BelongsTo_SubDomain'].add(hashabledict('id', {
+                relations['Article_BelongsTo_SubDomain'].add(Record({
                     "id"  : f"{document['id']}-{domain_id}",
                     "src" : document['id'],
                     "dst" : domain_id
+                }))
+
+            for keyword in document['keywords']:
+
+                keyword_id = keyword.replace('', '_')
+
+                nodes['Keyword'].add(Record({
+                    "id" : keyword_id,
+                    "name" : keyword,
+                    "type" : "Keyword"
+                }))
+
+                relations['Article_HasKeyword_Keyword'].add(Record({
+                    "id"  : f"{document['id']}-{keyword_id}",
+                    "src" : document['id'],
+                    "dst" : keyword_id
                 }))
 
             for entity in [record['head'], record['tail']]:
 
                 entity_id = entity.replace(' ','_')
 
-                nodes['Entity'].add(hashabledict('id', {
+                nodes['Entity'].add(Record({
                     "id" : entity_id,
                     "name" : entity,
                     "type" : "Entity"
                 }))
 
-                relations['Entity_AppearsIn_Article'].add(hashabledict('id', {
+                relations['Entity_AppearsIn_Article'].add(Record({
                     "id"  : f"{entity_id}-{document['id']}",
                     "src" : entity_id,
                     "dst" : document['id']
@@ -172,7 +207,7 @@ class FeatureExtractor(BaseCommand):
             if record['predicate'] not in predicates:
                 predicates[record['predicate']] = len(predicates)
 
-            relations['Entity_HasRelationWith_Entity'].add(hashabledict('id', {
+            relations['Entity_HasRelationWith_Entity'].add(Record({
                 "id" : f"{head_id}-{record['predicate'].replace(' ','_')}-{tail_id}",
                 "src" : head_id,
                 "dst" : tail_id,
@@ -181,6 +216,23 @@ class FeatureExtractor(BaseCommand):
                     "sentence" : record['sentence']
                 }
             }))
+            
+            pbar.update(task1, advance=100*prog-previous, refresh=True, visible=True)
+            previous = 100 * prog
+
+        for node_type, nodes_list in nodes.items():
+
+            self.send_info_event(
+                progress=None,
+                message=f"Found {len(nodes_list)} nodes of type : {node_type}."
+            )
+
+        for rel_type, rel_list in relations.items():
+
+            self.send_info_event(
+                progress=None,
+                message=f"Found {len(rel_list)} edges of type : {rel_type}."
+            )
         
         ### Feature Extraction
         nodes = {
@@ -203,17 +255,67 @@ class FeatureExtractor(BaseCommand):
             for key, value in node2id.items()
         }
 
-        model = SentenceTransformer(hf_model_dir(self.config.model_name), self.config.device)
+        return Graph(
+            nodes=nodes,
+            relations=relations,
+            predicates=predicates,
+            node2id=node2id,
+            id2incid=id2incid
+        )
+    
+    def extract_features(self, graph : Graph) -> Dict:
+
+        nodes = graph.nodes
+        node2id = graph.node2id
+        predicates = graph.predicates
+        relations = graph.relations
+        id2incid = graph.id2incid
+
+        ### Load model locally
+        model = SentenceTransformer(
+            hf_model_dir(self.config.model_name), 
+            self.config.device
+        )
 
         G = {
             "nodes" : defaultdict(dict),
             "relations" : defaultdict(dict),
         }
 
+        entities = (
+            [f"query: {e['name']}" for e in nodes['Entity']] 
+            if self.config.model_name == 'intfloat/e5-base-v2' else 
+            [e['name'] for e in nodes['Entity']] 
+        )
+
+        articles = (
+            [f"query: {e['abstract']}" for e in nodes['Article']] 
+            if self.config.model_name == 'intfloat/e5-base-v2' else 
+            [e['abstract'] for e in nodes['Article']] 
+        )
+
+        predicate_list = (
+            [f'query: {predicate}' for predicate in predicates.keys()] 
+            if self.config.model_name == 'intfloat/e5-base-v2' else 
+            list(predicates.keys())
+        )
+
         G['nodes']['Entity'] = {
             "id": node2id['Entity'],
             "embeddings": model.encode(
-                sentences = [f'query: {e['name']}' for e in nodes['Entity']],
+                sentences = entities,
+                batch_size = self.config.batch_size,
+                device = self.config.device,
+                show_progress_bar = True,
+                convert_to_tensor = True,
+                normalize_embeddings = True
+            ).cpu(),
+        }
+
+        G['nodes']['Article'] = {
+            "id": node2id['Article'],
+            "embeddings" : model.encode(
+                sentences = articles,
                 batch_size = self.config.batch_size,
                 device = self.config.device,
                 show_progress_bar = True,
@@ -222,34 +324,20 @@ class FeatureExtractor(BaseCommand):
             ).cpu()
         }
 
-        G['nodes']['Article']['query'] = {
-            "id": node2id['Article'],
-            "embeddings" : model.encode(
-                sentences = [f'query: {e['abstract']}' for e in nodes['Article']],
-                batch_size = self.config.batch_size,
-                device = self.config.device,
-                show_progress_bar = True,
-                convert_to_tensor = True,
-                normalize_embeddings = True
-            ).cpu()
-        }
-
-        G['nodes']['Article']['passage'] = {
-            "id": node2id['Article'],
-            "embeddings" : model.encode(
-                sentences = [f'passage: {e['abstract']}' for e in nodes['Article']],
-                batch_size = self.config.batch_size,
-                device = self.config.device,
-                show_progress_bar = True,
-                convert_to_tensor = True,
-                normalize_embeddings = True
-            ).cpu()
-        }
+        passage_embeddings = model.encode(
+            sentences = [f"passage: {e['abstract']}" for e in nodes['Article']],
+            batch_size = self.config.batch_size,
+            device = self.config.device,
+            show_progress_bar = True,
+            convert_to_tensor = True,
+            normalize_embeddings = True
+        ).cpu() if self.config.model_name == 'intfloat/e5-base-v2' else G['nodes']['Article']['embeddings']
+        
 
         G['predicates'] = {
-            "id": list(predicates.values()),
+            "id": [f'query: {predicate}' for predicate in predicates.values()],
             "predicates": model.encode(
-                sentences = list(predicates.keys()),
+                sentences = predicate_list,
                 batch_size = self.config.batch_size,
                 device = self.config.device,
                 show_progress_bar = True,
@@ -281,7 +369,50 @@ class FeatureExtractor(BaseCommand):
                         predicates[r['properties']['predicate']]
                     ])     
 
-            G['relations'][(src_node,rel_name,dst_node)] = torch.tensor(G['relations'][(src_node,rel_name,dst_node)])        
+            G['relations'][(src_node,rel_name,dst_node)] = torch.tensor(G['relations'][(src_node,rel_name,dst_node)])  
+
+        ### Generality Scores
+        pbar = Progress()
+        task2 = pbar.add_task("Computing Generality Score", total=len(nodes['Entity']))
+        task3 = pbar.add_task("Computing Relevancy Score", total=len(nodes['Entity']))
+        pbar.start()
+
+        scores = []
+
+        for entity_idx in range(len(nodes['Entity'])):
+            entities_ids, articles_ids = G['relations'][('Entity','AppearsIn','Article')].t()
+            articles_ids = torch.unique(articles_ids[entities_ids == entity_idx])
+            articles_embeddings = G['nodes']['Article']['embeddings'][articles_ids]
+            score = 1 - (articles_embeddings @ articles_embeddings.T).mean().item()
+            scores.append(score)
+            pbar.update(task_id=task2, advance=1, refresh=True)
+
+        scores = torch.tensor(scores)
+        scores = (scores - scores.min()) / (scores.max() - scores.min())
+        G['nodes']['Entity']['generality_score'] = scores
+
+        ### Relevancy Scores
+        scores = []
+
+        for entity_idx, entity_embedding in enumerate(G['nodes']['Entity']['embeddings']):
+            entities_ids, articles_ids = G['relations'][('Entity','AppearsIn','Article')].t()
+            articles_ids = torch.unique(articles_ids[entities_ids == entity_idx])
+            articles_embeddings = passage_embeddings[articles_ids]
+            score = 1 - (entity_embedding.reshape(1, -1) @ articles_embeddings.T).mean().item()
+            scores.append(score)
+            pbar.update(task_id=task3, advance=1, refresh=True)
+
+        scores = torch.tensor(scores)
+        scores = (scores - scores.min()) / (scores.max() - scores.min())
+        G['nodes']['Entity']['relevancy_score'] = scores
+
+        return G
+
+
+    def __iter__(self):
+
+        graph = self.process_triples()
+        G = self.extract_features(graph)        
 
         ### Save to disk
         GRAPHS_DIR = os.path.join(DATA_DIR, self.config.corpus, 'graphs')
@@ -294,9 +425,11 @@ class FeatureExtractor(BaseCommand):
         ENTITIES_FILENAME = os.path.join(GRAPH_DIR, 'nodes.json')
         RELATIONS_FILENAME = os.path.join(GRAPH_DIR, 'relations.json')
 
-        helpers.save_json_file(ENTITIES_FILENAME, nodes)
-        helpers.save_json_file(RELATIONS_FILENAME, relations)
+        helpers.save_json_file(ENTITIES_FILENAME, graph.nodes)
+        helpers.save_json_file(RELATIONS_FILENAME, graph.relations)
         torch.save(G, EMBEDDING_FILENAME)
+
+        yield from []
 
     @classmethod
     def from_config(cls, config : Config) -> Self:

@@ -114,7 +114,7 @@ class Trainer(BaseCommand):
     
     def load_data(self) -> ArticleAsKG:
 
-        data_path = os.path.join(DATA_DIR, *self.config.graph.split('/')) # os.path.join(DATA_DIR, *self.config.graph.split('/'), "graph.pt")
+        data_path = os.path.join(DATA_DIR, *self.config.graph.split('/'), "graph.pt") # os.path.join(DATA_DIR, *self.config.graph.split('/'), "graph.pt")
 
         self.send_debug_event(
             progress=0.0,
