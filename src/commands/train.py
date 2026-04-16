@@ -112,53 +112,6 @@ class Trainer(BaseCommand):
         )
 
         return configs
-    
-    # def load_data(self) -> ArticleAsKG:
-
-    #     data_path = os.path.join(DATA_DIR, *self.config.graph.split('/'), "graph.pt") # os.path.join(DATA_DIR, *self.config.graph.split('/'), "graph.pt")
-
-    #     self.send_debug_event(
-    #         progress=0.0,
-    #         message=f"Loading data at {data_path}."
-    #     )
-        
-    #     raw = torch.load(data_path, weights_only=False)
-
-    #     kg = KnowledgeGraph(
-    #         x = raw['entities'],
-    #         e = raw['predicates'][raw['edge_type']],
-    #         r = raw['predicates'],
-    #         edge_index = raw[('entity','has-relation-with', 'entity')].t(),
-    #         edge_type = raw['edge_type'],
-    #         entity_names=raw['metadata']['entities']
-    #     )
-
-    #     edge_index = torch.cat([
-    #         raw[('article', 'share-author-with', 'article')],
-    #         raw[('article', 'share-keyword-with', 'article')]
-    #     ], dim = -1)
-
-    #     edge_type = torch.cat([
-    #         torch.zeros_like(raw[('article', 'share-author-with', 'article')][0]),
-    #         torch.zeros_like(raw[('article', 'share-keyword-with', 'article')][0])
-    #     ])
-
-    #     articles = ArticlesGraph(
-    #         x = raw['articles'],
-    #         edge_index = edge_index,
-    #         edge_type = edge_type,
-    #         y = raw['labels']
-    #     )
-
-    #     data = ArticleAsKG(
-    #         articles = articles,
-    #         kg = kg,
-    #         edge_article = raw['triple_article'].t()
-    #     )
-
-    #     data.metadata = raw['metadata']
-
-    #     return self.normalize_data(data)
 
     def load_data(self) -> ArticleAsKG:
 
@@ -185,6 +138,9 @@ class Trainer(BaseCommand):
             edge_type = edge_type,
             entity_names = raw['nodes']['Entity']['id']
         )
+
+        kg.generality_score = raw['nodes']['Entity']['generality_score']
+        kg.relevancy_score  = raw['nodes']['Entity']['relevancy_score']
 
         ### Share-Keyword
         row1, col1 = raw['relations'][('Article','HasKeyword', 'Keyword')]

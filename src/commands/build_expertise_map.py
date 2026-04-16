@@ -3,23 +3,21 @@ import os
 import pandas as pd
 import numpy as np
 import networkx as nx
-from torch_scatter import scatter
 from rich.progress import Progress
 from pydantic import BaseModel, computed_field
 from typing import Self, Dict, List, Tuple, Optional, Literal, Any
-from definitions import EXPERIMENTS_DIR, DATA_DIR
+from torch_scatter import scatter
 from torch_geometric import utils as gnn_utils
 from torch import Tensor
+from sknetwork.clustering import Leiden, Louvain
+from sknetwork.data import from_edge_list
 from src.shared.command_tools import BaseCommand
 from src.gnn import ArticleAsKG, HetModel, HetModelReturn, KnowledgeGraph
 from src.shared.handlers import ConsoleLogger
 from src.commands.train import Trainer, Config as TrainerConfig
 from src.shared.file_tools import FileWriter
-from src.commands.build_kg.graph_construction.neo4j import Neo4J, Config as Neo4JConfig
+from definitions import EXPERIMENTS_DIR, DATA_DIR
 from instance import cli
-from sknetwork.clustering import Leiden, Louvain
-from sknetwork.data import from_edge_list
-from rich.progress import Progress
 
 class Config(BaseModel):
 
@@ -62,7 +60,9 @@ class Config(BaseModel):
 class ExpertiseMapBuilder(BaseCommand):
 
     def __init__(self, config : Config):
+
         super().__init__()
+
         self.config = config
 
     def load_data_and_model(self) -> Tuple[ArticleAsKG, HetModel]:
@@ -85,8 +85,6 @@ class ExpertiseMapBuilder(BaseCommand):
         data = trainer.load_data()
         data = trainer.filter_data(data)
         data = trainer.keep_largest_cc(data) if config.keep_largest_cc else data
-        data.split = trainer.create_or_load_split(data)
-        data.articles.split = data.split
 
         self.send_debug_event(
             progress=0.0,
@@ -120,6 +118,7 @@ class ExpertiseMapBuilder(BaseCommand):
             progress=0.0,
             message="Constructing entities metadata..."
         )
+
         
         kg = data.kg
         
@@ -132,6 +131,9 @@ class ExpertiseMapBuilder(BaseCommand):
             index=np.array(kg.entity_names),
             columns=data.metadata['labels']
         )
+
+        metadata['generality_score'] = kg.generality_score.tolist()
+        metadata['relevancy_score'] = kg.relevancy_score.tolist()
 
         ### Calculate PageRank Score
         G = nx.from_edgelist(kg.edge_index.t().tolist())
@@ -149,18 +151,6 @@ class ExpertiseMapBuilder(BaseCommand):
         metadata['pagerank'] = pagerank_scores
         metadata['specifity_weighted_page_rank'] = specifity_weighted_page_rank
         metadata['degree'] = degrees
-
-        ### Calculate Number of Labels in the neighborhood
-        neighborhood_labels = scatter(
-            src = labels[torch.cat([kg.edge_index[0], kg.edge_index[1]], dim = -1)],
-            index = torch.cat([kg.edge_index[1], kg.edge_index[0]], dim = -1),
-            dim = 0,
-            reduce="sum"
-        )
-
-        neighborhood_labels = neighborhood_labels.max(-1).values / (neighborhood_labels.sum(-1) + 1e-3)
-
-        metadata['neighborhood_labels'] = neighborhood_labels.numpy()
         metadata['num_labels'] = metadata[data.metadata['labels']].sum(1)
 
         return metadata
@@ -301,7 +291,10 @@ class ExpertiseMapBuilder(BaseCommand):
                 .query(f"community == {community}") \
                 .query(f"num_labels <= {max_labels}") \
                 .query(f"degree <= {max_degree}") \
-                .sort_values(by = "specifity_weighted_page_rank", ascending = False)
+                # .query(f"generality_score <= {0.75}") \
+                # .query(f"relevancy_score  <= {0.75}")
+
+            condidates = condidates.sort_values(by = "specifity_weighted_page_rank", ascending = False)
 
             community_domains = domains[community_labels[community,:]].tolist()
 
@@ -534,12 +527,12 @@ class ExpertiseMapBuilder(BaseCommand):
 
         writer.flush()
 
-        neo4j = Neo4J.from_config(Neo4JConfig(
-            input_filename=self.config.map_filename,
-            output_dir=os.path.join(self.config.map_dir, "neo4j")
-        ))
+        # neo4j = Neo4J.from_config(Neo4JConfig(
+        #     input_filename=self.config.map_filename,
+        #     output_dir=os.path.join(self.config.map_dir, "neo4j")
+        # ))
 
-        neo4j.run()
+        # neo4j.run()
 
         yield from []
 
