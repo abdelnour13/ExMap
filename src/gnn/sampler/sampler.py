@@ -32,7 +32,6 @@ class HybridSampler:
             **kg_sampler_args
         )
 
-
     def __len__(self) -> int:
         return len(self.articles_loader)
     
@@ -52,8 +51,6 @@ class HybridSampler:
             ### Get KG subgraph
             kg = self.kg.edge_subgraph(edges)
             kg = kg.subgraph(nodes)
-
-            # assert kg.edge_index.size(-1) == kg.triple_id.size(0), f"Error In Sampler. {kg.edge_index.size(-1)} != {kg.triple_id.size(0)}"
 
             ### Map Edge<->Articles
             articles_map = torch.zeros(size = (articles.article_id.max() + 1, )).long()

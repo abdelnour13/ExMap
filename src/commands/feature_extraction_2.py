@@ -8,11 +8,10 @@ from src.shared.command_tools import BaseCommand
 from src.shared.handlers import ConsoleLogger
 from src import helpers
 from definitions import DATA_DIR, hf_model_dir
-from typing import Tuple, Self, Dict, List
+from typing import Tuple, Self, Dict, List, Type
 from pydantic import BaseModel
 from instance import cli
 from collections import defaultdict
-from functools import partial
 from rich.progress import Progress
 from dataclasses import dataclass
 
@@ -22,7 +21,7 @@ class Config(BaseModel):
     batch_size : int = 128
     device : str = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-def hashabledict(d : dict, key : str) -> dict:
+def hashabledict(key : str) -> Type[Dict]:
 
     class _hashabledict(dict):
 
@@ -32,15 +31,15 @@ def hashabledict(d : dict, key : str) -> dict:
         def __hash__(self):
             return hash(self[key])
     
-    return _hashabledict(d)
+    return _hashabledict
 
 @dataclass
 class Graph:
-    nodes : Dict[str, List[Dict]]
-    relations : Dict[str, List[Dict]]
-    predicates : Dict[str, int]
-    node2id : Dict[str, List[str]]
-    id2incid : Dict[str, Dict[str, int]]
+    nodes : Dict[str, List[Dict]]           ### Node Type <-> Node properties
+    relations : Dict[str, List[Dict]]       ### Relation Type <-> Relations properties
+    predicates : Dict[str, int]             ### Predicate <-> Idx
+    node2id : Dict[str, List[str]]          ### Node Type <-> Unique Indetifier
+    id2incid : Dict[str, Dict[str, int]]    ### Unique Identifier <-> Node Index in `nodes`
 
 @cli.register_stage(
     name="feature_extraction",
@@ -85,7 +84,7 @@ class FeatureExtractor(BaseCommand):
         relations = defaultdict(set)
         predicates = {}
 
-        Record = partial(hashabledict, key='id')
+        Record = hashabledict(key='id')
 
         pbar = Progress()
         task1 = pbar.add_task("Triples Processing", total=100)
@@ -94,96 +93,100 @@ class FeatureExtractor(BaseCommand):
         previous = 0.0
         
         for record, prog in reader:
+                
+            if record['sentence'] is not None:
 
-            document = record['sentence']['document']
-            
-            nodes['Article'].add(Record({
-                "id" : document['id'],
-                "title" : document['title'],
-                "abstract" : document['abstract'],
-                "date" : document['date'],
-                "type" : "Article"
-            }))
-
-            for author in document['authors']:
-
-                author_id = author.replace(' ','_')
-
-                nodes['Author'].add(Record({
-                    "id" : author_id,
-                    "name" : author,
-                    "type" : "Author"
+                document = record['sentence']['document']
+                
+                nodes['Article'].add(Record({
+                    "id" : document['id'],
+                    "title" : document['title'],
+                    "abstract" : document['abstract'],
+                    "date" : document['date'],
+                    "type" : "Article"
                 }))
 
-                relations['Article_WrittenBy_Author'].add(Record({
-                    "id"  : f"{document['id']}-{author_id}",
-                    "src" : document['id'],
-                    "dst" : author_id,
-                }))
+                for author in document['authors']:
 
-            for venue in document['venues']:
+                    author_id = author.replace(' ','_')
 
-                venue_id = venue
+                    nodes['Author'].add(Record({
+                        "id" : author_id,
+                        "name" : author,
+                        "type" : "Author"
+                    }))
 
-                nodes['Venue'].add(Record({
-                    "id" : venue_id,
-                    "name" : venue,
-                    "type" : "Venue"
-                }))
+                    relations['Article_WrittenBy_Author'].add(Record({
+                        "id"  : f"{document['id']}-{author_id}",
+                        "src" : document['id'],
+                        "dst" : author_id,
+                    }))
 
-                relations['Article_BelongsTo_Venue'].add(Record({
-                    "id"  : f"{document['id']}-{venue_id}",
-                    "src" : document['id'],
-                    "dst" : venue_id
-                }))
+                for venue in document['venues']:
 
-            for team in document['teams']:
+                    venue_id = venue
 
-                lab_id = team
+                    nodes['Venue'].add(Record({
+                        "id" : venue_id,
+                        "name" : venue,
+                        "type" : "Venue"
+                    }))
 
-                nodes['Lab'].add(Record({
-                    "id" : lab_id,
-                    "name" : team,
-                    "type" : "Lab"
-                }))
+                    relations['Article_BelongsTo_Venue'].add(Record({
+                        "id"  : f"{document['id']}-{venue_id}",
+                        "src" : document['id'],
+                        "dst" : venue_id
+                    }))
 
-                relations['Article_BelongsTo_Lab'].add(Record({
-                    "id"  : f"{document['id']}-{lab_id}",
-                    "src" : document['id'],
-                    "dst" : lab_id
-                }))
+                for team in document['teams']:
 
-            for label in document['labels']:
+                    lab_id = team
 
-                domain_id = label.replace('', '_')
+                    nodes['Lab'].add(Record({
+                        "id" : lab_id,
+                        "name" : team,
+                        "type" : "Lab"
+                    }))
 
-                nodes['SubDomain'].add(Record({
-                    "id" : domain_id,
-                    "name" : label,
-                    "type" : "SubDomain"
-                }))
+                    relations['Article_BelongsTo_Lab'].add(Record({
+                        "id"  : f"{document['id']}-{lab_id}",
+                        "src" : document['id'],
+                        "dst" : lab_id
+                    }))
 
-                relations['Article_BelongsTo_SubDomain'].add(Record({
-                    "id"  : f"{document['id']}-{domain_id}",
-                    "src" : document['id'],
-                    "dst" : domain_id
-                }))
+                for label in document['labels']:
 
-            for keyword in document['keywords']:
+                    domain_id = label.replace('', '_')
 
-                keyword_id = keyword.replace('', '_')
+                    nodes['SubDomain'].add(Record({
+                        "id" : domain_id,
+                        "name" : label,
+                        "type" : "SubDomain"
+                    }))
 
-                nodes['Keyword'].add(Record({
-                    "id" : keyword_id,
-                    "name" : keyword,
-                    "type" : "Keyword"
-                }))
+                    relations['Article_BelongsTo_SubDomain'].add(Record({
+                        "id"  : f"{document['id']}-{domain_id}",
+                        "src" : document['id'],
+                        "dst" : domain_id
+                    }))
 
-                relations['Article_HasKeyword_Keyword'].add(Record({
-                    "id"  : f"{document['id']}-{keyword_id}",
-                    "src" : document['id'],
-                    "dst" : keyword_id
-                }))
+                for keyword in document['keywords']:
+
+                    keyword_id = keyword.replace('', '_')
+
+                    nodes['Keyword'].add(Record({
+                        "id" : keyword_id,
+                        "name" : keyword,
+                        "type" : "Keyword"
+                    }))
+
+                    if record['sentence'] is not None:
+
+                        relations['Article_HasKeyword_Keyword'].add(Record({
+                            "id"  : f"{document['id']}-{keyword_id}",
+                            "src" : document['id'],
+                            "dst" : keyword_id
+                        }))
 
             for entity in [record['head'], record['tail']]:
 
@@ -195,11 +198,13 @@ class FeatureExtractor(BaseCommand):
                     "type" : "Entity"
                 }))
 
-                relations['Entity_AppearsIn_Article'].add(Record({
-                    "id"  : f"{entity_id}-{document['id']}",
-                    "src" : entity_id,
-                    "dst" : document['id']
-                }))
+                if record['sentence'] is not None:
+                    
+                    relations['Entity_AppearsIn_Article'].add(Record({
+                        "id"  : f"{entity_id}-{document['id']}",
+                        "src" : entity_id,
+                        "dst" : document['id']
+                    }))
 
             head_id = record['head'].replace(' ','_')
             tail_id = record['tail'].replace(' ','_')
@@ -213,7 +218,8 @@ class FeatureExtractor(BaseCommand):
                 "dst" : tail_id,
                 "properties" : {
                     "predicate" : record['predicate'],
-                    "sentence" : record['sentence']
+                    "sentence" : record['sentence'],
+                    "article_id" : document['id'] if record['sentence'] is not None else None,
                 }
             }))
             
@@ -333,10 +339,9 @@ class FeatureExtractor(BaseCommand):
             normalize_embeddings = True
         ).cpu() if self.config.model_name == 'intfloat/e5-base-v2' else G['nodes']['Article']['embeddings']
         
-
         G['predicates'] = {
-            "id": [f'query: {predicate}' for predicate in predicates.values()],
-            "predicates": model.encode(
+            "id": list(predicates.keys()),
+            "embeddings": model.encode(
                 sentences = predicate_list,
                 batch_size = self.config.batch_size,
                 device = self.config.device,
@@ -352,7 +357,7 @@ class FeatureExtractor(BaseCommand):
 
             G['relations'][(src_node,rel_name,dst_node)] = []
 
-            for r in rels:
+            for i,r in enumerate(rels):
                     
                 if 'properties' not in r:
 
@@ -363,13 +368,24 @@ class FeatureExtractor(BaseCommand):
 
                 else:
 
+                    if i == 0:
+                        G['relations'][('Triple','ExtractedFrom','Article')] = []
+
                     G['relations'][(src_node,rel_name,dst_node)].append([
                         id2incid[src_node][r['src']],
                         id2incid[dst_node][r['dst']],
-                        predicates[r['properties']['predicate']]
-                    ])     
+                        predicates[r['properties']['predicate']],
+                    ])  
 
-            G['relations'][(src_node,rel_name,dst_node)] = torch.tensor(G['relations'][(src_node,rel_name,dst_node)])  
+                    if r['properties']['article_id'] is not None:
+
+                        G['relations'][('Triple','ExtractedFrom','Article')].append([
+                            i,
+                            id2incid['Article'][r['properties']['article_id']]
+                        ])
+
+        for rel_name in G['relations']:
+            G['relations'][rel_name] = torch.tensor(G['relations'][rel_name]).t()  
 
         ### Generality Scores
         pbar = Progress()
@@ -380,10 +396,11 @@ class FeatureExtractor(BaseCommand):
         scores = []
 
         for entity_idx in range(len(nodes['Entity'])):
-            entities_ids, articles_ids = G['relations'][('Entity','AppearsIn','Article')].t()
+            entities_ids, articles_ids = G['relations'][('Entity','AppearsIn','Article')]
             articles_ids = torch.unique(articles_ids[entities_ids == entity_idx])
             articles_embeddings = G['nodes']['Article']['embeddings'][articles_ids]
             score = 1 - (articles_embeddings @ articles_embeddings.T).mean().item()
+            graph.nodes['Entity'][entity_idx]['generality_score'] = score
             scores.append(score)
             pbar.update(task_id=task2, advance=1, refresh=True)
 
@@ -391,14 +408,17 @@ class FeatureExtractor(BaseCommand):
         scores = (scores - scores.min()) / (scores.max() - scores.min())
         G['nodes']['Entity']['generality_score'] = scores
 
+        G['labels'] = [node['name'] for node in nodes['SubDomain']]
+
         ### Relevancy Scores
         scores = []
 
         for entity_idx, entity_embedding in enumerate(G['nodes']['Entity']['embeddings']):
-            entities_ids, articles_ids = G['relations'][('Entity','AppearsIn','Article')].t()
+            entities_ids, articles_ids = G['relations'][('Entity','AppearsIn','Article')]
             articles_ids = torch.unique(articles_ids[entities_ids == entity_idx])
             articles_embeddings = passage_embeddings[articles_ids]
             score = 1 - (entity_embedding.reshape(1, -1) @ articles_embeddings.T).mean().item()
+            graph.nodes['Entity'][entity_idx]['relevancy_score'] = score
             scores.append(score)
             pbar.update(task_id=task3, advance=1, refresh=True)
 
@@ -407,7 +427,6 @@ class FeatureExtractor(BaseCommand):
         G['nodes']['Entity']['relevancy_score'] = scores
 
         return G
-
 
     def __iter__(self):
 

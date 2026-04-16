@@ -10,6 +10,7 @@ from torch_geometric import utils as gnn_utils
 from sklearn.model_selection import KFold
 from torch import optim, Tensor
 from torch.nn import functional as F
+from torch_sparse import SparseTensor
 from src import helpers
 from src.shared.command_tools import BaseCommand
 from src.shared.handlers import Event
@@ -112,50 +113,121 @@ class Trainer(BaseCommand):
 
         return configs
     
+    # def load_data(self) -> ArticleAsKG:
+
+    #     data_path = os.path.join(DATA_DIR, *self.config.graph.split('/'), "graph.pt") # os.path.join(DATA_DIR, *self.config.graph.split('/'), "graph.pt")
+
+    #     self.send_debug_event(
+    #         progress=0.0,
+    #         message=f"Loading data at {data_path}."
+    #     )
+        
+    #     raw = torch.load(data_path, weights_only=False)
+
+    #     kg = KnowledgeGraph(
+    #         x = raw['entities'],
+    #         e = raw['predicates'][raw['edge_type']],
+    #         r = raw['predicates'],
+    #         edge_index = raw[('entity','has-relation-with', 'entity')].t(),
+    #         edge_type = raw['edge_type'],
+    #         entity_names=raw['metadata']['entities']
+    #     )
+
+    #     edge_index = torch.cat([
+    #         raw[('article', 'share-author-with', 'article')],
+    #         raw[('article', 'share-keyword-with', 'article')]
+    #     ], dim = -1)
+
+    #     edge_type = torch.cat([
+    #         torch.zeros_like(raw[('article', 'share-author-with', 'article')][0]),
+    #         torch.zeros_like(raw[('article', 'share-keyword-with', 'article')][0])
+    #     ])
+
+    #     articles = ArticlesGraph(
+    #         x = raw['articles'],
+    #         edge_index = edge_index,
+    #         edge_type = edge_type,
+    #         y = raw['labels']
+    #     )
+
+    #     data = ArticleAsKG(
+    #         articles = articles,
+    #         kg = kg,
+    #         edge_article = raw['triple_article'].t()
+    #     )
+
+    #     data.metadata = raw['metadata']
+
+    #     return self.normalize_data(data)
+
     def load_data(self) -> ArticleAsKG:
 
-        data_path = os.path.join(DATA_DIR, *self.config.graph.split('/'), "graph.pt") # os.path.join(DATA_DIR, *self.config.graph.split('/'), "graph.pt")
+        data_dir = os.path.join(DATA_DIR, *self.config.graph.split('/'))
+        graph_path = os.path.join(data_dir, "graph.pt")
+        entities_path = os.path.join(data_dir, "nodes.json")
+
+        entities = helpers.load_json_file(entities_path)
 
         self.send_debug_event(
             progress=0.0,
-            message=f"Loading data at {data_path}."
+            message=f"Loading data at {graph_path}."
         )
         
-        raw = torch.load(data_path, weights_only=False)
+        raw = torch.load(graph_path, weights_only=False)
+
+        src, dst, edge_type = raw['relations'][('Entity', 'HasRelationWith', 'Entity')]
 
         kg = KnowledgeGraph(
-            x = raw['entities'],
-            e = raw['predicates'][raw['edge_type']],
-            r = raw['predicates'],
-            edge_index = raw[('entity','has-relation-with', 'entity')].t(),
-            edge_type = raw['edge_type'],
-            entity_names=raw['metadata']['entities']
+            x = raw['nodes']['Entity']['embeddings'],
+            e = raw['predicates']['embeddings'][edge_type],
+            r = raw['predicates']['embeddings'],
+            edge_index = torch.stack([src, dst]),
+            edge_type = edge_type,
+            entity_names = raw['nodes']['Entity']['id']
         )
 
+        ### Share-Keyword
+        row1, col1 = raw['relations'][('Article','HasKeyword', 'Keyword')]
+        A1 = SparseTensor(row=row1,col=col1,sparse_sizes=(len(entities['Article']), len(entities['Keyword'])))
+        A1 = A1 @ A1.t()
+        row1, col1, _ = A1.coo()
+
+        ### Share-Author
+        row2, col2 = raw['relations'][('Article','WrittenBy', 'Author')]
+        A2 = SparseTensor(row=row2,col=col2,sparse_sizes=(len(entities['Article']), len(entities['Author'])))
+        A2 = A2 @ A2.t()
+        row2, col2, _ = A2.coo()
+
         edge_index = torch.cat([
-            raw[('article', 'share-author-with', 'article')],
-            raw[('article', 'share-keyword-with', 'article')]
+            torch.stack([row1,col1]),
+            torch.stack([row2,col2])
         ], dim = -1)
 
         edge_type = torch.cat([
-            torch.zeros_like(raw[('article', 'share-author-with', 'article')][0]),
-            torch.zeros_like(raw[('article', 'share-keyword-with', 'article')][0])
+            torch.zeros_like(row1),
+            torch.ones_like(row2)
         ])
 
+        ### Labels
+        row, col = raw['relations'][('Article', 'BelongsTo', 'SubDomain')]
+        labels = SparseTensor(row=row,col=col,sparse_sizes=(len(entities['Article']), len(entities['SubDomain']))).to_dense()
+
         articles = ArticlesGraph(
-            x = raw['articles'],
+            x = raw['nodes']['Article']['embeddings'],
             edge_index = edge_index,
             edge_type = edge_type,
-            y = raw['labels']
+            y = labels
         )
 
         data = ArticleAsKG(
             articles = articles,
             kg = kg,
-            edge_article = raw['triple_article'].t()
+            edge_article = raw['relations'][('Triple','ExtractedFrom','Article')]
         )
 
-        data.metadata = raw['metadata']
+        data.metadata = {}
+        data.metadata['predicates'] = raw['predicates']['id']
+        data.metadata['labels']     = raw['labels']
 
         return self.normalize_data(data)
 
