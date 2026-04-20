@@ -13,8 +13,9 @@ class Config(StageConfig):
         description="The question answering model used to extract the expnasion of candidate acronyms."
     )
 
+    ### Default threshold was modified
     threshold : float = Field(
-        default=0.5,
+        default=0.8,
         description="The minimum threshold to retain the acronym expansion."
     )
 

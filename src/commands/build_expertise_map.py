@@ -1,547 +1,430 @@
-import torch
 import os
-import pandas as pd
-import numpy as np
-import networkx as nx
-from rich.progress import Progress
+import torch
+from typing import Any, Dict, List, Literal, Tuple, Optional
 from pydantic import BaseModel, computed_field
-from typing import Self, Dict, List, Tuple, Optional, Literal, Any
-from torch_scatter import scatter
-from torch_geometric import utils as gnn_utils
-from torch import Tensor
 from sknetwork.clustering import Leiden, Louvain
 from sknetwork.data import from_edge_list
-from src.shared.command_tools import BaseCommand
-from src.gnn import ArticleAsKG, HetModel, HetModelReturn, KnowledgeGraph
-from src.shared.handlers import ConsoleLogger
-from src.commands.train import Trainer, Config as TrainerConfig
-from src.shared.file_tools import FileWriter
-from definitions import EXPERIMENTS_DIR, DATA_DIR
+from torch import Tensor
+from definitions import EXPERIMENTS_DIR, FEATURES_DIR, EMS_DIR
 from instance import cli
+from functools import partial
+from src.commands.train import Trainer, Config as TrainerConfig
+from src.gnn import ArticleAsKG, HetModel, HetModelReturn
+from src.shared.command_tools import BaseCommand
+from src.shared.handlers import ConsoleLogger
+from src import helpers
+
+# ---------------------------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------------------------
 
 class Config(BaseModel):
 
-    corpus : str = 'nantes-uni-2020'
-    experiment : str = 'default'
-    model : str = 'default'
+    # ── Graph & Model ──────────────────────────────────────────────────
+    expertise_id : Optional[str] = None
+    graph_id : str = "nantes-uni-2020/all-MiniLM-L6-v2"
+    model_id : str = "nantes-uni-2020/Conv_Attn_null_False"
 
-    def model_post_init(self, context : Any) -> None:
-        os.makedirs(self.map_dir, exist_ok=True)
+    # ── Clustering ─────────────────────────────────────────────────────
+    clustering_alg:        str      = "leiden" # Leiden or Louvain
+    clustering_resolution: float    = 15.0
+    jaccard_mode:          str      = "hard"   # soft or hard
+    jaccard_threshold:     float    = 0.5
+
+    # ── Community cleaning ─────────────────────────────────────────────
+    max_labels:           int   = 3      # discard entities with > N subdomain labels
+    max_degree:           int   = 50     # discard entities with degree > N
+    max_generality_score: float = 0.75   # discard entities above this generality
+    max_relevancy_score:  float = 0.75   # discard entities above this relevancy
+    min_nodes_per_community : int = 10   # The Minimum number of nodes / community
+
+    # ── Representative node selection ──────────────────────────────────
+    top_k_candidates:     int   = 50    # max candidates kept per community after ranking
+    label_threshold:      float = 0.5   # min probability for a subdomain label to be active
 
     @computed_field
     @property
-    def map_dir(self) -> str:
-        return os.path.join(DATA_DIR, self.corpus, 'expertise_map')
+    def exprtise_dir(self) -> str:
+        return os.path.join(EMS_DIR, self.expertise_id or self.model_id.replace('/','--'))
 
     @computed_field
     @property
-    def map_filename(self) -> str:
-        return os.path.join(self.map_dir, 'expertise_map.jsonl')
+    def graph_dir(self) -> str:
+        return os.path.join(FEATURES_DIR, *self.graph_id.split('/'))
     
     @computed_field
     @property
-    def nodes_metadata_filename(self) -> str:
-        return os.path.join(self.map_dir, 'nodes_metadata.csv')
+    def features_path(self) -> str:
+        return os.path.join(self.graph_dir, 'graph.pt')
     
     @computed_field
     @property
-    def community_metadata_filename(self) -> str:
-        return os.path.join(self.map_dir, 'community_metadata.csv')
+    def metadata_path(self) -> str:
+        return os.path.join(self.graph_dir, "metadata.json")
+    
+    @computed_field
+    @property
+    def model_path(self) -> str:
+        experiment, model_name = self.model_id.split('/')
+        return os.path.join(EXPERIMENTS_DIR, experiment, 'models', f'model_{model_name}.pt')
+    
+    @computed_field
+    @property
+    def experiment(self) -> str:
+        return self.model_id.split('/')[0]
+    
+    @computed_field
+    @property
+    def model(self) -> str:
+        return self.model_id.split('/')[1]
+    
 
 @cli.register_stage(
     name="build_map",
     description=(
-        "Runs the pipeline responsible for building the expertise map from the knowledge graph and labeling nodes and  "
-        "the clusters."
+        "Runs the pipeline responsible for building the expertise map from the "
+        "knowledge graph and labelling nodes and clusters."
     ),
     add_from_conf=False,
-    add_save_to=False
+    add_save_to=False,
 )
 class ExpertiseMapBuilder(BaseCommand):
 
-    def __init__(self, config : Config):
-
+    def __init__(self, config: Config) -> None:
         super().__init__()
-
         self.config = config
 
-    def load_data_and_model(self) -> Tuple[ArticleAsKG, HetModel]:
+    def load_data_and_model(self) -> Tuple[ArticleAsKG, HetModel, Dict[str, Dict[str, List[Dict]]]]:
+
+        self.send_info_event(
+            progress=0.0,
+            message="[Load] Starting — loading trainer config and data",
+        )
+
+        trainer_cfg = TrainerConfig(experiment=self.config.experiment)
+        trainer     = Trainer(experiment=trainer_cfg.experiment, config=trainer_cfg.training_config)
+        configs     = trainer.get_configs()
+
+        if self.config.model not in configs:
+
+            raise KeyError(
+                f"[Load] Model config '{self.config.model}' not found. "
+                f"Available: {list(configs.keys())}"
+            )
+
+        run_config = configs[self.config.model]
 
         self.send_debug_event(
             progress=0.0,
-            message="Loading config file..."
+            message=f"[Load] Using run config '{self.config.model}': {run_config}",
         )
 
-        config = TrainerConfig(experiment=self.config.experiment)
-        trainer = Trainer(experiment=config.experiment, config=config.training_config)
-        configs = trainer.get_configs()
-        config = configs[self.config.model]
-
-        self.send_debug_event(
-            progress=0.0,
-            message="Loading data..."
-        )
-
+        # Load data through the trainer (handles normalisation)
         data = trainer.load_data()
-        data = trainer.filter_data(data)
-        data = trainer.keep_largest_cc(data) if config.keep_largest_cc else data
 
+        # Also keep the raw dict for augmentation later
         self.send_debug_event(
             progress=0.0,
-            message=f"Loading model {self.config.model}..."
+            message=f"[Load] Reading raw graph dict from {self.config.metadata_path}",
         )
 
-        model = trainer.create_model(config = config, data = data)
+        raw_G: Dict[str, Any] = helpers.load_json_file(self.config.metadata_path)
 
-        state_dict = torch.load(
-            f = os.path.join(
-                EXPERIMENTS_DIR,
-                self.config.experiment, 
-                "models",
-                f'model_{self.config.model}_0.pt',
-            ), 
-            weights_only = False, 
-            map_location = 'cpu'
+        # Load model
+        self.send_debug_event(
+            progress=0.0,
+            message=f"[Load] Loading model weights from {self.config.model_path}",
         )
 
+        model = trainer.create_model(config=run_config, data=data)
+        state_dict = torch.load(self.config.model_path, weights_only=False, map_location="cpu")
         model.load_state_dict(state_dict)
 
-        return data, model
-    
-    def get_metadata_df(self,
-        data : ArticleAsKG,              
-        results : HetModelReturn,
-        threshold : float      
-    ) -> pd.DataFrame:
-        
         self.send_info_event(
             progress=0.0,
-            message="Constructing entities metadata..."
+            message=(
+                f"[Load] Ready — "
+                f"{data.articles.num_nodes:,} articles, "
+                f"{data.kg.num_nodes:,} entities"
+            ),
         )
 
-        
-        kg = data.kg
-        
-        ### Labels
-        probas = results.entities_predictions.sigmoid()
-        labels = probas.gt(threshold)
-
-        metadata = pd.DataFrame(
-            data = labels.numpy(),
-            index=np.array(kg.entity_names),
-            columns=data.metadata['labels']
-        )
-
-        metadata['generality_score'] = kg.generality_score.tolist()
-        metadata['relevancy_score'] = kg.relevancy_score.tolist()
-
-        ### Calculate PageRank Score
-        G = nx.from_edgelist(kg.edge_index.t().tolist())
-        pagerank_scores = pd.Series(nx.pagerank(G))
-        pagerank_scores = pagerank_scores[np.arange(kg.num_nodes)].to_numpy()
-
-        ### Degrees
-        out_degrees = gnn_utils.degree(index = kg.edge_index[0], num_nodes = kg.num_nodes).numpy()
-        in_degrees = gnn_utils.degree(index = kg.edge_index[1], num_nodes = kg.num_nodes).numpy()
-        degrees = out_degrees + in_degrees
-
-        ### Specifity Weighted Page Rank Score
-        specifity_weighted_page_rank = pagerank_scores * np.log((kg.num_nodes + 1) / (degrees + 1))
-
-        metadata['pagerank'] = pagerank_scores
-        metadata['specifity_weighted_page_rank'] = specifity_weighted_page_rank
-        metadata['degree'] = degrees
-        metadata['num_labels'] = metadata[data.metadata['labels']].sum(1)
-
-        return metadata
+        return data, model, raw_G
     
-    @staticmethod
-    def jaccard_index(
-        edge_index : Tensor, 
-        probas : Tensor, 
-        mode : Literal['soft','hard'] = "soft",
-        threshold : float = 0.5
-    ) -> Tensor:
-        
-        if mode == 'hard':
-            probas = probas.gt(threshold).float()
+    def inference(self, model: HetModel, data: ArticleAsKG) -> HetModelReturn:
 
-        row, col = edge_index
-        a = torch.stack([probas[row], probas[col]], dim = 0)
-        intersection = a.min(0).values.sum(-1)
-        union = a.max(0).values.sum(-1)
-        jacc_idx = intersection / union
-        jacc_idx = torch.where(jacc_idx.isnan(), 0.0, jacc_idx)
-        return jacc_idx
-    
-    def inference(self,
-        model : HetModel,
-        data : ArticleAsKG
-    ) -> HetModelReturn:
-        
-        self.send_info_event(
-            progress=0.0,
-            message="Inference..."
-        )
-        
+        self.send_info_event(progress=0.0, message="[Infer] Running full-graph forward pass …")
+
         model = model.eval().cpu()
-        data = data.cpu()
-
-        model.ssl = False
+        data  = data.cpu()
+        model.ssl     = False
         model.cluster = False
 
         with torch.no_grad():
-            return model.forward(data)
-        
-    def cluster(self,
-        model : HetModel,
-        entities_embeddings : Tensor,
-        edge_index : Tensor,
-        alg : Literal["leiden", "louvain"] = "leiden",
-        alg_args : Optional[Dict] = None,
-        jaccrd_args : Optional[Dict] = None
-    ) -> Tuple[Tensor, Tensor]:
-        
+            results = model.forward(data)
+
         self.send_info_event(
             progress=0.0,
-            message="Clustering..."
+            message=(
+                f"[Infer] Done — "
+                f"entity embeddings: {list(results.entities_embeddings.shape)}, "
+                f"entity predictions: {list(results.entities_predictions.shape)}"
+            ),
         )
+
+        return results
+    
+    @staticmethod
+    def jaccard_index(
+        edge_index: Tensor,
+        probas:     Tensor,
+        mode:       Literal["soft", "hard"] = "soft",
+        threshold:  float = 0.5,
+    ) -> Tensor:
         
-        ### Arguments
-        alg_args = alg_args or {}
+        if mode == "hard":
+            probas = probas.gt(threshold).float()
 
-        if "resolution" not in alg_args:
-            alg_args["resolution"] = 15
+        row, col     = edge_index
+        a            = torch.stack([probas[row], probas[col]], dim=0)
+        intersection = a.min(0).values.sum(-1)
+        union        = a.max(0).values.sum(-1)
+        jacc         = intersection / union
 
-        ### Cluster Labels
-        with torch.no_grad():
-            entities_labels_probas = model.head(entities_embeddings).sigmoid()
+        return torch.where(jacc.isnan(), torch.zeros_like(jacc), jacc)
+    
+    def cluster(
+        self,
+        model : HetModel,
+        results : HetModelReturn,
+        edge_index : Tensor,
+    ) -> Tuple[Tensor, Tensor]:
 
-        ### Create new graph based on jaccard similarity
-        jaccard_args = jaccrd_args or { "mode" : "hard", "threshold" : 0.5 }
+        self.send_info_event(
+            progress=0.0,
+            message=(
+                f"[Cluster] Running {self.config.clustering_alg} "
+                f"(resolution={self.config.clustering_resolution}) …"
+            ),
+        )
 
-        edge_weight = self.jaccard_index(edge_index, entities_labels_probas, **jaccard_args)
+        entity_label_probas = results.entities_predictions.sigmoid()
+
+        edge_weight = self.jaccard_index(
+            edge_index, entity_label_probas,
+            mode=self.config.jaccard_mode,
+            threshold=self.config.jaccard_threshold,
+        )
 
         edge_list = list(zip(
             edge_index[0].tolist(),
             edge_index[1].tolist(),
-            edge_weight.tolist()
+            edge_weight.tolist(),
         ))
 
         adj = from_edge_list(edge_list)
 
-        ### Perform Community Detection
-        lv = Leiden(**alg_args) if alg == "leiden" else Louvain(**alg_args)
-        communities = lv.fit_predict(adj)
-        communities = torch.from_numpy(communities).to(entities_labels_probas.device)
+        alg_cls = Leiden if self.config.clustering_alg == "leiden" else Louvain
+        alg  = alg_cls(resolution=self.config.clustering_resolution)
+        communities = torch.from_numpy(alg.fit_predict(adj)).to(results.entities_embeddings.device)
 
-        ### Graph Coarsining
+        n_communities = int(communities.max().item() + 1)
 
-        # Clusters-level Representations
-        N = communities.max().item() + 1
+        self.send_info_event(
+            progress=0.0,
+            message=f"[Cluster] Found {n_communities} communities",
+        )
 
+        # Pool entity embeddings per community → community-level label probas
         with torch.no_grad():
 
-            clusters_representations = model.readout_fn.forward(
-                x = entities_embeddings,
+            community_embeddings = model.readout_fn.forward(
+                x = results.entities_embeddings,
                 index = communities,
-                dim_size = N,
+                dim_size = n_communities,
                 dim = 0
             )
 
-            communities_labels_probas = model.head(clusters_representations).sigmoid()
+            communities_labels_probas = model.head(community_embeddings).sigmoid()
 
         self.send_debug_event(
             progress=0.0,
-            message=f"Found total of {communities.max().item()} communities..."
+            message=(
+                f"[Cluster] Community label probas shape: "
+                f"{list(communities_labels_probas.shape)}"
+            ),
         )
 
         return communities, communities_labels_probas
     
-    def query_representative_nodes(self,
-        nodes_metadata : pd.DataFrame,
-        domains : List[str],
+    def clean_community(self, community : Dict, id2Entity : Dict[str, Dict]) -> Dict:
+
+        community = {**community}
+
+        community['entities'] = [
+            e_id 
+            for e_id in community['entities']
+            if (
+                (id2Entity[e_id]["degree"]           <= self.config.max_degree)           &
+                (id2Entity[e_id]["generality_score"] <= self.config.max_generality_score) &
+                (id2Entity[e_id]["relevancy_score"]  <= self.config.max_relevancy_score)
+            )
+        ]
+
+        return community
+
+    def process_communities(
+        self, 
+        id2Entity : Dict[str, Dict],
+        data : ArticleAsKG,
         communities : Tensor,
-        communities_labels_probas : Tensor,
-        max_labels : int = 3,
-        max_degree : int = 50,
-        threshold : float = 0.5,
-    ) -> pd.DataFrame:
+        communities_labels : Tensor
+    ) -> Dict:
         
+        n_communities = communities.max().item() + 1
+        communities_nodelist = [{ "id" : i, "entities" : [], "labels" : [] } for i in range(n_communities)]
+
+        for entity_id, community in zip(data.kg.entity_names, communities):
+            communities_nodelist[community.item()]['entities'].append(entity_id)
+        
+        for community, labels in enumerate(communities_labels):
+
+            for label_name, label_proba in zip(data.metadata['labels'], labels):
+
+                if label_proba >= self.config.label_threshold:
+                    
+                    communities_nodelist[community]['labels'].append((
+                        label_name,
+                        label_proba.item()
+                    ))
+
+        communities_nodelist = list(
+            map(
+                partial(self.query_representative_node,id2Entity=id2Entity),
+                filter(
+                    lambda x : len(x['entities']) >= self.config.min_nodes_per_community,
+                    map(
+                        partial(self.clean_community,id2Entity=id2Entity),
+                        communities_nodelist
+                    )
+                )
+            )
+        )
+
         self.send_info_event(
             progress=0.0,
-            message="Querying representative nodes..."
-        )
-        
-        domains = np.array(domains)
-
-        nodes_metadata['community'] = communities
-        community_labels = communities_labels_probas.gt(threshold)
-
-        centroids_df = []
-
-        pbar = Progress()
-        all_comunities = np.unique(communities.numpy()).tolist()
-        task = pbar.add_task("Getting Community Centroids", total=len(all_comunities))
-        pbar.start()
-
-        for community in all_comunities:
-
-            condidates = nodes_metadata \
-                .query(f"community == {community}") \
-                .query(f"num_labels <= {max_labels}") \
-                .query(f"degree <= {max_degree}") \
-                # .query(f"generality_score <= {0.75}") \
-                # .query(f"relevancy_score  <= {0.75}")
-
-            condidates = condidates.sort_values(by = "specifity_weighted_page_rank", ascending = False)
-
-            community_domains = domains[community_labels[community,:]].tolist()
-
-            for domain in community_domains:
-                condidates = condidates[condidates[domain]]
-                condidates = condidates.head(min(50, condidates.shape[0]))
-
-            if condidates.shape[0] > 0:
-
-                centroids_df.append({
-                    "id" : community,
-                    "name" : condidates.head(1).index.tolist()[0],
-                    "candidates" : condidates.index.tolist(),
-                    "domains" : community_domains,
-                })
-                
-            pbar.update(task, advance=1, refresh=True)
-
-        self.send_debug_event(
-            progress=0.0,
-            message=f"Number of communities with valid representative nodes {len(centroids_df)}..."
+            message=f"Number of communities after processing : {len(communities_nodelist)} ",
         )
 
-        df = pd.DataFrame(centroids_df)
-        df['size'] = torch.unique(communities, return_counts=True)[1].numpy()[df['id'].to_numpy()]
+        return communities_nodelist
 
-        return df
+    def query_representative_node(self, community : Dict, id2Entity : Dict[str, Dict]) -> Dict:
+
+        community = {**community}
+
+        current_max = 0.0
+        current_entity = None
+
+        for e_id in community['entities']:
+
+            e = id2Entity[e_id]
+
+            if e['specificity_weighted_pagerank'] > current_max:
+                current_max = e['specificity_weighted_pagerank']
+                current_entity = e['name']
+
+        community['name'] = current_entity
+
+        return community
     
-    def build_graph(self,
-        kg : KnowledgeGraph,
-        predicates : List[str],
-        nodes_metadata : pd.DataFrame,
-        communities_metadata : pd.DataFrame,
-        labels : list[str],
-        mapping : Dict[str, str],
-    ) -> None:
+    def update_graph(self,
+        raw_G : Dict[str, Dict[str, List[Dict]]],
+        data : ArticleAsKG,
+        communities_nodelist : List[Dict],
+        results : HetModelReturn,
+    ) -> Dict[str, Dict[str, List[Dict]]]:
         
-        self.send_info_event(
-            progress=0.0,
-            message="Starting Graph Construction..."
-        )
+        raw_G['nodes']['Expertise'] = []
+        raw_G['edges']['Expertise_BelongsTo_SubDomain'] = []
+        raw_G['edges']['Entity_BelongsTo_Expertise'] = []
+        raw_G['edges']['Entity_BelongsTo_SubDomain'] = []
         
-        nodes = {}
-        relations = []
-        domains = np.array(labels)
+        ### Community Node & Community <-> SubDomain links & Community <-> Entity Links
+        for community in communities_nodelist:
 
-        pbar = Progress()
-
-        task1 = pbar.add_task("Linking Between Domains and Sub-Domains", total=len(mapping))
-        task2 = pbar.add_task("Linking Expertise to their domains", total=len(communities_metadata))
-        task3 = pbar.add_task("Adding Graph Nodes", total=len(nodes_metadata))
-        task4 = pbar.add_task("Adding Knowledeg Graph Nodes", total=kg.edge_index.shape[1])
-
-        pbar.start()
-        
-        ### Link SubDomains to their domains
-        for sub_domain, domain in mapping.items():
-
-            nodes[f"SubDomain_{sub_domain}"] = {
-                "type" : "Domain",
-                "proprties" : {
-                    "id" : f"SubDomain_{sub_domain}",
-                    "name" : sub_domain,
-                    "labels" : [domain, sub_domain],
-                    "score" : 1.0
-                }
-            }
-
-            nodes[f"Domain_{domain}"] = {
-                "type" : "Domain",
-                "proprties" : {
-                    "id" : f"Domain_{domain}",
-                    "name" : domain,
-                    "labels" : [domain, "univ-nantes-2020"],
-                    "score" : 1.0
-                }
-            }
-
-            relations.append({
-                "id" : f"SubDomain_{sub_domain}--Domain_{domain}",
-                "relation" : {
-                    "type" : "isSubdomainOf",
-                    "properties" : {}
-                },
-                "n1" : nodes[f"SubDomain_{sub_domain}"],
-                "n2" : nodes[f"Domain_{domain}"]
+            raw_G['nodes']['Expertise'].append({
+                "id" : community['id'],
+                "name" : community['name'],
+                "type" : "Expertise"
             })
 
-            pbar.update(task1, advance=1, refresh=True)
+            for subdomain_id, edge_proba in community['labels']:
 
-        ### Link Expertise to their domains
-        for idx, row in communities_metadata.iterrows():
-
-            labels = row['domains']
-            sub_labels = set([mapping[label] for label in labels])
-
-            nodes[f"Expertise_{idx}"] = {
-                "type" : "Expertise",
-                "proprties" : {
-                    "id" : f"Expertise_{idx}",
-                    "name" : row['name'],
-                    "labels" : [*labels,*sub_labels],
-                    "score" : 1.0 # Replace it with the probability
-                },
-            }
-
-            for sub_domain in row['domains']:
-                
-                relations.append({
-                "id" : f"Expertise_{idx}--SubDomain_{sub_domain}",
-                "relation" : {
-                    "type" : "hasSubdomain",
-                    "properties" : {}
-                },
-                "n1" : nodes[f"Expertise_{idx}"],
-                "n2" : nodes[f"SubDomain_{sub_domain}"],
-            })
-                
-            pbar.update(task2, advance=1, refresh=True)
-
-        ### Link Nodes In Knowledge Graph to their Communities
-        for i,(idx, node) in enumerate(nodes_metadata.iterrows()):
-
-            labels = set(domains[nodes_metadata[domains].loc[idx].values])
-            sub_labels = set([mapping[label] for label in labels])
-
-            nodes[f"Node_{i}"] = {
-                "type" : "Node",
-                "proprties" : {
-                    "id" : f"Node_{i}",
-                    "name" : idx,
-                    "labels" : [*labels,*sub_labels],
-                    "score" : node["specifity_weighted_page_rank"]
-                },
-            }
-
-            if node['community'] in communities_metadata['id']:
-
-                relations.append({
-                    "id" : f"Node_{i}--Expertise_{node['community']}",
-                    "relation" : {
-                        "type" : "hasSubdomain",
-                        "properties" : {}
-                    },
-                    "n1" : nodes[f"Node_{i}"],
-                    "n2" : nodes[f"Expertise_{node['community']}"]
+                raw_G['edges']['Expertise_BelongsTo_SubDomain'].append({
+                    "id": f"{community['id']}-{subdomain_id}",
+                    "src": community['id'],
+                    "dst": subdomain_id,
+                    "score": edge_proba
                 })
 
-            pbar.update(task3, advance=1, refresh=True)
+            for entity in community['entities']:
 
-        ### Link Nodes With Other Nodes
-        for (src, dst), edge_type in zip(kg.edge_index.t(), kg.edge_type):
-            
-            relations.append({
-                "id" : f"Node_{src.item()}--Node_{dst.item()}",
-                "relation" : {
-                    "type" : "isRelatedTo",
-                    "properties" : {
-                        "predicate" : predicates[edge_type.item()]
-                    }
-                },
-                "n1" : nodes[f"Node_{src.item()}"],
-                "n2" : nodes[f"Node_{dst.item()}"]
-            })
+                raw_G['edges']['Entity_BelongsTo_Expertise'].append({
+                    "id": f"{entity}-{community['id']}",
+                    "src": entity,
+                    "dst": community['id'],
+                })
 
-            pbar.update(task4, advance=1, refresh=True)
+        ### Add Entity <-> SubDomain links
+        for entity, probas in zip(data.kg.entity_names, results.entities_predictions):
 
-        return relations
-            
+            for subdomain_id, proba in zip(data.metadata['labels'], probas):
+
+                proba = proba.sigmoid().item()
+
+                if proba >= self.config.label_threshold:
+
+                    raw_G['edges']['Entity_BelongsTo_SubDomain'].append({
+                        "id": f"{entity}-{subdomain_id}",
+                        "src": entity,
+                        "dst": subdomain_id,
+                        "score" : proba
+                    })
+
+        return raw_G
+    
     def __iter__(self):
-        
-        graph, model = self.load_data_and_model()
-        results = self.inference(model, graph)
-        nodes_metadata = self.get_metadata_df(graph, results, 0.5)
 
-        communities, communities_labels_probas = self.cluster(
-            model = model,
-            entities_embeddings = results.entities_embeddings,
-            edge_index = graph.kg.edge_index,
-            alg = "leiden",
-            alg_args = { "resolution" : 15 },
-            jaccrd_args = { "mode" : "hard", "threshold" : 0.5 }
+        data, model, raw_G = self.load_data_and_model()
+        inference_results  = self.inference(model, data)
+        communities, communities_labels = self.cluster(model, inference_results, data.kg.edge_index)
+        id2Entity = dict([(e['id'], e) for e in raw_G['nodes']['Entity']])
+
+        communities_nodelist = self.process_communities(
+            id2Entity,
+            data,
+            communities,
+            communities_labels
         )
 
-        communities_metadata = self.query_representative_nodes(
-            nodes_metadata=nodes_metadata,
-            domains=graph.metadata['labels'],
-            communities=communities,
-            communities_labels_probas=communities_labels_probas,
-            max_labels = 3,
-            max_degree = 50,
-            threshold = 0.5,
+        raw_G = self.update_graph(
+            raw_G,
+            data,
+            communities_nodelist,
+            inference_results
         )
 
-        relations = self.build_graph(
-            kg=graph.kg,
-            predicates=graph.metadata['predicates'],
-            nodes_metadata=nodes_metadata,
-            communities_metadata=communities_metadata,
-            labels=graph.metadata['labels'],
-            mapping={
-                "Robotics" : "Advanced Production Technologies",
-                "Processes and Assembly" : "Advanced Production Technologies",
-                "Additive Manufacturing" : "Advanced Production Technologies",
-                "Monitoring and Analysis" : "Advanced Production Technologies",
-                "Eco-design" : "Sustainable Industry",
-                "Reduction and Treatment of Effluents and Waste" : "Sustainable Industry",
-                "Recycling / Reuse" : "Sustainable Industry",
-                "Eco-responsible Processes" : "Sustainable Industry",
-                "Decarbonization of Mobility" : "Sustainable Industry",
-                "Decarbonization of Energy" : "Sustainable Industry",
-                "Composites and New Materials" : "Sustainable Industry",
-                "Industrial Digitalization" : "Industrial Digitalization",
-                "Digital Engineering of Products and Processes" : "Industrial Digitalization",
-                "Industrial Organization Performance" : "Industrial Digitalization",
-                "Preparation for New Jobs in the Future Industry" : "Industry 5.0",
-                "Change Management" : "Industry 5.0",
-                "User-Centered Design" : "Industry 5.0",
-                "Augmentation of Human Capabilities in Manufacturing" : "Industry 5.0"
-            },
+        os.makedirs(self.config.exprtise_dir, exist_ok=True)
+        data_path = os.path.join(self.config.exprtise_dir, 'dump.json')
+        helpers.save_json_file(data_path, raw_G)
+
+        yield self.make_debug_event(
+            progress=None,
+            message=f"Expertise map saved to path : {data_path}"
         )
-
-        nodes_metadata.to_csv(self.config.nodes_metadata_filename,index=True)
-        communities_metadata.to_csv(self.config.community_metadata_filename,index=False)
-        
-        writer = FileWriter.from_filename(self.config.map_filename).buffered(128)
-
-        for rel in relations:
-            writer.write([rel])
-
-        writer.flush()
-
-        # neo4j = Neo4J.from_config(Neo4JConfig(
-        #     input_filename=self.config.map_filename,
-        #     output_dir=os.path.join(self.config.map_dir, "neo4j")
-        # ))
-
-        # neo4j.run()
-
-        yield from []
 
     @classmethod
-    def from_config(cls, config : Config) -> Self:
-
-        builder = ExpertiseMapBuilder(config=config)
-        
-        builder \
-            .add_handler(ConsoleLogger("ExpertiseMapBuilder"))
-
+    def from_config(cls, config: Config) -> 'ExpertiseMapBuilder':
+        builder = cls(config=config)
+        builder.add_handler(ConsoleLogger("ExpertiseMapBuilder"))
         return builder

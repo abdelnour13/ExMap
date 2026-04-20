@@ -1,740 +1,856 @@
-import torch
+"""
+GNN Training Pipeline
+=====================
+Trains the Knowledge Representation Learning module using K-Fold cross-validation.
+
+For each hyper-parameter configuration:
+  • Run K trials (one per fold), saving per-trial history + predictions.
+  • After all K trials complete, retrain on the full graph and save that
+    model as the canonical artefact for the configuration.
+
+Only the full-graph model is saved as a .pt checkpoint.
+Per-trial histories (.csv) and predictions (.pt) are always preserved.
+
+Entry-point (CLI):
+    cli run train --experiment default
+"""
+
 import os
 import pandas as pd
-from torchmetrics.functional import accuracy,f1_score
-from rich.progress import Progress
+import torch
+from typing import Any, Dict, List, Optional, Self, Tuple
 from pydantic import BaseModel, Field, computed_field
-from typing import Self, Dict, Any, List, Tuple, Optional, Generator
-from definitions import EXPERIMENTS_DIR, DATA_DIR
-from torch_geometric import utils as gnn_utils
 from sklearn.model_selection import KFold
-from torch import optim, Tensor
+from torch import Tensor, optim
 from torch.nn import functional as F
+from torch_geometric import utils as gnn_utils
 from torch_sparse import SparseTensor
-from src import helpers
-from src.shared.command_tools import BaseCommand
-from src.shared.handlers import Event
-from src.gnn import HetGNNConfig, ArticleAsKG, ArticlesGraph, KnowledgeGraph, HybridSampler, HetModel, HetModelReturn
-from src.shared.handlers import ConsoleLogger
+from torchmetrics.functional import accuracy, f1_score
+
+from definitions import EXPERIMENTS_DIR, FEATURES_DIR
 from instance import cli
+from src import helpers
+from src.gnn import (
+    ArticleAsKG,
+    ArticlesGraph,
+    HetGNNConfig,
+    HetModel,
+    HetModelReturn,
+    HybridSampler,
+    KnowledgeGraph,
+)
+from src.shared.command_tools import BaseCommand
+from src.shared.handlers import ConsoleLogger, Event
+
+
+# ---------------------------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------------------------
 
 class Config(BaseModel):
-    
-    experiment : str = 'default'
+
+    experiment: str = "default"
 
     @computed_field
     @property
-    def training_config(self) -> 'TrainingConfig':
-        config_path = os.path.join(EXPERIMENTS_DIR, self.experiment, 'config.json')
+    def training_config(self) -> "TrainingConfig":
+        config_path = os.path.join(EXPERIMENTS_DIR, self.experiment, "config.json")
         conf = helpers.load_json_file(config_path)
         return TrainingConfig(**conf)
 
+
 class BaseTrainingConfig(BaseModel):
 
-    ### Data
-    graph : str = 'ls2n-duke'           # Graph found at $DATA_DIR/$graph/graph.pt
-    keep_largest_cc : bool = True       # Whether to keep only largest connected component or not
-    min_entities_per_article : int = 5  # The minimum number of entities for an article to be considered
+    # Data
+    graph: str = "ls2n-duke"                          
 
-    ### Losses
-    add_ssl_loss : bool = False    # Whether to add self-supervised (reconstruction) loss or not.
+    # Losses
+    add_ssl_loss: bool = False
 
-    ### Sampling
-    batch_size : int = 8
-    num_articles_neighbors : tuple[int,int] = (10,6)  # SAGE sampling for articles
-    num_entities_neighbors : tuple[int,int] = ()      # SAGE sampling for entities
+    # Sampling
+    batch_size: int = 8
+    num_articles_neighbors: tuple[int, int] = (10, 6)
+    num_entities_neighbors: tuple[int, int] = ()
 
-    ### Model
-    model_params : HetGNNConfig = Field(default_factory=HetGNNConfig) # Model parameters
+    # Model
+    model_params: HetGNNConfig = Field(default_factory=HetGNNConfig)
 
-    ### Hyper-parameters
-    lr : float = 0.00075          # Learning rate        
-    num_epochs : int = 10         # Number of epochs
-    accumelation_steps : int = 1  # Accumelation steps
-    weight_decay : float = 1e-4   # Weight decay
+    # Hyper-parameters
+    lr: float = 0.00075
+    num_epochs: int = 10
+    accumulation_steps: int = 1
+    weight_decay: float = 1e-4
 
-    ### Device
-    device : str = 'cuda' if torch.cuda.is_available() else 'cpu'  # Device
+    # Device
+    device: str = "cuda" if torch.cuda.is_available() else "cpu"
 
-    ### Negative Sampling
-    do_negative_sampling : bool = False # Whether to do negative sampling when learning connections between articles & labels
+    # Negative Sampling
+    do_negative_sampling: bool = False
 
-    ### Logging
-    log_every : int = 1 # Logging frequency
+    # Logging
+    log_every: int = 1
+
 
 class TrainingConfig(BaseTrainingConfig):
-    seed : int = 56      # SEED for reproducibility
-    num_splits : int = 4 # number of splits used in KFold
-    hparams : Dict[str,Dict[str, Any]] = Field(default_factory = lambda : { "default" : {} }) # Variations for hyper-parameters
+    seed: int = 56
+    num_splits: int = 4
+    hparams: Dict[str, Dict[str, Any]] = Field(default_factory=lambda: {"default": {}})
+
+
+# ---------------------------------------------------------------------------
+# Trainer
+# ---------------------------------------------------------------------------
 
 @cli.register_stage(
     name="train",
     description=(
-        "Trains the Knowledge Representation Learning module based on the configuration specified in "
-        "the experiment path."
+        "Trains the Knowledge Representation Learning module based on the "
+        "configuration specified in the experiment path."
     ),
     add_from_conf=False,
-    add_save_to=False
+    add_save_to=False,
 )
 class Trainer(BaseCommand):
 
-    def __init__(self, experiment : str, config : TrainingConfig):
+    def __init__(self, experiment: str, config: TrainingConfig) -> None:
         super().__init__()
-
         self.experiment = experiment
         self.config = config
-        self.current_config : Optional[BaseTrainingConfig] = None
 
-    def get_configs(self) -> Optional[Dict[str, BaseTrainingConfig]]:
+    # ------------------------------------------------------------------
+    # Config helpers
+    # ------------------------------------------------------------------
+
+    def get_configs(self) -> Dict[str, BaseTrainingConfig]:
 
         self.send_info_event(
             progress=0.0,
-            message="Loading all configurations combinations..."
+            message="[Config] Loading all hyper-parameter combinations …",
         )
 
-        configs = dict()
+        configs: Dict[str, BaseTrainingConfig] = {}
 
-        for exp_name,hparam in self.config.hparams.items():
+        for exp_name, hparam in self.config.hparams.items():
+            base = self.config.model_dump()
+            base.pop("hparams")
+            configs[exp_name] = BaseTrainingConfig(**helpers.override_dict(base, hparam))
 
-            base_config = self.config.model_dump()
-            base_config.pop('hparams')
-
-            config = BaseTrainingConfig(**helpers.override_dict(
-                base_config,
-                hparam
-            ))
-            
-            configs[exp_name] = config
-
-        self.send_debug_event(
+        self.send_info_event(
             progress=0.0,
-            message=f"Found {len(configs)} configuration combinations"
+            message=f"[Config] {len(configs)} configuration(s) loaded: {list(configs.keys())}",
         )
+
+        for name, cfg in configs.items():
+            
+            self.send_debug_event(
+                progress=0.0,
+                message=f"[Config] '{name}' — lr={cfg.lr}, epochs={cfg.num_epochs}, "
+                        f"batch={cfg.batch_size}, ssl={cfg.add_ssl_loss}",
+            )
 
         return configs
 
+    # ------------------------------------------------------------------
+    # Data loading  (new graph.pt format — no filtering)
+    # ------------------------------------------------------------------
+
     def load_data(self) -> ArticleAsKG:
 
-        data_dir = os.path.join(DATA_DIR, *self.config.graph.split('/'))
-        graph_path = os.path.join(data_dir, "graph.pt")
-        entities_path = os.path.join(data_dir, "nodes.json")
+        graph_path = os.path.join(FEATURES_DIR, *self.config.graph.split("/"), "graph.pt")
 
-        entities = helpers.load_json_file(entities_path)
+        self.send_info_event(
+            progress=0.0,
+            message=f"[Data] Loading graph from: {graph_path}",
+        )
+
+        raw: Dict[str, Any] = torch.load(graph_path, weights_only=False)
+
+        # ── Entity / KG tensors ──────────────────────────────────────
+        #
+        # Entity_HasRelationWith_Entity is [3, E]: row0=src, row1=dst, row2=pred_idx
+        triple_edge = raw["edges"][("Entity", "HasRelationWith", "Entity")]
+        src, dst, edge_type = triple_edge[0], triple_edge[1], triple_edge[2]
 
         self.send_debug_event(
             progress=0.0,
-            message=f"Loading data at {graph_path}."
+            message=f"[Data] KG triples: {src.shape[0]:,}  |  "
+                    f"Entities: {len(raw['nodes']['Entity']['id']):,}  |  "
+                    f"Predicates: {len(raw['predicates']['id'])}",
         )
-        
-        raw = torch.load(graph_path, weights_only=False)
-
-        src, dst, edge_type = raw['relations'][('Entity', 'HasRelationWith', 'Entity')]
 
         kg = KnowledgeGraph(
-            x = raw['nodes']['Entity']['embeddings'],
-            e = raw['predicates']['embeddings'][edge_type],
-            r = raw['predicates']['embeddings'],
-            edge_index = torch.stack([src, dst]),
-            edge_type = edge_type,
-            entity_names = raw['nodes']['Entity']['id']
+            x=raw["nodes"]["Entity"]["embeddings"],
+            e=raw["predicates"]["embeddings"][edge_type],
+            r=raw["predicates"]["embeddings"],
+            edge_index=torch.stack([src, dst]),
+            edge_type=edge_type,
+            entity_names=raw["nodes"]["Entity"]["id"],
         )
 
-        kg.generality_score = raw['nodes']['Entity']['generality_score']
-        kg.relevancy_score  = raw['nodes']['Entity']['relevancy_score']
+        kg.generality_score = raw["nodes"]["Entity"]["generality_score"]
+        kg.relevancy_score  = raw["nodes"]["Entity"]["relevancy_score"]
 
-        ### Share-Keyword
-        row1, col1 = raw['relations'][('Article','HasKeyword', 'Keyword')]
-        A1 = SparseTensor(row=row1,col=col1,sparse_sizes=(len(entities['Article']), len(entities['Keyword'])))
-        A1 = A1 @ A1.t()
-        row1, col1, _ = A1.coo()
+        # ── Article–Article edges  (pre-computed by the pipeline) ────
+        #
+        # Both ShareKeyword and ShareAuthor are [2, E] tensors stored
+        # under tuple keys.  We concatenate them into a single edge_index
+        # with an edge_type discriminator (0 = keyword, 1 = author).
 
-        ### Share-Author
-        row2, col2 = raw['relations'][('Article','WrittenBy', 'Author')]
-        A2 = SparseTensor(row=row2,col=col2,sparse_sizes=(len(entities['Article']), len(entities['Author'])))
-        A2 = A2 @ A2.t()
-        row2, col2, _ = A2.coo()
+        share_kw  = raw["edges"].get(("Article", "ShareKeyword", "Article"))
+        share_auth = raw["edges"].get(("Article", "ShareAuthor",  "Article"))
 
-        edge_index = torch.cat([
-            torch.stack([row1,col1]),
-            torch.stack([row2,col2])
-        ], dim = -1)
+        edge_parts, type_parts = [], []
 
-        edge_type = torch.cat([
-            torch.zeros_like(row1),
-            torch.ones_like(row2)
-        ])
+        if share_kw is not None:
+            edge_parts.append(share_kw)
+            type_parts.append(torch.zeros(share_kw.shape[1], dtype=torch.long))
+            self.send_debug_event(
+                progress=0.0,
+                message=f"[Data] Article–ShareKeyword edges: {share_kw.shape[1]:,}",
+            )
 
-        ### Labels
-        row, col = raw['relations'][('Article', 'BelongsTo', 'SubDomain')]
-        labels = SparseTensor(row=row,col=col,sparse_sizes=(len(entities['Article']), len(entities['SubDomain']))).to_dense()
+        if share_auth is not None:
+            edge_parts.append(share_auth)
+            type_parts.append(torch.ones(share_auth.shape[1], dtype=torch.long))
+            self.send_debug_event(
+                progress=0.0,
+                message=f"[Data] Article–ShareAuthor edges: {share_auth.shape[1]:,}",
+            )
+
+        if edge_parts:
+            article_edge_index = torch.cat(edge_parts, dim=-1)
+            article_edge_type  = torch.cat(type_parts, dim=0)
+        else:
+            # Fallback: no article–article edges
+            n_art = len(raw["nodes"]["Article"]["id"])
+            article_edge_index = torch.zeros((2, 0), dtype=torch.long)
+            article_edge_type  = torch.zeros(0, dtype=torch.long)
+            self.send_warn_event(
+                progress=0.0,
+                message="[Data] No Article–Article edges found in graph.pt",
+            )
+
+        # ── Labels  (Article → SubDomain) ───────────────────────────
+        n_articles  = len(raw["nodes"]["Article"]["id"])
+        n_subdomains = len(raw["labels"])
+
+        belongs_to = raw["edges"].get(("Article", "BelongsTo", "SubDomain"))
+        if belongs_to is not None:
+            row, col = belongs_to[0], belongs_to[1]
+            labels = SparseTensor(
+                row=row, col=col,
+                sparse_sizes=(n_articles, n_subdomains),
+            ).to_dense()
+        else:
+            labels = torch.zeros((n_articles, n_subdomains))
+            self.send_warn_event(
+                progress=0.0,
+                message="[Data] Article–BelongsTo–SubDomain edges not found; labels are all-zero",
+            )
+
+        self.send_debug_event(
+            progress=0.0,
+            message=f"[Data] Articles: {n_articles:,}  |  SubDomains: {n_subdomains}  |  "
+                    f"Labelled articles: {(labels.sum(-1) > 0).sum().item():,}",
+        )
+
+        # ── Triple → Article provenance ──────────────────────────────
+        triple_article = raw["edges"].get("Triple_ExtractedFrom_Article")
+        if triple_article is None:
+            self.send_warn_event(
+                progress=0.0,
+                message="[Data] Triple_ExtractedFrom_Article edge not found in graph.pt",
+            )
 
         articles = ArticlesGraph(
-            x = raw['nodes']['Article']['embeddings'],
-            edge_index = edge_index,
-            edge_type = edge_type,
-            y = labels
+            x=raw["nodes"]["Article"]["embeddings"],
+            edge_index=article_edge_index,
+            edge_type=article_edge_type,
+            y=labels,
         )
 
         data = ArticleAsKG(
-            articles = articles,
-            kg = kg,
-            edge_article = raw['relations'][('Triple','ExtractedFrom','Article')]
+            articles=articles,
+            kg=kg,
+            edge_article=triple_article,
         )
 
-        data.metadata = {}
-        data.metadata['predicates'] = raw['predicates']['id']
-        data.metadata['labels']     = raw['labels']
+        data.metadata = {
+            "predicates": raw["predicates"]["id"],
+            "labels":     raw["labels"],
+        }
+
+        self.send_info_event(
+            progress=0.0,
+            message=f"[Data] Graph loaded — "
+                    f"{n_articles:,} articles, "
+                    f"{len(raw['nodes']['Entity']['id']):,} entities, "
+                    f"{n_subdomains} subdomain labels",
+        )
 
         return self.normalize_data(data)
 
-    def normalize_data(self, data : ArticleAsKG) -> ArticleAsKG:
+    # ------------------------------------------------------------------
+    # Normalisation
+    # ------------------------------------------------------------------
 
-        mean, std = data.articles.x.mean(0, keepdim = True), data.articles.x.std(0, keepdim = True)
-        data.articles.x = (data.articles.x - mean) / (std + 1e-3)
+    def normalize_data(self, data: ArticleAsKG) -> ArticleAsKG:
+        
+        self.send_debug_event(progress=0.0, message="[Data] Normalising node features …")
 
-        mean, std = data.kg.x.mean(0, keepdim = True), data.kg.x.std(0, keepdim = True)
-        data.kg.x = (data.kg.x - mean) / (std + 1e-3)
+        def _norm(t: Tensor) -> Tensor:
+            mean = t.mean(0, keepdim=True)
+            std  = t.std(0,  keepdim=True)
+            return (t - mean) / (std + 1e-3)
 
-        mean, std = data.kg.r.mean(0, keepdim = True), data.kg.r.std(0, keepdim = True)
-        data.kg.r = (data.kg.r - mean) / (std + 1e-3)
-
-        mean, std = data.kg.edge_attr.mean(0, keepdim = True), data.kg.edge_attr.std(0, keepdim = True)
-        data.kg.edge_attr = (data.kg.edge_attr - mean) / (std + 1e-3)
+        data.articles.x        = _norm(data.articles.x)
+        data.kg.x              = _norm(data.kg.x)
+        data.kg.r              = _norm(data.kg.r)
+        data.kg.edge_attr      = _norm(data.kg.edge_attr)
 
         return data
-    
-    def keep_largest_cc(self, data : ArticleAsKG) -> ArticleAsKG:
 
-        labels = helpers.torch_connected_components(edge_index=data.kg.edge_index, num_nodes=data.kg.num_nodes)
-        ccs, counts = labels.unique(return_counts=True)
-        largest_cc = ccs[counts.argmax()]
-        indices = torch.arange(data.kg.num_nodes)
+    # ------------------------------------------------------------------
+    # Splits & samplers
+    # ------------------------------------------------------------------
 
-        self.send_info_event(
-            progress=0.0,
-            message=f"Largest Connected Componenet contains {counts.argmax()} entities."
+    def create_or_load_split(self, data: ArticleAsKG) -> Tensor:
+        graph_slug = self.config.graph.replace("/", "_")
+        split_path = os.path.join(
+            EXPERIMENTS_DIR, self.experiment,
+            f"split_{graph_slug}_{self.config.num_splits}.pt",
         )
 
-        return data.subgraph_entities(indices[labels == largest_cc])
-    
-    def filter_data(self, data : ArticleAsKG) -> Generator[Event, None, None]:
-
-        ### Filter Articles With Few entities
-        indices = torch.arange(data.articles.num_nodes)
-        entities_per_node = gnn_utils.degree(data.entity_article[1], num_nodes=data.articles.num_nodes) 
-        mask = (data.articles.y.sum(-1) > 0) # & (entities_per_node >= 5)
+        if os.path.exists(split_path):
+            self.send_debug_event(
+                progress=0.0,
+                message=f"[Split] Loading cached split from {split_path}",
+            )
+            return torch.load(split_path, map_location="cpu", weights_only=False)
 
         self.send_debug_event(
             progress=0.0,
-            message=f"Number of articles before/after filtering : {mask.size(0)}/{mask.sum()}."
+            message=f"[Split] Creating new {self.config.num_splits}-fold split …",
         )
 
-        return data.subgraph_articles(data.articles.article_id[mask])
-    
-    def create_or_load_split(self, data : ArticleAsKG) -> Tensor:
+        kf = KFold(n_splits=self.config.num_splits, shuffle=True)
+        n  = data.articles.num_nodes
+        split_tensor = torch.full((n,), -1, dtype=torch.long)
 
-        split_path = os.path.join(EXPERIMENTS_DIR, self.experiment, f'split_{self.config.graph.split('/')[-1]}_{self.config.num_splits}.pt')
+        for fold, (_, val_idx) in enumerate(kf.split(range(n))):
+            split_tensor[val_idx] = fold
 
-        if os.path.exists(split_path):
-
-            self.send_debug_event(
-                progress=0.0,
-                message="Loading split tensor from disk"
-            )
-
-            split_tensor = torch.load(split_path, map_location='cpu', weights_only=False)
-
-        else:
-
-            k_fold = KFold(n_splits = self.config.num_splits, shuffle = True)
-
-            split_tensor = torch.zeros((data.articles.num_nodes)).long() - 1
-            indices = torch.arange(data.articles.num_nodes)
-
-            for fold,(_, val_indices) in enumerate(k_fold.split(indices)):
-                split_tensor[val_indices] = fold
-
-            torch.save(split_tensor, split_path)
-
-            self.send_info_event(
-                progress=0.0,
-                message="Split tensor saved to disk."
-            )
-
+        torch.save(split_tensor, split_path)
+        self.send_info_event(
+            progress=0.0,
+            message=f"[Split] {self.config.num_splits}-fold split saved to {split_path}",
+        )
         return split_tensor
-    
-    def create_samplers(self, data : ArticleAsKG) -> List[Tuple[HybridSampler, HybridSampler]]:
 
+    def _make_sampler(self, split: ArticleAsKG, is_train: bool) -> HybridSampler:
+
+        return HybridSampler(
+            articles=split.articles,
+            kg=split.kg,
+            edge_article=split.edge_article,
+            articles_loader_args={
+                "batch_size":    self.config.batch_size,
+                "num_neighbors": self.config.num_articles_neighbors,
+                "drop_last":     is_train,
+                "shuffle":       is_train,
+            },
+            kg_sampler_args={
+                "num_neighbors": self.config.num_entities_neighbors,
+            },
+        )
+
+    def create_samplers(
+        self, 
+        data: ArticleAsKG
+    ) -> List[Tuple[HybridSampler, HybridSampler]]:
         split_tensor = self.create_or_load_split(data)
-        
-        samplers = []
+        samplers: List[Tuple[HybridSampler, HybridSampler]] = []
 
         for fold in range(self.config.num_splits):
-
             train_mask = split_tensor != fold
-            val_mask = split_tensor == fold
+            val_mask   = split_tensor == fold
 
             self.send_debug_event(
                 progress=0.0,
-                message=f"Fold {fold} : N training samples = {train_mask.sum()}, N validation samples = {val_mask.sum()}."
+                message=f"[Split] Fold {fold}: "
+                        f"train={train_mask.sum().item():,}  "
+                        f"val={val_mask.sum().item():,}",
             )
 
             train_split = data.subgraph_articles(data.articles.article_id[train_mask])
-            val_split = data.subgraph_articles(data.articles.article_id[val_mask])
+            val_split   = data.subgraph_articles(data.articles.article_id[val_mask])
 
-            ### Create Sampler
-            samplers.append(tuple([
-                HybridSampler(
-                    articles = split.articles,
-                    kg = split.kg,
-                    edge_article = split.edge_article,
-                    articles_loader_args = {
-                        'batch_size' : self.config.batch_size,
-                        'num_neighbors' : self.config.num_articles_neighbors,
-                        'drop_last' : split_id % 2 == 0,
-                        "shuffle" : split_id % 2 == 0
-                    },
-                    kg_sampler_args = {
-                        'num_neighbors' : self.config.num_entities_neighbors
-                    }
-                )
-                for split_id, split in enumerate([train_split, val_split])
-            ]))
+            samplers.append((
+                self._make_sampler(train_split, is_train=True),
+                self._make_sampler(val_split,   is_train=False),
+            ))
 
         return samplers
-    
-    def create_model(self, config : BaseTrainingConfig, data : ArticleAsKG) -> HetModel:
 
-        self.send_info_event(
-            progress=0.0,
-            message="Creating GNN model..."
-        )
+    def create_full_sampler(self, data: ArticleAsKG) -> HybridSampler:
+        """Sampler over the entire graph (used for final retraining)."""
+        return self._make_sampler(data, is_train=True)
 
-        config.model_params.ssl = config.add_ssl_loss
+    # ------------------------------------------------------------------
+    # Model factory
+    # ------------------------------------------------------------------
+
+    def create_model(self, config: BaseTrainingConfig, data: ArticleAsKG) -> HetModel:
+
+        self.send_info_event(progress=0.0, message="[Model] Instantiating GNN model …")
+
+        config.model_params.ssl     = config.add_ssl_loss
         config.model_params.cluster = False
 
         model = HetModel.from_config(
-            in_channels = data.kg.num_features,
-            num_labels = data.articles.y.size(-1),
-            num_relations = (data.kg.num_relations, data.articles.num_relations),
-            config = config.model_params
+            in_channels=data.kg.num_features,
+            num_labels=data.articles.y.size(-1),
+            num_relations=(data.kg.num_relations, data.articles.num_relations),
+            config=config.model_params,
         )
 
-        self.send_debug_event(
+        self.send_info_event(
             progress=0.0,
-            message=f"Model size {helpers.model_size_mb(model):.3}MB."
+            message=f"[Model] Size: {helpers.model_size_mb(model):.3f} MB  |  "
+                    f"Parameters: {sum(p.numel() for p in model.parameters()):,}",
         )
-
         return model
-    
+
+    # ------------------------------------------------------------------
+    # Loss & metrics
+    # ------------------------------------------------------------------
+
     @staticmethod
     def sample_negative_edges(
-        edge_index : Tensor,
-        edge_type : Tensor,
-        num_nodes : int
+        edge_index: Tensor, edge_type: Tensor, num_nodes: int
     ) -> Tuple[Tensor, Tensor, Tensor]:
-        
-        negative_edge_index = gnn_utils.negative_sampling(
-            edge_index=edge_index,
-            num_nodes=num_nodes
-        )
+        neg_ei  = gnn_utils.negative_sampling(edge_index=edge_index, num_nodes=num_nodes)
+        new_ei  = torch.cat([neg_ei, edge_index], dim=-1)
+        y_hat   = torch.cat([
+            torch.zeros_like(edge_index[0]),
+            torch.ones_like(edge_index[1]),
+        ]).float()
+        etype   = torch.cat([edge_type, edge_type], dim=0)
+        return new_ei, etype, y_hat
 
-        new_edge_index = torch.cat([negative_edge_index, edge_index], dim = -1)
-        y_hat = torch.cat([torch.zeros_like(edge_index[0]), torch.ones_like(edge_index[1])], dim = 0).float()
-
-        edge_type = torch.cat([edge_type, edge_type], dim = 0)
-
-        return new_edge_index, edge_type, y_hat
-    
     @staticmethod
-    def negative_sample(y : Tensor) -> Tuple[Tensor, Tensor]:
-
-        pos_edge_index = torch.argwhere(y).t()
-
-        neg_edge_index = gnn_utils.negative_sampling(
-            edge_index = pos_edge_index,
-            num_nodes = (y.size(0), y.size(1))
-        )
-
-        row, col = torch.cat([pos_edge_index,neg_edge_index],dim = -1)
-
+    def negative_sample(y: Tensor) -> Tuple[Tensor, Tensor]:
+        pos = torch.argwhere(y).t()
+        neg = gnn_utils.negative_sampling(edge_index=pos, num_nodes=(y.size(0), y.size(1)))
+        row, col = torch.cat([pos, neg], dim=-1)
         return row, col
-    
-    @staticmethod
-    def loss(config : TrainingConfig,
-        batch : ArticleAsKG, 
-        results : HetModelReturn,
-        batch_size : int,
-        labels : Optional[Tensor] = None,
-        negative_sample : Optional[Tuple[Tensor, Tensor]] = None,
-        weights : Optional[Dict] = None
-    ) -> Dict[str, Tensor]:
 
-        losses = {}
+    @staticmethod
+    def loss(
+        config: BaseTrainingConfig,
+        batch: ArticleAsKG,
+        results: HetModelReturn,
+        batch_size: int,
+        labels: Optional[Tensor] = None,
+        negative_sample: Optional[Tuple[Tensor, Tensor]] = None,
+        weights: Optional[Dict[str, float]] = None,
+    ) -> Dict[str, Tensor]:
+        
         weights = weights or {}
+        losses: Dict[str, Tensor] = {}
 
         y_hat = results.articles_predictions[:batch_size]
-        y = batch.articles.y[:batch_size]
+        y     = batch.articles.y[:batch_size]
 
-        ### Supervised Loss
         if negative_sample is not None:
             row, col = negative_sample
-            losses['guidance_loss'] = F.binary_cross_entropy_with_logits(y_hat[row, col], y[row, col].float())
+            losses["guidance_loss"] = F.binary_cross_entropy_with_logits(
+                y_hat[row, col], y[row, col].float()
+            )
         else:
-            losses['guidance_loss'] = F.binary_cross_entropy_with_logits(y_hat, y.float())
+            losses["guidance_loss"] = F.binary_cross_entropy_with_logits(y_hat, y.float())
 
-        ### Structure Loss
         if config.add_ssl_loss:
-            losses['ssl_loss'] = F.binary_cross_entropy_with_logits(results.structure_y_hat, labels.float())
+            losses["ssl_loss"] = F.binary_cross_entropy_with_logits(
+                results.structure_y_hat, labels.float()
+            )
 
-        loss = torch.scalar_tensor(0.0).to(y_hat.device)
+        total = torch.scalar_tensor(0.0).to(y_hat.device)
+        for name, value in losses.items():
+            w = weights.get(name, 1.0)
+            if w > 0:
+                total = total + w * value
 
-        for loss_name, loss_value in losses.items():
-
-            loss_weight =  weights.get(loss_name, 1.0) 
-
-            if loss_weight > 0:
-                loss += loss_weight * loss_value
-
-        losses["loss"] = loss
-
+        losses["loss"] = total
         return losses
-    
+
     @staticmethod
-    def evaluate(config : TrainingConfig,
-        batch : ArticleAsKG, 
-        results : HetModelReturn,
-        batch_size : int,
-        labels : Optional[Tensor] = None,
-        negative_sample : Optional[Tuple[Tensor, Tensor]] = None
-    ) -> Dict[str, Tensor]:
-        
-        metrics = {}
-        
-        y = batch.articles.y[:batch_size]
+    def evaluate(
+        config: BaseTrainingConfig,
+        batch: ArticleAsKG,
+        results: HetModelReturn,
+        batch_size: int,
+        labels: Optional[Tensor] = None,
+        negative_sample: Optional[Tuple[Tensor, Tensor]] = None,
+    ) -> Dict[str, float]:
+        metrics: Dict[str, float] = {}
+
+        y     = batch.articles.y[:batch_size]
         y_hat = results.articles_predictions[:batch_size]
 
         if negative_sample is not None:
-
             row, col = negative_sample
-            y = y[row, col]
-            y_hat = y_hat[row, col]
-
+            y, y_hat = y[row, col], y_hat[row, col]
             metrics["guidance_acc"] = accuracy(y_hat, y, task="binary").item()
-            metrics["guidance_f1"] = f1_score(y_hat, y, task="binary").item()
-        
+            metrics["guidance_f1"]  = f1_score(y_hat, y, task="binary").item()
         else:
-
-            metrics["guidance_acc"] = accuracy(
-                y_hat, 
-                y, 
-                task="multilabel", 
-                num_labels=batch.articles.y.size(-1), 
-                average="macro"
-            ).item()
-
-            metrics["guidance_f1"] = f1_score(
-                y_hat, 
-                y, 
-                task="multilabel", 
-                num_labels=batch.articles.y.size(-1), 
-                average="macro"
-            ).item()
+            n = batch.articles.y.size(-1)
+            metrics["guidance_acc"] = accuracy(y_hat, y, task="multilabel", num_labels=n, average="macro").item()
+            metrics["guidance_f1"]  = f1_score(y_hat, y, task="multilabel", num_labels=n, average="macro").item()
 
         if config.add_ssl_loss:
-
             metrics["structure_acc"] = accuracy(results.structure_y_hat, labels, task="binary").item()
-            metrics["structure_f1"] = f1_score(results.structure_y_hat, labels, task="binary").item()
+            metrics["structure_f1"]  = f1_score(results.structure_y_hat, labels, task="binary").item()
 
             row, col = batch.kg.edge_index
             h, t = results.entities_embeddings[row], results.entities_embeddings[col]
             r_hat = (h - t) @ results.relations_embeddings.t()
+            n_r   = batch.kg.r.size(0)
 
-            metrics['HITS@5'] = accuracy(
-                r_hat, 
-                batch.kg.edge_type, 
-                task='multiclass', 
-                num_classes=batch.kg.r.size(0),
-                top_k = 5
-            ).item()
-
-            metrics['HITS@10'] = accuracy(
-                r_hat, 
-                batch.kg.edge_type, 
-                task='multiclass', 
-                num_classes=batch.kg.r.size(0),
-                top_k = 10
-            ).item()
+            metrics["HITS@5"]  = accuracy(r_hat, batch.kg.edge_type, task="multiclass", num_classes=n_r, top_k=5).item()
+            metrics["HITS@10"] = accuracy(r_hat, batch.kg.edge_type, task="multiclass", num_classes=n_r, top_k=10).item()
 
         return metrics
-    
-    def run_experiment(self,
-        config : BaseTrainingConfig,
-        data : ArticleAsKG,
-        train_loader : HybridSampler,
-        val_loader : HybridSampler
-    ) -> Tuple[pd.DataFrame, torch.nn.Module]:
-        
-        ### Creat Model
-        model = self.create_model(config = config, data = data).to(config.device)
-        optimizer = optim.Adam(params = model.parameters(), lr = config.lr, weight_decay = config.weight_decay)
-        history = []
-        loaders = { "train" : train_loader, "val" : val_loader }
 
-        batch : ArticleAsKG = None
+    # ------------------------------------------------------------------
+    # Training loop
+    # ------------------------------------------------------------------
 
+    def run_experiment(
+        self,
+        config: BaseTrainingConfig,
+        data: ArticleAsKG,
+        train_loader: HybridSampler,
+        val_loader: HybridSampler,
+        label: str = "",                # e.g. "trial 2/4" or "full graph"
+        total_steps: int = 1,           # for progress denominator
+        completed_steps: int = 0,       # steps already done before this run
+    ) -> Tuple[pd.DataFrame, HetModel]:
+        """
+        Runs a complete training loop.
+
+        ``label``            is shown in log messages to identify the run.
+        ``total_steps``      is the denominator used for progress values.
+        ``completed_steps``  is the number of steps finished before this call.
+        """
+        model     = self.create_model(config=config, data=data).to(config.device)
+        optimizer = optim.Adam(model.parameters(), lr=config.lr, weight_decay=config.weight_decay)
         scheduler = optim.lr_scheduler.CosineAnnealingLR(
-            optimizer = optimizer, 
-            T_max = config.num_epochs, 
-            eta_min = 1e-2 * config.lr
+            optimizer=optimizer, T_max=config.num_epochs, eta_min=1e-2 * config.lr
         )
 
-        ### Training Loop
+        loaders = {"train": train_loader, "val": val_loader}
+        history: List[pd.DataFrame] = []
+
         for epoch in range(config.num_epochs):
 
-            local_history = []
+            # Progress value advances linearly within this run
+            epoch_progress = (completed_steps + epoch / config.num_epochs) / total_steps
 
-            for phase in ["train", "val"]:
+            epoch_rows: List[Dict[str, Any]] = []
 
+            for phase in ("train", "val"):
                 is_training = phase == "train"
-                model = model.train(mode = is_training)
+                model.train(mode=is_training)
                 loader = loaders[phase]
+                n_batches = len(loader)
 
-                iteration = 0
+                self.send_debug_event(
+                    progress=epoch_progress,
+                    message=f"[{label}] Epoch {epoch + 1}/{config.num_epochs} | "
+                            f"{phase.upper()} — {n_batches} batches",
+                )
 
-                # tqdm(loader, desc = f'Epoch {epoch+1}/{config.num_epochs} | Phase {phase.upper()}')
-
-                pbar = Progress()
-                task = pbar.add_task(f"[blue]{f'Epoch {epoch+1}/{config.num_epochs} | Phase {phase.upper()}'}", total=len(loader))
-                pbar.start()
-
-                for iteration_id, batch in enumerate(loader):
-                    
-                    batch = helpers.move_data_to_device(batch, device = config.device)
-
-                    ### Negative Sampling
-                    sample = None
-                    labels = None
-
-                    if config.model_params.ssl:
-
-                        edge_index, edge_type, labels = self.sample_negative_edges(
-                            batch.kg.edge_index, 
-                            batch.kg.edge_type, 
-                            num_nodes=batch.kg.num_nodes
-                        )
-
-                        sample = (edge_index, edge_type)
-
-                    with torch.set_grad_enabled(is_training):
-
-                        results = model.forward(batch, sample)
-
-                        ### Label Negative Sampling
-                        y = batch.articles.y[:config.batch_size]
-                        neg_sample = None
-
-                        if is_training and config.do_negative_sampling:
-                            neg_sample = self.negative_sample(y)
-
-                        ### Calculate Loss
-                        losses = self.loss(config,
-                            batch = batch,
-                            results = results,
-                            batch_size=config.batch_size,
-                            labels = labels,
-                            negative_sample=neg_sample,
-                            weights={
-                                "guidance_loss" : 1.0,
-                                "ssl_loss" : 0.05,
-                            }                    
-                        )
-
-                    if is_training:
-                        optimizer.zero_grad()
-                        losses["loss"].backward()
-                        optimizer.step()
-
-                    metrics = self.evaluate(config,
-                        batch=batch,
-                        results=results,
-                        batch_size=config.batch_size,
-                        labels=labels,
-                        negative_sample=neg_sample
+                from rich.progress import Progress as RichProgress
+                with RichProgress() as pbar:
+                    task = pbar.add_task(
+                        f"[blue]Epoch {epoch + 1}/{config.num_epochs} | {phase.upper()}",
+                        total=n_batches,
                     )
 
-                    local_history.append({
-                        'epoch' : epoch,
-                        'phase' : phase,
-                        'iteration' : iteration,
-                        **{
-                            loss_name : loss_value.item()
-                            for loss_name, loss_value in losses.items()
-                        },
-                        **metrics
-                    })
+                    for batch in loader:
+                        batch = helpers.move_data_to_device(batch, device=config.device)
 
-                    iteration += 1
+                        sample, labels = None, None
+                        if config.model_params.ssl:
+                            ei, et, labels = self.sample_negative_edges(
+                                batch.kg.edge_index, batch.kg.edge_type, batch.kg.num_nodes
+                            )
+                            sample = (ei, et)
 
-                    pbar.update(task, advance=1, refresh=True)
+                        with torch.set_grad_enabled(is_training):
+                            results   = model.forward(batch, sample)
+                            neg_smpl  = (
+                                self.negative_sample(batch.articles.y[:config.batch_size])
+                                if is_training and config.do_negative_sampling
+                                else None
+                            )
+                            losses = self.loss(
+                                config, batch=batch, results=results,
+                                batch_size=config.batch_size,
+                                labels=labels, negative_sample=neg_smpl,
+                                weights={"guidance_loss": 1.0, "ssl_loss": 0.05},
+                            )
 
-                pbar.remove_task(task)
+                        if is_training:
+                            optimizer.zero_grad()
+                            losses["loss"].backward()
+                            optimizer.step()
+
+                        metrics = self.evaluate(
+                            config, batch=batch, results=results,
+                            batch_size=config.batch_size,
+                            labels=labels, negative_sample=neg_smpl,
+                        )
+
+                        epoch_rows.append({
+                            "epoch": epoch,
+                            "phase": phase,
+                            **{k: v.item() for k, v in losses.items()},
+                            **metrics,
+                        })
+
+                        pbar.advance(task)
 
             scheduler.step()
 
-            local_history = pd.DataFrame(local_history)
-            history.append(local_history)
+            epoch_df = pd.DataFrame(epoch_rows)
+            history.append(epoch_df)
 
-            ### Early Stopping
-            local_history = local_history \
-                .drop(columns=['iteration','epoch']) \
-                .groupby(by=['phase']) \
-                .mean()
-            
-            ### Logging
+            # ── Epoch summary logging ─────────────────────────────────
             if (epoch + 1) % config.log_every == 0:
-                
-                for col in local_history.columns:
-                    if not col.endswith('loss'):
-                        local_history[col] = local_history[col].apply(lambda x : f'{100 * x:.2f}%')
-
-                self.send_info_event(
-                    progress=0.0,
-                    message=f"Epoch {epoch+1}/{config.num_epochs} | Phase : Training",
-                    extra=local_history.loc['train'].to_dict()
+                summary = (
+                    epoch_df
+                    .drop(columns=["epoch"])
+                    .groupby("phase")
+                    .mean()
                 )
 
-                self.send_info_event(
-                    progress=0.0,
-                    message=f"Epoch {epoch+1}/{config.num_epochs} | Phase : Validation",
-                    extra=local_history.loc['val'].to_dict()
+                for phase in ("train", "val"):
+                    if phase not in summary.index:
+                        continue
+
+                    row = summary.loc[phase]
+                    loss_val  = row.get("loss", float("nan"))
+                    guid_loss = row.get("guidance_loss", float("nan"))
+                    acc_val   = row.get("guidance_acc",  float("nan"))
+                    f1_val    = row.get("guidance_f1",   float("nan"))
+
+                    # Build optional extras string
+                    extras: List[str] = []
+                    if "ssl_loss" in row:
+                        extras.append(f"ssl_loss={row['ssl_loss']:.4f}")
+                    if "structure_f1" in row:
+                        extras.append(f"struct_f1={100 * row['structure_f1']:.2f}%")
+                    if "HITS@5" in row:
+                        extras.append(f"HITS@5={100 * row['HITS@5']:.2f}%")
+                    if "HITS@10" in row:
+                        extras.append(f"HITS@10={100 * row['HITS@10']:.2f}%")
+
+                    extras_str = ("  |  " + "  ".join(extras)) if extras else ""
+
+                    self.send_info_event(
+                        progress=epoch_progress,
+                        message=(
+                            f"[{label}] Epoch {epoch + 1}/{config.num_epochs} "
+                            f"[{phase.upper():5s}]  "
+                            f"loss={loss_val:.4f}  "
+                            f"guid_loss={guid_loss:.4f}  "
+                            f"acc={100 * acc_val:.2f}%  "
+                            f"f1={100 * f1_val:.2f}%"
+                            f"{extras_str}"
+                        ),
+                    )
+
+                self.send_debug_event(
+                    progress=epoch_progress,
+                    message=f"[{label}] Epoch {epoch + 1}/{config.num_epochs}  "
+                            f"lr={scheduler.get_last_lr()[0]:.6f}",
                 )
 
-                self.send_info_event(
-                    progress=0.0,
-                    message=f"Learning rate = {scheduler.get_last_lr()[0]:.5f}."
-                )
+        return pd.concat(history, ignore_index=True), model
 
-                print('\n')
+    # ------------------------------------------------------------------
+    # Inference
+    # ------------------------------------------------------------------
 
-        return pd.concat(history), model
-    
     @staticmethod
-    def inference(
-        model : HetModel,
-        data : ArticleAsKG
-    ) -> Tensor:
-        
+    def inference(model: HetModel, data: ArticleAsKG) -> Tensor:
         model = model.eval().cpu()
-        data = data.cpu()
+        data  = data.cpu()
 
-        model.ssl = False
+        model.ssl     = False
         model.cluster = False
 
         with torch.no_grad():
-            Y_hat = model.forward(data).articles_predictions
+            return model.forward(data).articles_predictions
 
-        return Y_hat
-    
+    # ------------------------------------------------------------------
+    # Main loop
+    # ------------------------------------------------------------------
+
     def __iter__(self):
 
-        ### Seed everything
         helpers.seed_everything(self.config.seed)
-        
-        ### Load all Configs :
+
         configs = self.get_configs()
+        data    = self.load_data()
 
-        ### Data Loading
-        data = self.load_data()
+        # Filter to articles with at least one label (required for training)
+        labeled_mask = data.articles.y.sum(-1) > 0
+        data = data.subgraph_articles(data.articles.article_id[labeled_mask])
 
-        MODELS_DIR = os.path.join(EXPERIMENTS_DIR, self.experiment, 'models')
-        RESULTS_DIR = os.path.join(EXPERIMENTS_DIR, self.experiment, 'results')
-        HISTORIES_PATH = os.path.join(EXPERIMENTS_DIR, self.experiment, 'histories')
+        self.send_info_event(
+            progress=0.0,
+            message=f"[Data] Articles after label filter: {data.articles.num_nodes:,}",
+        )
 
-        os.makedirs(MODELS_DIR, exist_ok=True)
-        os.makedirs(RESULTS_DIR, exist_ok=True)
-        os.makedirs(HISTORIES_PATH, exist_ok=True)
+        MODELS_DIR    = os.path.join(EXPERIMENTS_DIR, self.experiment, "models")
+        RESULTS_DIR   = os.path.join(EXPERIMENTS_DIR, self.experiment, "results")
+        HISTORIES_DIR = os.path.join(EXPERIMENTS_DIR, self.experiment, "histories")
 
-        total = len(self.config.hparams) * self.config.num_splits
+        os.makedirs(MODELS_DIR,    exist_ok=True)
+        os.makedirs(RESULTS_DIR,   exist_ok=True)
+        os.makedirs(HISTORIES_DIR, exist_ok=True)
 
-        for exp_id, (config_name, config) in enumerate(configs.items()):
+        n_configs = len(configs)
+        # Each config contributes (num_splits trials + 1 full retrain) steps
+        total_steps = n_configs * (self.config.num_splits + 1)
+        completed   = 0
 
-            ### Preprocessing
-            data = self.filter_data(data)
-
-            if config.keep_largest_cc:
-                data = self.keep_largest_cc(data)
+        for config_idx, (config_name, config) in enumerate(configs.items()):
 
             self.send_info_event(
-                progress=0.0,
-                message=f"Starting experiment for hyper-parameters combination \"{config_name}\"."
+                progress=completed / total_steps,
+                message=f"[Config '{config_name}'] Starting  "
+                        f"({config_idx + 1}/{n_configs} configurations)",
             )
 
-            ### Data samplers
             samplers = self.create_samplers(data)
 
-            for trail_id, (train_sampler, val_sampler) in enumerate(samplers):
+            # ----------------------------------------------------------
+            # K-Fold trials
+            # ----------------------------------------------------------
 
-                history_path = os.path.join(HISTORIES_PATH, f'history_{config_name}_{trail_id}.csv')
-                model_path = os.path.join(MODELS_DIR, f'model_{config_name}_{trail_id}.pt')
-                result_path = os.path.join(RESULTS_DIR, f'predictions_{config_name}_{trail_id}.pt')
+            for trial_id, (train_sampler, val_sampler) in enumerate(samplers):
 
-                if os.path.exists(result_path):
+                history_path = os.path.join(
+                    HISTORIES_DIR, f"history_{config_name}_trial{trial_id}.csv"
+                )
+                result_path = os.path.join(
+                    RESULTS_DIR, f"predictions_{config_name}_trial{trial_id}.pt"
+                )
+
+                step_label   = f"config '{config_name}' | trial {trial_id + 1}/{self.config.num_splits}"
+                step_progress = completed / total_steps
+
+                if os.path.exists(result_path) and os.path.exists(history_path):
+                    self.send_info_event(
+                        progress=step_progress,
+                        message=f"[{step_label}] Already completed — skipping",
+                    )
+                    completed += 1
                     continue
 
                 self.send_info_event(
-                    progress=(exp_id * self.config.num_splits + trail_id + 1) / total,
-                    message=f"Starting trial {trail_id} of experiment \"{config_name}\""
+                    progress=step_progress,
+                    message=f"[{step_label}] Starting trial …",
                 )
 
                 trial_history, model = self.run_experiment(
                     config=config,
                     data=data,
                     train_loader=train_sampler,
-                    val_loader=val_sampler
+                    val_loader=val_sampler,
+                    label=step_label,
+                    total_steps=total_steps,
+                    completed_steps=completed,
                 )
 
-                ### TODO: redefine triples membership to articles for triples that are added from
-                ### external knowledge base.
+                completed += 1
 
+                # Save trial history
+                trial_history["config"] = config_name
+                trial_history["trial"]  = trial_id
+                trial_history.to_csv(history_path, index=False)
                 self.send_info_event(
-                    progress=(exp_id * self.config.num_splits + trail_id + 1) / total,
-                    message=f"Trial {trail_id} of experiment {config_name} completed."
+                    progress=completed / total_steps,
+                    message=f"[{step_label}] History saved → {history_path}",
                 )
 
-                trial_history['exp'] = config_name
-                trial_history['trial'] = trail_id
-
-                trial_history.to_csv(history_path)
-
-                torch.save(model.state_dict(), f = model_path)
-
+                # Save trial predictions
+                preds = self.inference(model, data)
+                torch.save(preds, result_path)
                 self.send_info_event(
-                    progress=(exp_id * self.config.num_splits + trail_id + 1) / total,
-                    message=f"Making inference..."
+                    progress=completed / total_steps,
+                    message=f"[{step_label}] Predictions saved → {result_path}",
                 )
 
-                predictions = self.inference(model, data)
-                torch.save(predictions, f = result_path)
+                del model  # free VRAM between trials
 
-                self.send_info_event(
-                    progress=(exp_id * self.config.num_splits + trail_id + 1) / total,
-                    message=f"Model, inference results and history saved to disk."
-                )
+            # ----------------------------------------------------------
+            # Full-graph retrain  (only this model is saved as .pt)
+            # ----------------------------------------------------------
+
+            full_label     = f"config '{config_name}' | full retrain"
+            full_step_prog = completed / total_steps
+
+            self.send_info_event(
+                progress=full_step_prog,
+                message=f"[{full_label}] All {self.config.num_splits} trials done — "
+                        f"retraining on full graph …",
+            )
+
+            full_sampler = self.create_full_sampler(data)
+            # For the full retrain we still track a val signal using the full
+            # loader (same data) so the run_experiment interface is satisfied.
+            _, final_model = self.run_experiment(
+                config=config,
+                data=data,
+                train_loader=full_sampler,
+                val_loader=full_sampler,      # no held-out split
+                label=full_label,
+                total_steps=total_steps,
+                completed_steps=completed,
+            )
+
+            completed += 1
+
+            model_path = os.path.join(MODELS_DIR, f"model_{config_name}.pt")
+            torch.save(final_model.state_dict(), model_path)
+            self.send_info_event(
+                progress=completed / total_steps,
+                message=f"[{full_label}] Final model saved → {model_path}",
+            )
+
+            del final_model
+
+            self.send_info_event(
+                progress=completed / total_steps,
+                message=f"[Config '{config_name}'] Completed",
+            )
 
         self.send_info_event(
             progress=1.0,
-            message=f"History saved to disk"
+            message="===== All experiments completed =====",
         )
 
         yield from []
 
+    # ------------------------------------------------------------------
+
     @classmethod
-    def from_config(cls, config : Config) -> Self:
-
-        trainer = Trainer(experiment=config.experiment, config=config.training_config)
-        
-        trainer \
-            .add_handler(ConsoleLogger("Trainer"))
-
+    def from_config(cls, config: Config) -> Self:
+        trainer = cls(experiment=config.experiment, config=config.training_config)
+        trainer.add_handler(ConsoleLogger("Trainer"))
         return trainer

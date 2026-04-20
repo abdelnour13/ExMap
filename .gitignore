@@ -24,3 +24,5 @@ ui/*
 *.pth
 
 test*.ipynb
+
+queries.cypher.txt

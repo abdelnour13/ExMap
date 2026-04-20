@@ -22,7 +22,7 @@ class Domain:
 class Config(StageConfig):
 
     model : str = Field(
-        default="deepseek-chat",
+        default_factory=lambda : ["deepseek-chat"],
         description="The LLM to be used for triple extraction."
     )
 
@@ -89,16 +89,28 @@ class CorpusAnnotatator(Stage):
         
     async def transform(self, doc: Dict) -> Dict:
 
-        labels = []
-
+        ### The prompt was modified to take into account multiple levels of
+        ### membership.
         messages = [
             {
                 "role": "system",
                 "content": (
-                    "You are a binary scientific article classifier. "
-                    "You will receive one article and multiple domain labels. "
-                    "For each label, respond only with 'Yes' or 'No'. "
-                    f"The article is defined as:\n{self.encode_document(doc)}"
+                    "You are an expert scientific article classifier. Your task is to evaluate the alignment "
+                    "between a provided research article and a list of specific domain labels.\n\n"
+                    
+                    "### Article Data to Evaluate:\n"
+                    f"{self.encode_document(doc)}\n\n"
+                    
+                    "### Instructions:\n"
+                    "For each provided label, assign a numerical score (0-3) based on how well the article's "
+                    "problems and themes align with that domain:\n"
+                    "* **0 (Perfect Alignment):** The article’s core problems are exactly what is expected in this domain.\n"
+                    "* **1 (Strong Alignment):** The article is highly relevant and fits well within this domain.\n"
+                    "* **2 (Weak Alignment):** The article has minor topical overlap but is not a primary fit.\n"
+                    "* **3 (No Alignment):** The article is completely unrelated to this domain.\n\n"
+                    
+                    "### Output Format:\n"
+                    "The response should only contain the number that coresponds to the level with no additional explanation."
                 ),
             }
         ]
@@ -119,16 +131,20 @@ class CorpusAnnotatator(Stage):
         content = response.choices[0].message.content
         answers = re.sub(r"(\n)+", "\n", content).split("\n")
 
+        sub_domains = {}
+        domains = {}
+
         for domain, answer in zip(self.domains, answers):
+            result = int(answer.strip('"\'* ').lower())
+            sub_domains[domain.sub_domain] = result
+            domains[domain.domain] = min(domains.get(domain.domain, domains[domain.domain]), result)
 
-            result = answer.strip().strip('"').lower()
-
-            if result == "yes":
-                labels.append(domain.sub_domain)
-
+        ### The key to domains as well as the structure 
+        ### (from list ==> dict) was modified
         return {
             **doc, 
-            "labels" : labels
+            "sub_domains" : sub_domains,
+            "domains" : domains
         }
     
     @classmethod

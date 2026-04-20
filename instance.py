@@ -26,7 +26,7 @@ class Cli(PyCli):
             config_cls = inspect \
                 .signature(cls.from_config) \
                 .parameters['config'].annotation
-                
+                            
             self.add_command(
                 _cmd, 
                 name, 

@@ -1,12 +1,9 @@
 import torch
-import numpy as np
 from torch import Tensor
 from torch_geometric.data import Data
-from torch_geometric.data.storage import AttrType 
 from torch_geometric.typing import OptTensor
 from torch_geometric import utils as gnn_utils
 from typing import Optional, Any
-from collections import defaultdict
 
 class ArticlesGraph(Data):
 
@@ -21,10 +18,6 @@ class ArticlesGraph(Data):
         self.article_id = torch.arange(x.size(0)) if x is not None else None
         self.edge_id = torch.arange(edge_index.size(-1)) if edge_index is not None else None
         self.edge_type = edge_type
-
-        # print(self.is_node_attr('article_id'))
-        # print(self.is_edge_attr('edge_id'))
-        # print(self.is_edge_attr('edge_type'))
 
     @property
     def num_nodes(self) -> int:

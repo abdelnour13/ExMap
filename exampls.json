@@ -1,0 +1,60 @@
+{
+  "id": "2923285_8_11",
+  "sentence": {
+    "id": "2923285_8",
+    "sentence": "The findings suggest that a new model based on integrating Discrete-Time Markov Chain ( DTMC ) and Dynamic Bayesian Network ( DBN ) model can be of value in revealing latent high-risk paths in the supply chain ( SC ) , analysing the performance impact of both a disruption and a disruption propagation , and prioritizing the contingency and recovery policies .",
+    "document": {
+      "id": "2923285",
+      "title": "Ripple effect modelling of supplier disruption: integrated Markov chain and dynamic Bayesian network approach",
+      "abstract": "The ripple effect could occur when a disruption in supplier base can not be localised and a disruption in supplier base consequences propagate downstream the supply chain ( SC ) adversely affecting the performance . While stress-testing of SC designs and assessment of SC designs vulnerability to disruptions in single-echelon-single-event setting is desirable and indeed critical for some firms , modeling the ripple effect impact in multi-echelon-correlated-events systems is becoming increasingly important . Notably , ripple effect assessment in multi-stage SCs is particularly challenged by consideration of both vulnerability and recoverability capabilities at individual firms in the network . We construct a new model based on integrating Discrete-Time Markov Chain ( DTMC ) and Dynamic Bayesian Network ( DBN ) model to quantify The ripple effect . We use DTMC to model the recovery and vulnerability of suppliers . a new model based on integrating Discrete-Time Markov Chain ( DTMC ) and Dynamic Bayesian Network ( DBN ) model is then equalized with a DBN model in order to simulate the propagation behavior of supplier disruption in the supply chain ( SC ) . Finally , We propose a metric that quantifies the ripple effect of supplier disruption on manufacturer in terms of total expected utility and service level . a metric that quantifies the ripple effect of supplier disruption on manufacturer in terms of total expected utility and service level is examined and tested using two case-studies . The findings suggest that a new model based on integrating Discrete-Time Markov Chain ( DTMC ) and Dynamic Bayesian Network ( DBN ) model can be of value in revealing latent high-risk paths in the supply chain ( SC ) , analysing the performance impact of both a disruption and a disruption propagation , and prioritizing the contingency and recovery policies .",
+      "keywords": [
+        "supply chain resilience",
+        "ripple effect",
+        "bayesian network",
+        "supply disruption",
+        "disruption in supplier base",
+        "supply chain",
+        "ripple effect",
+        "stress-testing",
+        "ripple effect impact",
+        "multi-echelon-correlated-events",
+        "ripple effect assessment",
+        "multi-stage scs",
+        "dtmc",
+        "dynamic bayesian network",
+        "bayesian network",
+        "supply chain disruption",
+        "supplier disruption",
+        "service level",
+        "markov chain",
+        "dbn"
+      ],
+      "authors": ["Seyedmohsen Hosseini", "Dmitry Ivanov", "Alexandre Dolgui"],
+      "venues": ["info.info-au", "info.info-ro"],
+      "teams": ["LS2N"],
+      "date": "2020-01-01T00:00:00Z",
+      "labels": [
+        "Monitoring and Analysis",
+        "Industrial Digitalization",
+        "Digital Engineering of Products and Processes",
+        "Industrial Organization Performance"
+      ]
+    },
+    "acronyms": [
+      {
+        "acronym": "DBN",
+        "expansion": "dynamic bayesian network",
+        "score": 0.9677573442459106
+      },
+      {
+        "acronym": "DTMC",
+        "expansion": "discrete time markov chain",
+        "score": 0.9840439816543949
+      }
+    ]
+  },
+  "head": "dynamic bayesian network",
+  "predicate": "prioritize",
+  "tail": "recovery policy",
+  "predicate_group": "prioritizing"
+}

@@ -79,8 +79,27 @@ class KeywordsExtractor(Stage):
         
         keywords = self.key_phrase_transformer.get_key_phrases(doc["abstract"])
 
-        doc["keywords"].extend(keywords)
-
+        ### Here i updated the step to specify the source of
+        ### the keyword
+        doc["keywords"] = [
+            *
+            [
+                {
+                    "keyword" : keyword,
+                    "source"  : "hal"
+                }
+                for keyword in doc['keywords']
+            ],
+            *
+            [
+                {
+                    "keyword" : keyword,
+                    "source"  : "keyphrase_transformer"
+                }
+                for keyword in keywords
+                if keyword not in keywords
+            ]
+        ]
         return doc
 
     @classmethod

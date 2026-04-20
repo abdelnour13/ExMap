@@ -15,11 +15,12 @@ set_start_method('spawn', force=True)
 from src.commands.build_kg.cleaning import cleaning
 from src.commands.build_kg.preprocessing import coreference_resolution
 from src.commands.build_kg.content_enrichment import annotate, acronym_extraction, keyword_extraction
+# from commands import structure_graph
 from src.commands.build_kg.preprocessing import sentence_segmentation
-from src.commands.build_kg.graph_construction import triples, neo4j
+# from src.commands.build_kg.graph_construction import triples, neo4j
 from src.commands.build_kg.triplet_extraction import (
     triples_extractor, 
-    validation, 
+    # validation, 
     entities_mapping, 
     knowledge_completion,
     entities_cleaning,
@@ -28,7 +29,7 @@ from src.commands.build_kg.triplet_extraction import (
 
 from pycli.field import Field
 
-STAGES : Dict[str, Tuple[Stage, StageConfig]] = {
+STAGES : Dict[str, Tuple[Type[Stage], Type[StageConfig]]] = {
     "corpus_cleaning" : (cleaning.CorpusCleaner, cleaning.StageConfig),
     "coreference_resolution" : (coreference_resolution.CoreferenceResolver, coreference_resolution.Config),
     "corpus_annotation" : (annotate.CorpusAnnotatator, annotate.Config),
@@ -36,13 +37,14 @@ STAGES : Dict[str, Tuple[Stage, StageConfig]] = {
     "sentence_segmentation" : (sentence_segmentation.SentenceSegmentor, sentence_segmentation.Config),
     "acronyms_extraction" : (acronym_extraction.AcronymsExtractor, acronym_extraction.Config),
     "triples_extraction" : (triples_extractor.TriplesExtractor, triples_extractor.Config),
-    "triples_validation" : (validation.TriplesValidator, triples_extractor.Config),
+    # "triples_validation" : (validation.TriplesValidator, triples_extractor.Config),
     "entities_normalization" : (entities_cleaning.EntitiesNormalizer, entities_cleaning.Config),
     "knowledge_completion" : (knowledge_completion.KnowledgeCompletion, knowledge_completion.Config),
     "predicates_normalization" : (predicate_cleaning.PredicatesNormalizer, predicate_cleaning.Config),
     "entities_mapping" : (entities_mapping.EntitiesMapping, entities_mapping.Config),
-    "graph2triples" : (triples.Graph2Triples, triples.StageConfig),
-    "insert2neo4j"  : (neo4j.Neo4J, neo4j.Config)
+    # "graph_structuring" : (structure_graph.GraphStructurer, structure_graph.Config)
+    # "graph2triples" : (triples.Graph2Triples, triples.StageConfig),
+    # "insert2neo4j"  : (neo4j.Neo4J, neo4j.Config)
 }
 
 class GlobalConfig(BaseModel):

@@ -3,6 +3,11 @@ import os
 ROOT_DIR = os.path.dirname(__file__)
 
 DATA_DIR = os.path.join(ROOT_DIR, "data")
+
+KGS_DIR = os.path.join(DATA_DIR, "knowledge_graphs")
+FEATURES_DIR = os.path.join(DATA_DIR, "features")
+EMS_DIR = os.path.join(DATA_DIR, "expertise_maps")
+
 SCRIPTS_DIR = os.path.join(ROOT_DIR, "scripts")
 EXTERNAL_DIR = os.path.join(ROOT_DIR, 'external')
 EXPERIMENTS_DIR = os.path.join(ROOT_DIR, 'experiments')
