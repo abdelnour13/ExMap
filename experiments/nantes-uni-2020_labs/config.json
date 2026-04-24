@@ -1,0 +1,39 @@
+{
+    "seed" : 44,
+
+    "graph" : "nantes-uni-2020/all-MiniLM-L6-v2",
+    "label" : "labs",
+    "num_splits" : 4,
+    "keep_largest_cc" : true,
+    "min_entities_per_article" : 5,
+
+    "add_ssl_loss" : false,
+
+    "batch_size" : 16,
+    "num_articles_neighbors" : [10, 6],
+    "num_entities_neighbors" : [5, 5],
+
+    "model_params" : {
+        "norm" : true
+    },
+
+    "lr" : 0.001,
+    "num_epochs" : 10,
+    "accumelation_steps" : 1,
+    "weight_decay" : 1e-4,
+
+    "device" : "cuda",
+
+    "log_every" : 1,
+
+    "hparams": {
+        "Conv_Attn_null_False": {
+            "do_negative_sampling": false,
+            "model_params": {
+                "readout": "attn",
+                "variant": "conv",
+                "aggregation": null
+            }
+        }
+    }
+}

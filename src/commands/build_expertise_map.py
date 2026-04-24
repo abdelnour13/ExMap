@@ -23,7 +23,8 @@ class Config(BaseModel):
     # ── Graph & Model ──────────────────────────────────────────────────
     expertise_id : Optional[str] = None
     graph_id : str = "nantes-uni-2020/all-MiniLM-L6-v2"
-    model_id : str = "nantes-uni-2020/Conv_Attn_null_False"
+    domains_model_id : str = "nantes-uni-2020/Conv_Attn_null_False"
+    labs_model_id : str = "nantes-uni-2020_labs/Conv_Attn_null_False"
 
     # ── Clustering ─────────────────────────────────────────────────────
     clustering_alg:        str      = "leiden" # Leiden or Louvain
@@ -45,7 +46,7 @@ class Config(BaseModel):
     @computed_field
     @property
     def exprtise_dir(self) -> str:
-        return os.path.join(EMS_DIR, self.expertise_id or self.model_id.replace('/','--'))
+        return os.path.join(EMS_DIR, self.expertise_id or self.domains_model_id.replace('/','--'))
 
     @computed_field
     @property
@@ -64,19 +65,35 @@ class Config(BaseModel):
     
     @computed_field
     @property
-    def model_path(self) -> str:
-        experiment, model_name = self.model_id.split('/')
+    def domains_model_path(self) -> str:
+        experiment, model_name = self.domains_model_id.split('/')
         return os.path.join(EXPERIMENTS_DIR, experiment, 'models', f'model_{model_name}.pt')
     
     @computed_field
     @property
-    def experiment(self) -> str:
-        return self.model_id.split('/')[0]
+    def domains_experiment(self) -> str:
+        return self.domains_model_id.split('/')[0]
     
     @computed_field
     @property
-    def model(self) -> str:
-        return self.model_id.split('/')[1]
+    def domains_model(self) -> str:
+        return self.domains_model_id.split('/')[1]
+    
+    @computed_field
+    @property
+    def labs_model_path(self) -> str:
+        experiment, model_name = self.labs_model_id.split('/')
+        return os.path.join(EXPERIMENTS_DIR, experiment, 'models', f'model_{model_name}.pt')
+    
+    @computed_field
+    @property
+    def labs_experiment(self) -> str:
+        return self.labs_model_id.split('/')[0]
+    
+    @computed_field
+    @property
+    def labs_model(self) -> str:
+        return self.labs_model_id.split('/')[1]
     
 
 @cli.register_stage(
@@ -94,33 +111,49 @@ class ExpertiseMapBuilder(BaseCommand):
         super().__init__()
         self.config = config
 
-    def load_data_and_model(self) -> Tuple[ArticleAsKG, HetModel, Dict[str, Dict[str, List[Dict]]]]:
+    def load_data_and_model(self) -> Tuple[ArticleAsKG, HetModel, HetModel, Dict[str, Dict[str, List[Dict]]]]:
 
         self.send_info_event(
             progress=0.0,
             message="[Load] Starting — loading trainer config and data",
         )
 
-        trainer_cfg = TrainerConfig(experiment=self.config.experiment)
-        trainer     = Trainer(experiment=trainer_cfg.experiment, config=trainer_cfg.training_config)
-        configs     = trainer.get_configs()
+        ### Domains
+        domains_trainer_cfg = TrainerConfig(experiment=self.config.domains_experiment)
+        domains_trainer     = Trainer(experiment=domains_trainer_cfg.experiment, config=domains_trainer_cfg.training_config)
+        domains_configs     = domains_trainer.get_configs()
 
-        if self.config.model not in configs:
+        if self.config.domains_model not in domains_configs:
 
             raise KeyError(
-                f"[Load] Model config '{self.config.model}' not found. "
-                f"Available: {list(configs.keys())}"
+                f"[Load] Model config '{self.config.domains_model}' not found. "
+                f"Available: {list(domains_configs.keys())}"
             )
 
-        run_config = configs[self.config.model]
+        domains_run_config = domains_configs[self.config.domains_model]
+
+        ### Labs
+        labs_trainer_cfg = TrainerConfig(experiment=self.config.labs_experiment)
+        labs_trainer     = Trainer(experiment=labs_trainer_cfg.experiment, config=labs_trainer_cfg.training_config)
+        labs_configs     = labs_trainer.get_configs()
+
+        if self.config.labs_model not in labs_configs:
+
+            raise KeyError(
+                f"[Load] Model config '{self.config.labs_model}' not found. "
+                f"Available: {list(labs_configs.keys())}"
+            )
+
+        labs_run_config = labs_configs[self.config.labs_model]
 
         self.send_debug_event(
             progress=0.0,
-            message=f"[Load] Using run config '{self.config.model}': {run_config}",
+            message=f"[Load] Using run config '{self.config.labs_model}': {domains_run_config}",
         )
 
         # Load data through the trainer (handles normalisation)
-        data = trainer.load_data()
+        domains_data = domains_trainer.load_data()
+        labs_data = labs_trainer.load_data()
 
         # Also keep the raw dict for augmentation later
         self.send_debug_event(
@@ -133,23 +166,29 @@ class ExpertiseMapBuilder(BaseCommand):
         # Load model
         self.send_debug_event(
             progress=0.0,
-            message=f"[Load] Loading model weights from {self.config.model_path}",
+            message=f"[Load] Loading model weights from {self.config.domains_model_path}",
         )
 
-        model = trainer.create_model(config=run_config, data=data)
-        state_dict = torch.load(self.config.model_path, weights_only=False, map_location="cpu")
-        model.load_state_dict(state_dict)
+        # Domains model
+        domains_model = domains_trainer.create_model(config=domains_run_config, data=domains_data)
+        state_dict = torch.load(self.config.domains_model_path, weights_only=False, map_location="cpu")
+        domains_model.load_state_dict(state_dict)
+
+        # Labs model
+        labs_model = labs_trainer.create_model(config=labs_run_config, data=labs_data)
+        state_dict = torch.load(self.config.labs_model_path, weights_only=False, map_location="cpu")
+        labs_model.load_state_dict(state_dict)
 
         self.send_info_event(
             progress=0.0,
             message=(
                 f"[Load] Ready — "
-                f"{data.articles.num_nodes:,} articles, "
-                f"{data.kg.num_nodes:,} entities"
+                f"{domains_data.articles.num_nodes:,} articles, "
+                f"{domains_data.kg.num_nodes:,} entities"
             ),
         )
 
-        return data, model, raw_G
+        return domains_data, domains_model, labs_model, raw_G
     
     def inference(self, model: HetModel, data: ArticleAsKG) -> HetModelReturn:
 
@@ -195,10 +234,12 @@ class ExpertiseMapBuilder(BaseCommand):
     
     def cluster(
         self,
-        model : HetModel,
-        results : HetModelReturn,
+        domains_model : HetModel,
+        labs_model : HetModel,
+        domains_inference_results : HetModelReturn,
+        labs_inference_results : HetModelReturn,
         edge_index : Tensor,
-    ) -> Tuple[Tensor, Tensor]:
+    ) -> Tuple[Tensor, Tensor, Tensor]:
 
         self.send_info_event(
             progress=0.0,
@@ -208,7 +249,7 @@ class ExpertiseMapBuilder(BaseCommand):
             ),
         )
 
-        entity_label_probas = results.entities_predictions.sigmoid()
+        entity_label_probas = domains_inference_results.entities_predictions.sigmoid()
 
         edge_weight = self.jaccard_index(
             edge_index, entity_label_probas,
@@ -226,7 +267,7 @@ class ExpertiseMapBuilder(BaseCommand):
 
         alg_cls = Leiden if self.config.clustering_alg == "leiden" else Louvain
         alg  = alg_cls(resolution=self.config.clustering_resolution)
-        communities = torch.from_numpy(alg.fit_predict(adj)).to(results.entities_embeddings.device)
+        communities = torch.from_numpy(alg.fit_predict(adj)).to(domains_inference_results.entities_embeddings.device)
 
         n_communities = int(communities.max().item() + 1)
 
@@ -235,27 +276,39 @@ class ExpertiseMapBuilder(BaseCommand):
             message=f"[Cluster] Found {n_communities} communities",
         )
 
-        # Pool entity embeddings per community → community-level label probas
+        # community-level domains
         with torch.no_grad():
 
-            community_embeddings = model.readout_fn.forward(
-                x = results.entities_embeddings,
+            community_embeddings = domains_model.readout_fn.forward(
+                x = domains_inference_results.entities_embeddings,
                 index = communities,
                 dim_size = n_communities,
                 dim = 0
             )
 
-            communities_labels_probas = model.head(community_embeddings).sigmoid()
+            communities_domains_probas = domains_model.head(community_embeddings).sigmoid()
+
+        # community-level labs
+        with torch.no_grad():
+
+            community_embeddings = labs_model.readout_fn.forward(
+                x = labs_inference_results.entities_embeddings,
+                index = communities,
+                dim_size = n_communities,
+                dim = 0
+            )
+
+            communities_labs_probas = labs_model.head(community_embeddings).sigmoid()
 
         self.send_debug_event(
             progress=0.0,
             message=(
                 f"[Cluster] Community label probas shape: "
-                f"{list(communities_labels_probas.shape)}"
+                f"{list(communities_domains_probas.shape)} {communities_labs_probas.shape}"
             ),
         )
 
-        return communities, communities_labels_probas
+        return communities, communities_domains_probas, communities_labs_probas
     
     def clean_community(self, community : Dict, id2Entity : Dict[str, Dict]) -> Dict:
 
@@ -278,22 +331,34 @@ class ExpertiseMapBuilder(BaseCommand):
         id2Entity : Dict[str, Dict],
         data : ArticleAsKG,
         communities : Tensor,
-        communities_labels : Tensor
+        communities_domains : Tensor,
+        communities_labs : Tensor
     ) -> Dict:
         
         n_communities = communities.max().item() + 1
-        communities_nodelist = [{ "id" : i, "entities" : [], "labels" : [] } for i in range(n_communities)]
+        communities_nodelist = [{ "id" : i, "entities" : [], "labels" : [], "labs" : [] } for i in range(n_communities)]
 
         for entity_id, community in zip(data.kg.entity_names, communities):
             communities_nodelist[community.item()]['entities'].append(entity_id)
         
-        for community, labels in enumerate(communities_labels):
+        for community, labels in enumerate(communities_domains):
 
-            for label_name, label_proba in zip(data.metadata['labels'], labels):
+            for label_name, label_proba in zip(data.metadata['labels']['domains'], labels):
 
                 if label_proba >= self.config.label_threshold:
                     
                     communities_nodelist[community]['labels'].append((
+                        label_name,
+                        label_proba.item()
+                    ))
+
+        for community, labels in enumerate(communities_labs):
+
+            for label_name, label_proba in zip(data.metadata['labels']['labs'], labels):
+
+                if label_proba >= self.config.label_threshold:
+                    
+                    communities_nodelist[community]['labs'].append((
                         label_name,
                         label_proba.item()
                     ))
@@ -341,13 +406,16 @@ class ExpertiseMapBuilder(BaseCommand):
         raw_G : Dict[str, Dict[str, List[Dict]]],
         data : ArticleAsKG,
         communities_nodelist : List[Dict],
-        results : HetModelReturn,
+        domains_results : HetModelReturn,
+        labs_results : HetModelReturn
     ) -> Dict[str, Dict[str, List[Dict]]]:
         
         raw_G['nodes']['Expertise'] = []
         raw_G['edges']['Expertise_BelongsTo_SubDomain'] = []
+        raw_G['edges']['Expertise_BelongsTo_Lab'] = []
         raw_G['edges']['Entity_BelongsTo_Expertise'] = []
         raw_G['edges']['Entity_BelongsTo_SubDomain'] = []
+        raw_G['edges']['Entity_BelongsTo_Lab'] = []
         
         ### Community Node & Community <-> SubDomain links & Community <-> Entity Links
         for community in communities_nodelist:
@@ -367,6 +435,15 @@ class ExpertiseMapBuilder(BaseCommand):
                     "score": edge_proba
                 })
 
+            for lab_id, edge_proba in community['labs']:
+
+                raw_G['edges']['Expertise_BelongsTo_Lab'].append({
+                    "id": f"{community['id']}-{lab_id}",
+                    "src": community['id'],
+                    "dst": lab_id,
+                    "score": edge_proba
+                })
+
             for entity in community['entities']:
 
                 raw_G['edges']['Entity_BelongsTo_Expertise'].append({
@@ -376,9 +453,9 @@ class ExpertiseMapBuilder(BaseCommand):
                 })
 
         ### Add Entity <-> SubDomain links
-        for entity, probas in zip(data.kg.entity_names, results.entities_predictions):
+        for entity, probas in zip(data.kg.entity_names, domains_results.entities_predictions):
 
-            for subdomain_id, proba in zip(data.metadata['labels'], probas):
+            for subdomain_id, proba in zip(data.metadata['labels']['domains'], probas):
 
                 proba = proba.sigmoid().item()
 
@@ -391,27 +468,60 @@ class ExpertiseMapBuilder(BaseCommand):
                         "score" : proba
                     })
 
+        ### Add Entity <-> Lab links
+        for entity, probas in zip(data.kg.entity_names, labs_results.entities_predictions):
+
+            for lab_id, proba in zip(data.metadata['labels']['labs'], probas):
+
+                proba = proba.sigmoid().item()
+
+                if proba >= self.config.label_threshold:
+
+                    raw_G['edges']['Entity_BelongsTo_Lab'].append({
+                        "id": f"{entity}-{lab_id}",
+                        "src": entity,
+                        "dst": lab_id,
+                        "score" : proba
+                    })
+
         return raw_G
     
     def __iter__(self):
 
-        data, model, raw_G = self.load_data_and_model()
-        inference_results  = self.inference(model, data)
-        communities, communities_labels = self.cluster(model, inference_results, data.kg.edge_index)
-        id2Entity = dict([(e['id'], e) for e in raw_G['nodes']['Entity']])
+        ### Load models & data
+        data, domains_model, labs_model, raw_G = self.load_data_and_model()
 
+        ### Inference
+        domains_inference_results  = self.inference(domains_model, data)
+        labs_inference_results  = self.inference(labs_model, data)
+
+        ### Community detection
+        communities, communities_domains, communities_labs = self.cluster(
+            domains_model,
+            labs_model, 
+            domains_inference_results, 
+            labs_inference_results,
+            data.kg.edge_index
+        )
+
+        id2Entity = dict([(e['id'], e) for e in raw_G['nodes']['Entity']])
+        
+
+        ### Clean communities, entities ranking & representative entities selection
         communities_nodelist = self.process_communities(
             id2Entity,
             data,
             communities,
-            communities_labels
+            communities_domains,
+            communities_labs
         )
 
         raw_G = self.update_graph(
             raw_G,
             data,
             communities_nodelist,
-            inference_results
+            domains_inference_results,
+            labs_inference_results
         )
 
         os.makedirs(self.config.exprtise_dir, exist_ok=True)

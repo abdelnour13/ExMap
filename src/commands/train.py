@@ -62,7 +62,8 @@ class Config(BaseModel):
 class BaseTrainingConfig(BaseModel):
 
     # Data
-    graph: str = "ls2n-duke"                          
+    graph: str = "ls2n-duke"  
+    label : str = "domains"                        
 
     # Losses
     add_ssl_loss: bool = False
@@ -232,17 +233,19 @@ class Trainer(BaseCommand):
 
         # ── Labels  (Article → SubDomain) ───────────────────────────
         n_articles  = len(raw["nodes"]["Article"]["id"])
-        n_subdomains = len(raw["labels"])
+        n_labels = len(raw["labels"][self.config.label])
+        label_name = "SubDomain" if self.config.label == "domains" else "Lab"
 
-        belongs_to = raw["edges"].get(("Article", "BelongsTo", "SubDomain"))
+        belongs_to = raw["edges"].get(("Article", "BelongsTo", label_name))
+
         if belongs_to is not None:
             row, col = belongs_to[0], belongs_to[1]
             labels = SparseTensor(
                 row=row, col=col,
-                sparse_sizes=(n_articles, n_subdomains),
+                sparse_sizes=(n_articles, n_labels),
             ).to_dense()
         else:
-            labels = torch.zeros((n_articles, n_subdomains))
+            labels = torch.zeros((n_articles, n_labels))
             self.send_warn_event(
                 progress=0.0,
                 message="[Data] Article–BelongsTo–SubDomain edges not found; labels are all-zero",
@@ -250,7 +253,7 @@ class Trainer(BaseCommand):
 
         self.send_debug_event(
             progress=0.0,
-            message=f"[Data] Articles: {n_articles:,}  |  SubDomains: {n_subdomains}  |  "
+            message=f"[Data] Articles: {n_articles:,}  |  SubDomains: {n_labels}  |  "
                     f"Labelled articles: {(labels.sum(-1) > 0).sum().item():,}",
         )
 
@@ -285,7 +288,7 @@ class Trainer(BaseCommand):
             message=f"[Data] Graph loaded — "
                     f"{n_articles:,} articles, "
                     f"{len(raw['nodes']['Entity']['id']):,} entities, "
-                    f"{n_subdomains} subdomain labels",
+                    f"{n_labels} subdomain labels",
         )
 
         return self.normalize_data(data)

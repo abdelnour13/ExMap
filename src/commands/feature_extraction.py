@@ -637,10 +637,12 @@ class Embedder:
     # ------------------------------------------------------------------
 
     def embed(self, raw: RawGraph) -> Dict[str, torch.Tensor]:
+
         self._host.send_info_event(
             progress=None,
             message="[Stage 3 · Embed] Starting — loading SentenceTransformer model",
         )
+        
         self._host.send_debug_event(
             progress=None,
             message=(
@@ -774,7 +776,10 @@ class TensorGraphBuilder:
             "id": list(raw.predicates.keys()),
             "embeddings": emb["Predicate"],
         }
-        G["labels"] = [n["id"] for n in raw.nodes.get("SubDomain", NodeStore()).as_list()]
+        G["labels"] = {
+            'domains': [n["id"] for n in raw.nodes.get("SubDomain", NodeStore()).as_list()],
+            'labs': [n["id"] for n in raw.nodes.get("Lab", NodeStore()).as_list()],
+        }
 
         self._host.send_debug_event(
             progress=None,
@@ -782,7 +787,8 @@ class TensorGraphBuilder:
                 f"[Stage 4 · Build] Node counts — "
                 f"Entity: {len(G['nodes']['Entity']['id']):,}  "
                 f"Article: {len(G['nodes']['Article']['id']):,}  "
-                f"SubDomain labels: {len(G['labels'])}"
+                f"SubDomain labels: {len(G['labels']['domains'])} "
+                f"Labs labels: {len(G['labels']['labs'])}"
             ),
         )
 
@@ -795,6 +801,7 @@ class TensorGraphBuilder:
         triple_article_pairs: List[Tuple[int, int]] = []
 
         for etype, estore in raw.edges.items():
+            
             src_type, rel, dst_type = etype.split("_", 2)
             src_map = id2idx.get(src_type, {})
             dst_map = id2idx.get(dst_type, {})
