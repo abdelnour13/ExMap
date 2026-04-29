@@ -19,6 +19,7 @@ resources/models
 external/*
 data/*
 ui/*
+old_data
 
 *.pt
 *.pth

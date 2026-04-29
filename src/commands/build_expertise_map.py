@@ -1,11 +1,15 @@
 import os
 import torch
+import dotenv
+from rich.progress import Progress
+from src.shared.llms import LLM
+from openai import Client
 from typing import Any, Dict, List, Literal, Tuple, Optional
 from pydantic import BaseModel, computed_field
 from sknetwork.clustering import Leiden, Louvain
 from sknetwork.data import from_edge_list
 from torch import Tensor
-from definitions import EXPERIMENTS_DIR, FEATURES_DIR, EMS_DIR
+from definitions import EXPERIMENTS_DIR, FEATURES_DIR, EMS_DIR, ENV
 from instance import cli
 from functools import partial
 from src.commands.train import Trainer, Config as TrainerConfig
@@ -13,6 +17,8 @@ from src.gnn import ArticleAsKG, HetModel, HetModelReturn
 from src.shared.command_tools import BaseCommand
 from src.shared.handlers import ConsoleLogger
 from src import helpers
+
+dotenv.load_dotenv(ENV)
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -95,6 +101,13 @@ class Config(BaseModel):
     def labs_model(self) -> str:
         return self.labs_model_id.split('/')[1]
     
+    llm : str = "deepseek-chat"
+
+    @computed_field
+    @property
+    def api_key(self) -> str:
+        return dotenv.get_key(ENV, f"{self.llm.upper()}_API_KEY")
+    
 
 @cli.register_stage(
     name="build_map",
@@ -107,9 +120,10 @@ class Config(BaseModel):
 )
 class ExpertiseMapBuilder(BaseCommand):
 
-    def __init__(self, config: Config) -> None:
+    def __init__(self, config: Config, client : Client) -> None:
         super().__init__()
         self.config = config
+        self.client = client
 
     def load_data_and_model(self) -> Tuple[ArticleAsKG, HetModel, HetModel, Dict[str, Dict[str, List[Dict]]]]:
 
@@ -362,19 +376,20 @@ class ExpertiseMapBuilder(BaseCommand):
                         label_name,
                         label_proba.item()
                     ))
+        
+        communities_nodelist = [
+            self.clean_community(community, id2Entity)
+            for community in communities_nodelist
+            if len(community['entities']) >= self.config.min_nodes_per_community
+        ]
 
-        communities_nodelist = list(
-            map(
-                partial(self.query_representative_node,id2Entity=id2Entity),
-                filter(
-                    lambda x : len(x['entities']) >= self.config.min_nodes_per_community,
-                    map(
-                        partial(self.clean_community,id2Entity=id2Entity),
-                        communities_nodelist
-                    )
-                )
-            )
-        )
+        pbar = Progress()
+        tid = pbar.add_task("Communities Processing", total=len(communities_nodelist))
+        pbar.start()
+
+        for i,community in enumerate(communities_nodelist):
+            communities_nodelist[i] = self.query_representative_node(community, id2Entity)
+            pbar.update(tid, advance=1)
 
         self.send_info_event(
             progress=0.0,
@@ -387,18 +402,50 @@ class ExpertiseMapBuilder(BaseCommand):
 
         community = {**community}
 
-        current_max = 0.0
-        current_entity = None
+        sorted_entities = sorted(community['entities'], key=lambda eid : id2Entity[eid]['specificity_weighted_pagerank'], reverse=True)
+        community['name'] = id2Entity[sorted_entities[0]]['name']
 
-        for e_id in community['entities']:
+        sorted_entities = [id2Entity[eid]['name'] for eid in sorted_entities[:min(len(sorted_entities), 20)]]
 
-            e = id2Entity[e_id]
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are an expert academic taxonomist. Your task is to generate a precise, professional "
+                    "label that synthesizes a researcher's expertise based on a provided list of up to 20 concepts. "
+                    
+                    "### Requirements:\n"
+                    "1. **Granularity**: Ensure the label is neither too broad nor too specific. It must "
+                    "accurately encapsulate the specific intersection of the provided concepts.\n"
+                    "2. **Tone**: Use formal, scientific, and academic terminology.\n"
+                    "3. **Format**: Provide a concise noun phrase only. Do not use full sentences or "
+                    "lengthy descriptions.\n"
+                    "4. **Example**: 'AI-driven environmental risk assessment'."
+                    
+                    "### Output Format:\n"
+                    "The response should only contain the number that coresponds to the level with no additional explanation."
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"This expertise is described by the following entities : \n"
+                    "\n".join(sorted_entities)
+                )
+            }
+        ]
 
-            if e['specificity_weighted_pagerank'] > current_max:
-                current_max = e['specificity_weighted_pagerank']
-                current_entity = e['name']
+        response = self.client.chat.completions.create(
+            model=self.config.llm,
+            messages=messages,
+            stream=False,
+            temperature=0,  # No randomness
+            top_p=1,  # Disable sampling
+            seed=42,  # Seed
+        )
 
-        community['name'] = current_entity
+        content = response.choices[0].message.content
+        community['llm_label'] = content.strip()
 
         return community
     
@@ -423,6 +470,7 @@ class ExpertiseMapBuilder(BaseCommand):
             raw_G['nodes']['Expertise'].append({
                 "id" : community['id'],
                 "name" : community['name'],
+                "llm_label" : community['llm_label'],
                 "type" : "Expertise"
             })
 
@@ -535,6 +583,14 @@ class ExpertiseMapBuilder(BaseCommand):
 
     @classmethod
     def from_config(cls, config: Config) -> 'ExpertiseMapBuilder':
-        builder = cls(config=config)
+
+        llm = LLM.from_name(config.llm)
+
+        client = Client(
+            api_key=config.api_key,
+            base_url=llm.url
+        )
+
+        builder = cls(config=config, client=client)
         builder.add_handler(ConsoleLogger("ExpertiseMapBuilder"))
         return builder

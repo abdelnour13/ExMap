@@ -14,6 +14,7 @@ class EventLevel(Enum):
 
 @dataclass
 class Event:
+    task : str = "main" # The task currently executed by the command
     progress : Optional[float] = None # Estimated Progress if available
     timestamp : str = field(default_factory=lambda : datetime.now().strftime("%Y-%m-%d %H:%M:%S")) # Timestamp
     level : EventLevel = EventLevel.INFO # Level

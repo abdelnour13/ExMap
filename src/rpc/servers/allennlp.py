@@ -26,6 +26,7 @@ def ignore_return(fn):
 
     def _wrap(*args, **kwargs):
         fn(*args, **kwargs)
+        return 1
 
     return _wrap
 

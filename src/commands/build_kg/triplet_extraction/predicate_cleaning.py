@@ -119,7 +119,7 @@ class Predicate:
     add_from_conf=False,
     add_save_to=False
 )
-@add_handlers()
+@add_handlers
 class PredicatesNormalizer(Stage):
 
     MAX_PRED_LEN = 4

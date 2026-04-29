@@ -1,5 +1,6 @@
 import os
 from instance import cli
+from src.commands import download, text2kg
 
 def main():
 
@@ -8,7 +9,7 @@ def main():
     def predicate(path : str) -> bool:
         return os.path.dirname(path) == commands_dir and os.path.basename(path) not in ["train.py"]
     
-    cli.scan_dir(commands_dir, pattern_or_predicate=predicate)
+    # cli.scan_dir(commands_dir, pattern_or_predicate=predicate)
     cli.run()
 
 if __name__ == "__main__":

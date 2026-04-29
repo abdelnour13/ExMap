@@ -62,7 +62,7 @@ def getkeyphrasetransformerClass():
     add_from_conf=False,
     add_save_to=False
 )
-@add_handlers()
+@add_handlers
 class KeywordsExtractor(Stage):
 
     def __init__(self, 

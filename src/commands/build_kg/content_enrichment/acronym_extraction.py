@@ -28,7 +28,7 @@ class Config(StageConfig):
     add_from_conf=False,
     add_save_to=False
 )
-@add_handlers()
+@add_handlers
 class AcronymsExtractor(Stage):
 
     def __init__(self, 

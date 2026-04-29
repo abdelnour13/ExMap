@@ -496,6 +496,7 @@ class Trainer(BaseCommand):
         labels: Optional[Tensor] = None,
         negative_sample: Optional[Tuple[Tensor, Tensor]] = None,
     ) -> Dict[str, float]:
+        
         metrics: Dict[str, float] = {}
 
         y     = batch.articles.y[:batch_size]

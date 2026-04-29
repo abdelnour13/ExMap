@@ -1,6 +1,6 @@
 import os
 import dotenv
-from typing import Any, Dict, List, Self, Optional
+from typing import Any, Dict, List, Self
 from pydantic import BaseModel, computed_field
 from neo4j import GraphDatabase, Session, Transaction
 from definitions import ENV

@@ -3,7 +3,7 @@ import dotenv
 import pandas as pd
 import numpy as np
 from typing import Self
-from src.shared.command_tools import BaseCommand, OutputDirOption, ConnectionOption, InputFileOption, add_handlers
+from src.shared.command_tools import BaseCommand, add_handlers, StageConfig
 from src.shared.handlers import ConsoleLogger
 from src.shared.file_tools import BufferedWriter, FileWriter, FileReader, TextfileCache
 from pydantic import computed_field
@@ -12,7 +12,7 @@ from instance import cli
 
 dotenv.load_dotenv(ENV)
 
-class Config(InputFileOption, OutputDirOption, ConnectionOption):
+class Config(StageConfig):
     threshold : int
 
     @computed_field
@@ -26,7 +26,7 @@ class Config(InputFileOption, OutputDirOption, ConnectionOption):
     add_from_conf=False,
     add_save_to=False
 )
-@add_handlers()
+@add_handlers
 class KnowledgeCompletion(BaseCommand):
     
     def __init__(self, 

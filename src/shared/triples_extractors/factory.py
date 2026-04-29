@@ -1,5 +1,5 @@
 from openai import AsyncOpenAI
-from src.shared.llms import get_by_name
+from src.shared.llms import LLM
 from .two_step_llm import TwoStepLLMTriplesExtractor, LLMBasedTripleExtractor
 from .one_step_llm import OneStepLLMTriplesExtractor
 from typing import Literal
@@ -15,7 +15,7 @@ class TriplesExtractorFactory:
         llm_name : str = 'deepseek-chat',
     ) -> LLMBasedTripleExtractor:
         
-        llm = get_by_name(llm_name)
+        llm = LLM.from_name(llm_name)
 
         if type == 'two-step':
 

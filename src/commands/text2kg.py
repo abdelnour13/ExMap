@@ -1,12 +1,12 @@
 import os
-from typing import Generator, List, OrderedDict, Dict, Optional, Self, Tuple, Type
+from typing import Generator, Dict, Self, Tuple, Type, Optional
 from src.shared.command_tools import Stage, StageConfig, BaseCommand
 from src.shared.handlers import Event, ConsoleLogger
 from src.helpers import load_json_file
 from src.helpers.config import override
-from pydantic import BaseModel, computed_field
+from pydantic import BaseModel, computed_field, model_validator
 from instance import cli
-from definitions import DATA_DIR
+from definitions import rel_path, CORPUS_DIR, KGS_DIR
 from multiprocessing import set_start_method, Process
 from dataclasses import dataclass
 
@@ -15,12 +15,9 @@ set_start_method('spawn', force=True)
 from src.commands.build_kg.cleaning import cleaning
 from src.commands.build_kg.preprocessing import coreference_resolution
 from src.commands.build_kg.content_enrichment import annotate, acronym_extraction, keyword_extraction
-# from commands import structure_graph
 from src.commands.build_kg.preprocessing import sentence_segmentation
-# from src.commands.build_kg.graph_construction import triples, neo4j
 from src.commands.build_kg.triplet_extraction import (
     triples_extractor, 
-    # validation, 
     entities_mapping, 
     knowledge_completion,
     entities_cleaning,
@@ -37,14 +34,10 @@ STAGES : Dict[str, Tuple[Type[Stage], Type[StageConfig]]] = {
     "sentence_segmentation" : (sentence_segmentation.SentenceSegmentor, sentence_segmentation.Config),
     "acronyms_extraction" : (acronym_extraction.AcronymsExtractor, acronym_extraction.Config),
     "triples_extraction" : (triples_extractor.TriplesExtractor, triples_extractor.Config),
-    # "triples_validation" : (validation.TriplesValidator, triples_extractor.Config),
     "entities_normalization" : (entities_cleaning.EntitiesNormalizer, entities_cleaning.Config),
     "knowledge_completion" : (knowledge_completion.KnowledgeCompletion, knowledge_completion.Config),
     "predicates_normalization" : (predicate_cleaning.PredicatesNormalizer, predicate_cleaning.Config),
     "entities_mapping" : (entities_mapping.EntitiesMapping, entities_mapping.Config),
-    # "graph_structuring" : (structure_graph.GraphStructurer, structure_graph.Config)
-    # "graph2triples" : (triples.Graph2Triples, triples.StageConfig),
-    # "insert2neo4j"  : (neo4j.Neo4J, neo4j.Config)
 }
 
 class GlobalConfig(BaseModel):
@@ -53,27 +46,75 @@ class GlobalConfig(BaseModel):
     buffer_size : int
     resume : bool
 
-class Override(BaseModel):
-    name : str
-    args : Dict
-
 class PipeConfig(BaseModel):
-    glob : GlobalConfig
-    overrides : List[Override]
+    graph_id : str
+    corpus_id : str
+    glob: GlobalConfig
+    stages: Dict[str, StageConfig]
+
+    @model_validator(mode="before")
+    @classmethod
+    def validate_stages(cls, data):
+
+        stages = data.get("stages")
+        glob = data.get("glob")
+        corpus_id = data.get('corpus_id')
+
+        if stages is None or glob is None or corpus_id is None:
+            return data
+
+        validated = {}
+        input_filename = os.path.join(CORPUS_DIR, *corpus_id.split('/'))
+
+        for name, (_, ConfigClass) in STAGES.items():
+            
+            args = stages.get(name, {})
+
+            config = ConfigClass(**{
+                "input_filename" : input_filename,
+                "out" : os.path.join(KGS_DIR, data['graph_id'], name),
+                **override(args, glob)
+            })
+
+            validated[name] = config
+
+            input_filename = config.output_filename
+
+        data["stages"] = validated
+
+        return data
 
 class Config(BaseModel):
-    graph : str = Field(description="The corpus name the config file is expected to found at $DATA_DIR/$corpus/pipeline_config.json")
-    stage : Optional[str] = Field(description="The stage to run, otherwise it will run the whole pipeline.")
+    graph_id : str = Field(description=f"Name of folder located in {rel_path(KGS_DIR)} and contains a `config.json` file.")
+    stage : Optional[str] = Field(description=f"The stage to execute , if no value is provided the whole pipeline will get executed.", default=None)
+
+    @computed_field
+    @property
+    def kg_dir(self) -> str:
+        return os.path.join(KGS_DIR, self.graph_id)
+    
+    @computed_field
+    @property
+    def config_path(self) -> str:
+        return os.path.join(self.kg_dir, 'config.json')
 
     @computed_field
     @property
     def conf(self) -> PipeConfig:
-        return PipeConfig(**load_json_file(os.path.join(DATA_DIR, self.graph, 'pipeline_config.json')))
+
+        return PipeConfig(**{
+            "graph_id" : self.graph_id,
+            **load_json_file(self.config_path)
+        })
 
 @dataclass
 class StageInfo:
     cmd_cls : Type[BaseCommand]
     config : StageConfig
+
+def create_and_run(cmd_cls : Type[BaseCommand], cmd_config : StageConfig) -> None:
+    cmd = cmd_cls.from_config(cmd_config)
+    cmd.run()  
 
 @cli.register_stage(
     name="text2kg",
@@ -83,56 +124,30 @@ class StageInfo:
 )
 class Pipeline(BaseCommand):
 
-    def __init__(self, stages : OrderedDict[str, StageInfo]) -> None:
-        self.stages = stages
+    def __init__(self, config : PipeConfig, stage : Optional[str] = None) -> None:
+        super().__init__()
+        self.config = config
+        self.stage = stage
 
     def __iter__(self) -> Generator[Event, None, None]:
         
-        for i, (name, stage) in enumerate(self.stages.items()):
+        it = enumerate(self.config.stages.items()) if self.stage is None else [(0,(self.stage,self.config.stages[self.stage]))]
+        
+        for i, (name, config) in it:
 
-            print(f"({i+1}/{len(self.stages)}) Starting stage : {name}.\n")
+            yield self.make_info_event(progress=None,message=f"Starting stage {name}")
 
-            p = Process(target=self.create_and_run, args=(stage.cmd_cls, stage.config))
+            cmd_cls = STAGES[name][0]
+
+            os.makedirs(config.output_dir(), exist_ok=True)
+            p = Process(target=create_and_run, args=(cmd_cls, config))
             p.start()
             p.join()
-        
-        yield from []
 
+            yield self.make_info_event(progress=None,message=f"Completed stage {name}")
+        
     @classmethod
     def from_config(cls, config : Config) -> Self:
 
-        overrides = {
-            override.name : override.args
-            for override in config.conf.overrides
-        }
-
-        commands = OrderedDict()
-
-        input_filename = os.path.join(DATA_DIR, config.graph, "raw", "data.jsonl")
-
-        for stage_name in overrides.keys():
-
-            output_dir = os.path.join(DATA_DIR, config.graph, stage_name)
-
-            cmd_cls, cmd_config_cls = STAGES[stage_name]
-
-            cmd_config = cmd_config_cls(
-                input_filename=input_filename,
-                output_dir=output_dir,
-                **override(config.conf.glob.model_dump(), overrides[stage_name]),
-            )
-
-            commands[stage_name] = StageInfo(cmd_cls=cmd_cls, config=cmd_config)
-
-            input_filename = cmd_config.output_filename
-
-            if stage_name == config.stage:
-                break
-
-        return Pipeline(stages={ config.stage : commands[config.stage]}) \
-            .add_handler(ConsoleLogger("Text2KG"))
-    
-    @staticmethod
-    def create_and_run(cmd_cls : Type[BaseCommand], cmd_config : StageConfig) -> None:
-        cmd = cmd_cls.from_config(cmd_config)
-        cmd.run()        
+        return Pipeline(config=config.conf, stage=config.stage) \
+            .add_handler(ConsoleLogger("Text2KG"))      

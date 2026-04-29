@@ -19,6 +19,7 @@ class BaseCommand(ABC):
     def __init__(self):
         super().__init__()
         self.handlers : List[Handler] = []
+        self.stop = False
 
     def add_handler(self, handler : Handler) -> 'BaseCommand':
         self.handlers.append(handler)
@@ -40,22 +41,12 @@ class BaseCommand(ABC):
 
     def run(self) -> None:
 
-        stop = False
-
         for event in chain(self.before_start(), self, self.after_end()):
 
-            if stop:
+            if self.stop:
                 break
 
-            for handler in self.handlers:
-
-                handler.consume(event)
-
-                if event.level == EventLevel.CRITICAL:
-                    event = Event(**dict(event))
-                    event.message = "Stopping job due to a critical error, check logs for details."
-                    handler.consume(event)
-                    stop = True
+            self.send_event(event)
 
     def make_event(self,
         progress : Optional[float],
@@ -99,10 +90,24 @@ class BaseCommand(ABC):
     ) -> Event:
         return self.make_event(progress, EventLevel.WARN, message, extra)
     
+    def make_critical_event(self,
+        progress : Optional[float],
+        message : str,
+        extra : Optional[Dict] = None
+    ) -> Event:
+        return self.make_event(progress, EventLevel.CRITICAL, message, extra)
+    
     def send_event(self, event : Event) -> None:
 
         for handler in self.handlers:
+
             handler.consume(event)
+
+            if event.level == EventLevel.CRITICAL:
+                event = Event(**dict(event))
+                event.message = "Stopping job due to a critical error, check logs for details."
+                handler.consume(event)
+                self.stop = True
 
     def send_debug_event(self,
         progress : Optional[float],
@@ -131,3 +136,10 @@ class BaseCommand(ABC):
         extra : Optional[Dict] = None
     ) -> Event:
         self.send_event(self.make_event(progress, EventLevel.WARN, message, extra))
+
+    def send_critical_event(self,
+        progress : Optional[float],
+        message : str,
+        extra : Optional[Dict] = None
+    ) -> Event:
+        self.send_event(self.make_event(progress, EventLevel.CRITICAL, message, extra))

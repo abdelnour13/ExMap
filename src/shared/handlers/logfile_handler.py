@@ -1,4 +1,5 @@
 import logging
+from dataclasses import asdict
 from logging import FileHandler, getLogger, Logger, Formatter
 from .base import Handler, Event
 
@@ -11,7 +12,7 @@ class FileLogger(Handler):
         super().__init__()
         self.name = name
         self.log_file = log_file
-        self.logger = self.create_logger()
+        self.f = open(self.log_file, "a")
 
     def create_logger(self) -> Logger:
 
@@ -28,15 +29,24 @@ class FileLogger(Handler):
         return logger
 
     def consume(self, event : Event) -> None:
-        
-        self.logger.log(
-            level=event.level.value,
-            msg=event.message,
-            extra={
-                "_name" : self.name,
-                "_timestamp" : event.timestamp,
-                "_level" : event.level.name,
-                **event.extra,
-                "progress" : f"{(100 * event.progress):.2f}" if event.progress else None
-            }
-        )
+
+        raw = asdict(event)
+        line = []
+
+        for key, value in raw.items():
+
+            if key == 'extra':
+                
+                for k, v in value.items():
+                    line.append(f"{k}={v}")
+
+                continue
+
+            if key == 'task':
+                value = f'{self.name}::{value}'
+
+            line.append(f"{key}={value}")
+
+        line = ",".join(line)
+
+        self.f.write(f'{line}\n')

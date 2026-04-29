@@ -1,8 +1,10 @@
 import re
 import dotenv
+import asyncio
 from typing import Dict, List
 from src.shared.command_tools.vasync import Stage, StageConfig, add_handlers
 from src.shared.file_tools import FileWriter, FileReader, TextfileCache
+from src.shared.llms import LLM
 from src.helpers import load_json_file
 from pydantic import computed_field
 from pycli import Field
@@ -54,7 +56,7 @@ MODELS = {
     add_from_conf=False,
     add_save_to=False
 )
-@add_handlers()
+@add_handlers
 class CorpusAnnotatator(Stage):
 
     def __init__(self, 
@@ -80,64 +82,73 @@ class CorpusAnnotatator(Stage):
 
         return "\n".join(encoded_doc)
         
-    def get_prompt(self, domain : Domain) -> str:
+    def get_prompt(self, domain : Domain, article : Dict) -> str:
 
         return (
-            f"Given the label named \" {domain.sub_domain} \" and defined as : \" {domain.definition} \" . "
-            "Does the article in question belong to this label"
+            "### Article : \n"
+            f"- Title : {article['title']}.\n"
+            f"- Abstract : {article['abstract']}.\n"
+            f"- Keywords : {' | '.join(article['keywords'])}.\n\n"
+
+            "### Domain : \n"
+            f"- Name : {domain.sub_domain}\n"
+            f"- Definition : {domain.definition}"
         )
         
     async def transform(self, doc: Dict) -> Dict:
 
         ### The prompt was modified to take into account multiple levels of
         ### membership.
-        messages = [
-            {
-                "role": "system",
-                "content": (
-                    "You are an expert scientific article classifier. Your task is to evaluate the alignment "
-                    "between a provided research article and a list of specific domain labels.\n\n"
-                    
-                    "### Article Data to Evaluate:\n"
-                    f"{self.encode_document(doc)}\n\n"
-                    
-                    "### Instructions:\n"
-                    "For each provided label, assign a numerical score (0-3) based on how well the article's "
-                    "problems and themes align with that domain:\n"
-                    "* **0 (Perfect Alignment):** The article’s core problems are exactly what is expected in this domain.\n"
-                    "* **1 (Strong Alignment):** The article is highly relevant and fits well within this domain.\n"
-                    "* **2 (Weak Alignment):** The article has minor topical overlap but is not a primary fit.\n"
-                    "* **3 (No Alignment):** The article is completely unrelated to this domain.\n\n"
-                    
-                    "### Output Format:\n"
-                    "The response should only contain the number that coresponds to the level with no additional explanation."
-                ),
-            }
-        ]
+
+        requests = []
 
         for domain in self.domains:
-            prompt = self.get_prompt(domain)
+
+            messages = [
+                {
+                    "role": "system",
+                    "content": (
+                        "You are an expert in scientific article classification. Your task is to evaluate the alignment "
+                        "between a provided research article defined by its title, abstract and an optional list of keywords and "
+                        "and a domain defined by a name and a definition and your role is to assign a numerical score (0-3) "
+                        "based on how well the article's problems and themes align with the domain : \n\n"
+                        
+                        "### Scoring System:\n"
+                        "* **0 (Perfect Alignment):** The article’s core problems are exactly what is expected in this domain.\n"
+                        "* **1 (Strong Alignment):** The article is highly relevant and fits well within this domain.\n"
+                        "* **2 (Weak Alignment):** The article has minor topical overlap but is not a primary fit.\n"
+                        "* **3 (No Alignment):** The article is completely unrelated to this domain.\n\n"
+                        
+                        "### Output Format:\n"
+                        "The response should only contain the number that coresponds to the level with no additional explanation."
+                    ),
+                }
+            ]
+
+            prompt = self.get_prompt(domain, doc)
             messages.append({"role": "user", "content": prompt})
 
-        response = await self.client.chat.completions.create(
-            model=self.model,
-            messages=messages,
-            stream=False,
-            temperature=0,  # No randomness
-            top_p=1,  # Disable sampling
-            seed=42,  # Seed
-        )
+            req = self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                stream=False,
+                temperature=0,  # No randomness
+                top_p=1,  # Disable sampling
+                seed=42,  # Seed
+            )
 
-        content = response.choices[0].message.content
-        answers = re.sub(r"(\n)+", "\n", content).split("\n")
+            requests.append(req)
+
+        responses = await asyncio.gather(*requests)
+        responses = [res.choices[0].message.content for res in responses]
 
         sub_domains = {}
         domains = {}
 
-        for domain, answer in zip(self.domains, answers):
+        for domain, answer in zip(self.domains, responses):
             result = int(answer.strip('"\'* ').lower())
             sub_domains[domain.sub_domain] = result
-            domains[domain.domain] = min(domains.get(domain.domain, domains[domain.domain]), result)
+            domains[domain.domain] = min(domains.get(domain.domain, result), result)
 
         ### The key to domains as well as the structure 
         ### (from list ==> dict) was modified
@@ -151,6 +162,8 @@ class CorpusAnnotatator(Stage):
     def from_config(cls, config : Config) -> 'CorpusAnnotatator':
 
         cache = TextfileCache(config.checkpoint_filename)
+
+        llm = LLM.from_name(config.model)
         
         cmd = CorpusAnnotatator(
             reader=FileReader
@@ -161,7 +174,7 @@ class CorpusAnnotatator(Stage):
                 .buffered(config.buffer_size, cache),
             client=AsyncClient(
                 api_key=config.api_key,
-                base_url=MODELS[config.model]['url']
+                base_url=llm.url
             ),
             domains=config.domains,
             model=config.model

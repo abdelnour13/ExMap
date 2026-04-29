@@ -1,15 +1,49 @@
+"""
+Data download stage.
+============================================
+Raw data download from HAL API based on a config file found at : /data/corpus/<corpus-id>/config.json.
+
+The config format is a json file with the following schema :
+
+{
+    "teams" : [
+        "TEAM_1",
+        "TEAM_2",
+        ...
+    ],
+    "format" : "jsonl",
+    "attributes" : [
+        "ATTR_1",
+        "ATTR_2",
+        ...
+    ],
+    "from_" : "2020-01-01T00:00:00Z" # (ISO Date or `*`)
+    "to" : "*" (ISO Date or `*`),
+    "languages" : [
+        "LANG_1",
+        "LANG_2",
+        ...
+    ],
+    "sort" : "ATTR",
+    "page_size" : 32,
+    "num_pages" : null # int or null
+}
+"""
+
+import os
 import httpx
 import math
 import time
 import json
 from typing import Optional, Generator, Dict, Union, List, Self
 from src.helpers import load_json_file
-from src.shared.command_tools import BaseCommand, OutputDirOption, ConnectionOption
+from src.shared.command_tools import BaseCommand, ConnectionOption, OutputDirOption, add_handlers
 from src.shared.handlers import ConsoleLogger, Event, EventLevel
 from src.shared.file_tools import BufferedWriter, FileWriter
 from returns.result import Result, safe
 from returns.primitives.exceptions import UnwrapFailedError
-from pydantic import BaseModel, Field, computed_field
+from pydantic import BaseModel, Field, computed_field, field_validator
+from definitions import CORPUS_DIR, rel_path
 from instance import cli
 
 class HALConfig(BaseModel):
@@ -23,14 +57,38 @@ class HALConfig(BaseModel):
     page_size : int
     num_pages : Optional[int]
 
-class Config(OutputDirOption, ConnectionOption):
+class Config(ConnectionOption, OutputDirOption):
 
-    hal_config : str = Field(description="Path to a config.json file.")
+    corpus_id : str = Field(description=f"Name of folder located in {rel_path(CORPUS_DIR)} and contains a `config.json` file.")
+
+    def output_dir(self):
+        return os.path.join(CORPUS_DIR, self.corpus_id)
+    
+    @computed_field
+    @property
+    def config_path(self) -> str:
+        return os.path.join(self.output_dir(), 'config.json')
+    
+    @field_validator('corpus_id')
+    @classmethod
+    def validate(cls, value: str) -> str:
+
+        path = os.path.join(CORPUS_DIR, value)
+
+        if not os.path.exists(path):
+            raise ValueError(f"Path {path} not found, no such a file or directory.")
+        
+        config_file = os.path.join(path, "config.json")
+
+        if not os.path.exists(config_file):
+            raise ValueError(f"No config file found {path} not found, no such a file or directory.")
+        
+        return value
 
     @computed_field
     @property
     def hal_conf(self) -> HALConfig:
-        return HALConfig(**load_json_file(self.hal_config))
+        return HALConfig(**load_json_file(self.config_path))
     
 class HAL_API:
 
@@ -152,6 +210,7 @@ class HAL_API:
     add_from_conf=False,
     add_save_to=False
 )
+@add_handlers
 class DataDownloader(BaseCommand):
 
     def __init__(self, 
@@ -250,7 +309,7 @@ class DataDownloader(BaseCommand):
         yield self._handle_num_pages_response()
         
         ### Fetch Pages
-        for page_id in range(self._num_pages):
+        for _ in range(self._num_pages):
             yield from self._handle_fetch_page()
 
         yield self._make_event(progress=1.0,level=EventLevel.INFO,message=f"Download of {self._num_pages} has been completed.")
@@ -264,8 +323,5 @@ class DataDownloader(BaseCommand):
                 .from_filename(config.output_filename)
                 .buffered(config.hal_conf.page_size)
         )
-        
-        downloader \
-            .add_handler(ConsoleLogger("DataDownloader"))
 
         return downloader
