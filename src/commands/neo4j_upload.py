@@ -80,7 +80,6 @@ class Neo4jUploader(BaseCommand):
                     batch[i]['src'] = f"{graph_id}_{batch[i]['src']}"
                     batch[i]['dst'] = f"{graph_id}_{batch[i]['dst']}"
 
-
             session.execute_write(run_tx, batch)
             uploaded += len(batch)
 

@@ -52,10 +52,12 @@ class BaseCommand(ABC):
         progress : Optional[float],
         level : EventLevel,
         message : str,
+        task : str = "main",
         extra : Optional[Dict] = None
     ) -> Event:
         
         return Event(
+            task=task,
             progress=progress,
             level=level,
             message=message,
@@ -65,37 +67,42 @@ class BaseCommand(ABC):
     def make_debug_event(self,
         progress : Optional[float],
         message : str,
+        task : str = "main",
         extra : Optional[Dict] = None
     ) -> Event:
-        return self.make_event(progress, EventLevel.DEBUG, message, extra)
+        return self.make_event(progress, EventLevel.DEBUG, message, task, extra)
     
     def make_info_event(self,
         progress : Optional[float],
         message : str,
+        task : str = "main",
         extra : Optional[Dict] = None
     ) -> Event:
-        return self.make_event(progress, EventLevel.INFO, message, extra)
+        return self.make_event(progress, EventLevel.INFO, message, task, extra)
     
     def make_error_event(self,
         progress : Optional[float],
         message : str,
+        task : str = "main",
         extra : Optional[Dict] = None
     ) -> Event:
-        return self.make_event(progress, EventLevel.ERROR, message, extra)
+        return self.make_event(progress, EventLevel.ERROR, message, task, extra)
     
     def make_warn_event(self,
         progress : Optional[float],
         message : str,
+        task : str = "main",
         extra : Optional[Dict] = None
     ) -> Event:
-        return self.make_event(progress, EventLevel.WARN, message, extra)
+        return self.make_event(progress, EventLevel.WARN, message, task, extra)
     
     def make_critical_event(self,
         progress : Optional[float],
         message : str,
+        task : str = "main",
         extra : Optional[Dict] = None
     ) -> Event:
-        return self.make_event(progress, EventLevel.CRITICAL, message, extra)
+        return self.make_event(progress, EventLevel.CRITICAL, message, task, extra)
     
     def send_event(self, event : Event) -> None:
 
@@ -112,34 +119,39 @@ class BaseCommand(ABC):
     def send_debug_event(self,
         progress : Optional[float],
         message : str,
+        task : str = "main",
         extra : Optional[Dict] = None
     ) -> Event:
-        self.send_event(self.make_event(progress, EventLevel.DEBUG, message, extra))
+        self.send_event(self.make_event(progress, EventLevel.DEBUG, message, task, extra))
     
     def send_info_event(self,
         progress : Optional[float],
         message : str,
+        task : str = "main",
         extra : Optional[Dict] = None
     ) -> Event:
-        self.send_event(self.make_event(progress, EventLevel.INFO, message, extra))
+        self.send_event(self.make_event(progress, EventLevel.INFO, message, task, extra))
     
     def send_error_event(self,
         progress : Optional[float],
         message : str,
+        task : str = "main",
         extra : Optional[Dict] = None
     ) -> Event:
-        self.send_event(self.make_event(progress, EventLevel.ERROR, message, extra))
+        self.send_event(self.make_event(progress, EventLevel.ERROR, message, task, extra))
     
     def send_warn_event(self,
         progress : Optional[float],
         message : str,
+        task : str = "main",
         extra : Optional[Dict] = None
     ) -> Event:
-        self.send_event(self.make_event(progress, EventLevel.WARN, message, extra))
+        self.send_event(self.make_event(progress, EventLevel.WARN, message, task, extra))
 
     def send_critical_event(self,
         progress : Optional[float],
         message : str,
+        task : str = "main",
         extra : Optional[Dict] = None
     ) -> Event:
-        self.send_event(self.make_event(progress, EventLevel.CRITICAL, message, extra))
+        self.send_event(self.make_event(progress, EventLevel.CRITICAL, message, task, extra))

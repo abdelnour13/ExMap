@@ -1,10 +1,11 @@
 {
     "seed" : 44,
 
-    "graph" : "nantes-uni-2020/all-MiniLM-L6-v2",
+    "graph" : "nantes_uni_2020_2026_e5-v2",
     "num_splits" : 4,
     "keep_largest_cc" : true,
     "min_entities_per_article" : 5,
+    "labels" : ["subdomain", "lab"],
 
     "add_ssl_loss" : false,
 
@@ -30,6 +31,22 @@
             "do_negative_sampling": false,
             "model_params": {
                 "readout": "attn",
+                "variant": "conv",
+                "aggregation": null
+            }
+        },
+        "Conv_Max_null_False": {
+            "do_negative_sampling": false,
+            "model_params": {
+                "readout": "max",
+                "variant": "conv",
+                "aggregation": null
+            }
+        },
+        "Conv_Mean_null_False": {
+            "do_negative_sampling": false,
+            "model_params": {
+                "readout": "mean",
                 "variant": "conv",
                 "aggregation": null
             }

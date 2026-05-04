@@ -270,6 +270,7 @@ class TransGNN(nn.Module):
 
         if self.use_edges_info:
             r = edge_attr
+            # print(r)
             out = self.kg_scoring.translate(h, r) if self.use_edges_info else h
             in_ = self.kg_scoring.inv_translate(t, r) if self.use_edges_info else t
         else:

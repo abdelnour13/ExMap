@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 from typing import Self
 from src.shared.command_tools import BaseCommand, add_handlers, StageConfig
-from src.shared.handlers import ConsoleLogger
 from src.shared.file_tools import BufferedWriter, FileWriter, FileReader, TextfileCache
 from pydantic import computed_field
 from definitions import ENV
@@ -182,8 +181,5 @@ class KnowledgeCompletion(BaseCommand):
             threshold=config.threshold,
             cskg_path=config.cskg_dir
         )
-        
-        downloader \
-            .add_handler(ConsoleLogger("KnowledgeCompletion"))
 
         return downloader

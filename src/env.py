@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-from definitions import ENV
-from typing import Dict
+from definitions import ENV, domain_dir
+from typing import Dict, List
 from src.shared.llms import LLM as LLMInfo
+from src.helpers import load_json_file
 from neo4j import GraphDatabase, Driver
 from openai import Client, AsyncClient
 from dotenv import dotenv_values
@@ -13,12 +14,22 @@ class LLM:
     async_client : AsyncClient
 
 @dataclass
+class Domain:
+    domain : str
+    sub_domain : str
+    definition : str
+
+@dataclass
 class Env:
 
     llms : Dict[str, LLM]
     driver : Driver
     hf_token : str
     cskg_dir : str
+
+    @property
+    def cs_domains(self) -> List[Domain]:
+        return [Domain(**domain) for domain in load_json_file(domain_dir('computer_science'))]
 
     @classmethod
     def load(cls, env : str) -> 'Env':
@@ -45,7 +56,7 @@ class Env:
                     base_url=info.url
                 )
 
-                async_client = Client(
+                async_client = AsyncClient(
                     api_key=value,
                     base_url=info.url
                 )

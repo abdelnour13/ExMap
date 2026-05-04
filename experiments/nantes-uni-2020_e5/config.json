@@ -1,11 +1,11 @@
 {
     "seed" : 44,
 
-    "graph" : "nantes-uni-2020/all-MiniLM-L6-v2",
-    "label" : "labs",
+    "graph" : "nantes_uni_2020_2026_e5",
     "num_splits" : 4,
     "keep_largest_cc" : true,
     "min_entities_per_article" : 5,
+    "labels" : ["subdomain", "lab"],
 
     "add_ssl_loss" : false,
 

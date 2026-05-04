@@ -34,7 +34,7 @@ class Config(StageConfig):
     @computed_field
     @property
     def map_filename(self) -> str:
-        return os.path.join(self.output_dir, f"map.json")
+        return os.path.join(self.output_dir(), f"map.json")
 
 @cli.register_stage(
     name="entities_mapping",
@@ -91,6 +91,7 @@ class EntitiesMapping(Stage):
         )
 
         yield self.make_info_event(
+            task="map-construction/computing-embeddings",
             progress=0.0,
             message="Computing entities embeddings..."
         )
@@ -98,7 +99,7 @@ class EntitiesMapping(Stage):
         entities_dict = dict()
         edges = set()
 
-        for batch,_ in self.reader:
+        for batch, progress in self.reader:
 
             ### Acronyms
             for item in batch:
@@ -128,6 +129,12 @@ class EntitiesMapping(Stage):
                 if t['predicate'] == 'have abbreviation':
                     edges.add((entities_dict[t['head']][0], entities_dict[t['tail']][0]))
 
+            yield self.make_info_event(
+                task="map-construction/computing-embeddings",
+                progress=progress,
+                message=f"{len(batch)} entities processed."
+            )
+
         ### Computing entities embeddings
         embeddings = self.language_model.encode(
             list(entities_dict.keys()),
@@ -142,6 +149,7 @@ class EntitiesMapping(Stage):
 
         ### Computing mapping
         yield self.make_info_event(
+            task="map-construction/computing-similarity-matrix",
             progress=0.0,
             message="Adding similarity based edges..."
         )
@@ -149,12 +157,15 @@ class EntitiesMapping(Stage):
         embeddings = torch.from_numpy(np.stack(list(map(lambda t : t[1], entities_dict.values())), axis=0))
 
         row, col = 0, 0
+
+        batched = torch.split(embeddings, 8192)
+        prog = 0.0
         
-        for l in torch.split(embeddings, 8192):
+        for l in batched:
 
             col = 0
 
-            for r in torch.split(embeddings, 8192):
+            for r in batched:
 
                 S = l @ r.T
                 A = (S > self.threshold).type(torch.long)
@@ -163,6 +174,14 @@ class EntitiesMapping(Stage):
                     edges.add((row + src.item(), col + dst.item()))
 
                 col += r.size(0)
+
+                prog += 1 / (len(batched)**2)
+
+                yield self.make_info_event(
+                    task="map-construction/computing-similarity-matrix",
+                    progress=prog,
+                    message="Adding similarity based edges..."
+                )
 
             row += l.size(0)
 
@@ -230,6 +249,7 @@ class EntitiesMapping(Stage):
         progress : float, 
         level : EventLevel, 
         message : str, 
+        task : str = "main",
         extra : Optional[Dict] = None
     ):
         
@@ -237,6 +257,7 @@ class EntitiesMapping(Stage):
             progress, 
             level, 
             message, 
+            task,
             {
                 'total_mapped' : self.total_entities_mapped,
                 **(extra or {})

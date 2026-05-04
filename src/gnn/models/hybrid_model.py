@@ -2,51 +2,13 @@ import torch
 from torch import nn, Tensor
 from torch.nn import functional as F
 from torch_geometric import nn as gnn
+from torch_geometric.data import HeteroData
 from typing import Literal, Optional, Dict, Tuple, List
 from dataclasses import dataclass
 from torch_scatter import scatter
 from src import helpers
 from pydantic import BaseModel
-from src.gnn.layers import RGATConv, TransGNN, KGScoringFn, create_scoring_fn, MLP, Activation
-from src.gnn.sampler import ArticleAsKG, ArticlesGraph, KnowledgeGraph
-
-class ClusteringModule(nn.Module):
-
-    def __init__(self, 
-        in_dim : int,
-        num_clusters : int
-    ) -> None:
-        super().__init__()
-
-        self.C = nn.Linear(in_features=in_dim, out_features=num_clusters)
-        self.t = nn.Parameter(torch.scalar_tensor(1.0))
-
-    def forward(self, x : Tensor) -> Tuple[Tensor, Tensor]:
-        C = F.softmax(self.C(x), dim = -1)
-        A = F.sigmoid(self.t * (x @ x.T))
-        return C, A
-
-class TriplesDecoder(nn.Module):
-
-    def __init__(self, kg_scoring_fn : KGScoringFn) -> None:
-        super().__init__()
-
-        self.kg_scoring_fn = kg_scoring_fn
-        self.kg_scoring = create_scoring_fn(name=kg_scoring_fn)
-
-    def forward(self, 
-        x : Tensor,
-        edge_index : Tensor,
-        edge_attr : Tensor            
-    ) -> Tensor:
-        
-        row, col = edge_index
-        h, t = x[row], x[col]
-
-        r_hat = self.kg_scoring.inv_translate(h, t)
-        y_hat = torch.bmm(r_hat.unsqueeze(1), edge_attr.unsqueeze(-1)).squeeze()
-
-        return y_hat
+from src.gnn.layers import RGATConv, TransGNN, MLP, Activation
 
 class StdGNN(nn.Module):
 
@@ -281,34 +243,24 @@ class HetGNNConfig(BaseModel):
     gnn_args: Optional[Dict] = None   
     jk : bool = True
     dropout_rate : float = 0.0
-    ssl : bool = False
-    cluster : bool = False
     num_clusters : int = 5  
 
 @dataclass
 class HetModelReturn:
 
     ### Guidance Output
-    articles_predictions : Tensor
-    entities_predictions : Tensor
+    articles_predictions : Dict[str, Tensor]
+    entities_predictions : Dict[str, Tensor]
 
     ### Embeddings
     entities_embeddings : Tensor
     articles_embeddings : Tensor
-
-    ### Structure Output
-    structure_y_hat : Optional[Tensor] = None
-    relations_embeddings : Optional[Tensor] = None
-
-    ### Clustering
-    C : Optional[Tensor] = None
-    A : Optional[Tensor] = None
-
+    
 class HetModel(nn.Module):
 
     def __init__(self, 
         in_channels : int,
-        num_labels : int,
+        num_labels : Dict[str, int],
         num_relations: Tuple[int, int],
         channels : Optional[List[int]] = None,
         variant: Literal["conv", "attn"] = "conv",
@@ -383,22 +335,19 @@ class HetModel(nn.Module):
             self.readout_fn = gnn.AttentionalAggregation(gate_nn = nn.Linear(self.channels[-1], 1))
 
         ### Prediction Loss
-        self.dropout = nn.Dropout(p = dropout_rate) if dropout_rate > 0 else nn.Identity()
-        self.head = nn.Linear(self.channels[-1], num_labels)
+        self.heads = nn.ModuleDict()
 
-        ### Structure Reconstruction
-        if self.ssl:
-            self.proj_r = nn.Linear(self.channels[-1], self.channels[-1])
-            self.structure_decoder = TriplesDecoder(kg_scoring_fn='TransE')
+        for label_name, label_dim in num_labels.items():
 
-        ### Clustering
-        if self.cluster:
-            self.clustering_module = ClusteringModule(in_dim=self.channels[-1], num_clusters=num_clusters)
+            self.heads.add_module(label_name, nn.Sequential(
+                nn.Dropout(p = dropout_rate) if dropout_rate > 0 else nn.Identity(),
+                nn.Linear(self.channels[-1], label_dim)
+            ))
 
     @staticmethod
     def from_config(
         in_channels : int,
-        num_labels : int,
+        num_labels : Dict[str, int],
         num_relations : Tuple[int, int],
         config : HetGNNConfig                
     ) -> 'HetModel':
@@ -410,15 +359,17 @@ class HetModel(nn.Module):
             **config.model_dump()
         )
     
-    def encode(self, batch : ArticleAsKG) -> Tuple[Tensor, Tensor, Tensor]:
+    def encode(self, batch : HeteroData) -> Tuple[Tensor, Tensor, Tensor]:
 
-        kg_x, kg_e, kg_A = batch.kg.x, batch.kg.r[batch.kg.edge_type], batch.kg.edge_index
-        art_x, art_e, art_A = batch.articles.x, batch.articles.edge_type, batch.articles.edge_index
+        # print(batch)
+
+        kg_x, kg_e, kg_A = batch['Entity'].x, batch['Entity', 'HASRELATIONWITH', 'Entity'].edge_attr, batch['Entity', 'HASRELATIONWITH', 'Entity'].edge_index
+        art_x, art_e, art_A = batch['Article'].x, batch['Article','relate-to','Article'].edge_type, batch['Article', 'relate-to', 'Article'].edge_index
 
         kg_x_jk = []
         art_x_jk = []
         edge_x_jk = []
-        entity_article = batch.entity_article
+        entity_article = batch['Entity','APPEARIN', 'Article'].edge_index
 
         ### Encoder
         for layer in self.layers:
@@ -475,98 +426,30 @@ class HetModel(nn.Module):
 
         return self.proj_r(r)
     
-    def predict(self, x : Tensor) -> Tensor:
-        return self.head(self.dropout(x))
+    def predict(self, x : Tensor) -> Dict[str, Tensor]:
+        
+        return {
+            label_name : m(x)
+            for label_name, m in self.heads.items()
+        }
 
-    def forward(self, 
-        batch : ArticleAsKG,
-        sample : Optional[Tuple[Tensor, Tensor]] = None
-    ) -> HetModelReturn:
+    def forward(self, batch : HeteroData) -> HetModelReturn:
 
         ### Encoder        
         kg_x, kg_e, art_x = self.encode(batch)
         
         ### Pooling
-        art_x = self.article_embddings(kg_x, batch.entity_article, batch.articles.num_nodes)
+        entity_article = batch['Entity','APPEARIN', 'Article'].edge_index
+        art_x = self.article_embddings(kg_x, entity_article, batch['Article'].x.size(0))
 
         ### Prediction
         entities_predictions = self.predict(kg_x)
         articles_predictions = self.predict(art_x)
 
-        ### Structure Reconstruction Loss
-        structure_y_hat, r = None, None
-
-        if self.ssl:
-
-            r = self.relations(kg_e, batch.kg.edge_type)
-
-            structure_y_hat = self.structure_decoder.forward(
-                kg_x, 
-                edge_index = sample[0], 
-                edge_attr = r[sample[1]]
-            )
-
-        ### Clustering
-        C, A = None, None
-
-        if self.cluster:
-            C, A = self.clustering_module.forward(kg_x)
 
         return HetModelReturn(
             articles_predictions=articles_predictions,
             entities_predictions=entities_predictions,
             entities_embeddings=kg_x,
-            articles_embeddings=art_x,
-            structure_y_hat=structure_y_hat,
-            relations_embeddings=r,
-            C = C,
-            A = A
+            articles_embeddings=art_x
         )
-
-
-if __name__ == '__main__':
-
-    N1, N2 = 1000, 100
-    R1, R2 = 10, 2
-    D = 128
-
-    KG = helpers.create_toy_graph(
-        num_nodes = N1,
-        num_edges = 2 * N1,
-        num_types = R1,
-        node_features = D,
-        edge_features = D,
-        type_features = D
-    )
-
-    A = helpers.create_toy_graph(
-        num_nodes = N2,
-        num_edges = 2 * N2,
-        num_types = R2,
-        node_features = D,
-        edge_features = D,
-        type_features = D
-    )
-
-    edge_article = torch.stack([
-        torch.randint(0, 2 * N1, size = (2 * N1,)),
-        torch.randint(0, N2, size = (2 * N1,))
-    ], 0)
-
-    batch = ArticleAsKG(
-        articles = ArticlesGraph(x = A["x"], edge_index = A["edge_index"], edge_type = A["edge_type"]),
-        kg = KnowledgeGraph(x = KG["x"], e = KG["e"], r = KG["r"], edge_index = KG["edge_index"], edge_type = KG["edge_type"]),
-        edge_article = edge_article
-    )
-
-
-    model = HetModel(
-        in_channels = D,
-        channels = [D // 2, D // 2],
-        num_labels = 21,
-        num_relations = (R1, R2),
-    )
-
-    results = model.forward(batch)
-
-    print(results.articles_predictions.size())

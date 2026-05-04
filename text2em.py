@@ -1,6 +1,6 @@
 import os
 from instance import cli
-from src.commands import download, text2kg
+from src.commands import download, text2kg, train, build_expertise_map, neo4j_upload
 
 def main():
 

@@ -97,6 +97,7 @@ class Stage(BaseCommand):
         progress : Optional[float],
         level : EventLevel,
         message : str,
+        task : str = "main",
         extra : Optional[Dict] = None
     ) -> Event:
         
@@ -104,6 +105,7 @@ class Stage(BaseCommand):
             progress=progress, 
             level=level, 
             message=message,
+            task=task,
             extra={
                 'total_processed' : self.total_processed,
                 'total_saved' : self.total_saved,

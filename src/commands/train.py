@@ -26,22 +26,19 @@ from torch.nn import functional as F
 from torch_geometric import utils as gnn_utils
 from torch_sparse import SparseTensor
 from torchmetrics.functional import accuracy, f1_score
-
 from definitions import EXPERIMENTS_DIR, FEATURES_DIR
 from instance import cli
+from torch_geometric.loader import NeighborLoader
+from torch_geometric.data import HeteroData, Data
 from src import helpers
+from src.commands.feature_extraction import Graph
 from src.gnn import (
-    ArticleAsKG,
-    ArticlesGraph,
     HetGNNConfig,
     HetModel,
     HetModelReturn,
-    HybridSampler,
-    KnowledgeGraph,
 )
 from src.shared.command_tools import BaseCommand
-from src.shared.handlers import ConsoleLogger, Event
-
+from src.shared.handlers import ConsoleLogger
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -63,10 +60,7 @@ class BaseTrainingConfig(BaseModel):
 
     # Data
     graph: str = "ls2n-duke"  
-    label : str = "domains"                        
-
-    # Losses
-    add_ssl_loss: bool = False
+    labels : List[str] = Field(default_factory=lambda : ['subdomain', 'lab'])               
 
     # Sampling
     batch_size: int = 8
@@ -99,11 +93,163 @@ class TrainingConfig(BaseTrainingConfig):
 
 
 # ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+def _subgraph_by_articles(data : HeteroData, article_ids : torch.Tensor) -> HeteroData:
+
+    entities, articles = data['Entity', 'APPEARIN', 'Article'].edge_index
+
+    entity_ids = torch.unique(entities[torch.isin(articles, article_ids)])
+
+    subset = data.subgraph({
+        "Article" : article_ids,
+        "Entity" : entity_ids
+    })
+
+    for n_type in subset.node_types:
+        subset[n_type].node_id = torch.arange(len(subset[n_type].x))
+
+    for e_type in subset.edge_types:
+        subset[e_type].edge_id = torch.arange(len(subset[e_type].edge_index[0]))
+
+    return subset
+
+def _select_nodes(data: HeteroData, n_types: List[str]) -> HeteroData:
+
+    G = HeteroData()
+
+    for n_type in n_types:
+        for key, value in data[n_type].items():
+            G[n_type][key] = value.clone() if torch.is_tensor(value) else value
+
+    for e_type in data.edge_types:
+        if e_type[0] in n_types and e_type[2] in n_types:
+            for key, value in data[e_type].items():
+                G[e_type][key] = value.clone() if torch.is_tensor(value) else value
+
+    G.predicates2id = data.predicates2id
+
+    return G
+
+def _add_labels(data : HeteroData, n_types : List[str]) -> HeteroData:
+
+    for type_ in n_types:
+
+        e_type = [e for e in data.edge_types if e[0] == 'Article' and e[2] == type_][0]
+
+        row, col = data[e_type].edge_index
+        num_cols = data['Article'].num_nodes
+        num_rows = data[type_].num_nodes
+
+        A = SparseTensor(row=row,col=col,sparse_sizes=(num_cols,num_rows))
+
+        data['Article'][f'y_{type_.lower()}'] = A.to_dense().clone()
+
+    return data
+
+def _add_metapaths(data : HeteroData, types : Optional[List[str]] = None) -> HeteroData:
+
+    types = ['Author', 'Keyword'] if types is None else types
+
+    edge_index = []
+    edge_type  = []
+
+    for i, type_ in enumerate(types):
+
+        e_type = [e for e in data.edge_types if e[0] == 'Article' and e[2] == type_][0]
+
+        row, col = data[e_type].edge_index
+        num_cols = data['Article'].num_nodes
+        num_rows = data[type_].num_nodes
+
+        A = SparseTensor(row=row,col=col,sparse_sizes=(num_cols,num_rows))
+        A = A @ A.t()
+        row, col, _ = A.coo()
+
+        edge_index.append(torch.stack([row, col], dim=0))
+        edge_type.append(torch.zeros_like(row).fill_(i))
+
+    edge_index = torch.cat(edge_index, dim=-1)
+    edge_type = torch.cat(edge_type, dim=-1)
+
+    data['Article', 'relate-to', 'Article'].edge_index = edge_index
+    data['Article', 'relate-to', 'Article'].edge_type = edge_type
+    data['Article', 'relate-to', 'Article'].edge_id = torch.arange(len(row))
+
+    return data
+
+def _norm_features(data : HeteroData) -> HeteroData:
+
+    for n_type in data.node_types:
+        t = data[n_type].x
+        mean = t.mean(0, keepdim=True)
+        std  = t.std(0,  keepdim=True)
+        data[n_type].x = (t - mean) / (std + 1e-3)
+
+    for e_type in data.edge_types:
+        if 'x' in data[e_type]:
+            t = data[e_type].x
+            mean = t.mean(0, keepdim=True)
+            std  = t.std(0,  keepdim=True)
+            data[e_type].x = (t - mean) / (std + 1e-3)
+
+    return data
+
+# ---------------------------------------------------------------------------
+# Sampler
+# ---------------------------------------------------------------------------
+
+class HybridSampler:
+
+    def __init__(
+        self,
+        data : HeteroData,
+        num_neighbors : List[int],
+        batch_size : int,
+        shuffle : bool = True,
+        **kwargs
+    ) -> None:
+        
+        self.data = data
+        self.num_neighbors = num_neighbors
+        self.batch_size = batch_size
+        self.shuffle = shuffle
+
+        self._sampler = self._create_sampler(**kwargs)
+
+    def _create_sampler(self, **kwargs) -> NeighborLoader:
+
+        d = Data()
+
+        d.x = self.data['Article'].x
+        d.node_id = self.data['Article'].node_id
+
+        d.edge_index = self.data['Article', 'relate-to', 'Article'].edge_index
+
+        return NeighborLoader(
+            data=d,
+            num_neighbors=self.num_neighbors,
+            batch_size=self.batch_size,
+            shuffle=self.shuffle,
+            **kwargs
+        )
+
+    def __iter__(self):
+        
+        for batch in self._sampler:
+            article_ids = batch.node_id
+            yield _subgraph_by_articles(self.data, article_ids)
+
+    def __len__(self):
+        return len(self._sampler)
+
+# ---------------------------------------------------------------------------
 # Trainer
 # ---------------------------------------------------------------------------
 
 @cli.register_stage(
-    name="train",
+    name="train_2",
     description=(
         "Trains the Knowledge Representation Learning module based on the "
         "configuration specified in the experiment path."
@@ -146,7 +292,7 @@ class Trainer(BaseCommand):
             self.send_debug_event(
                 progress=0.0,
                 message=f"[Config] '{name}' — lr={cfg.lr}, epochs={cfg.num_epochs}, "
-                        f"batch={cfg.batch_size}, ssl={cfg.add_ssl_loss}",
+                        f"batch={cfg.batch_size}",
             )
 
         return configs
@@ -155,238 +301,136 @@ class Trainer(BaseCommand):
     # Data loading  (new graph.pt format — no filtering)
     # ------------------------------------------------------------------
 
-    def load_data(self) -> ArticleAsKG:
+    def load_data(self, return_raw : bool = False) -> Tuple[HeteroData, Graph] | HeteroData:
 
-        graph_path = os.path.join(FEATURES_DIR, *self.config.graph.split("/"), "graph.pt")
+        graph_path = os.path.join(FEATURES_DIR, self.config.graph)
 
         self.send_info_event(
+            task="Data Loading",
             progress=0.0,
             message=f"[Data] Loading graph from: {graph_path}",
         )
 
-        raw: Dict[str, Any] = torch.load(graph_path, weights_only=False)
-
-        # ── Entity / KG tensors ──────────────────────────────────────
-        #
-        # Entity_HasRelationWith_Entity is [3, E]: row0=src, row1=dst, row2=pred_idx
-        triple_edge = raw["edges"][("Entity", "HasRelationWith", "Entity")]
-        src, dst, edge_type = triple_edge[0], triple_edge[1], triple_edge[2]
-
-        self.send_debug_event(
-            progress=0.0,
-            message=f"[Data] KG triples: {src.shape[0]:,}  |  "
-                    f"Entities: {len(raw['nodes']['Entity']['id']):,}  |  "
-                    f"Predicates: {len(raw['predicates']['id'])}",
-        )
-
-        kg = KnowledgeGraph(
-            x=raw["nodes"]["Entity"]["embeddings"],
-            e=raw["predicates"]["embeddings"][edge_type],
-            r=raw["predicates"]["embeddings"],
-            edge_index=torch.stack([src, dst]),
-            edge_type=edge_type,
-            entity_names=raw["nodes"]["Entity"]["id"],
-        )
-
-        kg.generality_score = raw["nodes"]["Entity"]["generality_score"]
-        kg.relevancy_score  = raw["nodes"]["Entity"]["relevancy_score"]
-
-        # ── Article–Article edges  (pre-computed by the pipeline) ────
-        #
-        # Both ShareKeyword and ShareAuthor are [2, E] tensors stored
-        # under tuple keys.  We concatenate them into a single edge_index
-        # with an edge_type discriminator (0 = keyword, 1 = author).
-
-        share_kw  = raw["edges"].get(("Article", "ShareKeyword", "Article"))
-        share_auth = raw["edges"].get(("Article", "ShareAuthor",  "Article"))
-
-        edge_parts, type_parts = [], []
-
-        if share_kw is not None:
-            edge_parts.append(share_kw)
-            type_parts.append(torch.zeros(share_kw.shape[1], dtype=torch.long))
-            self.send_debug_event(
-                progress=0.0,
-                message=f"[Data] Article–ShareKeyword edges: {share_kw.shape[1]:,}",
-            )
-
-        if share_auth is not None:
-            edge_parts.append(share_auth)
-            type_parts.append(torch.ones(share_auth.shape[1], dtype=torch.long))
-            self.send_debug_event(
-                progress=0.0,
-                message=f"[Data] Article–ShareAuthor edges: {share_auth.shape[1]:,}",
-            )
-
-        if edge_parts:
-            article_edge_index = torch.cat(edge_parts, dim=-1)
-            article_edge_type  = torch.cat(type_parts, dim=0)
-        else:
-            # Fallback: no article–article edges
-            n_art = len(raw["nodes"]["Article"]["id"])
-            article_edge_index = torch.zeros((2, 0), dtype=torch.long)
-            article_edge_type  = torch.zeros(0, dtype=torch.long)
-            self.send_warn_event(
-                progress=0.0,
-                message="[Data] No Article–Article edges found in graph.pt",
-            )
-
-        # ── Labels  (Article → SubDomain) ───────────────────────────
-        n_articles  = len(raw["nodes"]["Article"]["id"])
-        n_labels = len(raw["labels"][self.config.label])
-        label_name = "SubDomain" if self.config.label == "domains" else "Lab"
-
-        belongs_to = raw["edges"].get(("Article", "BelongsTo", label_name))
-
-        if belongs_to is not None:
-            row, col = belongs_to[0], belongs_to[1]
-            labels = SparseTensor(
-                row=row, col=col,
-                sparse_sizes=(n_articles, n_labels),
-            ).to_dense()
-        else:
-            labels = torch.zeros((n_articles, n_labels))
-            self.send_warn_event(
-                progress=0.0,
-                message="[Data] Article–BelongsTo–SubDomain edges not found; labels are all-zero",
-            )
-
-        self.send_debug_event(
-            progress=0.0,
-            message=f"[Data] Articles: {n_articles:,}  |  SubDomains: {n_labels}  |  "
-                    f"Labelled articles: {(labels.sum(-1) > 0).sum().item():,}",
-        )
-
-        # ── Triple → Article provenance ──────────────────────────────
-        triple_article = raw["edges"].get("Triple_ExtractedFrom_Article")
-        if triple_article is None:
-            self.send_warn_event(
-                progress=0.0,
-                message="[Data] Triple_ExtractedFrom_Article edge not found in graph.pt",
-            )
-
-        articles = ArticlesGraph(
-            x=raw["nodes"]["Article"]["embeddings"],
-            edge_index=article_edge_index,
-            edge_type=article_edge_type,
-            y=labels,
-        )
-
-        data = ArticleAsKG(
-            articles=articles,
-            kg=kg,
-            edge_article=triple_article,
-        )
-
-        data.metadata = {
-            "predicates": raw["predicates"]["id"],
-            "labels":     raw["labels"],
-        }
+        graph = Graph.load(graph_path)
+        G = graph.pygeo
 
         self.send_info_event(
-            progress=0.0,
-            message=f"[Data] Graph loaded — "
-                    f"{n_articles:,} articles, "
-                    f"{len(raw['nodes']['Entity']['id']):,} entities, "
-                    f"{n_labels} subdomain labels",
+            task="Data Loading",
+            progress=0.25,
+            message=f"[Data] Adding Metapaths",
         )
 
-        return self.normalize_data(data)
+        G = _add_metapaths(G, types=['Author', 'Keyword'])
 
-    # ------------------------------------------------------------------
-    # Normalisation
-    # ------------------------------------------------------------------
+        self.send_info_event(
+            task="Data Loading",
+            progress=0.5,
+            message=f"[Data] Computing labels...",
+        )
 
-    def normalize_data(self, data: ArticleAsKG) -> ArticleAsKG:
+        G = _add_labels(G, ['SubDomain', 'Lab'])
+
+        self.send_info_event(
+            task="Data Loading",
+            progress=0.75,
+            message=f"[Data] Nodes selection",
+        )
+
+        G = _select_nodes(G, ['Article', 'Entity'])
+
+        self.send_info_event(
+            task="Data Loading",
+            progress=1.0,
+            message=f"[Data] Data normalization",
+        )
+
+        G = _norm_features(G)
+
+        G.raw_metadata = {
+            "predicates2id" : G.predicates2id,
+            "labels" : {
+                "subdomain" : [node.id for node in graph.get_nodes("SubDomain")],
+                "lab" : [node.id for node in graph.get_nodes("Lab")]
+            }
+        }
+
+        if return_raw:
+            return G, graph
         
-        self.send_debug_event(progress=0.0, message="[Data] Normalising node features …")
-
-        def _norm(t: Tensor) -> Tensor:
-            mean = t.mean(0, keepdim=True)
-            std  = t.std(0,  keepdim=True)
-            return (t - mean) / (std + 1e-3)
-
-        data.articles.x        = _norm(data.articles.x)
-        data.kg.x              = _norm(data.kg.x)
-        data.kg.r              = _norm(data.kg.r)
-        data.kg.edge_attr      = _norm(data.kg.edge_attr)
-
-        return data
+        return G
 
     # ------------------------------------------------------------------
     # Splits & samplers
     # ------------------------------------------------------------------
 
-    def create_or_load_split(self, data: ArticleAsKG) -> Tensor:
-        graph_slug = self.config.graph.replace("/", "_")
+    def create_or_load_split(self, data: HeteroData) -> Tensor:
+
+        graph_slug = self.config.graph
+
         split_path = os.path.join(
             EXPERIMENTS_DIR, self.experiment,
             f"split_{graph_slug}_{self.config.num_splits}.pt",
         )
 
         if os.path.exists(split_path):
+
             self.send_debug_event(
-                progress=0.0,
+                progress=None,
                 message=f"[Split] Loading cached split from {split_path}",
             )
+
             return torch.load(split_path, map_location="cpu", weights_only=False)
 
         self.send_debug_event(
-            progress=0.0,
+            progress=None,
             message=f"[Split] Creating new {self.config.num_splits}-fold split …",
         )
 
         kf = KFold(n_splits=self.config.num_splits, shuffle=True)
-        n  = data.articles.num_nodes
+        n  = data['Article'].x.size(0)
         split_tensor = torch.full((n,), -1, dtype=torch.long)
 
         for fold, (_, val_idx) in enumerate(kf.split(range(n))):
             split_tensor[val_idx] = fold
 
         torch.save(split_tensor, split_path)
+
         self.send_info_event(
-            progress=0.0,
+            progress=None,
             message=f"[Split] {self.config.num_splits}-fold split saved to {split_path}",
         )
+
         return split_tensor
 
-    def _make_sampler(self, split: ArticleAsKG, is_train: bool) -> HybridSampler:
+    def _make_sampler(self, split: HeteroData, is_train: bool) -> HybridSampler:
 
         return HybridSampler(
-            articles=split.articles,
-            kg=split.kg,
-            edge_article=split.edge_article,
-            articles_loader_args={
-                "batch_size":    self.config.batch_size,
-                "num_neighbors": self.config.num_articles_neighbors,
-                "drop_last":     is_train,
-                "shuffle":       is_train,
-            },
-            kg_sampler_args={
-                "num_neighbors": self.config.num_entities_neighbors,
-            },
+            data=split,
+            num_neighbors=self.config.num_articles_neighbors,
+            batch_size=self.config.batch_size,
+            shuffle=is_train,
+            drop_last=is_train
         )
 
-    def create_samplers(
-        self, 
-        data: ArticleAsKG
-    ) -> List[Tuple[HybridSampler, HybridSampler]]:
+    def create_samplers(self, data: HeteroData) -> List[Tuple[HybridSampler, HybridSampler]]:
+        
         split_tensor = self.create_or_load_split(data)
         samplers: List[Tuple[HybridSampler, HybridSampler]] = []
 
         for fold in range(self.config.num_splits):
+
             train_mask = split_tensor != fold
             val_mask   = split_tensor == fold
 
             self.send_debug_event(
-                progress=0.0,
+                progress=None,
                 message=f"[Split] Fold {fold}: "
                         f"train={train_mask.sum().item():,}  "
                         f"val={val_mask.sum().item():,}",
             )
 
-            train_split = data.subgraph_articles(data.articles.article_id[train_mask])
-            val_split   = data.subgraph_articles(data.articles.article_id[val_mask])
+            train_split = _subgraph_by_articles(data, data['Article'].node_id[train_mask])
+            val_split   = _subgraph_by_articles(data, data['Article'].node_id[val_mask])
 
             samplers.append((
                 self._make_sampler(train_split, is_train=True),
@@ -395,7 +439,7 @@ class Trainer(BaseCommand):
 
         return samplers
 
-    def create_full_sampler(self, data: ArticleAsKG) -> HybridSampler:
+    def create_full_sampler(self, data: HeteroData) -> HybridSampler:
         """Sampler over the entire graph (used for final retraining)."""
         return self._make_sampler(data, is_train=True)
 
@@ -403,17 +447,20 @@ class Trainer(BaseCommand):
     # Model factory
     # ------------------------------------------------------------------
 
-    def create_model(self, config: BaseTrainingConfig, data: ArticleAsKG) -> HetModel:
+    def create_model(self, config: BaseTrainingConfig, data: HeteroData) -> HetModel:
 
         self.send_info_event(progress=0.0, message="[Model] Instantiating GNN model …")
 
-        config.model_params.ssl     = config.add_ssl_loss
-        config.model_params.cluster = False
+        # config.model_params.ssl     = config.add_ssl_loss
+        # config.model_params.cluster = False
 
         model = HetModel.from_config(
-            in_channels=data.kg.num_features,
-            num_labels=data.articles.y.size(-1),
-            num_relations=(data.kg.num_relations, data.articles.num_relations),
+            in_channels=data['Entity'].x.size(-1),
+            num_labels={
+                label : data['Article'][f'y_{label}'].size(-1)
+                for label in self.config.labels
+            },
+            num_relations=(len(data.predicates2id), len(torch.unique(data['Article','relate-to', 'Article'].edge_type))),
             config=config.model_params,
         )
 
@@ -422,6 +469,7 @@ class Trainer(BaseCommand):
             message=f"[Model] Size: {helpers.model_size_mb(model):.3f} MB  |  "
                     f"Parameters: {sum(p.numel() for p in model.parameters()):,}",
         )
+
         return model
 
     # ------------------------------------------------------------------
@@ -430,15 +478,21 @@ class Trainer(BaseCommand):
 
     @staticmethod
     def sample_negative_edges(
-        edge_index: Tensor, edge_type: Tensor, num_nodes: int
+        edge_index: Tensor, 
+        edge_type: Tensor, 
+        num_nodes: int
     ) -> Tuple[Tensor, Tensor, Tensor]:
+        
         neg_ei  = gnn_utils.negative_sampling(edge_index=edge_index, num_nodes=num_nodes)
         new_ei  = torch.cat([neg_ei, edge_index], dim=-1)
+
         y_hat   = torch.cat([
             torch.zeros_like(edge_index[0]),
             torch.ones_like(edge_index[1]),
         ]).float()
+
         etype   = torch.cat([edge_type, edge_type], dim=0)
+
         return new_ei, etype, y_hat
 
     @staticmethod
@@ -451,34 +505,32 @@ class Trainer(BaseCommand):
     @staticmethod
     def loss(
         config: BaseTrainingConfig,
-        batch: ArticleAsKG,
+        batch: HeteroData,
         results: HetModelReturn,
         batch_size: int,
         labels: Optional[Tensor] = None,
-        negative_sample: Optional[Tuple[Tensor, Tensor]] = None,
+        negative_sample: Optional[Dict[str, Tuple[Tensor, Tensor]]] = None,
         weights: Optional[Dict[str, float]] = None,
     ) -> Dict[str, Tensor]:
         
         weights = weights or {}
         losses: Dict[str, Tensor] = {}
 
-        y_hat = results.articles_predictions[:batch_size]
-        y     = batch.articles.y[:batch_size]
+        for label in config.labels:
 
-        if negative_sample is not None:
-            row, col = negative_sample
-            losses["guidance_loss"] = F.binary_cross_entropy_with_logits(
-                y_hat[row, col], y[row, col].float()
-            )
-        else:
-            losses["guidance_loss"] = F.binary_cross_entropy_with_logits(y_hat, y.float())
+            y_hat = results.articles_predictions[label][:batch_size]
+            y     = batch['Article'][f'y_{label}'][:batch_size]
 
-        if config.add_ssl_loss:
-            losses["ssl_loss"] = F.binary_cross_entropy_with_logits(
-                results.structure_y_hat, labels.float()
-            )
+            if negative_sample is not None:
+                row, col = negative_sample[label]
+                losses[f"{label}_guidance_loss"] = F.binary_cross_entropy_with_logits(
+                    y_hat[row, col], y[row, col].float()
+                )
+            else:
+                losses[f"{label}_guidance_loss"] = F.binary_cross_entropy_with_logits(y_hat, y.float())
 
         total = torch.scalar_tensor(0.0).to(y_hat.device)
+
         for name, value in losses.items():
             w = weights.get(name, 1.0)
             if w > 0:
@@ -490,7 +542,7 @@ class Trainer(BaseCommand):
     @staticmethod
     def evaluate(
         config: BaseTrainingConfig,
-        batch: ArticleAsKG,
+        batch: HeteroData,
         results: HetModelReturn,
         batch_size: int,
         labels: Optional[Tensor] = None,
@@ -499,30 +551,32 @@ class Trainer(BaseCommand):
         
         metrics: Dict[str, float] = {}
 
-        y     = batch.articles.y[:batch_size]
-        y_hat = results.articles_predictions[:batch_size]
+        for label in config.labels:
 
-        if negative_sample is not None:
-            row, col = negative_sample
-            y, y_hat = y[row, col], y_hat[row, col]
-            metrics["guidance_acc"] = accuracy(y_hat, y, task="binary").item()
-            metrics["guidance_f1"]  = f1_score(y_hat, y, task="binary").item()
-        else:
-            n = batch.articles.y.size(-1)
-            metrics["guidance_acc"] = accuracy(y_hat, y, task="multilabel", num_labels=n, average="macro").item()
-            metrics["guidance_f1"]  = f1_score(y_hat, y, task="multilabel", num_labels=n, average="macro").item()
+            y     = batch['Article'][f'y_{label}'][:batch_size]
+            y_hat = results.articles_predictions[label][:batch_size]
 
-        if config.add_ssl_loss:
-            metrics["structure_acc"] = accuracy(results.structure_y_hat, labels, task="binary").item()
-            metrics["structure_f1"]  = f1_score(results.structure_y_hat, labels, task="binary").item()
+            if negative_sample is not None:
+                row, col = negative_sample
+                y, y_hat = y[row, col], y_hat[row, col]
+                metrics[f"{label}_guidance_acc"] = accuracy(y_hat, y, task="binary").item()
+                metrics[f"{label}_guidance_f1"]  = f1_score(y_hat, y, task="binary").item()
+            else:
+                n = batch['Article'][f'y_{label}'].size(-1)
+                metrics[f"{label}_guidance_acc"] = accuracy(y_hat, y, task="multilabel", num_labels=n, average="macro").item()
+                metrics[f"{label}_guidance_f1"]  = f1_score(y_hat, y, task="multilabel", num_labels=n, average="macro").item()
 
-            row, col = batch.kg.edge_index
-            h, t = results.entities_embeddings[row], results.entities_embeddings[col]
-            r_hat = (h - t) @ results.relations_embeddings.t()
-            n_r   = batch.kg.r.size(0)
+        # if config.add_ssl_loss:
+        #     metrics["structure_acc"] = accuracy(results.structure_y_hat, labels, task="binary").item()
+        #     metrics["structure_f1"]  = f1_score(results.structure_y_hat, labels, task="binary").item()
 
-            metrics["HITS@5"]  = accuracy(r_hat, batch.kg.edge_type, task="multiclass", num_classes=n_r, top_k=5).item()
-            metrics["HITS@10"] = accuracy(r_hat, batch.kg.edge_type, task="multiclass", num_classes=n_r, top_k=10).item()
+        #     row, col = batch.kg.edge_index
+        #     h, t = results.entities_embeddings[row], results.entities_embeddings[col]
+        #     r_hat = (h - t) @ results.relations_embeddings.t()
+        #     n_r   = batch.kg.r.size(0)
+
+        #     metrics["HITS@5"]  = accuracy(r_hat, batch.kg.edge_type, task="multiclass", num_classes=n_r, top_k=5).item()
+        #     metrics["HITS@10"] = accuracy(r_hat, batch.kg.edge_type, task="multiclass", num_classes=n_r, top_k=10).item()
 
         return metrics
 
@@ -533,7 +587,7 @@ class Trainer(BaseCommand):
     def run_experiment(
         self,
         config: BaseTrainingConfig,
-        data: ArticleAsKG,
+        data: HeteroData,
         train_loader: HybridSampler,
         val_loader: HybridSampler,
         label: str = "",                # e.g. "trial 2/4" or "full graph"
@@ -586,19 +640,30 @@ class Trainer(BaseCommand):
                         batch = helpers.move_data_to_device(batch, device=config.device)
 
                         sample, labels = None, None
-                        if config.model_params.ssl:
-                            ei, et, labels = self.sample_negative_edges(
-                                batch.kg.edge_index, batch.kg.edge_type, batch.kg.num_nodes
-                            )
-                            sample = (ei, et)
+
+                        # if config.model_params.ssl:
+
+                        #     ei, et, labels = self.sample_negative_edges(
+                        #         batch['Entity', 'HASRELATIONWITH', 'Entity'].edge_index, 
+                        #         batch['Entity', 'HASRELATIONWITH', 'Entity'].edge_type, 
+                        #         batch['Entity'].size(0)
+                        #     )
+
+                        #     sample = (ei, et)
 
                         with torch.set_grad_enabled(is_training):
-                            results   = model.forward(batch, sample)
+
+                            results   = model.forward(batch)
+
                             neg_smpl  = (
-                                self.negative_sample(batch.articles.y[:config.batch_size])
+                                {
+                                    label : self.negative_sample(batch['Article'][f'y_{label}'][:config.batch_size])
+                                    for label in config.labels
+                                }
                                 if is_training and config.do_negative_sampling
                                 else None
                             )
+
                             losses = self.loss(
                                 config, batch=batch, results=results,
                                 batch_size=config.batch_size,
@@ -645,10 +710,13 @@ class Trainer(BaseCommand):
                         continue
 
                     row = summary.loc[phase]
+
                     loss_val  = row.get("loss", float("nan"))
-                    guid_loss = row.get("guidance_loss", float("nan"))
-                    acc_val   = row.get("guidance_acc",  float("nan"))
-                    f1_val    = row.get("guidance_f1",   float("nan"))
+
+                    for label in config.labels:
+                        metrics[f"{label}_guidance_loss"]  = row.get(f"{label}_guidance_loss", float("nan"))
+                        metrics[f"{label}_guidance_acc"]   = 100 * row.get(f"{label}_guidance_acc",  float("nan"))
+                        metrics[f"{label}_guidance_f1"]    = 100 * row.get(f"{label}_guidance_f1",   float("nan"))
 
                     # Build optional extras string
                     extras: List[str] = []
@@ -665,15 +733,16 @@ class Trainer(BaseCommand):
 
                     self.send_info_event(
                         progress=epoch_progress,
-                        message=(
-                            f"[{label}] Epoch {epoch + 1}/{config.num_epochs} "
-                            f"[{phase.upper():5s}]  "
-                            f"loss={loss_val:.4f}  "
-                            f"guid_loss={guid_loss:.4f}  "
-                            f"acc={100 * acc_val:.2f}%  "
-                            f"f1={100 * f1_val:.2f}%"
-                            f"{extras_str}"
-                        ),
+                        message=" ".join([
+                            f"[{label}] Epoch {epoch + 1}/{config.num_epochs}",
+                            f"[{phase.upper():5s}]",
+                            f"loss={loss_val:.4f}",
+                            *[
+                                f"{key}={value:.4f}"
+                                for key, value in metrics.items()
+                            ],
+                            f"{extras_str}",
+                        ]),
                     )
 
                 self.send_debug_event(
@@ -689,12 +758,13 @@ class Trainer(BaseCommand):
     # ------------------------------------------------------------------
 
     @staticmethod
-    def inference(model: HetModel, data: ArticleAsKG) -> Tensor:
+    def inference(model: HetModel, data: HeteroData) -> Tensor:
+
         model = model.eval().cpu()
         data  = data.cpu()
 
-        model.ssl     = False
-        model.cluster = False
+        # model.ssl     = False
+        # model.cluster = False
 
         with torch.no_grad():
             return model.forward(data).articles_predictions
@@ -710,14 +780,7 @@ class Trainer(BaseCommand):
         configs = self.get_configs()
         data    = self.load_data()
 
-        # Filter to articles with at least one label (required for training)
-        labeled_mask = data.articles.y.sum(-1) > 0
-        data = data.subgraph_articles(data.articles.article_id[labeled_mask])
-
-        self.send_info_event(
-            progress=0.0,
-            message=f"[Data] Articles after label filter: {data.articles.num_nodes:,}",
-        )
+        # print(data)
 
         MODELS_DIR    = os.path.join(EXPERIMENTS_DIR, self.experiment, "models")
         RESULTS_DIR   = os.path.join(EXPERIMENTS_DIR, self.experiment, "results")
@@ -728,7 +791,6 @@ class Trainer(BaseCommand):
         os.makedirs(HISTORIES_DIR, exist_ok=True)
 
         n_configs = len(configs)
-        # Each config contributes (num_splits trials + 1 full retrain) steps
         total_steps = n_configs * (self.config.num_splits + 1)
         completed   = 0
 
@@ -759,6 +821,7 @@ class Trainer(BaseCommand):
                 step_progress = completed / total_steps
 
                 if os.path.exists(result_path) and os.path.exists(history_path):
+                    
                     self.send_info_event(
                         progress=step_progress,
                         message=f"[{step_label}] Already completed — skipping",
