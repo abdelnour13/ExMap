@@ -151,6 +151,23 @@ class NodeStore:
     _id2idx : Dict[str, int] = field(default_factory=dict,init=False)
     _features : Dict[str, Tensor] = field(default_factory=dict,init=False)
 
+    @property
+    def nodes(self) -> List[Node]:
+
+        return [
+            Node(
+                id=node.id,
+                properties={
+                    **node.properties,
+                    **{
+                        key : value[idx].item() if len(value.size()) == 1 else value[idx]
+                        for key, value in self._features.items()
+                    }
+                }
+            )
+            for idx, node in enumerate(self._nodes)
+        ]
+
     def add_node(self, id : str, properties : Optional[Dict[str, Any]] = None) -> bool:
 
         properties = properties or {}

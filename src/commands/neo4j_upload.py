@@ -1,15 +1,16 @@
 import os
-import dotenv
-from typing import Any, Dict, List, Self
+from torch import Tensor
+from typing import Dict, List, Self, TypeVar
 from pydantic import BaseModel, computed_field
-from neo4j import GraphDatabase, Session, Transaction
-from definitions import ENV
+from neo4j import Session, Transaction, Driver
 from instance import cli
-from src import helpers
+from definitions import EMS_DIR
+from src.env import env
+from src.commands.feature_extraction import Graph, Edge, Node
 from src.shared.command_tools import BaseCommand
 from src.shared.handlers import ConsoleLogger
 
-dotenv.load_dotenv(ENV)
+T = TypeVar('T')
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -17,23 +18,13 @@ dotenv.load_dotenv(ENV)
 
 class Config(BaseModel):
 
-    graph_filename: str
+    expertise_id: str
     batch_size: int = 500
 
     @computed_field
     @property
-    def neo4j_uri(self) -> str:
-        return dotenv.get_key(ENV, "NEO4J_URI")
-
-    @computed_field
-    @property
-    def neo4j_user(self) -> str:
-        return dotenv.get_key(ENV, "NEO4J_USER")
-
-    @computed_field
-    @property
-    def neo4j_pwd(self) -> str:
-        return dotenv.get_key(ENV, "NEO4J_PWD")
+    def expertise_dir(self) -> str:
+        return os.path.join(EMS_DIR, self.expertise_id)
 
 
 # ---------------------------------------------------------------------------
@@ -48,20 +39,21 @@ class Config(BaseModel):
 )
 class Neo4jUploader(BaseCommand):
 
-    def __init__(self, config: Config) -> None:
+    def __init__(self, config: Config, driver : Driver) -> None:
         super().__init__()
         self.config = config
+        self.driver = driver
 
     # ------------------------------------------------------------------
     # Helpers
     # ------------------------------------------------------------------
 
     @staticmethod
-    def _batches(items: List[Any], size: int):
+    def _batches(items: List[T], size: int):
         for i in range(0, len(items), size):
             yield items[i : i + size]
 
-    def _run_batched(self, session : Session, query: str, items: List[Any], label: str, graph_id : str) -> None:
+    def _run_batched(self, session : Session, query: str, items: List[Edge] | List[Node], label: str, graph_id : str) -> None:
 
         total = len(items)
         uploaded = 0
@@ -73,12 +65,21 @@ class Neo4jUploader(BaseCommand):
 
             for i in range(len(batch)):
 
-                batch[i]['graph_id'] = graph_id
-                batch[i]['id'] = f"{graph_id}_{batch[i]['id']}"
-
-                if 'src' in batch[i]:
-                    batch[i]['src'] = f"{graph_id}_{batch[i]['src']}"
-                    batch[i]['dst'] = f"{graph_id}_{batch[i]['dst']}"
+                batch[i] = {
+                    'graph_id' : graph_id,
+                    'id' : f"{graph_id}_{batch[i].id}",
+                    **(
+                        {
+                            "src" : f"{graph_id}_{batch[i].src}",
+                            "dst" : f"{graph_id}_{batch[i].dst}"
+                        } if isinstance(batch[i], Edge) else {}
+                    ),
+                    **{
+                        k : v
+                        for k, v in batch[i].properties.items()
+                        if not isinstance(v, Tensor)
+                    }
+                }
 
             session.execute_write(run_tx, batch)
             uploaded += len(batch)
@@ -99,16 +100,16 @@ class Neo4jUploader(BaseCommand):
 
     IGNORED_NODE_TYPES = {"Author", "Keyword"}
 
-    def _upload_nodes(self, session : Session, nodes_by_type: Dict[str, List[Dict]], graph_id : str) -> None:
+    def _upload_nodes(self, session : Session, graph : Graph, graph_id : str) -> None:
 
-        for node_type, node_list in nodes_by_type.items():
+        for node_type, node_list in graph._nodes.items():
 
             if not node_list or node_type in self.IGNORED_NODE_TYPES:
                 continue
 
             self.send_info_event(
                 progress=0.0,
-                message=f"[Upload] Uploading {len(node_list):,} '{node_type}' nodes …",
+                message=f"[Upload] Uploading {len(node_list._nodes):,} '{node_type}' nodes …",
             )
 
             query = (
@@ -117,13 +118,13 @@ class Neo4jUploader(BaseCommand):
                 f"SET n = node"
             )
 
-            self._run_batched(session, query, node_list, f"{node_type} nodes", graph_id)
+            self._run_batched(session, query, node_list.nodes, f"{node_type} nodes", graph_id)
 
-    def _create_indexes(self, session : Session, nodes_by_type: Dict[str, List[Dict]]) -> None:
+    def _create_indexes(self, session : Session, graph : Graph) -> None:
 
         self.send_info_event(progress=0.0, message="[Neo4j] Creating indexes on node ids …")
 
-        for node_type in nodes_by_type.keys():
+        for node_type in graph._nodes.keys():
 
             if node_type in self.IGNORED_NODE_TYPES:
                 continue
@@ -134,17 +135,16 @@ class Neo4jUploader(BaseCommand):
             query = f"CREATE INDEX IF NOT EXISTS FOR (n:{node_type}) ON (n.graph_id)"
             session.run(query)
 
-    def _upload_edges(self, session: Session, edges_by_type: Dict[str, List[Dict]], graph_id : str) -> None:
+    def _upload_edges(self, session: Session, graph : Graph, graph_id : str) -> None:
 
-        for edge_key, edge_list in edges_by_type.items():
+        for edge_key, edge_list in graph._edges.items():
 
             if not edge_list:
                 continue
 
-            parts    = edge_key.split("_")
-            src_type = parts[0]
-            dst_type = parts[-1]
-            rel_type = "_".join(parts[1:-1]).upper()
+            src_type = edge_key.src
+            dst_type = edge_key.dst
+            rel_type = edge_key.name.upper()
 
             if src_type in self.IGNORED_NODE_TYPES or dst_type in self.IGNORED_NODE_TYPES:
                 continue
@@ -152,7 +152,7 @@ class Neo4jUploader(BaseCommand):
             self.send_info_event(
                 progress=0.0,
                 message=(
-                    f"[Upload] Uploading {len(edge_list):,} "
+                    f"[Upload] Uploading {len(edge_list._edges):,} "
                     f"(:{src_type})-[:{rel_type}]->(:{dst_type}) edges …"
                 ),
             )
@@ -165,7 +165,7 @@ class Neo4jUploader(BaseCommand):
                 f"SET r = edge"
             )
 
-            self._run_batched(session, query, edge_list, f"{edge_key} edges", graph_id)
+            self._run_batched(session, query, edge_list._edges, f"{edge_key} edges", graph_id)
 
     # ------------------------------------------------------------------
     # Orchestrator
@@ -175,36 +175,29 @@ class Neo4jUploader(BaseCommand):
 
         self.send_info_event(
             progress=0.0,
-            message=f"[Neo4j] Loading graph from {self.config.graph_filename}",
+            message=f"[Neo4j] Loading graph from {self.config.expertise_dir}",
         )
 
-        raw_G: Dict[str, Any] = helpers.load_json_file(self.config.graph_filename)
+        graph = Graph.load(self.config.expertise_dir)
 
-        nodes_by_type: Dict[str, List[Dict]] = raw_G.get("nodes", {})
-        edges_by_type: Dict[str, List[Dict]] = raw_G.get("edges", {})
-
-        n_nodes = sum(len(v) for v in nodes_by_type.values())
-        n_edges = sum(len(v) for v in edges_by_type.values())
+        n_nodes = sum(graph.node_counts.values())
+        n_edges = sum(graph.edge_counts.values())
 
         self.send_info_event(
             progress=0.0,
             message=f"[Neo4j] Graph loaded — {n_nodes:,} nodes, {n_edges:,} edges",
         )
 
-        driver = GraphDatabase.driver(
-            self.config.neo4j_uri,
-            auth=(self.config.neo4j_user, self.config.neo4j_pwd),
-        )
 
-        graph_id = nodes_by_type['ExpertiseMap'][0]['id']
+        graph_id = graph.get_nodes('ExpertiseMap')[0].id
 
-        with driver.session() as session:
+        with self.driver.session() as session:
             self._clear_db(session)
-            self._upload_nodes(session, nodes_by_type, graph_id)
-            self._create_indexes(session, nodes_by_type)
-            self._upload_edges(session, edges_by_type, graph_id)
+            self._upload_nodes(session, graph, graph_id)
+            self._create_indexes(session, graph)
+            self._upload_edges(session, graph, graph_id)
 
-        driver.close()
+        self.driver.close()
 
         self.send_info_event(
             progress=1.0,
@@ -215,6 +208,6 @@ class Neo4jUploader(BaseCommand):
 
     @classmethod
     def from_config(cls, config: Config) -> Self:
-        uploader = cls(config=config)
+        uploader = Neo4jUploader(config=config,driver=env.driver)
         uploader.add_handler(ConsoleLogger("Neo4jUploader"))
         return uploader

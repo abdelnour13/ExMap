@@ -1,5 +1,5 @@
 from src.shared.handlers import Event, EventLevel
-from typing import Any, Generator,Protocol,List, TypeVar, Self, Optional, Dict
+from typing import Any, Generator,Protocol,List, TypeVar, Self, Optional, Dict, Iterable
 from abc import ABC, abstractmethod
 from itertools import chain
 
@@ -155,3 +155,29 @@ class BaseCommand(ABC):
         extra : Optional[Dict] = None
     ) -> Event:
         self.send_event(self.make_event(progress, EventLevel.CRITICAL, message, task, extra))
+
+    def track(self, 
+        it : Iterable[T], 
+        task : str,
+        update_every : int = 1
+    ) -> Generator[T, None, None]:
+        
+        total = len(it)
+
+        self.send_info_event(
+            progress=0.0,
+            task=task,
+            message=f"Starting {task.replace('-', ' ')}..."
+        )
+
+        for i, item in enumerate(it):
+
+            yield item
+
+            if (i % update_every == 0) or ((i+1) == total):
+
+                self.send_info_event(
+                    progress=(i+1)/total,
+                    task=task,
+                    message=f"{task.replace('-', ' ')} : {i+1} elements processed."
+                )

@@ -29,3 +29,5 @@ test*.ipynb
 queries.cypher.txt
 
 old_experiments
+
+evaluation_subset.csv

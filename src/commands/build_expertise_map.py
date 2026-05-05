@@ -1,8 +1,7 @@
 import os
 import torch
-import dotenv
-from rich.progress import Progress
-from src.shared.llms import LLM
+import numpy as np
+from sknetwork.ranking import PageRank
 from openai import Client
 from typing import Dict, List, Literal, Tuple
 from pydantic import BaseModel, computed_field
@@ -12,7 +11,7 @@ from torch import Tensor
 from definitions import EXPERIMENTS_DIR, EMS_DIR
 from instance import cli
 from torch_geometric.data import HeteroData
-from src.commands.feature_extraction import Edge, Graph
+from src.commands.feature_extraction import EdgeType, Graph
 from src.commands.train import Trainer, Config as TrainerConfig
 from src.gnn import HetModel, HetModelReturn
 from src.shared.command_tools import BaseCommand
@@ -20,6 +19,12 @@ from src.shared.handlers import ConsoleLogger
 from src.env import env
 from src import helpers
 
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+def entropy(en : Tensor) -> Tensor:
+    return torch.sum(en * torch.log(en + 10e-5), dim=-1).clip(max=0)
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -50,6 +55,10 @@ class BEMConfig(BaseModel):
 
     # ── Representative node selection ──────────────────────────────────
     llm : str = "deepseek-chat" # LLM used for llm-based labeling
+
+    # ── Root Node ──────────────────────────────────────────────────────
+    name : str
+    description : str
 
     @computed_field
     @property
@@ -190,7 +199,7 @@ class ExpertiseMapBuilder(BaseCommand):
         model : HetModel,
         inference_results : HetModelReturn,
         edge_index : Tensor,
-    ) -> Tuple[Tensor, Dict[str, Tensor]]:
+    ) -> Tuple[Tensor, Tensor, Dict[str, Tensor]]:
 
         self.send_info_event(
             progress=None,
@@ -219,6 +228,17 @@ class ExpertiseMapBuilder(BaseCommand):
         alg_cls = Leiden if self.config.clustering_alg == "leiden" else Louvain
         alg  = alg_cls(resolution=self.config.clustering_resolution)
         communities = torch.from_numpy(alg.fit_predict(adj)).to(inference_results.entities_embeddings.device)
+
+        communities_probas = torch.from_numpy(alg.fit_predict_proba(
+            from_edge_list(
+                list(
+                    zip(
+                        edge_index[0].tolist(), 
+                        edge_index[1].tolist()
+                    )
+                )
+            )
+        ))
 
         n_communities = int(communities.max().item() + 1)
 
@@ -250,7 +270,7 @@ class ExpertiseMapBuilder(BaseCommand):
             ),
         )
 
-        return communities, communities_labels
+        return communities, communities_probas, communities_labels
     
     def clean_community(self, community : Dict) -> Dict:
 
@@ -274,7 +294,7 @@ class ExpertiseMapBuilder(BaseCommand):
         data : HeteroData,
         communities : Tensor,
         community_labels : Dict[str, Tensor]
-    ) -> Dict:
+    ) -> List[Dict]:
         
         n_communities = communities.max().item() + 1
 
@@ -292,7 +312,11 @@ class ExpertiseMapBuilder(BaseCommand):
 
             communities_nodelist[community.item()]['entities'].append({
                 'id' : entity.id,
-                **graph.get_node('Entity', entity.id).properties
+                **{
+                    k : v
+                    for k, v in graph.get_node('Entity', entity.id).properties.items()
+                    if not isinstance(v, Tensor)
+                }
             })
         
         for community, labels in enumerate(community_labels['subdomain']):
@@ -323,21 +347,12 @@ class ExpertiseMapBuilder(BaseCommand):
             if len(community['entities']) >= self.config.min_nodes_per_community
         ]
 
-        self.send_info_event(
-            progress=0.0,
+        for i,community in enumerate(self.track(
+            communities_nodelist,
             task="representative-node-querying",
-            message="Starting Representative node querying..."
-        )
-
-        for i,community in enumerate(communities_nodelist):
-
+            update_every=16
+        )):
             communities_nodelist[i] = self.query_representative_node(community)
-
-            self.send_info_event(
-                progress=(i+1)/len(communities_nodelist),
-                task="representative-node-querying",
-                message="Starting Representative node querying..."
-            )
 
         self.send_info_event(
             progress=None,
@@ -345,17 +360,19 @@ class ExpertiseMapBuilder(BaseCommand):
         )
 
         return communities_nodelist
+    
+    def _select_representative_node(self, community : Dict, attr : str) -> str:
+        return sorted(community['entities'], key=lambda e : e[attr], reverse=True)[0]['name']
 
     def query_representative_node(self, community : Dict) -> Dict:
 
         community = {**community}
 
+        for attr in ['specificity_weighted_pagerank', 'pagerank_entropy']:
+            community[f'{attr}_name'] = self._select_representative_node(community, attr)
+
         sorted_entities = sorted(community['entities'], key=lambda e : e['specificity_weighted_pagerank'], reverse=True)
-        community['name'] = sorted_entities[0]['name']
-
-        return community
-
-        sorted_entities = [e['name'] for e in sorted_entities[:min(len(sorted_entities), 20)]]
+        sorted_entities = [e['name'] for e in sorted_entities[:min(len(sorted_entities), 25)]]
 
         messages = [
             {
@@ -406,22 +423,32 @@ class ExpertiseMapBuilder(BaseCommand):
         results : HetModelReturn
     ) -> Graph:
 
-        Expertise_BELONGSTO_SubDomain = Edge("Expertise", "SubDomain", "BELONGSTO")
-        Expertise_BELONGSTO_Lab = Edge("Expertise", "Lab", "BELONGSTO")
+        Expertise_BELONGSTO_SubDomain = EdgeType("Expertise", "SubDomain", "BELONGSTO")
+        Expertise_BELONGSTO_Lab = EdgeType("Expertise", "Lab", "BELONGSTO")
 
-        Entity_BELONGSTO_SubDomain = Edge("Entity", "SubDomain", "BELONGSTO")
-        Entity_BELONGSTO_Lab = Edge("Entity", "Lab", "BELONGSTO")
-        Entity_BELONGSTO_Expertise = Edge("Entity", "Expertise", "BELONGSTO")
+        Entity_BELONGSTO_SubDomain = EdgeType("Entity", "SubDomain", "BELONGSTO")
+        Entity_BELONGSTO_Lab = EdgeType("Entity", "Lab", "BELONGSTO")
+        Entity_BELONGSTO_Expertise = EdgeType("Entity", "Expertise", "BELONGSTO")
+
+        Domain_BELONGSTO_ExpertiseMap = EdgeType("Domain", "ExpertiseMap", "BELONGSTO")
         
         ### Community Node & Community <-> SubDomain links & Community <-> Entity Links
-        for community in communities_nodelist:
+        for community in self.track(
+            communities_nodelist,
+            task="update-graph/adding-experties",
+            update_every=16
+        ):
 
             graph.add_node(
                 type='Expertise', 
                 id=community['id'],
                 properties={
-                    "name" : community['name'],
-                    # "llm_label" : community['llm_label'],
+                    "llm_label" : community['llm_label'],
+                    **{
+                        k : v
+                        for k, v in community.items()
+                        if k.endswith('_name')
+                    }
                 }
             )
 
@@ -457,7 +484,7 @@ class ExpertiseMapBuilder(BaseCommand):
 
         ### Add Entity <-> SubDomain links
         for entity, subdomain_probas, lab_probas in zip(
-            graph.get_nodes('Entity'), 
+            self.track(graph.get_nodes('Entity'), task="update-graph/adding-entities-relations", update_every=512),
             results.entities_predictions['subdomain'], 
             results.entities_predictions['lab']
         ):
@@ -492,7 +519,120 @@ class ExpertiseMapBuilder(BaseCommand):
                             }
                         )
 
+        ### Add root node
+        graph.add_node(
+            type='ExpertiseMap',
+            id=self.config.expertise_id,
+            properties={
+                'name' : self.config.name,
+                'description' : self.config.description
+            }
+        )
+
+        ### Add Domain <-> Root Node relations
+        for domain in graph.get_nodes('Domain'):
+
+            graph.add_edge(
+                type=Domain_BELONGSTO_ExpertiseMap,
+                src=domain.id,
+                dst=self.config.expertise_id
+            )
+
         return graph
+    
+    def compute_pagerank_metrics(
+        self,
+        edge_index: Tensor,
+        communities: Tensor,
+        n_entities: int,
+    ) -> Tuple[Tensor, Tensor]:
+        """
+        Returns two entity-level PageRank tensors (both on unweighted graphs):
+
+        - global_pagerank : PageRank computed over the full entity–entity graph.
+        - local_pagerank  : PageRank computed only within each node's community
+                            subgraph, with nodes re-indexed locally so community
+                            size does not distort the scores.
+
+        Both tensors have shape (n_entities,) and float32 dtype.
+        """
+
+        self.send_info_event(
+            progress=None,
+            message="[PageRank] Computing global and local PageRank metrics …",
+        )
+
+        src_list = edge_index[0].tolist()
+        dst_list = edge_index[1].tolist()
+
+        # ── Global PageRank ────────────────────────────────────────────────
+        adj_global     = from_edge_list(list(zip(src_list, dst_list)))
+        global_scores  = PageRank().fit_predict(adj_global).astype(np.float32)
+
+        # Pad to n_entities in case the adj matrix is smaller than the node count
+        if len(global_scores) < n_entities:
+            padded = np.zeros(n_entities, dtype=np.float32)
+            padded[:len(global_scores)] = global_scores
+            global_scores = padded
+
+        # ── Local (community-level) PageRank ──────────────────────────────
+        local_scores   = np.zeros(n_entities, dtype=np.float32)
+        n_communities  = int(communities.max().item()) + 1
+
+        for c in self.track(
+            range(n_communities),
+            task="c-pr",
+            update_every=16
+        ):
+
+            node_mask  = (communities == c).nonzero(as_tuple=True)[0]
+            node_list  = node_mask.tolist()
+
+            if len(node_list) == 0:
+                continue
+
+            if len(node_list) == 1:
+                local_scores[node_list[0]] = 1.0
+                continue
+
+            # Re-index community nodes to 0…|C|-1 so the local adj is compact
+            node_set  = set(node_list)
+            local_idx = {g: l for l, g in enumerate(node_list)}
+
+            community_edges = [
+                (local_idx[s], local_idx[d])
+                for s, d in zip(src_list, dst_list)
+                if s in node_set and d in node_set
+            ]
+
+            if not community_edges:
+                # Isolated community — uniform score
+                uniform = 1.0 / len(node_list)
+                for g in node_list:
+                    local_scores[g] = uniform
+                continue
+
+            adj_local  = from_edge_list(community_edges)
+            local_pr   = PageRank().fit_predict(adj_local).astype(np.float32)
+
+            # Pad if adj is smaller than community size (dangling nodes)
+            if len(local_pr) < len(node_list):
+                padded = np.zeros(len(node_list), dtype=np.float32)
+                padded[:len(local_pr)] = local_pr
+                local_pr = padded
+
+            for g, l in local_idx.items():
+                local_scores[g] = local_pr[l]
+
+        self.send_info_event(
+            progress=None,
+            message="[PageRank] Done — global and local scores computed.",
+        )
+
+        return (
+            torch.from_numpy(global_scores),
+            torch.from_numpy(local_scores),
+        )
     
     def __iter__(self):
 
@@ -511,13 +651,27 @@ class ExpertiseMapBuilder(BaseCommand):
         }
 
         ### Community detection & update graph with community / expertise id
-        communities, community_labels = self.cluster(
+        communities, communities_probas, community_labels = self.cluster(
             model,
             inferece_results, 
             data['Entity', 'HASRELATIONWITH', 'Entity'].edge_index
         )
 
-        graph._nodes['Entity']._features['expertise_id'] = communities        
+        graph._nodes['Entity']._features['expertise_id'] = communities    
+        graph._nodes['Entity']._features['community_proba'] = communities_probas  
+        graph._nodes['Entity']._features['entropy'] = entropy(communities_probas) 
+        graph._nodes['Entity']._features['normalized_entropy'] = 2 * torch.sigmoid(entropy(communities_probas))
+        graph._nodes['Entity']._features['pagerank_entropy'] = graph._nodes['Entity']._features['normalized_entropy'] * graph._nodes['Entity']._features['pagerank']
+
+        # # ── New PageRank metrics ───────────────────────────────────────────────────
+        # n_entities = data['Entity'].x.size(0)
+        # global_pr, local_pr = self.compute_pagerank_metrics(
+        #     edge_index   = data['Entity', 'HASRELATIONWITH', 'Entity'].edge_index,
+        #     communities  = communities,
+        #     n_entities   = n_entities,
+        # )
+        # graph._nodes['Entity']._features['global_pagerank'] = global_pr
+        # graph._nodes['Entity']._features['local_pagerank']  = local_pr     
 
         ### Clean communities, entities ranking & representative entities selection
         communities_nodelist = self.process_communities(
@@ -526,6 +680,8 @@ class ExpertiseMapBuilder(BaseCommand):
             communities,
             community_labels
         )
+
+        helpers.save_json_file(os.path.join(self.config.expertise_dir, 'communities.json'), communities_nodelist)
 
         ### Save update graph with new node(s) and relationship(s)
         graph = self.update_graph(
