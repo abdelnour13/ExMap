@@ -18,6 +18,7 @@ Entry-point (CLI):
 import os
 import pandas as pd
 import torch
+from rich.progress import Progress as RichProgress
 from typing import Any, Dict, List, Optional, Self, Tuple
 from pydantic import BaseModel, Field, computed_field
 from sklearn.model_selection import KFold
@@ -196,6 +197,57 @@ def _norm_features(data : HeteroData) -> HeteroData:
 
     return data
 
+def _biased_sample_negative_edges(
+    edge_index : Tensor,
+    num_nodes : Tuple[int, int], 
+    x1 : Tensor, 
+    x2 : Tensor,
+    tmp : float = 1.0,
+    n_rounds : int = 10,
+    f_random : float = 0.3
+) -> Tuple[Tensor, Tensor]:
+
+    y = [torch.ones_like(edge_index[0])]
+    num_edges = len(edge_index[0])
+
+    ### Biased sampling
+    for _ in range(n_rounds):
+
+        n_row, n_col = gnn_utils.negative_sampling(
+            edge_index=edge_index,
+            num_nodes=num_nodes,
+            num_neg_samples=int((1-f_random)*num_edges)
+        )
+
+        scores = torch.sum(x1[n_row] * x2[n_col], dim=-1)
+        scores = scores - scores.max()
+        scores = gnn_utils.softmax(tmp * scores, index=n_row, dim=0)
+
+        indices = torch.multinomial(
+            scores,
+            num_samples=int((1-f_random)*num_edges/n_rounds),
+            replacement=False
+        )
+
+        negative_edge_index = torch.stack([n_row[indices], n_col[indices]], dim=0)
+        edge_index = torch.cat([edge_index, negative_edge_index], dim=-1)
+        y.append(torch.zeros_like(negative_edge_index[0]))
+
+    ### Random sampling
+    n_row, n_col = gnn_utils.negative_sampling(
+        edge_index=edge_index,
+        num_nodes=num_nodes,
+        num_neg_samples=int(f_random*num_edges)
+    )
+
+    negative_edge_index = torch.stack([n_row, n_col], dim=0)
+    edge_index = torch.cat([edge_index, negative_edge_index], dim=-1)
+    y.append(torch.zeros_like(negative_edge_index[0]))
+
+    y = torch.cat(y)
+
+    return edge_index.long(), y
+
 # ---------------------------------------------------------------------------
 # Sampler
 # ---------------------------------------------------------------------------
@@ -249,7 +301,7 @@ class HybridSampler:
 # ---------------------------------------------------------------------------
 
 @cli.register_stage(
-    name="train_2",
+    name="train",
     description=(
         "Trains the Knowledge Representation Learning module based on the "
         "configuration specified in the experiment path."
@@ -412,7 +464,7 @@ class Trainer(BaseCommand):
             drop_last=is_train
         )
 
-    def create_samplers(self, data: HeteroData) -> List[Tuple[HybridSampler, HybridSampler]]:
+    def create_samplers(self, data: HeteroData) -> Tuple[List[Tuple[HybridSampler, HybridSampler]], Tensor]:
         
         split_tensor = self.create_or_load_split(data)
         samplers: List[Tuple[HybridSampler, HybridSampler]] = []
@@ -437,7 +489,7 @@ class Trainer(BaseCommand):
                 self._make_sampler(val_split,   is_train=False),
             ))
 
-        return samplers
+        return samplers, split_tensor
 
     def create_full_sampler(self, data: HeteroData) -> HybridSampler:
         """Sampler over the entire graph (used for final retraining)."""
@@ -450,9 +502,6 @@ class Trainer(BaseCommand):
     def create_model(self, config: BaseTrainingConfig, data: HeteroData) -> HetModel:
 
         self.send_info_event(progress=0.0, message="[Model] Instantiating GNN model …")
-
-        # config.model_params.ssl     = config.add_ssl_loss
-        # config.model_params.cluster = False
 
         model = HetModel.from_config(
             in_channels=data['Entity'].x.size(-1),
@@ -508,7 +557,6 @@ class Trainer(BaseCommand):
         batch: HeteroData,
         results: HetModelReturn,
         batch_size: int,
-        labels: Optional[Tensor] = None,
         negative_sample: Optional[Dict[str, Tuple[Tensor, Tensor]]] = None,
         weights: Optional[Dict[str, float]] = None,
     ) -> Dict[str, Tensor]:
@@ -532,9 +580,16 @@ class Trainer(BaseCommand):
         total = torch.scalar_tensor(0.0).to(y_hat.device)
 
         for name, value in losses.items():
+
             w = weights.get(name, 1.0)
+            
             if w > 0:
                 total = total + w * value
+
+        # losses['rec_loss'] = F.mse_loss(
+        #     results.articles_embeddings @ results.articles_embeddings.T, 
+        #     batch['Article'].x @ batch['Article'].x.T
+        # )
 
         losses["loss"] = total
         return losses
@@ -545,7 +600,6 @@ class Trainer(BaseCommand):
         batch: HeteroData,
         results: HetModelReturn,
         batch_size: int,
-        labels: Optional[Tensor] = None,
         negative_sample: Optional[Tuple[Tensor, Tensor]] = None,
     ) -> Dict[str, float]:
         
@@ -629,27 +683,34 @@ class Trainer(BaseCommand):
                             f"{phase.upper()} — {n_batches} batches",
                 )
 
-                from rich.progress import Progress as RichProgress
                 with RichProgress() as pbar:
+
                     task = pbar.add_task(
                         f"[blue]Epoch {epoch + 1}/{config.num_epochs} | {phase.upper()}",
                         total=n_batches,
                     )
 
                     for batch in loader:
-                        batch = helpers.move_data_to_device(batch, device=config.device)
-
+                        
+                        ### Negative Sampling
                         sample, labels = None, None
 
-                        # if config.model_params.ssl:
+                        if config.model_params.ssl:
 
-                        #     ei, et, labels = self.sample_negative_edges(
-                        #         batch['Entity', 'HASRELATIONWITH', 'Entity'].edge_index, 
-                        #         batch['Entity', 'HASRELATIONWITH', 'Entity'].edge_type, 
-                        #         batch['Entity'].size(0)
-                        #     )
+                            sample, labels = _biased_sample_negative_edges(
+                                edge_index=batch['Entity','APPEARIN', 'Article'],
+                                num_nodes=(batch['Entity'].x.size(0), batch['Article'].x.size(0)),
+                                x1=batch['Entity'].x,
+                                x2=batch['Article'].x_passage,
+                                tmp=1.0,
+                                n_rounds=10,
+                                f_random=0.3
+                            )
 
-                        #     sample = (ei, et)
+                            sample = sample.to(config.device)
+                            labels = labels.to(config.device)
+
+                        batch = helpers.move_data_to_device(batch, device=config.device)
 
                         with torch.set_grad_enabled(is_training):
 
@@ -665,10 +726,16 @@ class Trainer(BaseCommand):
                             )
 
                             losses = self.loss(
-                                config, batch=batch, results=results,
+                                config, 
+                                batch=batch, 
+                                results=results,
                                 batch_size=config.batch_size,
-                                labels=labels, negative_sample=neg_smpl,
-                                weights={"guidance_loss": 1.0, "ssl_loss": 0.05},
+                                negative_sample=neg_smpl,
+                                weights={
+                                    "guidance_loss": 1.0, 
+                                    "ssl_loss": 0.05,
+                                    "rec_loss" : 0.05
+                                },
                             )
 
                         if is_training:
@@ -677,9 +744,11 @@ class Trainer(BaseCommand):
                             optimizer.step()
 
                         metrics = self.evaluate(
-                            config, batch=batch, results=results,
+                            config, 
+                            batch=batch, 
+                            results=results,
                             batch_size=config.batch_size,
-                            labels=labels, negative_sample=neg_smpl,
+                            negative_sample=neg_smpl,
                         )
 
                         epoch_rows.append({
@@ -698,6 +767,7 @@ class Trainer(BaseCommand):
 
             # ── Epoch summary logging ─────────────────────────────────
             if (epoch + 1) % config.log_every == 0:
+
                 summary = (
                     epoch_df
                     .drop(columns=["epoch"])
@@ -758,16 +828,63 @@ class Trainer(BaseCommand):
     # ------------------------------------------------------------------
 
     @staticmethod
-    def inference(model: HetModel, data: HeteroData) -> Tensor:
+    def inference(
+        model: HetModel, 
+        data: HeteroData,
+        split : Tensor,
+        fold : int
+    ) -> Dict[str, Tensor]:
 
         model = model.eval().cpu()
         data  = data.cpu()
 
-        # model.ssl     = False
-        # model.cluster = False
+        r = {}
+
+        model.ssl     = False
+
+        ### 1- With article-level infos
+        with torch.no_grad():
+            r["full"] = model.forward(data).articles_predictions
+
+        ### 2- zero 
+        x = data['Article'].x
+        data['Article'].x[split == fold] = torch.zeros_like(x[0,:])
 
         with torch.no_grad():
-            return model.forward(data).articles_predictions
+            r["partial1"] = model.forward(data).articles_predictions
+
+        data['Article'].x = x
+
+        ### 3- Mean
+        x = data['Article'].x
+        data['Article'].x[split == fold] = x.mean(0)
+
+        with torch.no_grad():
+            r["partial2"] = model.forward(data).articles_predictions
+
+        data['Article'].x = x
+        
+        ### 4- Without article-level infos 
+        subset = data.subgraph({
+            'Article' : data['Article'].node_id[split != fold]
+        })
+
+        with torch.no_grad():
+
+            results = model.forward(subset)
+
+            e_emb = results.entities_embeddings
+
+            a_emb = model.article_embddings(
+                e_emb, 
+                data['Entity','APPEARIN', 'Article'].edge_index,
+                data['Article'].x.size(0)
+            )
+
+            r["partial3"] = model.predict(a_emb)
+
+        return r
+    
 
     # ------------------------------------------------------------------
     # Main loop
@@ -802,7 +919,7 @@ class Trainer(BaseCommand):
                         f"({config_idx + 1}/{n_configs} configurations)",
             )
 
-            samplers = self.create_samplers(data)
+            samplers, split_tensor = self.create_samplers(data)
 
             # ----------------------------------------------------------
             # K-Fold trials
@@ -811,16 +928,24 @@ class Trainer(BaseCommand):
             for trial_id, (train_sampler, val_sampler) in enumerate(samplers):
 
                 history_path = os.path.join(
-                    HISTORIES_DIR, f"history_{config_name}_trial{trial_id}.csv"
+                    HISTORIES_DIR, 
+                    f"history_{config_name}_trial{trial_id}.csv"
                 )
-                result_path = os.path.join(
-                    RESULTS_DIR, f"predictions_{config_name}_trial{trial_id}.pt"
+
+                full_result_path = os.path.join(
+                    RESULTS_DIR, 
+                    f"predictions_full_{config_name}_trial{trial_id}.pt"
+                )
+
+                partial_result_path = os.path.join(
+                    RESULTS_DIR, 
+                    f"predictions_partial_{config_name}_trial{trial_id}.pt"
                 )
 
                 step_label   = f"config '{config_name}' | trial {trial_id + 1}/{self.config.num_splits}"
                 step_progress = completed / total_steps
 
-                if os.path.exists(result_path) and os.path.exists(history_path):
+                if os.path.exists(full_result_path) and os.path.exists(history_path):
                     
                     self.send_info_event(
                         progress=step_progress,
@@ -856,13 +981,26 @@ class Trainer(BaseCommand):
                 )
 
                 # Save trial predictions
-                preds = self.inference(model, data)
-                torch.save(preds, result_path)
-                self.send_info_event(
-                    progress=completed / total_steps,
-                    message=f"[{step_label}] Predictions saved → {result_path}",
+                results = self.inference(
+                    model, 
+                    data, 
+                    split=split_tensor,
+                    fold=trial_id
                 )
 
+                for startegy, result in results.items():
+
+                    torch.save(
+                        result,
+                        os.path.join(RESULTS_DIR, f"predictions_{startegy}_{config_name}_trial{trial_id}.pt"),
+                    )
+
+                self.send_info_event(
+                    progress=completed / total_steps,
+                    message=f"[{step_label}] Predictions saved → {full_result_path}",
+                )
+
+                del results
                 del model  # free VRAM between trials
 
             # ----------------------------------------------------------

@@ -6,7 +6,6 @@ from torch_geometric.data import HeteroData
 from typing import Literal, Optional, Dict, Tuple, List
 from dataclasses import dataclass
 from torch_scatter import scatter
-from src import helpers
 from pydantic import BaseModel
 from src.gnn.layers import RGATConv, TransGNN, MLP, Activation
 
@@ -237,6 +236,7 @@ class HetGNNConfig(BaseModel):
     variant: Literal["conv", "attn"] = "conv"
     readout : Literal['mean','max','attn'] = 'max' 
     activation: str = "relu"
+    ssl : bool = False
     norm: bool = False
     kgnn_args: Optional[Dict] = None
     rgnn_args: Optional[Dict] = None
@@ -255,6 +255,10 @@ class HetModelReturn:
     ### Embeddings
     entities_embeddings : Tensor
     articles_embeddings : Tensor
+
+    ### SSL
+    y_hat : Optional[Tensor]
+    
     
 class HetModel(nn.Module):
 
@@ -334,7 +338,7 @@ class HetModel(nn.Module):
         else:
             self.readout_fn = gnn.AttentionalAggregation(gate_nn = nn.Linear(self.channels[-1], 1))
 
-        ### Prediction Loss
+        ### Prediction Heads
         self.heads = nn.ModuleDict()
 
         for label_name, label_dim in num_labels.items():
@@ -343,6 +347,14 @@ class HetModel(nn.Module):
                 nn.Dropout(p = dropout_rate) if dropout_rate > 0 else nn.Identity(),
                 nn.Linear(self.channels[-1], label_dim)
             ))
+
+        ### SSL entity <-> article
+        self.ssl_head = nn.Sequential(
+            nn.Linear(2 * self.channels[-1], self.channels[-1]),
+            nn.BatchNorm1d(self.channels[-1]),
+            Activation(activation),
+            nn.Linear(self.channels[-1], 1)
+        )
 
     @staticmethod
     def from_config(
@@ -360,8 +372,6 @@ class HetModel(nn.Module):
         )
     
     def encode(self, batch : HeteroData) -> Tuple[Tensor, Tensor, Tensor]:
-
-        # print(batch)
 
         kg_x, kg_e, kg_A = batch['Entity'].x, batch['Entity', 'HASRELATIONWITH', 'Entity'].edge_attr, batch['Entity', 'HASRELATIONWITH', 'Entity'].edge_index
         art_x, art_e, art_A = batch['Article'].x, batch['Article','relate-to','Article'].edge_type, batch['Article', 'relate-to', 'Article'].edge_index
@@ -433,23 +443,39 @@ class HetModel(nn.Module):
             for label_name, m in self.heads.items()
         }
 
-    def forward(self, batch : HeteroData) -> HetModelReturn:
+    def forward(self, 
+        batch : HeteroData,
+        entity_article : Optional[Tensor] = None # 2xN : entity_id, article_id
+    ) -> HetModelReturn:
 
         ### Encoder        
-        kg_x, kg_e, art_x = self.encode(batch)
+        kg_x, _, art_x = self.encode(batch)
         
         ### Pooling
         entity_article = batch['Entity','APPEARIN', 'Article'].edge_index
-        art_x = self.article_embddings(kg_x, entity_article, batch['Article'].x.size(0))
+        art_x_p = self.article_embddings(kg_x, entity_article, batch['Article'].x.size(0))
 
         ### Prediction
         entities_predictions = self.predict(kg_x)
-        articles_predictions = self.predict(art_x)
+        articles_predictions = self.predict(art_x_p)
 
+        ### SSL
+        y_hat = None
+        
+        if self.ssl:
+
+            if entity_article is None:
+                raise Exception("entity_article can not be null when ssl is true.")
+            
+            entity_ids, articles_ids = entity_article
+            
+            x = torch.cat([kg_x[entity_ids], art_x[articles_ids]], dim=-1)
+            y_hat = self.ssl_head(x)
 
         return HetModelReturn(
             articles_predictions=articles_predictions,
             entities_predictions=entities_predictions,
             entities_embeddings=kg_x,
-            articles_embeddings=art_x
+            articles_embeddings=art_x,
+            y_hat=y_hat
         )
