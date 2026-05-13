@@ -1,7 +1,7 @@
 {
     "seed" : 44,
 
-    "graph" : "nantes_uni_2020_2026_e5",
+    "graph" : "nantes_uni_2020_2026_e5-v2",
     "num_splits" : 4,
     "keep_largest_cc" : true,
     "min_entities_per_article" : 5,
@@ -27,12 +27,13 @@
     "log_every" : 1,
 
     "hparams": {
-        "Conv_Attn_null_False": {
+        "Conv_Mean_null_False_ssl": {
             "do_negative_sampling": false,
             "model_params": {
-                "readout": "attn",
+                "readout": "mean",
                 "variant": "conv",
-                "aggregation": null
+                "aggregation": null,
+                "ssl" : true
             }
         }
     }

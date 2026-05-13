@@ -26,7 +26,7 @@ from torch import Tensor, optim
 from torch.nn import functional as F
 from torch_geometric import utils as gnn_utils
 from torch_sparse import SparseTensor
-from torchmetrics.functional import accuracy, f1_score
+from torchmetrics.functional import accuracy, f1_score, r2_score
 from definitions import EXPERIMENTS_DIR, FEATURES_DIR
 from instance import cli
 from torch_geometric.loader import NeighborLoader
@@ -96,6 +96,33 @@ class TrainingConfig(BaseTrainingConfig):
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
+def contrastive_loss(za : Tensor, ze : Tensor, temperature : float = 0.1):
+    """
+    za: article graph embeddings [B, D]
+    ze: entity-derived article embeddings [B, D]
+    """
+
+    # normalize embeddings
+    za = F.normalize(za, dim=1)
+    ze = F.normalize(ze, dim=1)
+
+    # similarity matrix
+    logits = za @ ze.T
+
+    # temperature scaling
+    logits = logits / temperature
+
+    # positives are diagonal entries
+    labels = torch.arange(za.size(0), device=za.device)
+
+    # symmetric InfoNCE
+    loss_a2e = F.cross_entropy(logits, labels)
+    loss_e2a = F.cross_entropy(logits.T, labels)
+
+    loss = (loss_a2e + loss_e2a) / 2
+
+    return loss
 
 def _subgraph_by_articles(data : HeteroData, article_ids : torch.Tensor) -> HeteroData:
 
@@ -579,18 +606,21 @@ class Trainer(BaseCommand):
 
         total = torch.scalar_tensor(0.0).to(y_hat.device)
 
+        if config.model_params.ssl:
+
+            losses['ssl'] = contrastive_loss(
+                results.articles_embeddings_v1[:batch_size,:],
+                results.articles_embeddings_v2[:batch_size,:],
+                temperature=0.1
+            )
+
         for name, value in losses.items():
 
             w = weights.get(name, 1.0)
             
             if w > 0:
                 total = total + w * value
-
-        # losses['rec_loss'] = F.mse_loss(
-        #     results.articles_embeddings @ results.articles_embeddings.T, 
-        #     batch['Article'].x @ batch['Article'].x.T
-        # )
-
+            
         losses["loss"] = total
         return losses
 
@@ -695,20 +725,20 @@ class Trainer(BaseCommand):
                         ### Negative Sampling
                         sample, labels = None, None
 
-                        if config.model_params.ssl:
+                        # if config.model_params.ssl:
 
-                            sample, labels = _biased_sample_negative_edges(
-                                edge_index=batch['Entity','APPEARIN', 'Article'],
-                                num_nodes=(batch['Entity'].x.size(0), batch['Article'].x.size(0)),
-                                x1=batch['Entity'].x,
-                                x2=batch['Article'].x_passage,
-                                tmp=1.0,
-                                n_rounds=10,
-                                f_random=0.3
-                            )
+                        #     sample, labels = _biased_sample_negative_edges(
+                        #         edge_index=batch['Entity','APPEARIN', 'Article'],
+                        #         num_nodes=(batch['Entity'].x.size(0), batch['Article'].x.size(0)),
+                        #         x1=batch['Entity'].x,
+                        #         x2=batch['Article'].x_passage,
+                        #         tmp=1.0,
+                        #         n_rounds=10,
+                        #         f_random=0.3
+                        #     )
 
-                            sample = sample.to(config.device)
-                            labels = labels.to(config.device)
+                        #     sample = sample.to(config.device)
+                        #     labels = labels.to(config.device)
 
                         batch = helpers.move_data_to_device(batch, device=config.device)
 
@@ -733,8 +763,7 @@ class Trainer(BaseCommand):
                                 negative_sample=neg_smpl,
                                 weights={
                                     "guidance_loss": 1.0, 
-                                    "ssl_loss": 0.05,
-                                    "rec_loss" : 0.05
+                                    "ssl" : 0.5 # was 0.1
                                 },
                             )
 
@@ -794,6 +823,8 @@ class Trainer(BaseCommand):
                         extras.append(f"ssl_loss={row['ssl_loss']:.4f}")
                     if "structure_f1" in row:
                         extras.append(f"struct_f1={100 * row['structure_f1']:.2f}%")
+                    if 'rec-acc' in row:
+                        extras.append(f"rec_acc={100 * row['rec-acc']:.2f}%")
                     if "HITS@5" in row:
                         extras.append(f"HITS@5={100 * row['HITS@5']:.2f}%")
                     if "HITS@10" in row:
@@ -833,38 +864,13 @@ class Trainer(BaseCommand):
         data: HeteroData,
         split : Tensor,
         fold : int
-    ) -> Dict[str, Tensor]:
+    ) -> Tensor:
 
         model = model.eval().cpu()
         data  = data.cpu()
 
-        r = {}
-
         model.ssl     = False
-
-        ### 1- With article-level infos
-        with torch.no_grad():
-            r["full"] = model.forward(data).articles_predictions
-
-        ### 2- zero 
-        x = data['Article'].x
-        data['Article'].x[split == fold] = torch.zeros_like(x[0,:])
-
-        with torch.no_grad():
-            r["partial1"] = model.forward(data).articles_predictions
-
-        data['Article'].x = x
-
-        ### 3- Mean
-        x = data['Article'].x
-        data['Article'].x[split == fold] = x.mean(0)
-
-        with torch.no_grad():
-            r["partial2"] = model.forward(data).articles_predictions
-
-        data['Article'].x = x
-        
-        ### 4- Without article-level infos 
+ 
         subset = data.subgraph({
             'Article' : data['Article'].node_id[split != fold]
         })
@@ -881,10 +887,7 @@ class Trainer(BaseCommand):
                 data['Article'].x.size(0)
             )
 
-            r["partial3"] = model.predict(a_emb)
-
-        return r
-    
+            return model.predict(a_emb)    
 
     # ------------------------------------------------------------------
     # Main loop
@@ -932,20 +935,15 @@ class Trainer(BaseCommand):
                     f"history_{config_name}_trial{trial_id}.csv"
                 )
 
-                full_result_path = os.path.join(
+                result_path = os.path.join(
                     RESULTS_DIR, 
-                    f"predictions_full_{config_name}_trial{trial_id}.pt"
-                )
-
-                partial_result_path = os.path.join(
-                    RESULTS_DIR, 
-                    f"predictions_partial_{config_name}_trial{trial_id}.pt"
+                    f"predictions_{config_name}_trial{trial_id}.pt"
                 )
 
                 step_label   = f"config '{config_name}' | trial {trial_id + 1}/{self.config.num_splits}"
                 step_progress = completed / total_steps
 
-                if os.path.exists(full_result_path) and os.path.exists(history_path):
+                if os.path.exists(result_path) and os.path.exists(history_path):
                     
                     self.send_info_event(
                         progress=step_progress,
@@ -981,26 +979,24 @@ class Trainer(BaseCommand):
                 )
 
                 # Save trial predictions
-                results = self.inference(
+                result = self.inference(
                     model, 
                     data, 
                     split=split_tensor,
                     fold=trial_id
                 )
 
-                for startegy, result in results.items():
-
-                    torch.save(
-                        result,
-                        os.path.join(RESULTS_DIR, f"predictions_{startegy}_{config_name}_trial{trial_id}.pt"),
-                    )
+                torch.save(
+                    result,
+                    result_path,
+                )
 
                 self.send_info_event(
                     progress=completed / total_steps,
-                    message=f"[{step_label}] Predictions saved → {full_result_path}",
+                    message=f"[{step_label}] Predictions saved → {result_path}",
                 )
 
-                del results
+                del result
                 del model  # free VRAM between trials
 
             # ----------------------------------------------------------
@@ -1017,6 +1013,7 @@ class Trainer(BaseCommand):
             )
 
             full_sampler = self.create_full_sampler(data)
+
             # For the full retrain we still track a val signal using the full
             # loader (same data) so the run_experiment interface is satisfied.
             _, final_model = self.run_experiment(

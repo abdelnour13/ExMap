@@ -215,19 +215,23 @@ class HetConv(nn.Module):
         ### Trans GNN Forward
         kg_x, kg_e, _ = self.trans_gnn.forward(x=kg_x, edge_index=kg_A, edge_attr=kg_e)
 
-        ### R-GNN Forward
-        if self.use_mlp:
-            art_x = self.rgnn(art_x)
-        else:
-            art_x = self.rgnn.forward(art_x, art_A, art_e)
+        if True:
 
-        ### GNN Forward
-        new_kg_x = self.gnn_1.forward(x=(art_x, kg_x), edge_index=entity_article[[1,0],:])
+            ### R-GNN Forward
+            if self.use_mlp:
+                art_x = self.rgnn(art_x)
+            else:
+                art_x = self.rgnn.forward(art_x, art_A, art_e)
 
-        if self.biderectional:
-            art_x = self.gnn_2.forward(x=(kg_x, art_x), edge_index=entity_article)
+            if False:
 
-        kg_x = new_kg_x
+                ### GNN Forward
+                new_kg_x = self.gnn_1.forward(x=(art_x, kg_x), edge_index=entity_article[[1,0],:])
+
+                if self.biderectional:
+                    art_x = self.gnn_2.forward(x=(kg_x, art_x), edge_index=entity_article)
+
+                kg_x = new_kg_x
 
         return kg_x, kg_e, art_x
     
@@ -254,10 +258,10 @@ class HetModelReturn:
 
     ### Embeddings
     entities_embeddings : Tensor
-    articles_embeddings : Tensor
+    articles_embeddings_v1 : Tensor # By aggregating entities embeddings
 
     ### SSL
-    y_hat : Optional[Tensor]
+    articles_embeddings_v2 : Tensor
     
     
 class HetModel(nn.Module):
@@ -401,12 +405,14 @@ class HetModel(nn.Module):
             art_x = self.art_jk.forward(art_x_jk)
             kg_e = self.edge_jk.forward(edge_x_jk)
 
-            ### Final Message Passing After KG
-            kg_x = self.gnn.forward(x=(art_x, kg_x), edge_index=entity_article[[1,0],:])
+            if False:
+
+                ### Final Message Passing After KG
+                kg_x = self.gnn.forward(x=(art_x, kg_x), edge_index=entity_article[[1,0],:])
 
         ### Projection Layer
         kg_x = self.proj_x(kg_x)
-        kg_e = self.proj_e(kg_e)
+        # kg_e = self.proj_e(kg_e)
         art_x = self.proj_art(art_x)
 
         return kg_x, kg_e, art_x
@@ -459,23 +465,10 @@ class HetModel(nn.Module):
         entities_predictions = self.predict(kg_x)
         articles_predictions = self.predict(art_x_p)
 
-        ### SSL
-        y_hat = None
-        
-        if self.ssl:
-
-            if entity_article is None:
-                raise Exception("entity_article can not be null when ssl is true.")
-            
-            entity_ids, articles_ids = entity_article
-            
-            x = torch.cat([kg_x[entity_ids], art_x[articles_ids]], dim=-1)
-            y_hat = self.ssl_head(x)
-
         return HetModelReturn(
             articles_predictions=articles_predictions,
             entities_predictions=entities_predictions,
             entities_embeddings=kg_x,
-            articles_embeddings=art_x,
-            y_hat=y_hat
+            articles_embeddings_v1=art_x_p,
+            articles_embeddings_v2=art_x   
         )
