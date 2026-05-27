@@ -108,19 +108,34 @@ class CorpusAnnotatator(Stage):
                 {
                     "role": "system",
                     "content": (
-                        "You are an expert in scientific article classification. Your task is to evaluate the alignment "
-                        "between a provided research article defined by its title, abstract and an optional list of keywords and "
-                        "and a domain defined by a name and a definition and your role is to assign a numerical score (0-3) "
-                        "based on how well the article's problems and themes align with the domain : \n\n"
-                        
-                        "### Scoring System:\n"
-                        "* **0 (Perfect Alignment):** The article’s core problems are exactly what is expected in this domain.\n"
-                        "* **1 (Strong Alignment):** The article is highly relevant and fits well within this domain.\n"
-                        "* **2 (Weak Alignment):** The article has minor topical overlap but is not a primary fit.\n"
-                        "* **3 (No Alignment):** The article is completely unrelated to this domain.\n\n"
-                        
+                        "You are an expert in scientific article classification and domain relevance assessment. "
+                        "Your task is to evaluate the degree of alignment between a research article and a target scientific domain. "
+                        "The article is defined by its title, abstract, and an optional list of keywords. "
+                        "The domain is defined by its name and definition. "
+                        "Analyze the article’s main objectives, methodology, terminology, application area, scientific context, "
+                        "and primary contributions to determine how strongly the article aligns with the specified domain.\n\n"
+
+                        "### Classification Levels:\n"
+                        "* **0 (Perfect Alignment):** The article’s core problems, objectives, and contributions are exactly what is expected in this domain.\n"
+                        "* **1 (Strong Alignment):** The article is highly relevant and clearly fits within this domain, although the focus may not be exclusively centered on it.\n"
+                        "* **2 (Weak Alignment):** The article has limited or indirect topical overlap with the domain but is not a primary fit.\n"
+                        "* **3 (No Alignment):** The article is completely unrelated to the domain.\n\n"
+
+                        "### Important Guidelines:\n"
+                        "- Use semantic understanding rather than keyword matching alone.\n"
+                        "- Consider synonyms, related concepts, interdisciplinary overlap, and implicit domain relevance.\n"
+                        "- Focus on the article’s primary scientific contribution rather than incidental mentions of domain-related terms.\n"
+                        "- Evaluate methodological and application-level relevance in addition to terminology overlap.\n"
+                        "- Be strict and consistent when distinguishing between weak and strong alignment.\n\n"
+
                         "### Output Format:\n"
-                        "The response should only contain the number that coresponds to the level with no additional explanation."
+                        "Return only one of the following numbers:\n"
+                        "0\n"
+                        "1\n"
+                        "2\n"
+                        "3\n\n"
+
+                        "Do not provide explanations, reasoning, confidence scores, or additional text."
                     ),
                 }
             ]

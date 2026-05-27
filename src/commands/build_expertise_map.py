@@ -1,7 +1,6 @@
 import os
 import torch
-import numpy as np
-from sknetwork.ranking import PageRank
+import networkx as nx
 from openai import Client
 from typing import Dict, List, Literal, Tuple
 from pydantic import BaseModel, computed_field
@@ -24,7 +23,7 @@ from src import helpers
 # ---------------------------------------------------------------------------
 
 def entropy(en : Tensor) -> Tensor:
-    return torch.sum(en * torch.log(en + 10e-5), dim=-1).clip(max=0)
+    return -torch.sum(en * torch.log(en + 10e-5), dim=-1).clip(max=0)
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -368,10 +367,10 @@ class ExpertiseMapBuilder(BaseCommand):
 
         community = {**community}
 
-        for attr in ['specificity_weighted_pagerank', 'pagerank_entropy']:
+        for attr in ['specificity_weighted_pagerank', 'personalized_pagerank']:
             community[f'{attr}_name'] = self._select_representative_node(community, attr)
 
-        sorted_entities = sorted(community['entities'], key=lambda e : e['specificity_weighted_pagerank'], reverse=True)
+        sorted_entities = sorted(community['entities'], key=lambda e : e['personalized_pagerank'], reverse=True)
         sorted_entities = [e['name'] for e in sorted_entities[:min(len(sorted_entities), 25)]]
 
         messages = [
@@ -443,7 +442,7 @@ class ExpertiseMapBuilder(BaseCommand):
                 type='Expertise', 
                 id=community['id'],
                 properties={
-                    "llm_label" : community['llm_label'],
+                    "llm_label" : community.get('llm_label'),
                     **{
                         k : v
                         for k, v in community.items()
@@ -540,99 +539,36 @@ class ExpertiseMapBuilder(BaseCommand):
 
         return graph
     
-    def compute_pagerank_metrics(
-        self,
-        edge_index: Tensor,
-        communities: Tensor,
-        n_entities: int,
-    ) -> Tuple[Tensor, Tensor]:
-        """
-        Returns two entity-level PageRank tensors (both on unweighted graphs):
+    def _personalized_pagerank(self, graph : Graph) -> Tensor:
 
-        - global_pagerank : PageRank computed over the full entity–entity graph.
-        - local_pagerank  : PageRank computed only within each node's community
-                            subgraph, with nodes re-indexed locally so community
-                            size does not distort the scores.
+        row, col = graph.pygeo['Entity', 'HASRELATIONWITH', 'Entity'].edge_index
 
-        Both tensors have shape (n_entities,) and float32 dtype.
-        """
+        G = nx.DiGraph()
 
-        self.send_info_event(
-            progress=None,
-            message="[PageRank] Computing global and local PageRank metrics …",
+        for src, dst in zip(row, col):
+            G.add_edge(src.item(), dst.item())
+
+        G = G.to_undirected()
+
+        # for attr in ['normalized_entropy','relevancy_scores','generality_scores']:
+        #     print(graph._nodes['Entity']._features[attr].min(), graph._nodes['Entity']._features[attr].max())
+
+        scores = torch.pow(
+            (1 - graph._nodes['Entity']._features['normalized_entropy']) *
+            (1 - graph._nodes['Entity']._features['relevancy_scores']) * 
+            (1 - graph._nodes['Entity']._features['generality_scores']),
+            1 / 3
         )
 
-        src_list = edge_index[0].tolist()
-        dst_list = edge_index[1].tolist()
-
-        # ── Global PageRank ────────────────────────────────────────────────
-        adj_global     = from_edge_list(list(zip(src_list, dst_list)))
-        global_scores  = PageRank().fit_predict(adj_global).astype(np.float32)
-
-        # Pad to n_entities in case the adj matrix is smaller than the node count
-        if len(global_scores) < n_entities:
-            padded = np.zeros(n_entities, dtype=np.float32)
-            padded[:len(global_scores)] = global_scores
-            global_scores = padded
-
-        # ── Local (community-level) PageRank ──────────────────────────────
-        local_scores   = np.zeros(n_entities, dtype=np.float32)
-        n_communities  = int(communities.max().item()) + 1
-
-        for c in self.track(
-            range(n_communities),
-            task="c-pr",
-            update_every=16
-        ):
-
-            node_mask  = (communities == c).nonzero(as_tuple=True)[0]
-            node_list  = node_mask.tolist()
-
-            if len(node_list) == 0:
-                continue
-
-            if len(node_list) == 1:
-                local_scores[node_list[0]] = 1.0
-                continue
-
-            # Re-index community nodes to 0…|C|-1 so the local adj is compact
-            node_set  = set(node_list)
-            local_idx = {g: l for l, g in enumerate(node_list)}
-
-            community_edges = [
-                (local_idx[s], local_idx[d])
-                for s, d in zip(src_list, dst_list)
-                if s in node_set and d in node_set
-            ]
-
-            if not community_edges:
-                # Isolated community — uniform score
-                uniform = 1.0 / len(node_list)
-                for g in node_list:
-                    local_scores[g] = uniform
-                continue
-
-            adj_local  = from_edge_list(community_edges)
-            local_pr   = PageRank().fit_predict(adj_local).astype(np.float32)
-
-            # Pad if adj is smaller than community size (dangling nodes)
-            if len(local_pr) < len(node_list):
-                padded = np.zeros(len(node_list), dtype=np.float32)
-                padded[:len(local_pr)] = local_pr
-                local_pr = padded
-
-            for g, l in local_idx.items():
-                local_scores[g] = local_pr[l]
-
-        self.send_info_event(
-            progress=None,
-            message="[PageRank] Done — global and local scores computed.",
+        pr = nx.pagerank(
+            G,
+            personalization=dict([
+                (i, score.item()) for i, score in enumerate(scores)
+            ]),
+            max_iter=1000
         )
 
-        return (
-            torch.from_numpy(global_scores),
-            torch.from_numpy(local_scores),
-        )
+        return torch.tensor(list(pr.values()))
     
     def __iter__(self):
 
@@ -660,8 +596,13 @@ class ExpertiseMapBuilder(BaseCommand):
         graph._nodes['Entity']._features['expertise_id'] = communities    
         graph._nodes['Entity']._features['community_proba'] = communities_probas  
         graph._nodes['Entity']._features['entropy'] = entropy(communities_probas) 
-        graph._nodes['Entity']._features['normalized_entropy'] = 2 * torch.sigmoid(entropy(communities_probas))
-        graph._nodes['Entity']._features['pagerank_entropy'] = graph._nodes['Entity']._features['normalized_entropy'] * graph._nodes['Entity']._features['pagerank']
+        graph._nodes['Entity']._features['normalized_entropy'] = 2 * torch.sigmoid(entropy(communities_probas)) - 1
+        graph._nodes['Entity']._features['pagerank_entropy'] = (
+            graph._nodes['Entity']._features['normalized_entropy'] * 
+            graph._nodes['Entity']._features['pagerank']
+        )
+
+        graph._nodes['Entity']._features['personalized_pagerank'] = self._personalized_pagerank(graph)
 
         # # ── New PageRank metrics ───────────────────────────────────────────────────
         # n_entities = data['Entity'].x.size(0)

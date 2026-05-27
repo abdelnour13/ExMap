@@ -62,7 +62,7 @@ class StdGNN(nn.Module):
     ) -> Tensor:
         messages = self.conv(x, edge_index)
         x = self.root(x[1])
-        sigma =  torch.clip(F.sigmoid(self.gate(messages)), 0.2, 0.8)
+        sigma =  torch.clip(F.sigmoid(self.gate(messages)), 0.3, 0.7)
         x = sigma * x + (1 - sigma) * messages
         return self.act(self.bn(x))
 

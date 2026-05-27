@@ -1,7 +1,7 @@
 {
     "seed" : 44,
 
-    "graph" : "nantes_uni_2020_2026_e5-v2",
+    "graph" : "nantes_uni_2020_2026_e5",
     "num_splits" : 4,
     "keep_largest_cc" : true,
     "min_entities_per_article" : 5,
@@ -27,13 +27,28 @@
     "log_every" : 1,
 
     "hparams": {
-        "Conv_Mean_null_False_ssl": {
+        "Conv_Mean_null_False": {
             "do_negative_sampling": false,
             "model_params": {
                 "readout": "mean",
                 "variant": "conv",
-                "aggregation": null,
-                "ssl" : true
+                "aggregation": null
+            }
+        },
+        "Conv_Max_null_False": {
+            "do_negative_sampling": false,
+            "model_params": {
+                "readout": "mean",
+                "variant": "conv",
+                "aggregation": null            
+            }
+        },
+        "Conv_Attn_null_False": {
+            "do_negative_sampling": false,
+            "model_params": {
+                "readout": "mean",
+                "variant": "conv",
+                "aggregation": null
             }
         }
     }
