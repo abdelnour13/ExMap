@@ -229,17 +229,9 @@ class HetGNNConfig(BaseModel):
     gnn_args: Optional[Dict] = None   
     jk : bool = True
     dropout_rate : float = 0.0
-    num_clusters : int = 5 
 
 @dataclass
 class HetModelReturn:
-
-    ### Guidance Output
-    articles_predictions_v1 : Dict[str, Tensor]
-    entities_predictions_v1 : Dict[str, Tensor]
-
-    articles_predictions_v2 : Dict[str, Tensor]
-    entities_predictions_v2 : Dict[str, Tensor]
 
     ### Embeddings : View 1 : Entities Encoder
     entities_embeddings_v1 : Tensor
@@ -249,12 +241,19 @@ class HetModelReturn:
     entities_embeddings_v2 : Tensor # By aggregating articles embeddings
     articles_embeddings_v2 : Tensor
 
+    ### Guidance Output
+    articles_predictions_v1 : Optional[Dict[str, Tensor]] = None
+    entities_predictions_v1 : Optional[Dict[str, Tensor]] = None
+
+    articles_predictions_v2 : Optional[Dict[str, Tensor]] = None
+    entities_predictions_v2 : Optional[Dict[str, Tensor]] = None
+
 class HetModel(nn.Module):
 
     def __init__(self, 
         in_channels : int,
-        num_labels : Dict[str, int],
         num_relations: Tuple[int, int],
+        num_labels : Optional[Dict[str, int]] = None,
         channels : Optional[List[int]] = None,
         variant: Literal["conv", "attn"] = "conv",
         activation: str = "relu",
@@ -269,6 +268,7 @@ class HetModel(nn.Module):
     ) -> None:
         super().__init__()
 
+        self.num_labels = num_labels
         self.num_relations = num_relations
         self.channels = [in_channels, *(channels or [in_channels // 2] * 2)]
         self.jk = jk
@@ -327,12 +327,14 @@ class HetModel(nn.Module):
         ### Prediction Heads
         self.heads = nn.ModuleDict()
 
-        for label_name, label_dim in num_labels.items():
+        if num_labels is not None:
 
-            self.heads.add_module(label_name, nn.Sequential(
-                nn.Dropout(p = dropout_rate) if dropout_rate > 0 else nn.Identity(),
-                nn.Linear(self.channels[-1], label_dim)
-            ))
+            for label_name, label_dim in self.num_labels.items():
+
+                self.heads.add_module(label_name, nn.Sequential(
+                    nn.Dropout(p = dropout_rate) if dropout_rate > 0 else nn.Identity(),
+                    nn.Linear(self.channels[-1], label_dim)
+                ))
 
     @staticmethod
     def from_config(
@@ -426,7 +428,7 @@ class HetModel(nn.Module):
     ) -> HetModelReturn:
 
         ### Encoder        
-        kg_x_v1, _, art_x_v2 = self.encode(batch)
+        kg_x_v1, art_x_v2 = self.encode(batch)
         
         ### Pooling
         entity_article = batch['Entity','APPEARIN', 'Article'].edge_index
@@ -435,11 +437,18 @@ class HetModel(nn.Module):
         kg_x_v2 = self.entities_embddings(art_x_v2, entity_article, batch['Entity'].x.size(0))
 
         ### Prediction
-        entities_predictions_v1 = self.predict(kg_x_v1)
-        entities_predictions_v2 = self.predict(kg_x_v2)
+        entities_predictions_v1 = None
+        articles_predictions_v2 = None
+        entities_predictions_v1 = None
+        entities_predictions_v2 = None
 
-        articles_predictions_v1 = self.predict(art_x_v1)
-        articles_predictions_v2 = self.predict(art_x_v2)
+        if self.num_labels is not None:
+
+            entities_predictions_v1 = self.predict(kg_x_v1)
+            entities_predictions_v2 = self.predict(kg_x_v2)
+
+            articles_predictions_v1 = self.predict(art_x_v1)
+            articles_predictions_v2 = self.predict(art_x_v2)
 
         return HetModelReturn(
             articles_predictions_v1=articles_predictions_v1,
