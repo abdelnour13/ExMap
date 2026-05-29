@@ -1,13 +1,81 @@
 import torch
 from torch import nn, Tensor
 from torch.nn import functional as F
-from torch_geometric import nn as gnn
+from torch_geometric import nn as gnn, utils as gnn_utils
 from torch_geometric.data import HeteroData
 from typing import Literal, Optional, Dict, Tuple, List
 from dataclasses import dataclass
-from torch_scatter import scatter
 from pydantic import BaseModel
 from src.gnn.layers import RGATConv, TransGNN, MLP, Activation
+from math import max
+from torch_scatter import scatter_sum
+
+class StochasticAttnPooling(nn.Module):
+
+    def __init__(self, rate : float, input_channels : int, temp : float = 3.0):
+        super().__init__()
+
+        self.rate = rate
+        self.input_channels = input_channels
+
+        self.register_buffer('temp', torch.scalar_tensor(temp))
+
+        self.gate = nn.Linear(2 * input_channels, 1) # Entities alone ir entities-articles interactions ?
+
+    def forward(self, 
+        x_e : Tensor, 
+        x_a : Tensor,
+        edge_index : Tensor, 
+    ) -> Tensor:
+        
+        row, col = edge_index # (entities-articles)
+
+        scores = self.gate(torch.cat([x_e[row], x_a[col]], dim=-1))
+        scores = gnn_utils.softmax(scores/self.get_buffer('temp'), col, num_nodes=x_a.shape[0])
+
+        if self.training:
+
+            X, M = gnn_utils.to_dense_batch(  # (N,M,D)
+                x=x_e,
+                batch=col
+            )
+
+            scores, _ = gnn_utils.to_dense_batch(  # (N,M)
+                x=scores,
+                batch=col
+            )
+            
+            scores = scores[:,:,0]
+
+            new_scores = []
+
+            for _, entities_scores, mask in zip(X, scores, M):
+
+                # Or uniformly random ?
+                indices = torch.multinomial(
+                    (1 - entities_scores) * mask.float(), 
+                    num_samples=max(1, int(self.rate * mask.float().sum().item()))
+                )
+                    
+                entities_scores[indices] = 0.0
+                new_scores.append(entities_scores)
+
+            new_scores = torch.stack(new_scores, dim=0).softmax(dim=-1)
+            new_scores = new_scores[:,:,None]
+
+            x_articles = torch.sum(X * new_scores, dim=1)
+
+        else:
+
+            x_articles = scatter_sum(
+                src=x_e[row] * scores,
+                index=col,
+                reduce='sim',
+                dim=0,
+                dim_size=x_a.size(0)
+            )
+
+        return x_articles
 
 class StdGNN(nn.Module):
 

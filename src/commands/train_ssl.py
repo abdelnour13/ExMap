@@ -93,6 +93,53 @@ class TrainingConfig(BaseTrainingConfig):
 # Helpers
 # ---------------------------------------------------------------------------
 
+def redundancy_reduction_loss(
+    z1 : Tensor, 
+    z2 : Tensor, 
+    lambd : float = 0.005, 
+    eps : float = 1e-5,
+    max_entities : int = 512
+) -> Tensor:
+    """
+    Barlow Twins-style redundancy reduction loss.
+
+    Args:
+        z1: Tensor [B, D] (view 1 embeddings)
+        z2: Tensor [B, D] (view 2 embeddings)
+        lambd: weight for off-diagonal penalty
+        eps: numerical stability
+
+    Returns:
+        scalar loss
+    """
+
+    if z1.shape[0] >= max_entities:
+        perm = torch.randperm(z1.shape[0])
+        perm = perm[:max_entities]
+        z1 = z1[perm,:]
+        z2 = z2[perm,:]
+
+    # 1. Normalize each dimension (important)
+    z1 = z1 - z1.mean(dim=0)
+    z2 = z2 - z2.mean(dim=0)
+
+    z1 = z1 / (z1.std(dim=0) + eps)
+    z2 = z2 / (z2.std(dim=0) + eps)
+
+    # 2. Cross-correlation matrix
+    # shape: [D, D]
+    c = torch.matmul(z1.T, z2) / z1.shape[0]
+
+    # 3. On-diagonal loss (invariance)
+    on_diag = torch.diagonal(c).add(-1).pow(2).sum()
+
+    # 4. Off-diagonal loss (redundancy reduction)
+    off_diag = c.fill_diagonal_(0).pow(2).sum()
+
+    loss = on_diag + lambd * off_diag
+
+    return loss
+
 def clip_loss(za : Tensor, ze : Tensor, temperature : float = 0.1):
     """
     za: article graph embeddings [B, D]
@@ -121,6 +168,7 @@ def clip_loss(za : Tensor, ze : Tensor, temperature : float = 0.1):
     return loss
 
 def loss(
+    batch : HeteroData,
     model_output : HetModelReturn, 
     batch_size : int,
     temperature : float = 0.1
@@ -134,15 +182,28 @@ def loss(
         temperature=temperature
     )
 
-    # losses['l2'] = clip_loss(
-    #     model_output.entities_embeddings_v1,
-    #     model_output.entities_embeddings_v2,
-    #     temperature=temperature
-    # )
-
     losses['loss'] = losses['l1']
 
     return losses
+
+def _augment(batch : HeteroData, rate : float = 0.1, training : bool = True) -> HeteroData:
+
+    if not training:
+        return batch
+
+    batch['Entity'].x = gnn_utils.mask_feature(
+        batch['Entity'].x,
+        p=rate,
+        mode='row'
+    )
+
+    # batch['Article'].x = gnn_utils.mask_feature(
+    #     batch['Article'].x,
+    #     p=rate,
+    #     mode='row'
+    # )
+
+    return batch
 
 def _subgraph_by_articles(data : HeteroData, article_ids : torch.Tensor) -> HeteroData:
 
@@ -198,7 +259,7 @@ def _add_labels(data : HeteroData, n_types : List[str]) -> HeteroData:
 
 def _add_metapaths(data : HeteroData, types : Optional[List[str]] = None) -> HeteroData:
 
-    types = ['Author', 'Keyword'] if types is None else types
+    types = ['Author'] if types is None else types
 
     edge_index = []
     edge_type  = []
@@ -611,7 +672,7 @@ class Trainer(BaseCommand):
 
                         with torch.set_grad_enabled(is_training):
                             results   = model.forward(batch)
-                            losses = loss(results, config.batch_size)
+                            losses = loss(batch, results, config.batch_size)
 
                         if is_training:
                             optimizer.zero_grad()
@@ -646,12 +707,12 @@ class Trainer(BaseCommand):
                     if phase not in summary.index:
                         continue
 
-                    row = summary.loc[phase]
+                    row = summary.loc[phase] #.to_dict()
 
                     loss_val  = row.get("loss", float("nan"))
 
                     metrics = {
-                        **losses
+                        **row.to_dict()
                     }
 
                     self.send_info_event(
@@ -732,71 +793,71 @@ class Trainer(BaseCommand):
             # K-Fold trials
             # ----------------------------------------------------------
 
-            for trial_id, (train_sampler, val_sampler) in enumerate(samplers):
+            # for trial_id, (train_sampler, val_sampler) in enumerate(samplers):
 
-                history_path = os.path.join(
-                    HISTORIES_DIR, 
-                    f"history_{config_name}_trial{trial_id}.csv"
-                )
+            #     history_path = os.path.join(
+            #         HISTORIES_DIR, 
+            #         f"history_{config_name}_trial{trial_id}.csv"
+            #     )
 
-                result_path = os.path.join(
-                    RESULTS_DIR, 
-                    f"predictions_{config_name}_trial{trial_id}.pt"
-                )
+            #     result_path = os.path.join(
+            #         RESULTS_DIR, 
+            #         f"predictions_{config_name}_trial{trial_id}.pt"
+            #     )
 
-                step_label   = f"config '{config_name}' | trial {trial_id + 1}/{self.config.num_splits}"
-                step_progress = completed / total_steps
+            #     step_label   = f"config '{config_name}' | trial {trial_id + 1}/{self.config.num_splits}"
+            #     step_progress = completed / total_steps
 
-                if os.path.exists(result_path) and os.path.exists(history_path):
+            #     if os.path.exists(result_path) and os.path.exists(history_path):
                     
-                    self.send_info_event(
-                        progress=step_progress,
-                        message=f"[{step_label}] Already completed — skipping",
-                    )
-                    completed += 1
-                    continue
+            #         self.send_info_event(
+            #             progress=step_progress,
+            #             message=f"[{step_label}] Already completed — skipping",
+            #         )
+            #         completed += 1
+            #         continue
 
-                self.send_info_event(
-                    progress=step_progress,
-                    message=f"[{step_label}] Starting trial …",
-                )
+            #     self.send_info_event(
+            #         progress=step_progress,
+            #         message=f"[{step_label}] Starting trial …",
+            #     )
 
-                trial_history, model = self.run_experiment(
-                    config=config,
-                    data=data,
-                    train_loader=train_sampler,
-                    val_loader=val_sampler,
-                    label=step_label,
-                    total_steps=total_steps,
-                    completed_steps=completed,
-                )
+            #     trial_history, model = self.run_experiment(
+            #         config=config,
+            #         data=data,
+            #         train_loader=train_sampler,
+            #         val_loader=val_sampler,
+            #         label=step_label,
+            #         total_steps=total_steps,
+            #         completed_steps=completed,
+            #     )
 
-                completed += 1
+            #     completed += 1
 
-                # Save trial history
-                trial_history["config"] = config_name
-                trial_history["trial"]  = trial_id
-                trial_history.to_csv(history_path, index=False)
-                self.send_info_event(
-                    progress=completed / total_steps,
-                    message=f"[{step_label}] History saved → {history_path}",
-                )
+            #     # Save trial history
+            #     trial_history["config"] = config_name
+            #     trial_history["trial"]  = trial_id
+            #     trial_history.to_csv(history_path, index=False)
+            #     self.send_info_event(
+            #         progress=completed / total_steps,
+            #         message=f"[{step_label}] History saved → {history_path}",
+            #     )
 
-                # Save trial predictions
-                result = self.inference(model, data)
+            #     # Save trial predictions
+            #     result = self.inference(model, data)
 
-                torch.save(
-                    result,
-                    result_path,
-                )
+            #     torch.save(
+            #         result,
+            #         result_path,
+            #     )
 
-                self.send_info_event(
-                    progress=completed / total_steps,
-                    message=f"[{step_label}] Predictions saved → {result_path}",
-                )
+            #     self.send_info_event(
+            #         progress=completed / total_steps,
+            #         message=f"[{step_label}] Predictions saved → {result_path}",
+            #     )
 
-                del result
-                del model  # free VRAM between trials
+            #     del result
+            #     del model  # free VRAM between trials
 
             # ----------------------------------------------------------
             # Full-graph retrain  (only this model is saved as .pt)
@@ -813,9 +874,19 @@ class Trainer(BaseCommand):
 
             full_sampler = self.create_full_sampler(data)
 
+            history_path = os.path.join(
+                HISTORIES_DIR, 
+                f"history_{config_name}.csv"
+            )
+
+            result_path = os.path.join(
+                RESULTS_DIR, 
+                f"predictions_{config_name}.pt"
+            )
+
             # For the full retrain we still track a val signal using the full
             # loader (same data) so the run_experiment interface is satisfied.
-            _, final_model = self.run_experiment(
+            history, final_model = self.run_experiment(
                 config=config,
                 data=data,
                 train_loader=full_sampler,
@@ -834,6 +905,29 @@ class Trainer(BaseCommand):
                 message=f"[{full_label}] Final model saved → {model_path}",
             )
 
+            # Save trial history
+            history["config"] = config_name
+            step_label  = f"config '{config_name}'"
+            history.to_csv(history_path, index=False)
+            self.send_info_event(
+                progress=completed / total_steps,
+                message=f"[{step_label}] History saved → {history_path}",
+            )
+
+            # Save trial predictions
+            result = self.inference(final_model, data)
+
+            torch.save(
+                result,
+                result_path,
+            )
+
+            self.send_info_event(
+                progress=completed / total_steps,
+                message=f"[{step_label}] Predictions saved → {result_path}",
+            )
+
+            del result
             del final_model
 
             self.send_info_event(
