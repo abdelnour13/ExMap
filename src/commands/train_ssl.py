@@ -33,6 +33,7 @@ from torch_geometric.loader import NeighborLoader
 from torch_geometric.data import HeteroData, Data
 from src import helpers
 from src.commands.feature_extraction import Graph
+from torch_scatter import scatter
 from src.gnn import (
     HetGNNConfigV2 as HetGNNConfig,
     HetModelV2 as HetModel,
@@ -76,6 +77,16 @@ class BaseTrainingConfig(BaseModel):
     num_epochs: int = 10
     accumulation_steps: int = 1
     weight_decay: float = 1e-4
+
+    # Augmentation
+    augment : bool = False
+    augment_args : Dict[str, Any] = Field(default_factory=dict)
+
+    # Losses
+    dual : bool = False
+    rec  : bool = False
+    structure_rec : bool = False
+    margin_structure : bool = False
 
     # Device
     device: str = "cuda" if torch.cuda.is_available() else "cpu"
@@ -167,41 +178,165 @@ def clip_loss(za : Tensor, ze : Tensor, temperature : float = 0.1):
 
     return loss
 
+def cosine_similarity_rec_loss(
+    a: Tensor,
+    b: Tensor,
+    batch_size : int
+) -> Tensor:
+    
+    a = a[:batch_size]
+    b = b[:batch_size]
+
+    a = F.normalize(a, dim=1)
+    b = F.normalize(b, dim=1)
+
+    A = a @ a.T
+    B = b @ b.T
+
+    return F.mse_loss(A, B)
+
+def structure_rec_loss(
+    a: Tensor,
+    edge_index: Tensor,
+) -> Tensor:
+    
+    N = a.shape[0]
+    
+    row, col = edge_index
+
+    A = a @ a.T
+    B = SparseTensor(row=row, col=col).to_dense().to(A.device)
+
+    L = F.binary_cross_entropy_with_logits(A, B, reduction="none")
+
+    l_pos = L[row, col].mean()
+    L[row, col] = 0.0
+
+    l_neg = L.sum() / (N*N - len(row))
+
+    return (l_pos + l_neg) / 2
+
+def margin_structure_loss(
+    x,
+    edge_index,
+    num_neg=5,
+    margin=0.3
+):
+    row, col = edge_index
+
+    x = F.normalize(x, dim=1)
+
+    # positive scores
+    pos_sim = (x[row] * x[col]).sum(dim=-1)
+
+    pos_sim = scatter(
+        pos_sim,
+        index=row,
+        dim=0,
+        dim_size=x.size(0),
+        reduce='min'
+    )
+
+    n_row, n_col = gnn_utils.negative_sampling(
+        edge_index=edge_index,
+        num_nodes=x.size(0),
+        num_neg_samples=len(pos_sim) * num_neg
+    )
+
+    neg_sim = (x[n_row] * x[n_col]).sum(dim=-1)
+
+    L = F.relu(margin - pos_sim[n_row] + neg_sim)
+
+    return L.mean()
+
 def loss(
     batch : HeteroData,
+    config : BaseTrainingConfig,
     model_output : HetModelReturn, 
     batch_size : int,
-    temperature : float = 0.1
+    temperature : float = 0.1,
 ) -> Dict[str, Tensor]:
 
     losses = {}
+
+    M = model_output.articles_embeddings_v2.shape[1]
+
+    a1 = model_output.articles_embeddings_v2 #.split(split_size=M // 2,dim=1)
+    e1 = model_output.entities_embeddings_v2 #.split(split_size=M // 2,dim=1)
+
+    # print( model_output.articles_embeddings_v2.shape, a1.shape, a2.shape)
     
     losses['l1'] = clip_loss(
         model_output.articles_embeddings_v1[:batch_size],
-        model_output.articles_embeddings_v2[:batch_size],
+        a1[:batch_size], # model_output.articles_embeddings_v2[:batch_size],
         temperature=temperature
     )
 
-    losses['loss'] = losses['l1']
+    loss = losses['l1']
+
+    if config.dual:
+
+        p = torch.randperm(model_output.entities_embeddings_v1.shape[0])
+        p = p[:min(1024, p.shape[0])]
+
+        losses['l2'] = clip_loss(
+            model_output.entities_embeddings_v1[p,:],
+            e1[p,:], # model_output.entities_embeddings_v2[p,:],
+            temperature=temperature
+        )
+
+        loss += losses['l2']
+
+    if config.rec:
+
+        losses['rec_loss'] = cosine_similarity_rec_loss(
+            batch['Article'].x,
+            a2, # model_output.articles_embeddings_v2,
+            config.batch_size
+        )
+
+        loss += losses['rec_loss']
+
+    if config.structure_rec:
+
+        losses['structure_rec_loss'] = structure_rec_loss(
+            a1,
+            batch['Article', 'relate-to', 'Article'].edge_index
+        )
+
+        loss += losses['structure_rec_loss']
+
+    if config.margin_structure:
+
+        losses['margin_structure_rec_loss'] = margin_structure_loss(
+            a1,
+            batch['Article', 'relate-to', 'Article'].edge_index,
+            5,
+            0.3
+        )
+
+        loss += losses['margin_structure_rec_loss']
+
+    losses['loss'] = loss
 
     return losses
 
-def _augment(batch : HeteroData, rate : float = 0.1, training : bool = True) -> HeteroData:
+def _augment(batch : HeteroData, rate : float = 0.1, training : bool = True, mode : str = 'row') -> HeteroData:
 
     if not training:
         return batch
 
-    batch['Entity'].x = gnn_utils.mask_feature(
+    batch['Entity'].x, _ = gnn_utils.mask_feature(
         batch['Entity'].x,
         p=rate,
-        mode='row'
+        mode=mode
     )
 
-    # batch['Article'].x = gnn_utils.mask_feature(
-    #     batch['Article'].x,
-    #     p=rate,
-    #     mode='row'
-    # )
+    batch['Article'].x, _ = gnn_utils.mask_feature(
+        batch['Article'].x,
+        p=rate,
+        mode=mode
+    )
 
     return batch
 
@@ -667,12 +802,15 @@ class Trainer(BaseCommand):
                     )
 
                     for batch in loader:
+
+                        if config.augment:
+                            batch = _augment(batch=batch, training=is_training, **config.augment_args)
                         
                         batch = helpers.move_data_to_device(batch, device=config.device)
 
                         with torch.set_grad_enabled(is_training):
                             results   = model.forward(batch)
-                            losses = loss(batch, results, config.batch_size)
+                            losses = loss(batch, config, results, config.batch_size)
 
                         if is_training:
                             optimizer.zero_grad()
@@ -709,8 +847,6 @@ class Trainer(BaseCommand):
 
                     row = summary.loc[phase] #.to_dict()
 
-                    loss_val  = row.get("loss", float("nan"))
-
                     metrics = {
                         **row.to_dict()
                     }
@@ -720,7 +856,6 @@ class Trainer(BaseCommand):
                         message=" ".join([
                             f"[{label}] Epoch {epoch + 1}/{config.num_epochs}",
                             f"[{phase.upper():5s}]",
-                            f"loss={loss_val:.4f}",
                             *[
                                 f"{key}={value:.4f}"
                                 for key, value in metrics.items()
@@ -765,8 +900,6 @@ class Trainer(BaseCommand):
         configs = self.get_configs()
         data    = self.load_data()
 
-        # print(data)
-
         MODELS_DIR    = os.path.join(EXPERIMENTS_DIR, self.experiment, "models")
         RESULTS_DIR   = os.path.join(EXPERIMENTS_DIR, self.experiment, "results")
         HISTORIES_DIR = os.path.join(EXPERIMENTS_DIR, self.experiment, "histories")
@@ -776,7 +909,7 @@ class Trainer(BaseCommand):
         os.makedirs(HISTORIES_DIR, exist_ok=True)
 
         n_configs = len(configs)
-        total_steps = n_configs * (self.config.num_splits + 1)
+        total_steps = n_configs # * (self.config.num_splits + 1)
         completed   = 0
 
         for config_idx, (config_name, config) in enumerate(configs.items()):
@@ -784,80 +917,12 @@ class Trainer(BaseCommand):
             self.send_info_event(
                 progress=completed / total_steps,
                 message=f"[Config '{config_name}'] Starting  "
-                        f"({config_idx + 1}/{n_configs} configurations)",
+                        f"({config_idx + 1}/{n_configs} configurations) "
+                        f"config.dual = {config.dual}, config.augment = {config.augment}, "
+                        f"config.augment_args = {config.augment_args}, config.rec = {config.rec}"
             )
 
-            samplers, split_tensor = self.create_samplers(data)
 
-            # ----------------------------------------------------------
-            # K-Fold trials
-            # ----------------------------------------------------------
-
-            # for trial_id, (train_sampler, val_sampler) in enumerate(samplers):
-
-            #     history_path = os.path.join(
-            #         HISTORIES_DIR, 
-            #         f"history_{config_name}_trial{trial_id}.csv"
-            #     )
-
-            #     result_path = os.path.join(
-            #         RESULTS_DIR, 
-            #         f"predictions_{config_name}_trial{trial_id}.pt"
-            #     )
-
-            #     step_label   = f"config '{config_name}' | trial {trial_id + 1}/{self.config.num_splits}"
-            #     step_progress = completed / total_steps
-
-            #     if os.path.exists(result_path) and os.path.exists(history_path):
-                    
-            #         self.send_info_event(
-            #             progress=step_progress,
-            #             message=f"[{step_label}] Already completed — skipping",
-            #         )
-            #         completed += 1
-            #         continue
-
-            #     self.send_info_event(
-            #         progress=step_progress,
-            #         message=f"[{step_label}] Starting trial …",
-            #     )
-
-            #     trial_history, model = self.run_experiment(
-            #         config=config,
-            #         data=data,
-            #         train_loader=train_sampler,
-            #         val_loader=val_sampler,
-            #         label=step_label,
-            #         total_steps=total_steps,
-            #         completed_steps=completed,
-            #     )
-
-            #     completed += 1
-
-            #     # Save trial history
-            #     trial_history["config"] = config_name
-            #     trial_history["trial"]  = trial_id
-            #     trial_history.to_csv(history_path, index=False)
-            #     self.send_info_event(
-            #         progress=completed / total_steps,
-            #         message=f"[{step_label}] History saved → {history_path}",
-            #     )
-
-            #     # Save trial predictions
-            #     result = self.inference(model, data)
-
-            #     torch.save(
-            #         result,
-            #         result_path,
-            #     )
-
-            #     self.send_info_event(
-            #         progress=completed / total_steps,
-            #         message=f"[{step_label}] Predictions saved → {result_path}",
-            #     )
-
-            #     del result
-            #     del model  # free VRAM between trials
 
             # ----------------------------------------------------------
             # Full-graph retrain  (only this model is saved as .pt)
@@ -883,6 +948,9 @@ class Trainer(BaseCommand):
                 RESULTS_DIR, 
                 f"predictions_{config_name}.pt"
             )
+
+            if os.path.exists(history_path) and os.path.exists(result_path):
+                continue
 
             # For the full retrain we still track a val signal using the full
             # loader (same data) so the run_experiment interface is satisfied.

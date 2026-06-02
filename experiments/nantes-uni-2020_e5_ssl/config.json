@@ -14,6 +14,8 @@
     "num_entities_neighbors" : [5, 5],
 
     "model_params" : {
+        "channels" : [256, 256],
+        "use_entities_articles_links" : false,
         "norm" : true
     },
 
@@ -28,10 +30,112 @@
 
     "hparams": {
         "Conv_Mean": {
+            "augment" : false,
+            "dual" : false,
+            "rec" : false,
             "model_params": {
                 "readout": "mean",
-                "variant": "conv",
-                "use_entities_articles_links" : false
+                "variant": "conv"
+            }
+        },
+        "Conv_Mean_Aug": {
+            "augment" : true,
+            "dual" : false,
+            "rec" : false,
+            "model_params": {
+                "readout": "mean",
+                "variant": "conv"
+            }
+        },
+        "Conv_Mean_Dual": {
+            "dual" : true,
+            "augment" : false,
+            "rec" : false,
+            "model_params": {
+                "readout": "mean",
+                "variant": "conv"
+            }
+        },
+        "Conv_Mean_Rec": {
+            "dual" : false,
+            "augment" : false,
+            "rec" : true,
+            "model_params": {
+                "readout": "mean",
+                "variant": "conv"
+            }
+        },
+        "Conv_Mean_Rec_Dual": {
+            "dual" : true,
+            "augment" : false,
+            "rec" : true,
+            "model_params": {
+                "readout": "mean",
+                "variant": "conv"
+            }
+        },
+        "Conv_Mean_Rec_Dual_2": {
+            "dual" : true,
+            "augment" : false,
+            "rec" : true,
+            "model_params": {
+                "readout": "mean",
+                "variant": "conv"
+            }
+        },
+        "Conv_Mean_Dual_Aug": {
+            "dual" : true,
+            "augment" : true,
+            "rec" : false,
+            "augment_args" : {
+                "rate" : 0.25,
+                "mode" : "col"
+            },
+            "model_params": {
+                "readout": "mean",
+                "variant": "conv"
+            }
+        },
+        "Conv_Mean_Structure_Rec": {
+            "dual" : false,
+            "augment" : false,
+            "rec" : false,
+            "structure_rec" : true,
+            "augment_args" : {
+                "rate" : 0.25,
+                "mode" : "col"
+            },
+            "model_params": {
+                "readout": "mean",
+                "variant": "conv"
+            }
+        },
+        "Conv_Mean_Margin_Structure": {
+            "dual" : false,
+            "augment" : false,
+            "rec" : false,
+            "structure_rec" : false,
+            "margin_structure": true,
+            "augment_args" : {
+                "rate" : 0.25,
+                "mode" : "col"
+            },
+            "model_params": {
+                "readout": "mean",
+                "variant": "conv"
+            }
+        },
+        "Conv_Mean_Dual_Aug_2": {
+            "dual" : true,
+            "augment" : true,
+            "rec" : false,
+            "augment_args" : {
+                "rate" : 0.25,
+                "mode" : "col"
+            },
+            "model_params": {
+                "readout": "mean",
+                "variant": "conv"
             }
         }
     }

@@ -7,7 +7,6 @@ from typing import Literal, Optional, Dict, Tuple, List
 from dataclasses import dataclass
 from pydantic import BaseModel
 from src.gnn.layers import RGATConv, TransGNN, MLP, Activation
-from math import max
 from torch_scatter import scatter_sum
 
 class StochasticAttnPooling(nn.Module):
@@ -505,18 +504,18 @@ class HetModel(nn.Module):
         kg_x_v2 = self.entities_embddings(art_x_v2, entity_article, batch['Entity'].x.size(0))
 
         ### Prediction
-        entities_predictions_v1 = None
+        articles_predictions_v1 = None
         articles_predictions_v2 = None
         entities_predictions_v1 = None
         entities_predictions_v2 = None
 
-        if self.num_labels is not None:
+        # if self.num_labels is not None:
 
-            entities_predictions_v1 = self.predict(kg_x_v1)
-            entities_predictions_v2 = self.predict(kg_x_v2)
+        #     entities_predictions_v1 = self.predict(kg_x_v1)
+        #     entities_predictions_v2 = self.predict(kg_x_v2)
 
-            articles_predictions_v1 = self.predict(art_x_v1)
-            articles_predictions_v2 = self.predict(art_x_v2)
+        #     articles_predictions_v1 = self.predict(art_x_v1)
+        #     articles_predictions_v2 = self.predict(art_x_v2)
 
         return HetModelReturn(
             articles_predictions_v1=articles_predictions_v1,
