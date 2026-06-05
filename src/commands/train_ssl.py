@@ -83,6 +83,7 @@ class BaseTrainingConfig(BaseModel):
     augment_args : Dict[str, Any] = Field(default_factory=dict)
 
     # Losses
+    clip : bool = True
     dual : bool = False
     rec  : bool = False
     structure_rec : bool = False
@@ -249,6 +250,47 @@ def margin_structure_loss(
 
     return L.mean()
 
+def agreements_loss(
+    a : Tensor, 
+    b : Tensor, 
+    C : Tensor,
+    temp : float = 0.1
+) -> Tensor:
+    
+    prob_a = a @ C.T
+    prob_b = b @ C.T
+
+    return clip_loss(prob_a, prob_b, temp)
+
+def entropy(p : Tensor) -> Tensor:
+    return - torch.sum(p * torch.log(p + 1e-6), dim=-1)
+
+def sharpening_loss(
+    a : Tensor, 
+    b : Tensor, 
+    C : Tensor,
+    temp : float = 0.1
+) -> Tensor:
+    
+    logits_a = F.softmax(a @ C.T, dim=-1)
+    logits_b = F.softmax(b @ C.T, dim=-1)
+
+    l_a = entropy(p=logits_a).mean()
+    l_b = entropy(p=logits_b).mean()
+
+    return (l_a + l_b) / 2
+
+def diversity_loss(C : Tensor, temp : float = 0.1) -> Tensor:
+
+    C = F.normalize(C, p=2, dim=1)
+    logits = (C @ C.T) / temp
+    
+    labels = torch.arange(C.size(0)).to(C.device)
+    loss = (F.cross_entropy(logits, labels) + F.cross_entropy(logits.T, labels)) / 2
+
+    return loss
+
+
 def loss(
     batch : HeteroData,
     config : BaseTrainingConfig,
@@ -264,15 +306,17 @@ def loss(
     a1 = model_output.articles_embeddings_v2 #.split(split_size=M // 2,dim=1)
     e1 = model_output.entities_embeddings_v2 #.split(split_size=M // 2,dim=1)
 
-    # print( model_output.articles_embeddings_v2.shape, a1.shape, a2.shape)
+    loss = torch.scalar_tensor(0.0).to(a1.device)
     
-    losses['l1'] = clip_loss(
-        model_output.articles_embeddings_v1[:batch_size],
-        a1[:batch_size], # model_output.articles_embeddings_v2[:batch_size],
-        temperature=temperature
-    )
+    if config.clip:
 
-    loss = losses['l1']
+        losses['l1'] = clip_loss(
+            model_output.articles_embeddings_v1[:batch_size],
+            a1[:batch_size], # model_output.articles_embeddings_v2[:batch_size],
+            temperature=temperature
+        )
+
+        loss += losses['l1']
 
     if config.dual:
 
@@ -317,9 +361,40 @@ def loss(
 
         loss += losses['margin_structure_rec_loss']
 
+    if config.model_params.n_prototypes is not None:
+
+        losses['sharpening_loss'] = sharpening_loss(
+            model_output.articles_embeddings_v1,
+            model_output.articles_embeddings_v2,
+            model_output.C
+        )
+
+        losses['aggreement_loss'] = agreements_loss(
+            model_output.articles_embeddings_v1,
+            model_output.articles_embeddings_v2,
+            model_output.C
+        )
+
+        loss += losses['aggreement_loss'] + 0.1 * losses['sharpening_loss']
+
+
     losses['loss'] = loss
 
     return losses
+
+def _process(batch : HeteroData) -> HeteroData:
+
+    # batch['Entity'].node_score = (1 - batch['Entity'].generality_scores) ** 2
+
+    edge_index, edge_type = gnn_utils.remove_self_loops(
+        batch['Article', 'relate-to', 'Article'].edge_index,
+        batch['Article', 'relate-to', 'Article'].edge_type
+    )
+
+    batch['Article', 'relate-to', 'Article'].edge_index = edge_index
+    batch['Article', 'relate-to', 'Article'].edge_type = edge_type
+
+    return batch
 
 def _augment(batch : HeteroData, rate : float = 0.1, training : bool = True, mode : str = 'row') -> HeteroData:
 
@@ -802,6 +877,8 @@ class Trainer(BaseCommand):
                     )
 
                     for batch in loader:
+
+                        batch = _process(batch)
 
                         if config.augment:
                             batch = _augment(batch=batch, training=is_training, **config.augment_args)

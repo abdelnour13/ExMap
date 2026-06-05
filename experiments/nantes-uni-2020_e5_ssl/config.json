@@ -83,19 +83,6 @@
                 "variant": "conv"
             }
         },
-        "Conv_Mean_Dual_Aug": {
-            "dual" : true,
-            "augment" : true,
-            "rec" : false,
-            "augment_args" : {
-                "rate" : 0.25,
-                "mode" : "col"
-            },
-            "model_params": {
-                "readout": "mean",
-                "variant": "conv"
-            }
-        },
         "Conv_Mean_Structure_Rec": {
             "dual" : false,
             "augment" : false,
@@ -125,7 +112,7 @@
                 "variant": "conv"
             }
         },
-        "Conv_Mean_Dual_Aug_2": {
+        "Conv_Mean_Dual_Aug": {
             "dual" : true,
             "augment" : true,
             "rec" : false,
@@ -134,6 +121,55 @@
                 "mode" : "col"
             },
             "model_params": {
+                "readout": "mean",
+                "variant": "conv"
+            }
+        },
+        "Conv_Mean_Margin_Structure_Aug": {
+            "dual" : false,
+            "augment" : true,
+            "rec" : false,
+            "structure_rec" : false,
+            "margin_structure": true,
+            "augment_args" : {
+                "rate" : 0.25,
+                "mode" : "col"
+            },
+            "model_params": {
+                "readout": "mean",
+                "variant": "conv"
+            }
+        },
+        "Conv_Mean_Margin_Structure_Prototypes": {
+            "clip" : false,
+            "dual" : false,
+            "augment" : false,
+            "rec" : false,
+            "structure_rec" : false,
+            "margin_structure": true,
+            "augment_args" : {
+                "rate" : 0.25,
+                "mode" : "col"
+            },
+            "model_params": {
+                "n_prototypes" : 384,
+                "readout": "mean",
+                "variant": "conv"
+            }
+        },
+        "Conv_Mean_Margin_Structure_Prototypes_2": {
+            "clip" : false,
+            "dual" : false,
+            "augment" : false,
+            "rec" : false,
+            "structure_rec" : false,
+            "margin_structure": true,
+            "augment_args" : {
+                "rate" : 0.25,
+                "mode" : "col"
+            },
+            "model_params": {
+                "n_prototypes" : 384,
                 "readout": "mean",
                 "variant": "conv"
             }

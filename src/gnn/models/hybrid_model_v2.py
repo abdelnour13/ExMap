@@ -264,13 +264,14 @@ class HetConv(nn.Module):
         kg: Tuple[Tensor, Tensor, Tensor],
         articles: Tuple[Tensor, Tensor, Tensor],
         entity_article: Tensor,
+        node_score : Optional[Tensor] = None
     ) -> Tuple[Tensor, Tensor, Tensor]: 
 
         kg_x, kg_e, kg_A = kg
         art_x, art_e, art_A = articles
 
         ### Trans GNN Forward
-        kg_x, kg_e, _ = self.trans_gnn.forward(x=kg_x, edge_index=kg_A, edge_attr=kg_e)
+        kg_x, kg_e, _ = self.trans_gnn.forward(x=kg_x, edge_index=kg_A, edge_attr=kg_e, node_score=node_score)
 
         ### R-GNN Forward
         if self.use_mlp:
@@ -296,6 +297,7 @@ class HetGNNConfig(BaseModel):
     gnn_args: Optional[Dict] = None   
     jk : bool = True
     dropout_rate : float = 0.0
+    n_prototypes : Optional[int] = None  
 
 @dataclass
 class HetModelReturn:
@@ -315,6 +317,9 @@ class HetModelReturn:
     articles_predictions_v2 : Optional[Dict[str, Tensor]] = None
     entities_predictions_v2 : Optional[Dict[str, Tensor]] = None
 
+    ### Centroids
+    C : Optional[Tensor] = None
+
 class HetModel(nn.Module):
 
     def __init__(self, 
@@ -331,7 +336,8 @@ class HetModel(nn.Module):
         gnn_args: Optional[Dict] = None,   
         jk : bool = True,
         readout : Literal['mean','max','attn'] = 'max',
-        dropout_rate : float = 0.0,         
+        dropout_rate : float = 0.0,      
+        n_prototypes : Optional[int] = None   
     ) -> None:
         super().__init__()
 
@@ -341,6 +347,7 @@ class HetModel(nn.Module):
         self.jk = jk
         self.readout = readout
         self.use_entities_articles_links = use_entities_articles_links
+        self.n_prototypes = n_prototypes
 
         self.layers = nn.ModuleList()
 
@@ -391,6 +398,10 @@ class HetModel(nn.Module):
             self.entities_readout_fn = gnn.AttentionalAggregation(gate_nn = nn.Linear(self.channels[-1], 1))
             self.articles_readout_fn = gnn.AttentionalAggregation(gate_nn = nn.Linear(self.channels[-1], 1))
 
+        ### Centroids
+        if n_prototypes is not None:
+            self.C = nn.Parameter(torch.randn((n_prototypes, self.channels[-1])))
+
         ### Prediction Heads
         self.heads = nn.ModuleDict()
 
@@ -428,12 +439,15 @@ class HetModel(nn.Module):
         entity_article = batch['Entity','APPEARIN', 'Article'].edge_index
 
         ### Encoder
+        node_score = batch['Entity'].get('node_score')
+
         for layer in self.layers:
 
             kg_x, kg_e, art_x = layer(
                 (kg_x, kg_e, kg_A),
                 (art_x, art_e, art_A),
-                entity_article
+                entity_article,
+                node_score=node_score
             )
 
             kg_x_jk.append(kg_x)
@@ -525,5 +539,6 @@ class HetModel(nn.Module):
             entities_embeddings_v1=kg_x_v1,
             entities_embeddings_v2=kg_x_v2,
             articles_embeddings_v1=art_x_v1,
-            articles_embeddings_v2=art_x_v2 
+            articles_embeddings_v2=art_x_v2,
+            C=self.C.data if self.n_prototypes is not None else None
         )

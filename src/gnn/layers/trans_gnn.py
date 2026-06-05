@@ -281,8 +281,8 @@ class TransGNN(nn.Module):
         src = torch.cat([in_,out], dim = 0)
 
         if attn_weights is not None:
-            src = src.unsqueeze(1) * attn_weights.unsqueeze(-1)
-            src = src.mean(1)
+            src = src * attn_weights.unsqueeze(-1) # src.unsqueeze(1)
+            # src = src.mean(1)
 
         messages = torch_scatter.scatter(
             src = src,
@@ -356,6 +356,7 @@ class TransGNN(nn.Module):
     def forward(self,
         x : Tensor,
         edge_index : Tensor,
+        node_score : Optional[Tensor] = None,
         edge_type : Optional[Tensor] = None,
         relations : Optional[Tensor] = None,
         edge_attr : Optional[Tensor] = None            
@@ -388,6 +389,21 @@ class TransGNN(nn.Module):
                 x,
                 edge_index,
                 edge_attr
+            )
+
+        elif node_score is not None:
+
+            ### node_score is in the range [O, 1]
+    
+            row, col = edge_index
+            logits = torch.log(node_score + 1e-8)
+            logits = logits - logits.mean()
+
+            attn_weights = gnn_utils.softmax(
+                src = torch.cat([logits[col],logits[row]],dim=0),
+                index = torch.cat([row, col]),
+                num_nodes = x.size(0),
+                dim = 0
             )
 
         messages = self.message_and_aggregate(
