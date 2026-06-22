@@ -6,20 +6,20 @@ services:
     - 8080:8080
     volumes:
     - .:/allennlp
-  openie6:
-    build: ./docker/openie6
-    ports:
-    - 8081:8081
-    volumes:
-    - .:/openie6
-    deploy:
-      resources:
-        reservations:
-          devices:
-          - driver: nvidia
-            count: all
-            capabilities:
-            - gpu
+  # openie6:
+  #   build: ./docker/openie6
+  #   ports:
+  #   - 8081:8081
+  #   volumes:
+  #   - .:/openie6
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #         - driver: nvidia
+  #           count: all
+  #           capabilities:
+  #           - gpu
   neo4j:
     image: neo4j:latest
     container_name: text2kg-neo4j

@@ -205,6 +205,7 @@ class NodeStore:
         properties = {
             key : value[idx].item() if len(value.size()) == 1 else value[idx]
             for key, value in self._features.items()
+            if len(value.size()) == 1
         }
 
         return Node(
@@ -347,6 +348,7 @@ class Graph:
     
     @property
     def node_counts(self) -> Dict[str, int]:
+        
         return {
             key : len(value._nodes)
             for key, value in self._nodes.items()

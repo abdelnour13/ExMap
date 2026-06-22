@@ -2,326 +2,326 @@
   {
     "domain": "Digital Health",
     "sub_domain": "Real-World Data Epidemiology & Biostatistics",
-    "description": "Applies advanced biostatistics, AI models, and large language models (LLMs) to analyze real-world epidemiological data, including national health databases (SNDS), while ensuring data augmentation and anonymization."
+    "definition": "Applies advanced biostatistics, AI models, and large language models (LLMs) to analyze real-world epidemiological data, including national health databases (SNDS), while ensuring data augmentation and anonymization."
   },
   {
     "domain": "Digital Health",
     "sub_domain": "Viral Genomics & Digital Twins",
-    "description": "Leverages high-throughput viral genome sequencing, digital twins, and artificial intelligence to model new variants in-silico and analyze treatments."
+    "definition": "Leverages high-throughput viral genome sequencing, digital twins, and artificial intelligence to model new variants in-silico and analyze treatments."
   },
   {
     "domain": "Innovative Treatments",
     "sub_domain": "Viral Vectors & Gene Therapy",
-    "description": "Focuses on the production, chemical engineering, and pre-clinical validation of viral vectors, cells, and extracellular vesicles to develop therapies for therapeutic dead-end diseases."
+    "definition": "Focuses on the production, chemical engineering, and pre-clinical validation of viral vectors, cells, and extracellular vesicles to develop therapies for therapeutic dead-end diseases."
   },
   {
     "domain": "Digital Health, Health Nutrition",
     "sub_domain": "Urban Health & Walkability",
-    "description": "Utilizes 2D/3D urban models, street image analysis, and AR/VR experiments to create cartographic indicators and analyze walkability and user experiences."
+    "definition": "Utilizes 2D/3D urban models, street image analysis, and AR/VR experiments to create cartographic indicators and analyze walkability and user experiences."
   },
   {
     "domain": "Health Nutrition",
     "sub_domain": "Plant-Based Foods & Microbiome",
-    "description": "Analyzes the functional and nutritional qualities of plant-dominant foods, exploring their impact on allergies, the microbiome, the immune system, and epithelial barriers."
+    "definition": "Analyzes the functional and nutritional qualities of plant-dominant foods, exploring their impact on allergies, the microbiome, the immune system, and epithelial barriers."
   },
   {
     "domain": "Digital Health, Innovative Treatments",
     "sub_domain": "Antimicrobial Resistance & Mechanistic Modeling",
-    "description": "Uses mechanistic modeling, AI, software engineering, and porcine models (flow cytometry, fluorescence microscopy) to study antimicrobial resistance and tick-borne diseases."
+    "definition": "Uses mechanistic modeling, AI, software engineering, and porcine models (flow cytometry, fluorescence microscopy) to study antimicrobial resistance and tick-borne diseases."
   },
   {
     "domain": "Innovative Treatments",
     "sub_domain": "Chemical Synthesis & Molecular Devices",
-    "description": "Engages in the chemical synthesis of biological molecules, bio(in)organic chemistry, and molecular modeling to develop functional devices for diagnostics, oncology, immunology, and targeted therapy."
+    "definition": "Engages in the chemical synthesis of biological molecules, bio(in)organic chemistry, and molecular modeling to develop functional devices for diagnostics, oncology, immunology, and targeted therapy."
   },
   {
     "domain": "Medical Devices",
     "sub_domain": "Therapeutic & Diagnostic Nanomaterials",
-    "description": "Designs innovative phosphocalcic materials, hybrid organic/inorganic materials, and photoacoustic/fluorescent imaging tools for nanomedicine and bone pathology treatments."
+    "definition": "Designs innovative phosphocalcic materials, hybrid organic/inorganic materials, and photoacoustic/fluorescent imaging tools for nanomedicine and bone pathology treatments."
   },
   {
     "domain": "Health Nutrition",
     "sub_domain": "Isotopic Analysis & Metabolomics",
-    "description": "Provides non-targeted and quantitative metabolomics, isotopic analysis (13C, 15N, etc.), NMR profiling, and the synthesis of labeled standards for complex matrices."
+    "definition": "Provides non-targeted and quantitative metabolomics, isotopic analysis (13C, 15N, etc.), NMR profiling, and the synthesis of labeled standards for complex matrices."
   },
   {
     "domain": "Digital Health",
     "sub_domain": "Predictive Metabolomics",
-    "description": "Develops predictive and diagnostic multivariate statistical models based on metabolomics data."
+    "definition": "Develops predictive and diagnostic multivariate statistical models based on metabolomics data."
   },
   {
     "domain": "Digital Health",
     "sub_domain": "Multi-OMICS in Kidney Diseases",
-    "description": "Develops and applies Multi-OMICS approaches specifically targeted at understanding and treating kidney diseases."
+    "definition": "Develops and applies Multi-OMICS approaches specifically targeted at understanding and treating kidney diseases."
   },
   {
     "domain": "Innovative Treatments",
     "sub_domain": "Transplant Immunology & Biomarkers",
-    "description": "Studies immunological reactions related to organ transplantation, inflammation, auto-immunity, and infectious diseases to identify biomarkers and develop novel immunotherapies and bioprinting strategies."
+    "definition": "Studies immunological reactions related to organ transplantation, inflammation, auto-immunity, and infectious diseases to identify biomarkers and develop novel immunotherapies and bioprinting strategies."
   },
   {
     "domain": "Innovative Treatments",
     "sub_domain": "Oncology & Multi-OMICS",
-    "description": "Integrates genetics, epigenetics, proteomics, and 3D tumor models to study the tumor microenvironment, vectorization strategies, and cellular metabolism in cancer."
+    "definition": "Integrates genetics, epigenetics, proteomics, and 3D tumor models to study the tumor microenvironment, vectorization strategies, and cellular metabolism in cancer."
   },
   {
     "domain": "Digital Health",
     "sub_domain": "AI-Driven Image & OMICS Analysis",
-    "description": "Applies artificial intelligence to process and analyze MRI images and extensive OMICS datasets."
+    "definition": "Applies artificial intelligence to process and analyze MRI images and extensive OMICS datasets."
   },
   {
     "domain": "Digital Health, Medical Devices, Innovative Treatments",
     "sub_domain": "Materials Science & Digital Twins",
-    "description": "Combines experimental techniques in materials engineering (rheology, dynamic behavior) with predictive numerical modeling and digital twins."
+    "definition": "Combines experimental techniques in materials engineering (rheology, dynamic behavior) with predictive numerical modeling and digital twins."
   },
   {
     "domain": "Innovative Treatments",
     "sub_domain": "Microalgae Pre-GMP Bioproduction",
-    "description": "Applies Pre-GMP process engineering for the extraction, purification, bioproduction, and biorefining of microalgae and bacterial ingredients."
+    "definition": "Applies Pre-GMP process engineering for the extraction, purification, bioproduction, and biorefining of microalgae and bacterial ingredients."
   },
   {
     "domain": "Health Nutrition",
     "sub_domain": "Microalgae Nutritional Extraction",
-    "description": "Extracts and characterizes microalgae to identify bioactive nutrients like pigments and proteins for use as dietary supplements."
+    "definition": "Extracts and characterizes microalgae to identify bioactive nutrients like pigments and proteins for use as dietary supplements."
   },
   {
     "domain": "Innovative Treatments, Health Nutrition",
     "sub_domain": "Marine Toxins & Ecosystems",
-    "description": "Studies the physiology of toxic microalgae, assessing toxin emergence, bio-diversity, and associated risks across marine ecosystems."
+    "definition": "Studies the physiology of toxic microalgae, assessing toxin emergence, bio-diversity, and associated risks across marine ecosystems."
   },
   {
     "domain": "Health Nutrition",
     "sub_domain": "Marine Ecosystem Dynamics",
-    "description": "Evaluates the dynamics, pressures, and impacts on marine ecosystems from the source to the ocean (Grand-Ouest Fisheries Unit)."
+    "definition": "Evaluates the dynamics, pressures, and impacts on marine ecosystems from the source to the ocean (Grand-Ouest Fisheries Unit)."
   },
   {
     "domain": "Medical Devices, Innovative Treatments, Health Nutrition",
     "sub_domain": "Marine Microbiology & Food Safety",
-    "description": "Bioprospects marine molecules and studies the spatio-temporal dynamics of microbiomes to combat foodborne pathogens (e.g., Listeria, Norovirus) and improve food biopreservation."
+    "definition": "Bioprospects marine molecules and studies the spatio-temporal dynamics of microbiomes to combat foodborne pathogens (e.g., Listeria, Norovirus) and improve food biopreservation."
   },
   {
     "domain": "Health Nutrition",
     "sub_domain": "Marine Chemical Exposome",
-    "description": "Investigates the transfer and biological impact of chemical contaminants in marine ecosystems to characterize the oceanic chemical exposome."
+    "definition": "Investigates the transfer and biological impact of chemical contaminants in marine ecosystems to characterize the oceanic chemical exposome."
   },
   {
     "domain": "Innovative Treatments",
     "sub_domain": "Anti-Infective Therapies",
-    "description": "Identifies therapeutic targets and synthesizes original molecules (heterocyclic chemistry) to combat bacterial, mycotic, and parasitic infections by studying immune resistance mechanisms."
+    "definition": "Identifies therapeutic targets and synthesizes original molecules (heterocyclic chemistry) to combat bacterial, mycotic, and parasitic infections by studying immune resistance mechanisms."
   },
   {
     "domain": "Health Nutrition",
     "sub_domain": "Microbiome & Drug Tolerance",
-    "description": "Analyzes host-microbiome interactions, metagenomics, and the impact of drug treatments (like antibiotics) on the microbiome and drug metabolism."
+    "definition": "Analyzes host-microbiome interactions, metagenomics, and the impact of drug treatments (like antibiotics) on the microbiome and drug metabolism."
   },
   {
     "domain": "Innovative Treatments",
     "sub_domain": "Targeted Therapies & Immunomodulation",
-    "description": "Develops targeted clinical strategies including mRNA vaccines, affitins, cellular therapies (T-cells, Tregs), and chemical immunomodulators for dermatology and mycobacterial infections."
+    "definition": "Develops targeted clinical strategies including mRNA vaccines, affitins, cellular therapies (T-cells, Tregs), and chemical immunomodulators for dermatology and mycobacterial infections."
   },
   {
     "domain": "Innovative Treatments",
     "sub_domain": "Marine Metabolomics & Antibacterial Properties",
-    "description": "Explores the adaptation of marine microorganisms to understand their metabolomics (lipophilic compounds) and evaluate their antibacterial properties, specifically regarding dyslipidemia and breast cancer."
+    "definition": "Explores the adaptation of marine microorganisms to understand their metabolomics (lipophilic compounds) and evaluate their antibacterial properties, specifically regarding dyslipidemia and breast cancer."
   },
   {
     "domain": "Health Nutrition",
     "sub_domain": "Lipophilic Compounds in Cosmetology",
-    "description": "Analyzes lipophilic compounds and secondary metabolites derived from marine sources for applications in cosmetology and nutraceuticals."
+    "definition": "Analyzes lipophilic compounds and secondary metabolites derived from marine sources for applications in cosmetology and nutraceuticals."
   },
   {
     "domain": "Health Nutrition",
     "sub_domain": "Environmental Health & Exposome",
-    "description": "Examines the exposome, including chemical contaminants and metabolomics, to ensure food safety and improve environmental health."
+    "definition": "Examines the exposome, including chemical contaminants and metabolomics, to ensure food safety and improve environmental health."
   },
   {
     "domain": "Digital Health, Medical Devices, Innovative Treatments, Health Nutrition",
     "sub_domain": "Healthcare Workflow & UX Evaluation",
-    "description": "Evaluates user/patient behavioral responses, work quality, and the acceptability of organizational transformations to improve healthcare pathways and risk management."
+    "definition": "Evaluates user/patient behavioral responses, work quality, and the acceptability of organizational transformations to improve healthcare pathways and risk management."
   },
   {
     "domain": "Digital Health",
     "sub_domain": "HIS Governance & Management",
-    "description": "Contributes to the governance of Hospital Information Systems (HIS) and the development of digital tools for healthcare management."
+    "definition": "Contributes to the governance of Hospital Information Systems (HIS) and the development of digital tools for healthcare management."
   },
   {
     "domain": "Digital Health, Innovative Treatments",
     "sub_domain": "Cognitive Regulation & Risk Management",
-    "description": "Studies cognitive, behavioral, emotional, and social regulations to manage health-related risks."
+    "definition": "Studies cognitive, behavioral, emotional, and social regulations to manage health-related risks."
   },
   {
     "domain": "Digital Health, Medical Devices, Health Nutrition",
     "sub_domain": "Digital Transformation & Medical Devices",
-    "description": "Provides comprehensive digital services including signal/image processing, digital twins for surgery, VR/AR for mental well-being, and predictive modeling for the gut microbiome and peptidomics."
+    "definition": "Provides comprehensive digital services including signal/image processing, digital twins for surgery, VR/AR for mental well-being, and predictive modeling for the gut microbiome and peptidomics."
   },
   {
     "domain": "Digital Health",
     "sub_domain": "AI for Medical Imaging",
-    "description": "Develops AI tools for medical image processing, pattern recognition, and modeling fluid mechanics (such as vascular flows)."
+    "definition": "Develops AI tools for medical image processing, pattern recognition, and modeling fluid mechanics (such as vascular flows)."
   },
   {
     "domain": "Digital Health",
     "sub_domain": "Biomechanics & Motor Coordination Analysis",
-    "description": "Assesses the cognitive-motor responses and mechanical stress on the musculo-tendinous system for applications in sports, aging, and neurodegenerative disease rehabilitation."
+    "definition": "Assesses the cognitive-motor responses and mechanical stress on the musculo-tendinous system for applications in sports, aging, and neurodegenerative disease rehabilitation."
   },
   {
     "domain": "Innovative Treatments",
     "sub_domain": "Neuromuscular Cell & Gene Therapy",
-    "description": "Investigates the pathophysiology of neuromuscular diseases to develop cell and gene therapies, utilizing adult stem cells, hydrogels, and microfluidics."
+    "definition": "Investigates the pathophysiology of neuromuscular diseases to develop cell and gene therapies, utilizing adult stem cells, hydrogels, and microfluidics."
   },
   {
     "domain": "Innovative Treatments, Health Nutrition",
     "sub_domain": "Early Life Nutrition & Metabolic Diseases",
-    "description": "Studies the nutrition of the first 1000 days (DOHaD), focusing on metabolic diseases, neurodevelopmental disorders, and the interactions between the microbiome, breast milk, and the placenta."
+    "definition": "Studies the nutrition of the first 1000 days (DOHaD), focusing on metabolic diseases, neurodevelopmental disorders, and the interactions between the microbiome, breast milk, and the placenta."
   },
   {
     "domain": "Innovative Treatments, Health Nutrition",
     "sub_domain": "Food Allergies & Microbiome",
-    "description": "Evaluates food allergenicity and explores allergy prevention through the study of additives, contaminants, pre/probiotics, fermented foods, and plant proteins."
+    "definition": "Evaluates food allergenicity and explores allergy prevention through the study of additives, contaminants, pre/probiotics, fermented foods, and plant proteins."
   },
   {
     "domain": "Medical Devices",
     "sub_domain": "Bio-inspired Hydrogels & Additive Manufacturing",
-    "description": "Formulates, evaluates, and characterizes hybrid biomaterials, bio-inspired hydrogels, and cements for soft or calcified tissues using additive bio-manufacturing."
+    "definition": "Formulates, evaluates, and characterizes hybrid biomaterials, bio-inspired hydrogels, and cements for soft or calcified tissues using additive bio-manufacturing."
   },
   {
     "domain": "Innovative Treatments",
     "sub_domain": "Osteo-articular Cell Therapy & Biomaterials",
-    "description": "Explores osteo-articular biology and aging to deliver cell/drug therapies (stem cells, extracellular vesicles) combined with bio-inspired hydrogels and additive manufacturing."
+    "definition": "Explores osteo-articular biology and aging to deliver cell/drug therapies (stem cells, extracellular vesicles) combined with bio-inspired hydrogels and additive manufacturing."
   },
   {
     "domain": "Health Nutrition",
     "sub_domain": "Food Microbiological Safety",
-    "description": "Conducts multi-criteria risk assessments and studies the food microbiome to control pathogenic bacteria and enhance food biopreservation."
+    "definition": "Conducts multi-criteria risk assessments and studies the food microbiome to control pathogenic bacteria and enhance food biopreservation."
   },
   {
     "domain": "Innovative Treatments",
     "sub_domain": "Radionuclides for Therapy & Imaging",
-    "description": "Models, synthesizes, and characterizes innovative radionuclides to advance targeted therapies (hadron therapy) and medical imaging in nuclear medicine."
+    "definition": "Models, synthesizes, and characterizes innovative radionuclides to advance targeted therapies (hadron therapy) and medical imaging in nuclear medicine."
   },
   {
     "domain": "Health Nutrition",
     "sub_domain": "Gut-Brain Axis & Neurogastroenterology",
-    "description": "Investigates the gut-brain axis, microbiota, and neuroinflammation linked to CNS diseases (autism, Alzheimer's) and inflammatory disorders using digestive tract engineering."
+    "definition": "Investigates the gut-brain axis, microbiota, and neuroinflammation linked to CNS diseases (autism, Alzheimer's) and inflammatory disorders using digestive tract engineering."
   },
   {
     "domain": "Innovative Treatments",
     "sub_domain": "Cardiometabolic Multi-OMICS & Pharmacology",
-    "description": "Uses Multi-OMICS, electrophysiology, and pharmacology (ion channels) to study and treat cardiovascular, metabolic, and respiratory pathologies, including cardiac arrhythmias."
+    "definition": "Uses Multi-OMICS, electrophysiology, and pharmacology (ion channels) to study and treat cardiovascular, metabolic, and respiratory pathologies, including cardiac arrhythmias."
   },
   {
     "domain": "Digital Health",
     "sub_domain": "Structural Bioinformatics & Molecular Docking",
-    "description": "Performs structural bioinformatic analyses to predict protein structures and uses AI for in-silico molecular docking and screening."
+    "definition": "Performs structural bioinformatic analyses to predict protein structures and uses AI for in-silico molecular docking and screening."
   },
   {
     "domain": "Innovative Treatments",
     "sub_domain": "Glycochemistry & DNA Repair Mechanisms",
-    "description": "Develops glycoconjugate vaccines and inhibitors, synthesizes targeted flavonoids for neurodegeneration, and studies DNA repair mechanisms tied to cancer treatment resistance."
+    "definition": "Develops glycoconjugate vaccines and inhibitors, synthesizes targeted flavonoids for neurodegeneration, and studies DNA repair mechanisms tied to cancer treatment resistance."
   },
   {
     "domain": "Health Nutrition",
     "sub_domain": "Plant Chemical Ecology & Agroecology",
-    "description": "Studies the chemical communication between plant roots (rhizosphere), cooperation, and allelopathy to foster sustainable agriculture and agroecology."
+    "definition": "Studies the chemical communication between plant roots (rhizosphere), cooperation, and allelopathy to foster sustainable agriculture and agroecology."
   },
   {
     "domain": "Medical Devices",
     "sub_domain": "Composite Processes for Medical Devices",
-    "description": "Implements innovative composite and metallic manufacturing processes to improve the functionality and techno-economic viability of medical devices."
+    "definition": "Implements innovative composite and metallic manufacturing processes to improve the functionality and techno-economic viability of medical devices."
   },
   {
     "domain": "Digital Health, Medical Devices, Innovative Treatments",
     "sub_domain": "Chronic Inflammatory Diseases & Biomarkers",
-    "description": "Researches immunopathological mechanisms across chronic inflammatory diseases (like Rheumatoid Arthritis and IBD) to define biomarkers, therapeutic targets, and treatment efficacy."
+    "definition": "Researches immunopathological mechanisms across chronic inflammatory diseases (like Rheumatoid Arthritis and IBD) to define biomarkers, therapeutic targets, and treatment efficacy."
   },
   {
     "domain": "Digital Health, Medical Devices, Innovative Treatments",
     "sub_domain": "Cardiometabolic Pathophysiology & Target Identification",
-    "description": "Identifies biomarkers and novel therapeutic targets to improve patient care in cardiovascular, metabolic, and pulmonary diseases (e.g., congenital heart disease, diabetes, obesity)."
+    "definition": "Identifies biomarkers and novel therapeutic targets to improve patient care in cardiovascular, metabolic, and pulmonary diseases (e.g., congenital heart disease, diabetes, obesity)."
   },
   {
     "domain": "Digital Health, Medical Devices, Innovative Treatments",
     "sub_domain": "Clinical Oncology & Nuclear Medicine",
-    "description": "Provides specialized expertise in hematology, nuclear medicine (theranostics), onco-dermatology, digestive oncology, and thoracic oncology, utilizing AI and genomic medicine."
+    "definition": "Provides specialized expertise in hematology, nuclear medicine (theranostics), onco-dermatology, digestive oncology, and thoracic oncology, utilizing AI and genomic medicine."
   },
   {
     "domain": "Digital Health, Medical Devices, Innovative Treatments",
     "sub_domain": "Geriatrics & Neurocognitive Diseases",
-    "description": "Conducts clinical research focused on geriatric issues, particularly evaluating the impact of neurocognitive diseases in the elderly."
+    "definition": "Conducts clinical research focused on geriatric issues, particularly evaluating the impact of neurocognitive diseases in the elderly."
   },
   {
     "domain": "Digital Health, Innovative Treatments",
     "sub_domain": "Biocollection Management",
-    "description": "Organizes and structures collections of human biological samples specifically intended for research purposes."
+    "definition": "Organizes and structures collections of human biological samples specifically intended for research purposes."
   },
   {
     "domain": "Digital Health, Innovative Treatments",
     "sub_domain": "Oncology Biocollection Project Management",
-    "description": "Manages biocollection projects focused on oncology, working closely with biological resource centers (CRB)."
+    "definition": "Manages biocollection projects focused on oncology, working closely with biological resource centers (CRB)."
   },
   {
     "domain": "Innovative Treatments",
     "sub_domain": "Cellular Engineering & CAR-T Cells",
-    "description": "Applies cellular engineering processes (selection, amplification, gene transformation) to develop clinical applications like TILs, CAR-T cells, mesenchymal cells, and hematopoietic stem cells."
+    "definition": "Applies cellular engineering processes (selection, amplification, gene transformation) to develop clinical applications like TILs, CAR-T cells, mesenchymal cells, and hematopoietic stem cells."
   },
   {
     "domain": "Digital Health, Medical Devices",
     "sub_domain": "Medico-Economic Analysis & Innovation",
-    "description": "Provides expertise in innovation methodologies, medico-economic analysis, medical device evaluation, SNDS data analysis, and intellectual property."
+    "definition": "Provides expertise in innovation methodologies, medico-economic analysis, medical device evaluation, SNDS data analysis, and intellectual property."
   },
   {
     "domain": "Digital Health, Medical Devices",
     "sub_domain": "Clinical Research & UX Methodologies",
-    "description": "Focuses on clinical research methodologies and evaluates the organizational impact, usability, accessibility, and acceptability of health innovations."
+    "definition": "Focuses on clinical research methodologies and evaluates the organizational impact, usability, accessibility, and acceptability of health innovations."
   },
   {
     "domain": "Health Nutrition",
     "sub_domain": "Exposome & Quality of Life Evaluation",
-    "description": "Integrates human and social sciences to evaluate the exposome (nutrition, physical activity, socio-economic environment), return to work, and overall quality of life."
+    "definition": "Integrates human and social sciences to evaluate the exposome (nutrition, physical activity, socio-economic environment), return to work, and overall quality of life."
   },
   {
     "domain": "Innovative Treatments",
     "sub_domain": "Predictive & Functional Genomics",
-    "description": "Performs high-throughput sequencing for descriptive genomics, computational prediction of tumor alterations, and functional proof-of-concept testing via genome editing."
+    "definition": "Performs high-throughput sequencing for descriptive genomics, computational prediction of tumor alterations, and functional proof-of-concept testing via genome editing."
   },
   {
     "domain": "Digital Health, Medical Devices, Health Nutrition",
     "sub_domain": "Multi-OMICS Data Science",
-    "description": "Applies Data Science to translational research projects, focusing specifically on the analysis of complex multi-OMICS data."
+    "definition": "Applies Data Science to translational research projects, focusing specifically on the analysis of complex multi-OMICS data."
   },
   {
     "domain": "Health Nutrition",
     "sub_domain": "DNA Repair & Environmental Toxicity",
-    "description": "Studies the dynamic movements of the genome, DNA repair mechanisms, and the damaging effects of environmental pollutants (like pesticides) on cells, particularly in children."
+    "definition": "Studies the dynamic movements of the genome, DNA repair mechanisms, and the damaging effects of environmental pollutants (like pesticides) on cells, particularly in children."
   },
   {
     "domain": "Medical Devices, Innovative Treatments, Health Nutrition",
     "sub_domain": "Proteomics Experimental Design",
-    "description": "Provides specialized expertise in designing and managing experimental proteomics projects."
+    "definition": "Provides specialized expertise in designing and managing experimental proteomics projects."
   },
   {
     "domain": "Medical Devices, Innovative Treatments, Health Nutrition",
     "sub_domain": "3D Cell Culture & Tumor-on-Chip",
-    "description": "Utilizes advanced 3D cell culture techniques to isolate and amplify circulating tumor cells, generating tumor-on-chip models to analyze architectural and functional microenvironments."
+    "definition": "Utilizes advanced 3D cell culture techniques to isolate and amplify circulating tumor cells, generating tumor-on-chip models to analyze architectural and functional microenvironments."
   },
   {
     "domain": "Digital Health, Medical Devices, Innovative Treatments, Health Nutrition",
     "sub_domain": "Real-World Data & AI Regulatory Compliance",
-    "description": "Combines expertise in real-world data, biostatistics, LLMs, and data quality processes to navigate regulatory requirements for medical devices and AI studies."
+    "definition": "Combines expertise in real-world data, biostatistics, LLMs, and data quality processes to navigate regulatory requirements for medical devices and AI studies."
   },
   {
     "domain": "Digital Health, Medical Devices, Innovative Treatments, Health Nutrition",
     "sub_domain": "Comprehensive Oncology & Radiotherapy",
-    "description": "Leverages international networks to provide multidisciplinary oncology expertise, integrated clinical data, and advanced technological platforms for cancer engineering and radiotherapy."
+    "definition": "Leverages international networks to provide multidisciplinary oncology expertise, integrated clinical data, and advanced technological platforms for cancer engineering and radiotherapy."
   },
   {
     "domain": "Digital Health, Medical Devices",
     "sub_domain": "Market Access & Regulatory Strategy",
-    "description": "Offers oncology expertise focused on regulatory protocols, CE marking, medical device classification, and market access/reimbursement strategies."
+    "definition": "Offers oncology expertise focused on regulatory protocols, CE marking, medical device classification, and market access/reimbursement strategies."
   },
   {
     "domain": "Innovative Treatments, Health Nutrition",
     "sub_domain": "Organoids & Tumoroids Engineering",
-    "description": "Specializes in the production and functional analysis of organoids, tumoroids, and tumor-on-chip technologies to study tumor microenvironments and cellular architectures."
+    "definition": "Specializes in the production and functional analysis of organoids, tumoroids, and tumor-on-chip technologies to study tumor microenvironments and cellular architectures."
   }
 ]

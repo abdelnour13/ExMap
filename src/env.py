@@ -1,6 +1,7 @@
+import os
 from dataclasses import dataclass
-from definitions import ENV, domain_dir
-from typing import Dict, List
+from definitions import ENV, FIELDS_DIR
+from typing import Dict, List, Optional
 from src.shared.llms import LLM as LLMInfo
 from src.helpers import load_json_file
 from neo4j import GraphDatabase, Driver
@@ -20,6 +21,33 @@ class Domain:
     definition : str
 
 @dataclass
+class EntityType:
+    type : str
+    definition : str
+    examples : List[str]
+
+@dataclass
+class FieldInfo:
+    domains : List[Domain]
+    ontology : Optional[List[EntityType]]
+
+    @staticmethod
+    def load(path : str) -> 'FieldInfo':
+
+        domains_path = os.path.join(path, 'domains.json')
+        ontology_path = os.path.join(path, 'ontology.json')
+
+        domains = [Domain(**domain) for domain in load_json_file(domains_path)]
+
+        entities = None
+
+        if os.path.exists(ontology_path):
+            entities = [EntityType(**domain) for domain in load_json_file(ontology_path)]
+
+        return FieldInfo(domains=domains,ontology=entities)
+
+
+@dataclass
 class Env:
 
     llms : Dict[str, LLM]
@@ -28,8 +56,18 @@ class Env:
     cskg_dir : str
 
     @property
-    def cs_domains(self) -> List[Domain]:
-        return [Domain(**domain) for domain in load_json_file(domain_dir('computer_science'))]
+    def fields(self) -> Dict[str, FieldInfo]:
+
+        _fields = {}
+
+        for filename in os.listdir(FIELDS_DIR):
+
+            path = os.path.join(FIELDS_DIR, filename)
+
+            if os.path.isdir(path):
+                _fields[filename] = FieldInfo.load(path)
+
+        return _fields
 
     @classmethod
     def load(cls, env : str) -> 'Env':

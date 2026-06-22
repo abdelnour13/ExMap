@@ -38,7 +38,7 @@
         "Conv_Max_null_False": {
             "do_negative_sampling": false,
             "model_params": {
-                "readout": "mean",
+                "readout": "max",
                 "variant": "conv",
                 "aggregation": null            
             }
@@ -46,7 +46,7 @@
         "Conv_Attn_null_False": {
             "do_negative_sampling": false,
             "model_params": {
-                "readout": "mean",
+                "readout": "attn",
                 "variant": "conv",
                 "aggregation": null
             }

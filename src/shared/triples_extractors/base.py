@@ -1,13 +1,12 @@
 import asyncio
 from abc import ABC, abstractmethod
-from typing import List, Union, Dict
+from typing import List, Union, Dict, TypedDict
 from returns.result import Result
-from dataclasses import dataclass
 from openai import APIError, RateLimitError, AsyncOpenAI
 from src.helpers import make_openai_request
 
-@dataclass
-class Triple:
+
+class Triple(TypedDict):
     head : str
     predicate : str
     tail : str
@@ -40,5 +39,5 @@ class LLMBasedTripleExtractor(BaseTriplesExtractor):
         )
 
     @abstractmethod
-    def extract(self, texts : List[str]) -> List[Result[List[Triple], Union[APIError,RateLimitError]]]:
+    async def extract(self, texts : List[str]) -> List[Result[List[Triple], Union[APIError,RateLimitError]]]:
         ...

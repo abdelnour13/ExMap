@@ -1,0 +1,207 @@
+[
+  {
+    "type": "Organization",
+    "definition": "An entity composed of people and resources structured to achieve specific goals, including research, industrial, academic, or governmental activities.",
+    "examples": [
+      "Airbus",
+      "MIT",
+      "CNRS",
+      "European Commission",
+      "Siemens Research Lab"
+    ]
+  },
+  {
+    "type": "Location",
+    "definition": "A geographical place or area where an entity, event, or activity is situated or occurs.",
+    "examples": [
+      "France",
+      "Toulouse",
+      "Factory floor A",
+      "Silicon Valley",
+      "Industrial Zone B"
+    ]
+  },
+  {
+    "type": "Problem_Task",
+    "definition": "A challenge, objective, or goal that requires a solution, execution, or improvement.",
+    "examples": [
+      "Predictive maintenance of machines",
+      "Reducing CO2 emissions",
+      "Optimizing production scheduling",
+      "Fault detection in sensors"
+    ]
+  },
+  {
+    "type": "Software_Tool",
+    "definition": "A digital application, platform, or programming resource used to perform computational or analytical tasks.",
+    "examples": [
+      "Python",
+      "TensorFlow",
+      "google website",
+      "microsoft office word"
+    ]
+  },
+  {
+    "type": "Method_Algorithm",
+    "definition": "A structured approach, procedure, or computational logic used to solve a problem or perform a task.",
+    "examples": [
+      "Neural Networks",
+      "Finite Element Method",
+      "Genetic Algorithm",
+      "Lean Manufacturing",
+      "Six Sigma"
+    ]
+  },
+  {
+    "type": "Metric",
+    "definition": "A quantitative measure used to evaluate performance, efficiency, quality, or risk.",
+    "examples": [
+      "Accuracy",
+      "F1-score",
+      "Energy efficiency",
+      "CO2 emissions",
+      "Mean Time Between Failures (MTBF)"
+    ]
+  },
+  {
+    "type": "Property",
+    "definition": "An inherent or measurable characteristic of an entity, material, or system.",
+    "examples": [
+      "Thermal conductivity",
+      "Durability",
+      "Weight",
+      "Flexibility",
+      "Strength"
+    ]
+  },
+  {
+    "type": "Project",
+    "definition": "A temporary and organized effort involving multiple actors aimed at achieving specific objectives or solving a problem.",
+    "examples": [
+      "Horizon Europe Project",
+      "Smart Factory Initiative",
+      "AI for Manufacturing Project",
+      "Green Energy Transition Program"
+    ]
+  },
+  {
+    "type": "System",
+    "definition": "A set of interconnected components working together to perform a specific function or achieve a goal.",
+    "examples": [
+      "Production system",
+      "Digital twin system",
+      "Autonomous robotic system",
+      "Energy management system"
+    ]
+  },
+  {
+    "type": "Hardware_Tool",
+    "definition": "A physical device or equipment used in industrial, computational, or experimental processes.",
+    "examples": [
+      "Industrial robot arm",
+      "Temperature sensor",
+      "NVIDIA GPU",
+      "3D printer",
+      "PLC controller"
+    ]
+  },
+  {
+    "type": "Material",
+    "definition": "A substance or matter used in the production or manufacturing of products.",
+    "examples": [
+      "Aluminum",
+      "Carbon fiber composite",
+      "Bioplastic",
+      "Steel",
+      "Graphene"
+    ]
+  },
+  {
+    "type": "Product",
+    "definition": "A finished or semi-finished item resulting from a manufacturing or production process.",
+    "examples": [
+      "Aircraft wing",
+      "Electric vehicle",
+      "Smartphone",
+      "Medical device",
+      "Wind turbine blade"
+    ]
+  },
+  {
+    "type": "Process",
+    "definition": "A sequence of actions or operations performed to transform inputs into outputs.",
+    "examples": [
+      "Additive manufacturing",
+      "Welding",
+      "Assembly line production",
+      "Recycling process",
+      "Heat treatment"
+    ]
+  },
+  {
+    "type": "Person_Role",
+    "definition": "An individual or a defined function performed by a person within an organization or system.",
+    "examples": [
+      "Data scientist",
+      "Mechanical engineer",
+      "Machine operator",
+      "Project manager",
+      "Technician"
+    ]
+  },
+  {
+    "type": "Event",
+    "definition": "An occurrence or incident that happens at a specific time and may affect systems, processes, or entities.",
+    "examples": [
+      "Machine failure",
+      "Maintenance operation",
+      "System upgrade",
+      "Training session",
+      "Product launch"
+    ]
+  },
+  {
+    "type": "Policy",
+    "definition": "A set of rules, regulations, or guidelines governing actions and decisions within an organization or system.",
+    "examples": [
+      "Environmental regulation",
+      "Safety standards",
+      "Data governance policy",
+      "ISO 9001",
+      "Carbon reduction policy"
+    ]
+  },
+  {
+    "type": "Concept",
+    "definition": "An abstract idea or notion representing principles, theories, or general understandings.",
+    "examples": [
+      "Sustainability",
+      "Industry 4.0",
+      "Circular economy",
+      "Digital transformation",
+      "Flexibility"
+    ]
+  },
+  {
+    "type": "Data_Information",
+    "definition": "Structured or unstructured information collected, processed, or used for analysis and decision-making.",
+    "examples": [
+      "Sensor data",
+      "Production logs",
+      "Training dataset",
+      "Simulation results",
+      "Maintenance records"
+    ]
+  },
+  {
+    "type": "Resource",
+    "definition": "An asset or input required for processes, including energy, time, or human effort.",
+    "examples": [
+      "Electricity",
+      "Natural gas",
+      "Human labor",
+      "Time",
+      "Water"
+    ]
+  }
+]

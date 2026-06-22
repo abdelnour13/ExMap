@@ -12,10 +12,8 @@ from dataclasses import dataclass
 
 set_start_method('spawn', force=True)
 
-from src.commands.build_kg.cleaning import cleaning
-from src.commands.build_kg.preprocessing import coreference_resolution
-from src.commands.build_kg.content_enrichment import annotate, acronym_extraction, keyword_extraction
-from src.commands.build_kg.preprocessing import sentence_segmentation
+from src.commands.build_kg.preprocessing import coreference_resolution, cleaning, sentence_segmentation
+from src.commands.build_kg.content_enrichment import annotation, acronym_extraction, keyword_extraction
 from src.commands.build_kg.triplet_extraction import (
     triples_extractor, 
     entities_mapping, 
@@ -29,7 +27,7 @@ from pycli.field import Field
 STAGES : Dict[str, Tuple[Type[Stage], Type[StageConfig]]] = {
     "corpus_cleaning" : (cleaning.CorpusCleaner, cleaning.StageConfig),
     "coreference_resolution" : (coreference_resolution.CoreferenceResolver, coreference_resolution.Config),
-    "corpus_annotation" : (annotate.CorpusAnnotatator, annotate.Config),
+    "corpus_annotation" : (annotation.CorpusAnnotatator, annotation.Config),
     "keywords_extraction" : (keyword_extraction.KeywordsExtractor, keyword_extraction.StageConfig),
     "sentence_segmentation" : (sentence_segmentation.SentenceSegmentor, sentence_segmentation.Config),
     "acronyms_extraction" : (acronym_extraction.AcronymsExtractor, acronym_extraction.Config),
@@ -66,14 +64,16 @@ class PipeConfig(BaseModel):
         validated = {}
         input_filename = os.path.join(CORPUS_DIR, *corpus_id.split('/'))
 
-        for name, (_, ConfigClass) in STAGES.items():
+        for name, args in stages.items():
             
-            args = stages.get(name, {})
+            args = stages.get(name)
+
+            _, ConfigClass = STAGES[name]
 
             config = ConfigClass(**{
                 "input_filename" : input_filename,
                 "out" : os.path.join(KGS_DIR, data['graph_id'], name),
-                **override(args, glob)
+                **override(glob, args)
             })
 
             validated[name] = config

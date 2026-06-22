@@ -22,5 +22,23 @@ _llms : Dict[str, LLM] = {
         url="https://api.deepseek.com",
         price_per_1m_in_tokens=0.28,
         price_per_1m_out_tokens=0.42
+    ),
+    "deepseek-v4-flash" : LLM(
+        name="deepseek-v4-flash",
+        url="https://api.deepseek.com",
+        price_per_1m_in_tokens=0.28,
+        price_per_1m_out_tokens=0.42
+    ),
+    "deepseek-v4-pro" : LLM(
+        name="deepseek-v4-pro",
+        url="https://api.deepseek.com",
+        price_per_1m_in_tokens=0.28,
+        price_per_1m_out_tokens=0.42
+    ),
+    "gemini" : LLM(
+        name="gemini-3.1-flash-lite",
+        url="https://generativelanguage.googleapis.com/v1beta/openai/",
+        price_per_1m_in_tokens=0.28,
+        price_per_1m_out_tokens=0.42
     )
 }

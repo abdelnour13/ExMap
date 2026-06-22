@@ -42,6 +42,11 @@ class SentenceSegmentor(Stage):
     def transform(self, doc : Dict) -> List[Dict]:
 
         sentences = self.tokenize(doc['abstract'])
+
+        # return {
+        #     **doc,
+        #     "sentences" : [sentence.strip() for sentence in sentences]
+        # }
         
         return [
             {

@@ -8,7 +8,7 @@ from pycli import Field, Model
 from instance import cli
 
 MODELS = {
-    "spanbert-large" : "https://storage.googleapis.com/allennlp-public-models/coref-spanbert-large-2021.03.10.tar.gz",
+    "spanbert-large" : "https://storage.googleapis.com/allennlp-public-models/coref-spanbert-large-2021.03.10.tar.gz"
 }
 
 class Config(StageConfig):
@@ -130,3 +130,28 @@ class CoreferenceResolver(Stage):
             model=config.model,
             device=config.device
         )
+    
+if __name__ == '__main__':
+
+    config = Config(
+        input_filename="/home/fellah-a/Documents/Text2KG/data/corpus/ls2n-duke/data.jsonl",
+        out="/home/fellah-a/Documents/Text2KG/data/corpus/ls2n-duke/out",
+    )
+
+    coreference_resolver = CoreferenceResolver.from_config(config)
+
+    result = coreference_resolver.transform(
+        { 
+            "abstract" : """
+            The main objective of this thesis is to combine the advantages of probabilistic graphical model learning and formal verification 
+            in order to build a novel strategy for security assessments. The second objective is to assess the security of a given system 
+            by veri- fying whether it satisfies given properties and, if not, how far is it from satisfying them. We are interested in 
+            performing formal verification of this system based on event sequences col- lected from its execution. Consequently, 
+            we propose a model-based approach where a Re- cursive Timescale Graphical Event Model (RT- GEM), learned from the event streams, 
+            is con- sidered to be representative of the underlying system. This model is then used to check a se- curity property. 
+            If the property is not verified, we propose a search methodology to find an- other close model that satisfies it.
+            """
+        }
+    )
+
+    print(result)

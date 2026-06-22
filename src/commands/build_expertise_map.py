@@ -550,15 +550,14 @@ class ExpertiseMapBuilder(BaseCommand):
 
         G = G.to_undirected()
 
-        # for attr in ['normalized_entropy','relevancy_scores','generality_scores']:
-        #     print(graph._nodes['Entity']._features[attr].min(), graph._nodes['Entity']._features[attr].max())
-
         scores = torch.pow(
             (1 - graph._nodes['Entity']._features['normalized_entropy']) *
             (1 - graph._nodes['Entity']._features['relevancy_scores']) * 
             (1 - graph._nodes['Entity']._features['generality_scores']),
             1 / 3
         )
+
+        scores = scores / scores.sum()
 
         pr = nx.pagerank(
             G,
@@ -569,6 +568,29 @@ class ExpertiseMapBuilder(BaseCommand):
         )
 
         return torch.tensor(list(pr.values()))
+    
+    def inference_entities_v2(self, 
+        model : HetModel, 
+        output : HetModelReturn,
+        data : HeteroData
+    ) -> Dict[str, Tensor]:
+
+        ### TODO: include node itself
+        row, col = data['Entity', 'HASRELATIONWITH', 'Entity'].edge_index
+
+        entities_embeddings = model.readout_fn.forward(
+            x = torch.cat([output.entities_embeddings[col],output.entities_embeddings[row]], dim=0),
+            index = torch.cat([row, col], dim=-1),
+            dim_size = output.entities_embeddings.shape[0],
+            dim = 0
+        )
+
+        labels = {}
+
+        for k, m in model.heads.items():
+            labels[f'{k}_v2'] = m(entities_embeddings).sigmoid()
+
+        return labels
     
     def __iter__(self):
 

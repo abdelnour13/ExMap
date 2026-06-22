@@ -107,13 +107,13 @@ class AcronymsExtractor(Stage):
             result = self.pipeline(question = question, context = sentence)
 
             ### Filter by threshold
-            if result['score'] >= self.threshold:
+            # if result['score'] >= self.threshold:
 
-                acronyms.append({
-                    "acronym" : acronym,
-                    "expansion" : result['answer'].strip(),
-                    "score" : result['score']
-                })
+            acronyms.append({
+                "acronym" : acronym,
+                "expansion" : result['answer'].strip('() '),
+                "score" : result['score']
+            })
 
         doc["acronyms"] = acronyms
 
@@ -134,3 +134,28 @@ class AcronymsExtractor(Stage):
             qa_model=config.qa_model,
             threshold=config.threshold
         )
+    
+if __name__ == '__main__':
+
+    examples = [
+        {
+
+            "sentence" : 'A large language model (LLM) is a neural network trained on a vast amount of text for natural language processing tasks, especially language generation.'
+        },
+        {
+            "sentence" : 'An LLM (large language model) is a neural network trained on a vast amount of text for natural language processing tasks, especially language generation.'
+        },
+        {
+            "sentence" : 'Machine learning operations (MLOps) is a set of workflow practices aiming to streamline the process of deploying and maintaining machine learning (ML) models. '
+        }
+    ]
+
+    config = Config(
+        input_filename="/home/fellah-a/Documents/Text2KG/data/corpus/ls2n-duke/data.jsonl",
+        out="/home/fellah-a/Documents/Text2KG/data/corpus/ls2n-duke/out",
+    )
+
+    acronyms_extractor = AcronymsExtractor.from_config(config)
+
+    for example in examples:
+        print(acronyms_extractor.transform(example))
