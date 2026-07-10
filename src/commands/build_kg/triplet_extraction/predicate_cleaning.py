@@ -423,6 +423,7 @@ class PredicatesNormalizer(Stage):
     def transform(self, doc: Dict) -> Dict:
 
         head, tail, predicate = doc["head"], doc["tail"], doc["predicate"]
+        predicate = predicate.replace('_', ' ')
 
         ### Initial Normalization
         predicate = self.base_normalize(predicate)

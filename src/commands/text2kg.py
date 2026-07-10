@@ -64,19 +64,19 @@ class PipeConfig(BaseModel):
         validated = {}
         input_filename = os.path.join(CORPUS_DIR, *corpus_id.split('/'))
 
-        for name, args in stages.items():
+        for stage_name, args in stages.items():
             
-            args = stages.get(name)
+            name = args.pop('stage')
 
             _, ConfigClass = STAGES[name]
 
             config = ConfigClass(**{
                 "input_filename" : input_filename,
-                "out" : os.path.join(KGS_DIR, data['graph_id'], name),
+                "out" : os.path.join(KGS_DIR, data['graph_id'], stage_name),
                 **override(glob, args)
             })
 
-            validated[name] = config
+            validated[stage_name] = config
 
             input_filename = config.output_filename
 
@@ -137,7 +137,10 @@ class Pipeline(BaseCommand):
 
             yield self.make_info_event(progress=None,message=f"Starting stage {name}")
 
-            cmd_cls = STAGES[name][0]
+            cls_name = '_'.join(name.split('_')[:2])
+            # cls_name = name
+
+            cmd_cls = STAGES[cls_name][0]
 
             os.makedirs(config.output_dir(), exist_ok=True)
             p = Process(target=create_and_run, args=(cmd_cls, config))

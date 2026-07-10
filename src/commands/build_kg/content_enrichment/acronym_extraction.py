@@ -107,15 +107,16 @@ class AcronymsExtractor(Stage):
             result = self.pipeline(question = question, context = sentence)
 
             ### Filter by threshold
-            # if result['score'] >= self.threshold:
-
             acronyms.append({
                 "acronym" : acronym,
                 "expansion" : result['answer'].strip('() '),
                 "score" : result['score']
             })
 
-        doc["acronyms"] = acronyms
+        doc["acronyms"] = [
+            *doc.get('acronyms', []),
+            *acronyms
+        ]
 
         return doc
 

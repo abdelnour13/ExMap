@@ -89,15 +89,7 @@
             "new",
             "us"
         ],
-        "tail" : [
-            "through",
-            "across",
-            "between",
-            "under",
-            "above",
-            "over",
-            "as"
-        ]
+        "tail" : []
     },
     "propositions" : [
         "of",
@@ -142,6 +134,8 @@
         "same" : ["is equivelant to", true],
         "is same" : ["is equivelant to", true],
         "same as" : ["is equivelant to", true],
-        "is same as" : ["is equivelant to", true]
+        "is same as" : ["is equivelant to", true],
+        "is known as" : ["is equivelant to", true],
+        "known as" : ["is equivelant to", true]
     }
 }

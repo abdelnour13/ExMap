@@ -19,7 +19,7 @@ import os
 import pandas as pd
 import torch
 from rich.progress import Progress as RichProgress
-from typing import Any, Dict, List, Optional, Self, Tuple
+from typing import Any, Dict, List, Optional, Self, Tuple, Literal
 from pydantic import BaseModel, Field, computed_field
 from sklearn.model_selection import KFold
 from torch import Tensor, optim
@@ -57,7 +57,6 @@ class Config(BaseModel):
         conf = helpers.load_json_file(config_path)
         return TrainingConfig(**conf)
 
-
 class BaseTrainingConfig(BaseModel):
 
     # Data
@@ -83,11 +82,15 @@ class BaseTrainingConfig(BaseModel):
     augment_args : Dict[str, Any] = Field(default_factory=dict)
 
     # Losses
-    clip : bool = True
-    dual : bool = False
-    rec  : bool = False
-    structure_rec : bool = False
-    margin_structure : bool = False
+    apply_topk_operator : bool = False
+    topk_rate : float = 0.1
+    agreement_loss : str = 'infonce_agreements_loss'
+    sparsity_loss : Optional[str] = None
+    reconstruct_features : bool = False
+    reconstruct_structure : bool = False
+    num_negative_samples : int = 5 # Used only if reconstruct_structure = True
+    margin : float = 0.3  # Used only if reconstruct_structure = True
+    sharpness_loss : bool = True
 
     # Device
     device: str = "cuda" if torch.cuda.is_available() else "cpu"
@@ -104,80 +107,6 @@ class TrainingConfig(BaseTrainingConfig):
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
-
-def redundancy_reduction_loss(
-    z1 : Tensor, 
-    z2 : Tensor, 
-    lambd : float = 0.005, 
-    eps : float = 1e-5,
-    max_entities : int = 512
-) -> Tensor:
-    """
-    Barlow Twins-style redundancy reduction loss.
-
-    Args:
-        z1: Tensor [B, D] (view 1 embeddings)
-        z2: Tensor [B, D] (view 2 embeddings)
-        lambd: weight for off-diagonal penalty
-        eps: numerical stability
-
-    Returns:
-        scalar loss
-    """
-
-    if z1.shape[0] >= max_entities:
-        perm = torch.randperm(z1.shape[0])
-        perm = perm[:max_entities]
-        z1 = z1[perm,:]
-        z2 = z2[perm,:]
-
-    # 1. Normalize each dimension (important)
-    z1 = z1 - z1.mean(dim=0)
-    z2 = z2 - z2.mean(dim=0)
-
-    z1 = z1 / (z1.std(dim=0) + eps)
-    z2 = z2 / (z2.std(dim=0) + eps)
-
-    # 2. Cross-correlation matrix
-    # shape: [D, D]
-    c = torch.matmul(z1.T, z2) / z1.shape[0]
-
-    # 3. On-diagonal loss (invariance)
-    on_diag = torch.diagonal(c).add(-1).pow(2).sum()
-
-    # 4. Off-diagonal loss (redundancy reduction)
-    off_diag = c.fill_diagonal_(0).pow(2).sum()
-
-    loss = on_diag + lambd * off_diag
-
-    return loss
-
-def clip_loss(za : Tensor, ze : Tensor, temperature : float = 0.1):
-    """
-    za: article graph embeddings [B, D]
-    ze: entity-derived article embeddings [B, D]
-    """
-
-    # normalize embeddings
-    za = F.normalize(za, dim=1)
-    ze = F.normalize(ze, dim=1)
-
-    # similarity matrix
-    logits = za @ ze.T
-
-    # temperature scaling
-    logits = logits / temperature
-
-    # positives are diagonal entries
-    labels = torch.arange(za.size(0), device=za.device)
-
-    # symmetric InfoNCE
-    loss_a2e = F.cross_entropy(logits, labels)
-    loss_e2a = F.cross_entropy(logits.T, labels)
-
-    loss = (loss_a2e + loss_e2a) / 2
-
-    return loss
 
 def cosine_similarity_rec_loss(
     a: Tensor,
@@ -220,9 +149,9 @@ def structure_rec_loss(
 def margin_structure_loss(
     x,
     edge_index,
-    num_neg=5,
-    margin=0.3
-):
+    num_neg : int,
+    margin : float
+) -> Tensor:
     row, col = edge_index
 
     x = F.normalize(x, dim=1)
@@ -250,137 +179,170 @@ def margin_structure_loss(
 
     return L.mean()
 
-def agreements_loss(
-    a : Tensor, 
-    b : Tensor, 
-    C : Tensor,
-    temp : float = 0.1
-) -> Tensor:
-    
-    prob_a = a @ C.T
-    prob_b = b @ C.T
+def infonce_agreement_loss(za : Tensor, ze : Tensor, temperature : float = 0.1):
 
-    return clip_loss(prob_a, prob_b, temp)
+    # normalize embeddings
+    za = F.normalize(za, dim=1)
+    ze = F.normalize(ze, dim=1)
+
+    # similarity matrix
+    logits = za @ ze.T
+
+    # temperature scaling
+    logits = logits / temperature
+
+    # positives are diagonal entries
+    labels = torch.arange(za.size(0), device=za.device)
+
+    # symmetric InfoNCE
+    loss_a2e = F.cross_entropy(logits, labels)
+    loss_e2a = F.cross_entropy(logits.T, labels)
+
+    loss = (loss_a2e + loss_e2a) / 2
+
+    return loss
+
+def bc(a : Tensor, b : Tensor) -> Tensor:
+
+    l1 = a.log() @ b.T
+    l2 = (1 - a).log() @ (1 - b).T
+
+    return - (l1 + l2)
+
+def bce_agreement_loss(
+    a : Tensor,
+    b : Tensor
+) -> Tensor:
+    return (bc(a, b) + bc(a, b)) / 2
 
 def entropy(p : Tensor) -> Tensor:
     return - torch.sum(p * torch.log(p + 1e-6), dim=-1)
 
-def sharpening_loss(
-    a : Tensor, 
-    b : Tensor, 
-    C : Tensor,
-    temp : float = 0.1
+def sharpness_loss(h : Tensor) -> Tensor:
+
+    h_prob = h.sigmoid()
+    h_entropy = -(h_prob * h_prob.log() + (1 - h_prob) * (1 - h_prob).log())
+
+    return h_entropy.mean()
+
+def l1_sparisty_loss(h : Tensor) -> Tensor:
+    return h.abs().sum()
+
+def soft_topk_sparsity_loss(
+    h : Tensor, 
+    rate : float
 ) -> Tensor:
-    
-    logits_a = F.softmax(a @ C.T, dim=-1)
-    logits_b = F.softmax(b @ C.T, dim=-1)
+    return F.softplus(h.sigmoid().mean(dim=-1) - rate).mean()
 
-    l_a = entropy(p=logits_a).mean()
-    l_b = entropy(p=logits_b).mean()
+def top_k_operator(h : Tensor, rate : float) -> Tuple[Tensor, Tensor]:
 
-    return (l_a + l_b) / 2
+    k = int(rate * h.shape[0])
 
-def diversity_loss(C : Tensor, temp : float = 0.1) -> Tensor:
+    indices = h.topk(k=k,dim=-1).indices
+    mask = torch.zeros_like(h)
+    row = torch.arange(h.size(0)).repeat(4)
+    col = indices.T.reshape(-1)
+    mask[row, col] = 1.0
 
-    C = F.normalize(C, p=2, dim=1)
-    logits = (C @ C.T) / temp
-    
-    labels = torch.arange(C.size(0)).to(C.device)
-    loss = (F.cross_entropy(logits, labels) + F.cross_entropy(logits.T, labels)) / 2
+    return h * mask, mask
 
+def agreement_loss(
+    a1 : Tensor, 
+    a2 : Tensor,
+    variant : Literal['bce_agreement_loss', 'infonce_agreements_loss'],
+    apply_topk_operator : bool,
+    topk_rate : float
+) -> Tensor:
+        
+    if apply_topk_operator:
+        a1 = top_k_operator(a1, topk_rate)
+        a2 = top_k_operator(a1, topk_rate)
+
+    match variant:
+        case 'bce_agreement_loss':
+            loss = bce_agreement_loss(a1.sigmoid(), a2.sigmoid())
+        case 'infonce_agreements_loss':
+            loss = infonce_agreement_loss(a1, a2)
+        case _:
+            raise Exception(f"Unknown loss '{variant}'")
+        
     return loss
 
+def sparisty_loss(
+    h : Tensor, 
+    topk_rate : float,
+    variant : Literal['l1_sparisty_loss', 'soft_topk_sparsity_loss']
+) -> Tensor:
+    
+    match variant:
+        case 'l1_sparisty_loss':
+            loss = l1_sparisty_loss(h)
+        case 'soft_topk_sparsity_loss':
+            loss = soft_topk_sparsity_loss(h, topk_rate)
+        case _:
+            raise Exception(f"Unknown loss '{variant}'")
+        
+    return loss
 
 def loss(
     batch : HeteroData,
     config : BaseTrainingConfig,
     model_output : HetModelReturn, 
     batch_size : int,
-    temperature : float = 0.1,
-) -> Dict[str, Tensor]:
-
+    weights : Dict[str, float]
+) -> Tuple[Tensor, Dict[str, Tensor]]:
+        
+    ### Losses dictionary
     losses = {}
-
-    M = model_output.articles_embeddings_v2.shape[1]
-
-    a1 = model_output.articles_embeddings_v2 #.split(split_size=M // 2,dim=1)
-    e1 = model_output.entities_embeddings_v2 #.split(split_size=M // 2,dim=1)
-
-    loss = torch.scalar_tensor(0.0).to(a1.device)
     
-    if config.clip:
+    ### Alignment Loss
+    a1 = model_output.articles_embeddings_v1
+    a2 = model_output.articles_embeddings_v2
 
-        losses['l1'] = clip_loss(
-            model_output.articles_embeddings_v1[:batch_size],
-            a1[:batch_size], # model_output.articles_embeddings_v2[:batch_size],
-            temperature=temperature
+    losses['agreement_loss'] = agreement_loss(
+        a1,
+        a2,
+        variant=config.agreement_loss,
+        apply_topk_operator=config.apply_topk_operator,
+        topk_rate=config.topk_rate
+    )
+
+    ### Sparsity Loss
+    if config.sparsity_loss is None:
+
+        losses['sparsity_loss'] = sparisty_loss(
+            a2,
+            variant=config.sparsity_loss,
+            topk_rate=config.topk_rate
         )
 
-        loss += losses['l1']
+    ### Reconstruction loss
+    if config.reconstruct_features:
 
-    if config.dual:
-
-        p = torch.randperm(model_output.entities_embeddings_v1.shape[0])
-        p = p[:min(1024, p.shape[0])]
-
-        losses['l2'] = clip_loss(
-            model_output.entities_embeddings_v1[p,:],
-            e1[p,:], # model_output.entities_embeddings_v2[p,:],
-            temperature=temperature
-        )
-
-        loss += losses['l2']
-
-    if config.rec:
-
-        losses['rec_loss'] = cosine_similarity_rec_loss(
-            batch['Article'].x,
-            a2, # model_output.articles_embeddings_v2,
-            config.batch_size
-        )
-
-        loss += losses['rec_loss']
-
-    if config.structure_rec:
-
-        losses['structure_rec_loss'] = structure_rec_loss(
+        losses['features_reconstruction_loss'] = cosine_similarity_rec_loss(
             a1,
+            a2,
+            batch_size=batch_size
+        )
+
+    if config.reconstruct_structure:
+
+        losses['structure_reconstruction_loss'] = structure_rec_loss(
+            a2,
             batch['Article', 'relate-to', 'Article'].edge_index
         )
 
-        loss += losses['structure_rec_loss']
+    if config.sharpness_loss:
+        losses['sharpness_loss'] = sharpness_loss(a2)
 
-    if config.margin_structure:
+    loss = torch.scalar_tensor(0.0).to(a1.device)
 
-        losses['margin_structure_rec_loss'] = margin_structure_loss(
-            a1,
-            batch['Article', 'relate-to', 'Article'].edge_index,
-            5,
-            0.3
-        )
-
-        loss += losses['margin_structure_rec_loss']
-
-    if config.model_params.n_prototypes is not None:
-
-        losses['sharpening_loss'] = sharpening_loss(
-            model_output.articles_embeddings_v1,
-            model_output.articles_embeddings_v2,
-            model_output.C
-        )
-
-        losses['aggreement_loss'] = agreements_loss(
-            model_output.articles_embeddings_v1,
-            model_output.articles_embeddings_v2,
-            model_output.C
-        )
-
-        loss += losses['aggreement_loss'] + 0.1 * losses['sharpening_loss']
-
+    for loss_name, loss_value in losses.items():
+        loss += weights.get(loss_name, 1.0) * loss_value
 
     losses['loss'] = loss
 
-    return losses
+    return loss
 
 def _process(batch : HeteroData) -> HeteroData:
 

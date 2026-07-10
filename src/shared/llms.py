@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Dict
+from openai import Client, AsyncClient
 
 @dataclass(frozen=True)
 class LLM:

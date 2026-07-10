@@ -36,8 +36,9 @@ import math
 import time
 import json
 import xml.etree.ElementTree as ET
+from datetime import datetime
 from collections import defaultdict
-from itertools import chain
+from itertools import batched
 from typing import Optional, Generator, Dict, Union, List, Self
 from src.helpers import load_json_file
 from src.shared.command_tools import BaseCommand, ConnectionOption, OutputDirOption, add_handlers
@@ -193,6 +194,9 @@ class HAL_API:
             )
         )
 
+        if normalized_doc["title"] is not None:
+            normalized_doc["title"] = normalized_doc["title"].strip('.').strip('[]')
+
         normalized_doc["date"] = doc["producedDate_tdate"]
 
         return normalized_doc
@@ -233,7 +237,15 @@ class HAL_API:
                 .map(lambda x : list(map(self.normalize_document, x)))
 
 def _item_from_list_or_dict(d : dict | list[dict]) -> dict:
-    return d[0] if isinstance(d, list) else d
+
+    if isinstance(d, list):
+
+        if len(d) > 0:
+            return d[0]
+        
+        return None
+    
+    return d
 
 def _list_from_list_or_dict(d : dict | list[dict]) -> list[dict]:
     return d if isinstance(d, list) else [d]
@@ -246,9 +258,7 @@ class PUBMED_API:
     def __init__(self, config : BaseAPIConfig) -> None:
         self.config = config
         self.__num_pages : Optional[Result[int, Union[httpx.TransportError,httpx.HTTPStatusError]]] = None
-        self.__team_num_pages : Dict[str, int] = {}
         
-
     @safe(exceptions=(httpx.TransportError,httpx.HTTPStatusError))
     def make_request(self, 
         url : str,
@@ -310,46 +320,137 @@ class PUBMED_API:
                 d[t.tag] = text
 
         return d
+    
+    def _get_date(self, d : dict) -> Optional[str]:
 
-    def normalize_document(self, d : dict) -> dict:
+        alt_date1 = d['MedlineCitation'].get('DateCompleted', None)
+        alt_date1 = f"{alt_date1['Year']}-{alt_date1['Month']}-{alt_date1['Day']}T00:00:00Z" if alt_date1 is not None else None
+
+        alt_date2 = d['MedlineCitation'].get('DateRevised', None)
+        alt_date2 = f"{alt_date2['Year']}-{alt_date2['Month']}-{alt_date2['Day']}T00:00:00Z" if alt_date2 is not None else None
 
         article = d['MedlineCitation']['Article']
-        keywords = d['MedlineCitation'].get('KeywordList', { 'Keyword' : [] })['Keyword']
-        doc_id = d['MedlineCitation']['PMID']['#text']
 
-        ### Title & Abstract
-        title = _item_from_list_or_dict(article['ArticleTitle'])
-        abstract = _item_from_list_or_dict(article.get('Abstract', { 'AbstractText' : None })['AbstractText'])
-
-        ### List of Authors
-        authors_info = article.get('AuthorList', { 'Author' : [] })
-        authors = [x['LastName'] + '. ' + x['ForeName'] for x in authors_info['Author']]
-
-        ### Teams List
-        teams = set()
-
-        for author in authors_info['Author']:
-            for aff in _list_from_list_or_dict(author['AffiliationInfo']):
-                teams.update([team.strip() for team in aff['Affiliation'].split(',')])
-
-        teams = [team for team in teams if team in self.config.teams]
-
-        ### Date
         date = article.get('ArticleDate')
         date = f"{date['Year']}-{date['Month']}-{date['Day']}T00:00:00Z" if date is not None else None
 
-        ### Keywords
+        if date is None:
+            date = alt_date1
+        
+        if date is None:
+            date = alt_date2
+
+        return date
+    
+    def _get_title(self, d : dict) -> Optional[str]:
+
+        article = d['MedlineCitation']['Article']
+        title = _item_from_list_or_dict(article.get('ArticleTitle', []))
+
+        if title is not None:
+
+            title = title.strip('[]')
+
+            if title.lower() == 'not available':
+                title = None
+
+        return title
+    
+    def _get_abstract(self, d : dict) -> Optional[str]:
+
+        article = d['MedlineCitation']['Article']
+        abstract = article.get('Abstract', { 'AbstractText' : None })['AbstractText']
+
+        if isinstance(abstract, list):
+
+            abstract_parts = []
+
+            for item in abstract:
+                
+                if isinstance(item, str):
+                    abstract_parts.append(item)
+
+                elif isinstance(item, dict):
+
+                    if '#text' in item:
+                        abstract_parts.append(item['#text'])
+
+            abstract = " ".join(abstract_parts)
+
+        if isinstance(abstract, dict):
+            abstract = abstract.get('#text', None)
+
+        return abstract
+    
+    def _get_authors(self, d : dict) -> List[str]:
+
+        article = d['MedlineCitation']['Article']
+        authors_info = article.get('AuthorList', { 'Author' : [] })
+        authors = [x['LastName'] + '. ' + x['ForeName'] for x in authors_info['Author'] if ('LastName' in x) and ('ForeName' in x)]
+
+        return authors
+    
+    def _get_teams(self, d : dict) -> List[str]:
+
+        teams = set()
+
+        article = d['MedlineCitation']['Article']
+        authors_info = article.get('AuthorList', { 'Author' : [] })
+
+        for author in authors_info['Author']:
+            if isinstance(author, dict):
+                for aff in _list_from_list_or_dict(author.get('AffiliationInfo', [])):
+                    teams.update([team.strip().lower() for team in aff['Affiliation'].split(',')])
+
+        teams = [team for team in teams if team in list(map(str.lower, self.config.teams))]
+
+        return teams
+    
+    def _get_keywords(self, d : dict) -> List[str]:
+
+        keywords = _list_from_list_or_dict(d['MedlineCitation'].get('KeywordList', { 'Keyword' : [] })['Keyword'])
         keywords = [k['#text'] for k in keywords]
 
-        return {
-            "id" : doc_id,
-            "title" : title,
-            "abstract" : abstract,
-            "authors" : authors,
-            "teams" :  teams,
-            "date" : date,
-            "keywords" : keywords
+        return keywords
+
+
+    def normalize_document(self, d : dict) -> Optional[Dict]:
+
+        record = {
+            "id" :  d['MedlineCitation']['PMID']['#text'],
+            "title" : self._get_title(d),
+            "abstract" : self._get_abstract(d),
+            "authors" : self._get_authors(d),
+            "teams" : self._get_teams(d),
+            "date" : self._get_date(d),
+            "keywords" : self._get_keywords(d),
+            "venues" : []
         }
+
+        if any([
+            record['abstract'] is None,
+            record['date'] is None,
+            len(record['teams']) == 0,
+        ]):
+            return None
+                
+        dt = datetime.fromisoformat(record['date'].replace("Z", "+00:00"))
+
+        if self.config.from_ != '*':
+
+            from_ = datetime.fromisoformat(self.config.from_.replace("Z", "+00:00"))
+
+            if dt < from_:
+                return None
+            
+        if self.config.to != '*':
+
+            to = datetime.fromisoformat(self.config.to.replace("Z", "+00:00"))
+
+            if dt > to:
+                return None
+
+        return record
 
     def _num_pages(self, team : str) -> Result[int, httpx.TransportError | httpx.HTTPStatusError]:
 
@@ -364,67 +465,79 @@ class PUBMED_API:
             .map(lambda x : x['esearchresult']['count']) \
             .map(int) \
             .map(lambda x : math.ceil(x / self.config.page_size))        
+        
         return count
 
 
-    def _fetch(self,
-        retstart : int = 0,
-        retmax : int = 128
-    ) -> PageResult:
-        
-        term = ' OR '.join([f'"{lab}"[Affiliation]' for lab in self.config.teams])
-                
-        ### FETCH the list of ids
-        response = self.make_request(
-            PUBMED_API.ESEARCH_URL.format(term=term,format="json",retmax=retmax,retstart=retstart),
-            max_retries=3
-        )
-
-        try:
-            response = response.unwrap()
-        except Exception as e:
-            return Result.from_failure(e)
-        
-        content = response.json()
-        ids = content['esearchresult']['idlist']
-
-        ### Request
-        response = self.make_request(
-            PUBMED_API.EFETCH_URL.format(ids=','.join(ids)),
-            max_retries=3
-        )
-
-        try:
-            response = response.unwrap()
-        except Exception as e:
-            return Result.from_failure(e)
-
-        ### XML to JSON
-        content = response.text
-        
-        for tag in ['i', 'sup', 'b', 'div', 'p', 'sub']:
-            content = content.replace(f'<{tag}>', ' ').replace(f'</{tag}>', ' ')
-        content = ET.ElementTree(ET.fromstring(content))
-        content = self.etree_to_dict(content.getroot())
-
-        ### Process Response
-        articles = _list_from_list_or_dict(content['PubmedArticleSet']['PubmedArticle'])
-        articles = [self.normalize_document(article) for article in articles]
-
-        return Result.from_value(articles)
-    
     def fetch_page(self) -> Generator[PageResult, None, None]:
                 
-        for team in self.config.teams:
-            
-            retstart = 0
-            numfetched_pages = 0
+        term = ' OR '.join([f'"{lab}"[Affiliation]' for lab in self.config.teams])
 
-            while numfetched_pages < self.__team_num_pages[team]:
-                yield self._fetch(team, retstart=retstart, retmax=self.config.page_size)
-                retstart += self.config.page_size
-                numfetched_pages += 1
-                time.sleep(0.25)
+        ids_list = []
+                
+        ### FETCH the list of ids
+        retstart = 0
+        K = 4
+        num_fetched = 0
+
+        while num_fetched < self.num_pages().unwrap():
+
+            response = self.make_request(
+                PUBMED_API.ESEARCH_URL.format(term=term,format="json",retmax=K * self.config.page_size,retstart=retstart),
+                max_retries=3
+            )
+
+            try:
+                response = response.unwrap()
+            except Exception as e:
+                retstart += K * self.config.page_size
+                num_fetched += K
+                continue
+            
+            try:
+                content = response.json()
+            except Exception as e:
+                retstart += K * self.config.page_size
+                num_fetched += K
+                continue
+            
+            ids_list.extend(content['esearchresult']['idlist'])
+            retstart += K * self.config.page_size
+            num_fetched += K
+            time.sleep(0.05)
+
+        ids_list = set(ids_list)
+
+        print(f"Found {len(ids_list)} articles.")
+
+        ### Request
+        for ids in batched(ids_list, self.config.page_size):
+
+            response = self.make_request(
+                PUBMED_API.EFETCH_URL.format(ids=','.join(ids)),
+                max_retries=3
+            )
+
+            try:
+                response = response.unwrap()
+            except Exception as e:
+                return Result.from_failure(e)
+
+            ### XML to JSON
+            content = response.text
+            
+            for tag in ['i', 'sup', 'b', 'div', 'p', 'sub']:
+                content = content.replace(f'<{tag}>', ' ').replace(f'</{tag}>', ' ')
+
+            content = ET.ElementTree(ET.fromstring(content))
+            content = self.etree_to_dict(content.getroot())
+
+            ### Process Response
+            articles = _list_from_list_or_dict(content['PubmedArticleSet']['PubmedArticle'])
+            articles = list(filter(None, map(self.normalize_document, articles)))
+
+            yield Result.from_value(articles)
+            time.sleep(0.25)
     
     def num_pages(self) -> Result[int, Union[httpx.TransportError, httpx.HTTPStatusError]]:
 
@@ -448,7 +561,7 @@ class PUBMED_API:
 
             content = response.map(httpx.Response.json)
                             
-            self.__num_pages = count = content \
+            self.__num_pages = content \
                 .map(lambda x : x['esearchresult']['count']) \
                 .map(int) \
                 .map(lambda x : math.ceil(x / self.config.page_size)) 
@@ -490,7 +603,15 @@ class ApiList:
         return self.__num_pages
     
     def fetch_page(self) -> Generator[PageResult, None, None]:
-        yield from chain(*[api.fetch_page() for api in self.apis])
+        
+        for api in self.apis:
+
+            for page in api.fetch_page():
+
+                yield page.map(lambda x : [
+                    {**item, 'source' : api.__class__.__name__} 
+                    for item in x
+                ])
         
     
 @cli.register_stage(
@@ -589,9 +710,13 @@ class DataDownloader(BaseCommand):
                         'message' : error.response.text
                     })
 
-                    yield self._make_event(progress, EventLevel.ERROR, message=f"Failed to fetch number of pages due to an HTTP error : {payload}.")
+                    yield self._make_event(progress, EventLevel.ERROR,message=f"Failed to fetch page {page_id} due to the following error : {payload}.")
 
-            self.writer.flush()
+                else:
+
+                    yield self._make_event(progress, EventLevel.ERROR,message=f"Failed to fetch page {page_id} due to the following error : {error}.")
+
+        self.writer.flush()
 
     def __iter__(self) -> Generator[Event, None, None]:
 
@@ -611,7 +736,7 @@ class DataDownloader(BaseCommand):
         pubmedia_api = PUBMED_API(config.hal_conf.get_config('pubmedia'))
 
         downloader = DataDownloader(
-            api=ApiList([pubmedia_api]),
+            api=ApiList([pubmedia_api,hal_api]),
             writer=FileWriter
                 .from_filename(config.output_filename)
                 .buffered(config.hal_conf.page_size)

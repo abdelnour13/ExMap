@@ -1,92 +1,313 @@
 [
-    {
-        "sub_domain": "Robotics",
-        "domain": "Advanced Production Technologies",
-        "definition": "Set of technologies dedicated to designing, programming, and using robots to automate tasks, improve precision, safety, and efficiency in industrial processes."
-    },
-    {
-        "sub_domain": "Processes and Assembly",
-        "domain": "Advanced Production Technologies",
-        "definition": "Techniques for manufacturing and assembling product parts or components using varied methods (welding, bonding, machining, etc.) to ensure quality, reliability, and performance of finished products."
-    },
-    {
-        "sub_domain": "Additive Manufacturing",
-        "domain": "Advanced Production Technologies",
-        "definition": "Production method creating objects by adding material layer-by-layer from a 3D digital model, enabling complex, customized parts with less waste than traditional processes."
-    },
-    {
-        "sub_domain": "Monitoring and Analysis",
-        "domain": "Advanced Production Technologies",
-        "definition": "Real-time surveillance of industrial processes using sensors and data acquisition systems combined with analytical tools to detect anomalies, predict failures, and optimize performance."
-    },
-    {
-        "sub_domain": "Eco-design",
-        "domain": "Sustainable Industry",
-        "definition": "Design approach integrating environmental impacts from the earliest stages of product/service development to reduce ecological footprint throughout its lifecycle (raw material extraction to recycling)."
-    },
-    {
-        "sub_domain": "Reduction and Treatment of Effluents and Waste",
-        "domain": "Sustainable Industry",
-        "definition": "Methods to reduce liquid, solid, or gaseous discharges from industrial activities and treat them to limit environmental and human health impacts."
-    },
-    {
-        "sub_domain": "Recycling / Reuse",
-        "domain": "Sustainable Industry",
-        "definition": "Practices extending the lifespan of materials/components/products through transformation, repair, or reuse, aligning with circular economy and waste reduction principles."
-    },
-    {
-        "sub_domain": "Eco-responsible Processes",
-        "domain": "Sustainable Industry",
-        "definition": "Manufacturing/transformation techniques minimizing energy consumption, raw material use, and pollutant emissions while promoting renewable/recycled resources."
-    },
-    {
-        "sub_domain": "Decarbonization of Mobility",
-        "domain": "Sustainable Industry",
-        "definition": "Transition to low-greenhouse-gas transport modes (land, air, maritime) via electrification, alternative fuels, or energy optimization of vehicles/infrastructure."
-    },
-    {
-        "sub_domain": "Decarbonization of Energy",
-        "domain": "Sustainable Industry",
-        "definition": "Reduction of CO2 emissions from energy production/consumption through renewable energy development, energy efficiency improvements, and fossil fuel substitution."
-    },
-    {
-        "sub_domain": "Composites and New Materials",
-        "domain": "Sustainable Industry",
-        "definition": "Development/use of innovative materials (composites, bio-based, nanomaterials) with specific properties (lightness, strength, durability) meeting industrial performance/sustainability demands."
-    },
-    {
-        "sub_domain": "Industrial Digitalization",
-        "domain": "Industrial Digitalization",
-        "definition": "Transformation of industrial activities by integrating digital technologies (IoT, big data, AI, cyber-physical systems) to optimize production, maintenance, quality, and traceability."
-    },
-    {
-        "sub_domain": "Digital Engineering of Products and Processes",
-        "domain": "Industrial Digitalization",
-        "definition": "Use of digital tools (CAD, simulation, digital twins) to design, model, test, and improve products and manufacturing processes from conception to production."
-    },
-    {
-        "sub_domain": "Industrial Organization Performance",
-        "domain": "Industrial Digitalization",
-        "definition": "A company's ability to achieve quality, cost, time, flexibility, and innovation goals through coordinated continuous improvement methods, indicator-based management, integrated digital tools (e.g., ERP), and optimized processes/resources in complex industrial environments."
-    },
-    {
-        "sub_domain": "Preparation for New Jobs in the Future Industry",
-        "domain": "Industry 5.0",
-        "definition": "Actions/training systems to support skill evolution for Industry 4.0, including anticipating competency needs, transforming training pathways, and adapting to emerging technologies (AI, robotics, data)."
-    },
-    {
-        "sub_domain": "Change Management",
-        "domain": "Industry 5.0",
-        "definition": "Process supporting individuals/teams/organizations in transitioning to new practices/tools/models, reducing resistance, facilitating adoption of changes, and ensuring sustainable integration."
-    },
-    {
-        "sub_domain": "User-Centered Design",
-        "domain": "Industry 5.0",
-        "definition": "Design approach placing end-user needs/expectations/constraints at the core of development, ensuring ergonomics, usability, and satisfaction through deep usage understanding."
-    },
-    {
-        "sub_domain": "Augmentation of Human Capabilities in Manufacturing",
-        "domain": "Industry 5.0",
-        "definition": "Integration of technologies (augmented reality, cobots, AI) to support/amplify operators' physical, cognitive, or decision-making abilities, improving performance/safety/quality while keeping humans central to production."
-    }
+  {
+    "sub_domain": "Robotics",
+    "domain": "Advanced Production Technologies",
+    "definition": "Set of technologies dedicated to designing, programming, and using robots to automate tasks, improve precision, safety, and efficiency in industrial processes.",
+    "alt_names": [
+      "robotics",
+      "industrial robots",
+      "robotic systems",
+      "robot programming",
+      "robot control",
+      "autonomous robots",
+      "collaborative robots",
+      "cobots",
+      "robotic automation",
+      "robotic manipulation",
+      "robotic inspection",
+      "industrial automation using robots"
+    ]
+  },
+  {
+    "sub_domain": "Processes and Assembly",
+    "domain": "Advanced Production Technologies",
+    "definition": "Techniques for manufacturing and assembling product parts or components using varied methods (welding, bonding, machining, etc.) to ensure quality, reliability, and performance of finished products.",
+    "alt_names": [
+      "manufacturing processes",
+      "assembly operations",
+      "industrial assembly",
+      "assembly line",
+      "welding",
+      "bonding",
+      "joining processes",
+      "machining",
+      "fastening",
+      "fabrication",
+      "production methods",
+      "industrial manufacturing"
+    ]
+  },
+  {
+    "sub_domain": "Additive Manufacturing",
+    "domain": "Advanced Production Technologies",
+    "definition": "Production method creating objects by adding material layer-by-layer from a 3D digital model, enabling complex, customized parts with less waste than traditional processes.",
+    "alt_names": [
+      "additive manufacturing",
+      "3d printing",
+      "rapid prototyping",
+      "digital fabrication",
+      "metal 3d printing",
+      "polymer printing",
+      "layer-by-layer manufacturing",
+      "printed components",
+      "custom manufacturing",
+      "generative manufacturing"
+    ]
+  },
+  {
+    "sub_domain": "Monitoring and Analysis",
+    "domain": "Advanced Production Technologies",
+    "definition": "Real-time surveillance of industrial processes using sensors and data acquisition systems combined with analytical tools to detect anomalies, predict failures, and optimize performance.",
+    "alt_names": [
+      "industrial monitoring",
+      "process monitoring",
+      "condition monitoring",
+      "sensor monitoring",
+      "predictive maintenance",
+      "fault detection",
+      "anomaly detection",
+      "industrial analytics",
+      "real-time monitoring",
+      "performance analysis",
+      "process optimization"
+    ]
+  },
+  {
+    "sub_domain": "Eco-design",
+    "domain": "Sustainable Industry",
+    "definition": "Design approach integrating environmental impacts from the earliest stages of product/service development to reduce ecological footprint throughout its lifecycle (raw material extraction to recycling).",
+    "alt_names": [
+      "eco-design",
+      "ecodesign",
+      "sustainable design",
+      "green design",
+      "life cycle assessment",
+      "lca",
+      "circular design",
+      "environmental design",
+      "design for sustainability",
+      "eco-friendly product development"
+    ]
+  },
+  {
+    "sub_domain": "Reduction and Treatment of Effluents and Waste",
+    "domain": "Sustainable Industry",
+    "definition": "Methods to reduce liquid, solid, or gaseous discharges from industrial activities and treat them to limit environmental and human health impacts.",
+    "alt_names": [
+      "waste treatment",
+      "wastewater treatment",
+      "industrial effluents",
+      "effluent treatment",
+      "pollution control",
+      "waste reduction",
+      "industrial emissions",
+      "air pollution reduction",
+      "environmental remediation",
+      "industrial waste management"
+    ]
+  },
+  {
+    "sub_domain": "Recycling / Reuse",
+    "domain": "Sustainable Industry",
+    "definition": "Practices extending the lifespan of materials/components/products through transformation, repair, or reuse, aligning with circular economy and waste reduction principles.",
+    "alt_names": [
+      "recycling",
+      "reuse",
+      "remanufacturing",
+      "resource recovery",
+      "material recovery",
+      "repair",
+      "refurbishment",
+      "product refurbishment",
+      "waste valorization",
+      "circular economy",
+      "closed-loop manufacturing"
+    ]
+  },
+  {
+    "sub_domain": "Eco-responsible Processes",
+    "domain": "Sustainable Industry",
+    "definition": "Manufacturing/transformation techniques minimizing energy consumption, raw material use, and pollutant emissions while promoting renewable/recycled resources.",
+    "alt_names": [
+      "sustainable manufacturing",
+      "green manufacturing",
+      "eco-responsible production",
+      "energy-efficient manufacturing",
+      "resource-efficient production",
+      "low-emission manufacturing",
+      "clean production",
+      "sustainable industrial processes",
+      "environmentally responsible production"
+    ]
+  },
+  {
+    "sub_domain": "Decarbonization of Mobility",
+    "domain": "Sustainable Industry",
+    "definition": "Transition to low-greenhouse-gas transport modes (land, air, maritime) via electrification, alternative fuels, or energy optimization of vehicles/infrastructure.",
+    "alt_names": [
+      "sustainable mobility",
+      "electric vehicles",
+      "vehicle electrification",
+      "hydrogen mobility",
+      "alternative fuels",
+      "green transportation",
+      "low-carbon transport",
+      "transport energy efficiency",
+      "clean mobility"
+    ]
+  },
+  {
+    "sub_domain": "Decarbonization of Energy",
+    "domain": "Sustainable Industry",
+    "definition": "Reduction of CO2 emissions from energy production/consumption through renewable energy development, energy efficiency improvements, and fossil fuel substitution.",
+    "alt_names": [
+      "renewable energy",
+      "energy transition",
+      "clean energy",
+      "low-carbon energy",
+      "solar energy",
+      "wind energy",
+      "energy efficiency",
+      "energy storage",
+      "green energy",
+      "decarbonized energy systems"
+    ]
+  },
+  {
+    "sub_domain": "Composites and New Materials",
+    "domain": "Sustainable Industry",
+    "definition": "Development/use of innovative materials (composites, bio-based, nanomaterials) with specific properties (lightness, strength, durability) meeting industrial performance/sustainability demands.",
+    "alt_names": [
+      "advanced materials",
+      "composite materials",
+      "bio-based materials",
+      "smart materials",
+      "nanomaterials",
+      "lightweight materials",
+      "innovative materials",
+      "sustainable materials",
+      "high-performance materials",
+      "material engineering"
+    ]
+  },
+  {
+    "sub_domain": "Industrial Digitalization",
+    "domain": "Industrial Digitalization",
+    "definition": "Transformation of industrial activities by integrating digital technologies (IoT, big data, AI, cyber-physical systems) to optimize production, maintenance, quality, and traceability.",
+    "alt_names": [
+      "industrial digitalization",
+      "industry 4.0",
+      "smart manufacturing",
+      "industrial iot",
+      "iiot",
+      "connected factory",
+      "smart factory",
+      "cyber-physical systems",
+      "industrial ai",
+      "manufacturing analytics",
+      "digital transformation"
+    ]
+  },
+  {
+    "sub_domain": "Digital Engineering of Products and Processes",
+    "domain": "Industrial Digitalization",
+    "definition": "Use of digital tools (CAD, simulation, digital twins) to design, model, test, and improve products and manufacturing processes from conception to production.",
+    "alt_names": [
+      "digital engineering",
+      "computer aided design",
+      "cad",
+      "computer aided engineering",
+      "cae",
+      "digital twin",
+      "engineering simulation",
+      "virtual prototyping",
+      "product lifecycle management",
+      "plm",
+      "process simulation"
+    ]
+  },
+  {
+    "sub_domain": "Industrial Organization Performance",
+    "domain": "Industrial Digitalization",
+    "definition": "A company's ability to achieve quality, cost, time, flexibility, and innovation goals through coordinated continuous improvement methods, indicator-based management, integrated digital tools (e.g., ERP), and optimized processes/resources in complex industrial environments.",
+    "alt_names": [
+      "operational excellence",
+      "industrial performance",
+      "lean manufacturing",
+      "continuous improvement",
+      "quality management",
+      "process optimization",
+      "production planning",
+      "erp systems",
+      "industrial productivity",
+      "resource optimization"
+    ]
+  },
+  {
+    "sub_domain": "Preparation for New Jobs in the Future Industry",
+    "domain": "Industry 5.0",
+    "definition": "Actions/training systems to support skill evolution for Industry 4.0, including anticipating competency needs, transforming training pathways, and adapting to emerging technologies (AI, robotics, data).",
+    "alt_names": [
+      "future skills",
+      "industrial training",
+      "reskilling",
+      "upskilling",
+      "workforce development",
+      "industry 4.0 skills",
+      "digital skills",
+      "future jobs",
+      "workforce transformation",
+      "industrial education"
+    ]
+  },
+  {
+    "sub_domain": "Change Management",
+    "domain": "Industry 5.0",
+    "definition": "Process supporting individuals/teams/organizations in transitioning to new practices/tools/models, reducing resistance, facilitating adoption of changes, and ensuring sustainable integration.",
+    "alt_names": [
+      "change management",
+      "organizational transformation",
+      "technology adoption",
+      "digital transformation management",
+      "organizational adaptation",
+      "transformation strategy",
+      "change leadership",
+      "employee engagement",
+      "resistance to change"
+    ]
+  },
+  {
+    "sub_domain": "User-Centered Design",
+    "domain": "Industry 5.0",
+    "definition": "Design approach placing end-user needs/expectations/constraints at the core of development, ensuring ergonomics, usability, and satisfaction through deep usage understanding.",
+    "alt_names": [
+      "user centered design",
+      "human centered design",
+      "ux design",
+      "user experience",
+      "usability",
+      "ergonomics",
+      "design thinking",
+      "human factors",
+      "user requirements",
+      "customer-centric design"
+    ]
+  },
+  {
+    "sub_domain": "Augmentation of Human Capabilities in Manufacturing",
+    "domain": "Industry 5.0",
+    "definition": "Integration of technologies (augmented reality, cobots, AI) to support/amplify operators' physical, cognitive, or decision-making abilities, improving performance/safety/quality while keeping humans central to production.",
+    "alt_names": [
+      "human augmentation",
+      "human machine collaboration",
+      "cobots",
+      "collaborative robots",
+      "augmented reality",
+      "operator assistance",
+      "decision support systems",
+      "wearable technologies",
+      "ai assisted work",
+      "human centered manufacturing"
+    ]
+  }
 ]

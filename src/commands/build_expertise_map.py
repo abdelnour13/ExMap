@@ -15,7 +15,7 @@ from src.commands.train import Trainer, Config as TrainerConfig
 from src.gnn import HetModel, HetModelReturn
 from src.shared.command_tools import BaseCommand
 from src.shared.handlers import ConsoleLogger
-from src.env import env
+from src.shared.env import env
 from src import helpers
 
 # ---------------------------------------------------------------------------

@@ -34,7 +34,7 @@ from torch_geometric import utils as gnn_utils
 from torch_geometric.data import HeteroData
 from torch_geometric.transforms import RemoveIsolatedNodes
 from definitions import KGS_DIR, FEATURES_DIR, hf_model_dir
-from src.env import env
+from src.shared.env import env
 from pydantic import BaseModel, computed_field
 from instance import cli
 
@@ -538,24 +538,26 @@ class GraphBuilder:
                 message=f"Processed {len(records)} records."
             )
 
-        for domain in env.cs_domains:
+        for domain in env.fields['health_care'].domains:
+            
+            for d in map(str.strip, domain.domain.split(',')):
 
-            domain_id = _slugify(domain.domain)
-            subdomain_id = _slugify(domain.sub_domain)
+                domain_id = _slugify(d)
+                subdomain_id = _slugify(domain.sub_domain)
 
-            graph.add_node(
-                type='Domain',
-                id=domain_id,
-                properties={
-                    "name" : domain.domain
-                }
-            )
+                graph.add_node(
+                    type='Domain',
+                    id=domain_id,
+                    properties={
+                        "name" : d
+                    }
+                )
 
-            graph.add_edge(
-                type=FeatureExtractor.SubDomain_ISSUBDOMAINOF_Domain,
-                src=subdomain_id,
-                dst=domain_id
-            )
+                graph.add_edge(
+                    type=FeatureExtractor.SubDomain_ISSUBDOMAINOF_Domain,
+                    src=subdomain_id,
+                    dst=domain_id
+                )
 
         return graph
 
@@ -695,6 +697,8 @@ class GraphBuilder:
             # Keyword
             for keyword in article['keywords']:
 
+                keyword = keyword['keyword']
+
                 keyword_id = _slugify(keyword)
 
                 graph.add_node(
@@ -712,23 +716,31 @@ class GraphBuilder:
                 )
 
             # SubDomains
-            for domain in article['labels']:
+            for method, items in article['pseudo_labels'].items():
+                    
+                for item in items:
+                    
+                    domain = item['label']
+                    score = item['score']
 
-                domain_id = _slugify(domain)
+                    if score == 0.0:
+                        continue
 
-                graph.add_node(
-                    type='SubDomain',
-                    id=domain_id,
-                    properties={
-                        "name" : domain
-                    }
-                )
+                    domain_id = _slugify(domain)
 
-                graph.add_edge(
-                    type=FeatureExtractor.Article_BELONGSTO_SubDomain,
-                    src=article['id'],
-                    dst=domain_id
-                )
+                    graph.add_node(
+                        type='SubDomain',
+                        id=domain_id,
+                        properties={
+                            "name" : domain
+                        }
+                    )
+
+                    graph.add_edge(
+                        type=FeatureExtractor.Article_BELONGSTO_SubDomain,
+                        src=article['id'],
+                        dst=domain_id
+                    )
 
 # ---------------------------------------------------------------------------
 # Stage 02 : Filtering
@@ -1146,7 +1158,7 @@ class GraphEmbedder:
 # ---------------------------------------------------------------------------
 
 @cli.register_stage(
-    name="feature_extraction_2",
+    name="feature_extraction",
     description=(
         "Transforms raw JSONL triples into an embedded, annotated knowledge graph "
         "ready for GNN training. Includes parsing, filtering, sentence-bert embedding, "

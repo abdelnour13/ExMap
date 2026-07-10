@@ -24,7 +24,6 @@ class BufferedWriter:
 
         if len(self.buffer) >= self.buffer_size:
 
-            # buff = self.buffer[:self.buffer_size]
             self.writer.write(self.buffer)
             n_saved = len(self.buffer)
 
@@ -32,8 +31,6 @@ class BufferedWriter:
                 self.cache.update(self.buffer)
 
             self.buffer = []
-
-            self.buffer = self.buffer[self.buffer_size:]
 
             return n_saved
 

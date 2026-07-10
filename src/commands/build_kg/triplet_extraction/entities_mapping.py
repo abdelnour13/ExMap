@@ -101,23 +101,6 @@ class EntitiesMapping(Stage):
 
         for batch, progress in self.reader:
 
-            ### Acronyms
-            for item in batch:
-                    
-                if 'sentence' in item and item['sentence'] is not None:
-
-                    for acronym in item['sentence']['acronyms']:
-                            
-                        if acronym['score'] >= 0.8:
-                            
-                            if acronym['acronym'].lower() not in entities_dict:
-                                entities_dict[acronym['acronym'].lower()] = [len(entities_dict), None]
-
-                            if acronym['expansion'].lower() not in entities_dict:
-                                entities_dict[acronym['expansion'].lower()] = [len(entities_dict), None]
-
-                            edges.add((entities_dict[acronym['acronym'].lower()][0], entities_dict[acronym['expansion'].lower()][0]))
-
             for t in batch:
 
                 if t['head'] not in entities_dict:

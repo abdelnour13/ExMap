@@ -1,41 +1,28 @@
-from openai import AsyncOpenAI
-from src.shared.llms import LLM
-from .two_step_llm import LLMBasedTripleExtractor, TwoStepLLMTriplesExtractorWithOntology
+from src.shared.env import env
+from .two_step_llm import TwoStepLLMTriplesExtractor
 from .one_step_llm import OneStepLLMTriplesExtractor
-from typing import Literal
-
-LLMBasedType = Literal['two-step','one-step']
+from .base import BaseTriplesExtractor
 
 class TriplesExtractorFactory:
     
     @staticmethod
-    def from_llm(  
-        api_key : str,
-        type : LLMBasedType = 'two-step',
-        llm_name : str = 'deepseek-chat',
-    ) -> LLMBasedTripleExtractor:
-        
-        llm = LLM.from_name(llm_name)
+    def from_name(name : str) -> BaseTriplesExtractor:
 
-        if type == 'two-step':
+        type_, llm = name.split('/')
 
-            return TwoStepLLMTriplesExtractorWithOntology(
-                client=AsyncOpenAI(
-                    api_key=api_key,
-                    base_url=llm.url
-                ),
-                model=llm.name
-            )
-        
-        elif type == "one-step":
+        if type_ == 'one-step-llm':
 
             return OneStepLLMTriplesExtractor(
-                client=AsyncOpenAI(
-                    api_key=api_key,
-                    base_url=llm.url
-                ),
-                model=llm.name
+                client=env.llms[llm].async_client,
+                model=llm
+            )
+        
+        elif type_ == 'two-step-llm':
+
+            return TwoStepLLMTriplesExtractor(
+                client=env.llms[llm].async_client,
+                model=llm
             )
         
         else:
-            raise ValueError(f"Unavailable type : {type}")
+            raise ValueError(f"Unrecognized triple extractor type {type_}")

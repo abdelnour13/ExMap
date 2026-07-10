@@ -19,6 +19,7 @@ class Domain:
     domain : str
     sub_domain : str
     definition : str
+    alt_names : Optional[List[str]] = None
 
 @dataclass
 class EntityType:

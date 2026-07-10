@@ -26,6 +26,7 @@ class CorpusCleaner(Stage):
     ) -> None:
         super().__init__(reader, writer)
         self.language_detector = language_detector
+        self.dups = set()
 
     def clean_keywords(self, keywords : list[str]) -> list[str]:
 
@@ -106,6 +107,11 @@ class CorpusCleaner(Stage):
                 doc['abstract'] = self.clean_text(doc['abstract'])
 
         doc['keywords'] = self.clean_keywords(doc['keywords'])
+
+        if doc['title'] in self.dups:
+            doc['title'] = None
+
+        self.dups.add(doc['title'])
 
         return doc
     

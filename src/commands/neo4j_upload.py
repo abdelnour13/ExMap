@@ -5,7 +5,7 @@ from pydantic import BaseModel, computed_field
 from neo4j import Session, Transaction, Driver
 from instance import cli
 from definitions import EMS_DIR
-from src.env import env
+from src.shared.env import env
 from src.commands.feature_extraction import Graph, Edge, Node
 from src.shared.command_tools import BaseCommand
 from src.shared.handlers import ConsoleLogger
