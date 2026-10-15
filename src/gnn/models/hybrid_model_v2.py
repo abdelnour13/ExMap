@@ -3,11 +3,17 @@ from torch import nn, Tensor
 from torch.nn import functional as F
 from torch_geometric import nn as gnn, utils as gnn_utils
 from torch_geometric.data import HeteroData
-from typing import Literal, Optional, Dict, Tuple, List
+from typing import Literal, Optional, Dict, Tuple, List, Any
 from dataclasses import dataclass
 from pydantic import BaseModel
 from src.gnn.layers import RGATConv, TransGNN, MLP, Activation
-from torch_scatter import scatter_sum
+from src.gnn.losses import (
+    ClipLossContext,
+    DiversityLossContext,
+    ConsistencyLossContext,
+)
+from warnings import warn
+from torch_scatter import scatter_sum, scatter
 
 class StochasticAttnPooling(nn.Module):
 
@@ -140,7 +146,7 @@ class RGNN(nn.Module):
         in_channels: int,
         out_channels: int,
         num_relations: int,
-        variant: Literal["conv", "attn"] = "conv",
+        variant: Literal["conv", "attn", "mlp"] = "conv",
         norm : bool = False,
         activation : str = "relu",
         **kwargs
@@ -149,6 +155,8 @@ class RGNN(nn.Module):
         
         self.variant = variant
         self.num_relations = num_relations
+
+        self.use_mlp = kwargs.pop("use_mlp", False)
 
         if variant == "conv":
 
@@ -168,10 +176,22 @@ class RGNN(nn.Module):
                 **kwargs
             )
 
+        if self.use_mlp:
+
+            self.conv = nn.Linear(
+                in_channels,
+                out_channels,
+                **kwargs
+            )
+
         self.bn = nn.BatchNorm1d(out_channels) if norm else nn.Identity()
         self.act = Activation(activation)
 
     def forward(self, x: Tensor, edge_index: Tensor, edge_type: Tensor) -> Tensor:
+
+        if self.use_mlp:
+            return self.act(self.bn(self.conv(x)))
+
         return self.act(self.bn(self.conv(x, edge_index, edge_type)))
     
 class HetConv(nn.Module):
@@ -250,6 +270,7 @@ class HetConv(nn.Module):
 
         # Standard GNN for neighbor aggregation
         if self.use_entities_articles_links:
+
             self.gnn = StdGNN(
                 in_channels = (out_channels, out_channels),
                 out_channels = out_channels,
@@ -287,6 +308,7 @@ class HetConv(nn.Module):
     
 class HetGNNConfig(BaseModel):
     channels : Optional[List[int]] = None
+    projection_dim : Optional[int] = None
     variant: Literal["conv", "attn"] = "conv"
     readout : Literal['mean','max','attn'] = 'max' 
     activation: str = "relu"
@@ -300,31 +322,49 @@ class HetGNNConfig(BaseModel):
     n_prototypes : Optional[int] = None  
 
 @dataclass
+class ViewResults:
+
+    entities_embeddings : Tensor
+    articles_embeddings : Tensor
+
+    entities_prototypes : Optional[Tensor] = None
+    articles_prototypes : Optional[Tensor] = None
+
+    entities_predictions : Optional[Dict[str, Tensor]] = None
+    articles_predictions : Optional[Dict[str, Tensor]] = None
+
+    attn_weights : Optional[Tensor] = None
+
+@dataclass
 class HetModelReturn:
-
-    ### Embeddings : View 1 : Entities Encoder
-    entities_embeddings_v1 : Tensor
-    articles_embeddings_v1 : Tensor # By aggregating entities embeddings
-
-    ### SSL : View 2 : Articles Encoder
-    entities_embeddings_v2 : Tensor # By aggregating articles embeddings
-    articles_embeddings_v2 : Tensor
-
-    ### Guidance Output
-    articles_predictions_v1 : Optional[Dict[str, Tensor]] = None
-    entities_predictions_v1 : Optional[Dict[str, Tensor]] = None
-
-    articles_predictions_v2 : Optional[Dict[str, Tensor]] = None
-    entities_predictions_v2 : Optional[Dict[str, Tensor]] = None
-
-    ### Centroids
+    entities_view : ViewResults
+    articles_view : ViewResults
     C : Optional[Tensor] = None
+
+    def context(self, batch : HeteroData, batch_size : int) -> Dict[str, Any]:
+
+        return {
+            "clip_loss" : ClipLossContext(
+                za=self.articles_view.articles_prototypes,
+                ze=self.entities_view.articles_prototypes
+            ),
+            "diversity_loss" : DiversityLossContext(
+                h=self.C
+            ),
+            "consistency_loss" : ConsistencyLossContext(
+                xa=batch['Article'].x_passage,
+                xe=batch['Entity'].x,
+                a2t=self.articles_view.articles_prototypes,
+                e2t=self.entities_view.entities_prototypes
+            )
+        }
 
 class HetModel(nn.Module):
 
     def __init__(self, 
         in_channels : int,
         num_relations: Tuple[int, int],
+        projection_dim : int,
         num_labels : Optional[Dict[str, int]] = None,
         channels : Optional[List[int]] = None,
         variant: Literal["conv", "attn"] = "conv",
@@ -343,6 +383,7 @@ class HetModel(nn.Module):
 
         self.num_labels = num_labels
         self.num_relations = num_relations
+        self.projection_dim = projection_dim
         self.channels = [in_channels, *(channels or [in_channels // 2] * 2)]
         self.jk = jk
         self.readout = readout
@@ -364,6 +405,7 @@ class HetModel(nn.Module):
                 kgnn_args = kgnn_args,
                 rgnn_args = rgnn_args,
                 gnn_args = gnn_args,
+                use_entities_articles_links=use_entities_articles_links
             )
 
             self.layers.append(layer)
@@ -373,34 +415,35 @@ class HetModel(nn.Module):
         self.art_jk = gnn.JumpingKnowledge(mode = "max")
 
         ## Final Passing after JK
-        self.gnn = StdGNN(
-            in_channels = (self.channels[-1],self.channels[-1]),
-            out_channels = self.channels[-1],
-            variant = variant,
-            norm = norm,
-            activation=activation
-        )
+        if self.use_entities_articles_links:
+
+            self.gnn = StdGNN(
+                in_channels = (self.channels[-1],self.channels[-1]),
+                out_channels = self.channels[-1],
+                variant = variant,
+                norm = norm,
+                activation=activation
+            )
 
         ### Projection Layers
-        self.proj_x = nn.Linear(self.channels[-1], self.channels[-1])
-        self.proj_art = nn.Linear(self.channels[-1], self.channels[-1])
+        self.proj_x = nn.Linear(self.channels[-1], projection_dim)
+        self.proj_art = nn.Linear(self.channels[-1], projection_dim)
 
         ### Pooling
         self.pool = None
 
-        if readout == 'mean':
-            self.entities_readout_fn = gnn.MeanAggregation()
-            self.articles_readout_fn = gnn.MeanAggregation()
-        elif readout == 'max':
-            self.entities_readout_fn = gnn.MaxAggregation()
-            self.articles_readout_fn = gnn.MaxAggregation()
-        else:
-            self.entities_readout_fn = gnn.AttentionalAggregation(gate_nn = nn.Linear(self.channels[-1], 1))
-            self.articles_readout_fn = gnn.AttentionalAggregation(gate_nn = nn.Linear(self.channels[-1], 1))
+        if readout == 'attn':
+            self.entities_attn_weights = nn.Linear(projection_dim, 1)
+            self.articles_attn_weights = nn.Linear(projection_dim, 1)
 
         ### Centroids
         if n_prototypes is not None:
-            self.C = nn.Parameter(torch.randn((n_prototypes, self.channels[-1])))
+
+            self.C = nn.Sequential(
+                Activation(activation),
+                nn.Linear(in_features=projection_dim, out_features=n_prototypes, bias=False),
+                nn.Sigmoid()
+            )
 
         ### Prediction Heads
         self.heads = nn.ModuleDict()
@@ -411,8 +454,54 @@ class HetModel(nn.Module):
 
                 self.heads.add_module(label_name, nn.Sequential(
                     nn.Dropout(p = dropout_rate) if dropout_rate > 0 else nn.Identity(),
-                    nn.Linear(self.channels[-1], label_dim)
+                    nn.Linear(projection_dim, label_dim)
                 ))
+
+    def reduce(
+        self,
+        x : Tensor,
+        edge_index : Tensor,
+        num_nodes : int,
+        weights : Optional[Tensor] = None,
+        reduce : Literal['mean', 'max', 'attn'] = 'mean'
+    ) -> Tensor:
+
+        if weights is not None and reduce != 'attn':
+            warn(message=f"Attention weights provide but reduce = '{reduce}'")
+
+        if weights is None and reduce == 'attn':
+            raise Exception(f"reduce = '{reduce}'. But attnetion weights not provided")
+
+        row, col = edge_index
+
+        if reduce != 'attn':
+
+            x = scatter(
+                src=x[row,:],
+                index=col,
+                dim=0,
+                dim_size=num_nodes,
+                reduce=reduce
+            )
+
+            return x
+
+        weights = gnn_utils.softmax(
+            src=weights[row],
+            index=col,
+            num_nodes=num_nodes,
+            dim=0
+        )
+
+        x = scatter(
+            src=weights * x[row,:],
+            index=col,
+            dim=0,
+            dim_size=num_nodes,
+            reduce='sum'
+        )
+
+        return x        
 
     @staticmethod
     def from_config(
@@ -431,8 +520,17 @@ class HetModel(nn.Module):
     
     def encode(self, batch : HeteroData) -> Tuple[Tensor, Tensor, Tensor]:
 
-        kg_x, kg_e, kg_A = batch['Entity'].x, batch['Entity', 'HASRELATIONWITH', 'Entity'].edge_attr, batch['Entity', 'HASRELATIONWITH', 'Entity'].edge_index
-        art_x, art_e, art_A = batch['Article'].x, batch['Article','relate-to','Article'].edge_type, batch['Article', 'relate-to', 'Article'].edge_index
+        kg_x, kg_e, kg_A = (
+            batch['Entity'].x, 
+            batch['Entity', 'HASRELATIONWITH', 'Entity'].edge_attr, 
+            batch['Entity', 'HASRELATIONWITH', 'Entity'].edge_index
+        )
+
+        art_x, art_e, art_A = (
+            batch['Article'].x, 
+            batch['Article','relate-to','Article'].edge_type, 
+            batch['Article', 'relate-to', 'Article'].edge_index
+        )
 
         kg_x_jk = []
         art_x_jk = []
@@ -470,32 +568,6 @@ class HetModel(nn.Module):
 
         return kg_x, art_x
     
-    def article_embddings(self, 
-        x : Tensor,
-        entity_article : Tensor,
-        num_articles : int                      
-    ) -> Tensor:
-        
-        return self.entities_readout_fn(
-            x[entity_article[0]], 
-            index = entity_article[1], 
-            dim_size = num_articles,
-            dim = 0
-        )
-    
-    def entities_embddings(self, 
-        x : Tensor,
-        entity_article : Tensor,
-        num_entities : int                      
-    ) -> Tensor:
-        
-        return self.entities_readout_fn(
-            x[entity_article[1]], 
-            index = entity_article[0], 
-            dim_size = num_entities,
-            dim = 0
-        )
-    
     def predict(self, x : Tensor) -> Dict[str, Tensor]:
         
         return {
@@ -514,31 +586,86 @@ class HetModel(nn.Module):
         ### Pooling
         entity_article = batch['Entity','APPEARIN', 'Article'].edge_index
 
-        art_x_v1 = self.article_embddings(kg_x_v1, entity_article, batch['Article'].x.size(0))
-        kg_x_v2 = self.entities_embddings(art_x_v2, entity_article, batch['Entity'].x.size(0))
+        entities_attn_weights = None
+        articles_attn_weights = None
 
-        ### Prediction
-        articles_predictions_v1 = None
-        articles_predictions_v2 = None
-        entities_predictions_v1 = None
-        entities_predictions_v2 = None
+        if self.readout == 'attn':
+            entities_attn_weights = self.entities_attn_weights(kg_x_v1)
+            articles_attn_weights = self.articles_attn_weights(art_x_v2)
 
-        # if self.num_labels is not None:
+        art_x_v1 = self.reduce(
+            x=kg_x_v1,
+            edge_index=entity_article,
+            num_nodes=batch['Article'].x.size(0),
+            weights=entities_attn_weights,
+            reduce=self.readout
+        )
 
-        #     entities_predictions_v1 = self.predict(kg_x_v1)
-        #     entities_predictions_v2 = self.predict(kg_x_v2)
+        kg_x_v2 = self.reduce(
+            x=art_x_v2,
+            edge_index=entity_article[[1,0],:],
+            num_nodes=batch['Entity'].x.size(0),
+            weights=articles_attn_weights,
+            reduce=self.readout
+        )
 
-        #     articles_predictions_v1 = self.predict(art_x_v1)
-        #     articles_predictions_v2 = self.predict(art_x_v2)
+        ### Prototypes
+        kg_x_v1_prot = None
+        kg_x_v2_prot = None
+        art_x_v1_prot = None
+        art_x_v2_prot = None
+        
+        if self.n_prototypes is not None:
+
+            kg_x_v1_prot = self.C(kg_x_v1)
+            art_x_v2_prot = self.C(art_x_v2)
+
+            art_x_v1_prot = self.reduce(
+                x=kg_x_v1_prot,
+                edge_index=entity_article,
+                num_nodes=batch['Article'].x.size(0),
+                weights=entities_attn_weights,
+                reduce=self.readout
+            )
+    
+            kg_x_v2_prot = self.reduce(
+                x=art_x_v2_prot,
+                edge_index=entity_article[[1,0],:],
+                num_nodes=batch['Entity'].x.size(0),
+                weights=articles_attn_weights,
+                reduce=self.readout
+            )
+
+        ### Predictions
+        kg_x_v1_pred = None
+        kg_x_v2_pred = None
+        art_x_v1_pred = None
+        art_x_v2_pred = None
+
+        if (self.num_labels is not None) and (len(self.num_labels) > 0):
+            kg_x_v1_pred = self.predict(kg_x_v1)
+            kg_x_v2_pred = self.predict(kg_x_v2)
+            art_x_v1_pred = self.predict(art_x_v1)
+            art_x_v2_pred = self.predict(art_x_v2)
 
         return HetModelReturn(
-            articles_predictions_v1=articles_predictions_v1,
-            articles_predictions_v2=articles_predictions_v2,
-            entities_predictions_v1=entities_predictions_v1,
-            entities_predictions_v2=entities_predictions_v2,
-            entities_embeddings_v1=kg_x_v1,
-            entities_embeddings_v2=kg_x_v2,
-            articles_embeddings_v1=art_x_v1,
-            articles_embeddings_v2=art_x_v2,
-            C=self.C.data if self.n_prototypes is not None else None
+            entities_view=ViewResults(
+                entities_embeddings=kg_x_v1,
+                articles_embeddings=art_x_v1,
+                entities_prototypes=kg_x_v1_prot,
+                articles_prototypes=art_x_v1_prot,
+                entities_predictions=kg_x_v1_pred,
+                articles_predictions=art_x_v1_pred,
+                attn_weights=entities_attn_weights
+            ),
+            articles_view=ViewResults(
+                entities_embeddings=kg_x_v2,
+                articles_embeddings=art_x_v2,
+                entities_prototypes=kg_x_v2_prot,
+                articles_prototypes=art_x_v2_prot,
+                entities_predictions=kg_x_v2_pred,
+                articles_predictions=art_x_v2_pred,
+                attn_weights=articles_attn_weights
+            ),
+            C=self.C[1].weight
         )

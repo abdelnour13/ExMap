@@ -9,8 +9,8 @@
 
     "add_ssl_loss" : false,
 
-    "batch_size" : 16,
-    "num_articles_neighbors" : [10, 6],
+    "batch_size" : 512,
+    "num_articles_neighbors" : [0, 0],
     "num_entities_neighbors" : [5, 5],
 
     "model_params" : {
@@ -18,7 +18,7 @@
     },
 
     "lr" : 0.001,
-    "num_epochs" : 10,
+    "num_epochs" : 320,
     "accumelation_steps" : 1,
     "weight_decay" : 1e-4,
 

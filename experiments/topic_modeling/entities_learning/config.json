@@ -1,0 +1,67 @@
+{
+    "seed" : 54,
+
+    "graph" : "industry_of_future_intfloat--e5-base-v2",
+    "num_splits" : 4,
+
+    "add_ssl_loss" : false,
+
+    "batch_size" : 16,
+    "num_articles_neighbors" : [8, 4],
+
+    "model_name" : "KGEncoder",
+
+    "model_params" : {
+        "encoder_type" : "gnn",
+        "hidden_channels" : [384, 384],
+        "out_channels" : 256,
+        "variant" : "conv",
+        "activation" : "relu",
+        "norm" : true,
+        "shortcut" : false,
+        "jk" : true,
+        "readout" : "attn"
+    },
+
+    "lr" : 0.001,
+    "num_epochs" : 10,
+    "accumelation_steps" : 1,
+    "weight_decay" : 1e-4,
+
+    "device" : "cuda",
+
+    "log_every" : 1,
+
+    "hparams" : {
+        "baseline" : {
+            "model_params" : {
+                "readout" : "attn"
+            },
+            "losses" : {
+                "aa_cosine_rec_loss" : {
+                    "params" : {
+                        "norm" : true
+                    }
+                }
+            }
+        },
+        "baseline_2" : {
+            "model_params" : {
+                "readout" : "attn"
+            },
+            "losses" : {
+                "aa_cosine_rec_loss" : {
+                    "params" : {
+                        "norm" : true
+                    }
+                },
+                "ea_cosine_rec_loss" : {
+                    "params" : {
+                        "norm" : true
+                    }
+                }
+            }
+        }
+    }
+
+}

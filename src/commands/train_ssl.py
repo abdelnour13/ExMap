@@ -147,8 +147,8 @@ def structure_rec_loss(
     return (l_pos + l_neg) / 2
 
 def margin_structure_loss(
-    x,
-    edge_index,
+    x : Tensor,
+    edge_index : Tensor,
     num_neg : int,
     margin : float
 ) -> Tensor:
@@ -296,8 +296,8 @@ def loss(
     losses = {}
     
     ### Alignment Loss
-    a1 = model_output.articles_embeddings_v1
-    a2 = model_output.articles_embeddings_v2
+    a1 = model_output.entities_view.articles_embeddings_v1
+    a2 = model_output.articles_view.articles_embeddings_v2
 
     losses['agreement_loss'] = agreement_loss(
         a1,
@@ -320,8 +320,8 @@ def loss(
     if config.reconstruct_features:
 
         losses['features_reconstruction_loss'] = cosine_similarity_rec_loss(
-            a1,
             a2,
+            batch['Article'].x,
             batch_size=batch_size
         )
 

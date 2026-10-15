@@ -1,0 +1,46 @@
+{
+    "seed" : 54,
+
+    "graph" : "industry_of_future_intfloat--e5-base-v2",
+    "num_splits" : 4,
+
+    "add_ssl_loss" : false,
+
+    "batch_size" : 512,
+    "num_articles_neighbors" : [0, 0],
+
+    "model_name" : "EncoderDecoder",
+
+    "model_params" : {
+        "encoder_type" : "gnn",
+        "hidden_channels" : [384, 384],
+        "out_channels" : 256,
+        "variant" : "conv",
+        "activation" : "relu",
+        "norm" : true,
+        "shortcut" : false,
+        "jk" : true
+    },
+
+    "lr" : 0.001,
+    "num_epochs" : 50,
+    "accumelation_steps" : 1,
+    "weight_decay" : 1e-4,
+
+    "device" : "cuda",
+
+    "log_every" : 1,
+
+    "hparams" : {
+        "baseline" : {
+            "losses" : {
+                "cosine_rec_loss" : {
+                    "params" : {
+                        "norm" : true
+                    }
+                }
+            }
+        }
+    }
+
+}

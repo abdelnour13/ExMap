@@ -1,12 +1,12 @@
 import os
 from torch import Tensor
-from typing import Dict, List, Self, TypeVar
+from typing import List, Self, TypeVar
 from pydantic import BaseModel, computed_field
 from neo4j import Session, Transaction, Driver
 from instance import cli
 from definitions import EMS_DIR
 from src.shared.env import env
-from src.commands.feature_extraction import Graph, Edge, Node
+from src.commands.feature_extraction.graph_utils import Graph, Edge, Node
 from src.shared.command_tools import BaseCommand
 from src.shared.handlers import ConsoleLogger
 
@@ -189,7 +189,7 @@ class Neo4jUploader(BaseCommand):
         )
 
 
-        graph_id = graph.get_nodes('ExpertiseMap')[0].id
+        graph_id = next(iter(graph.get_nodes('ExpertiseMap').nodes_generator)).id
 
         with self.driver.session() as session:
             self._clear_db(session)

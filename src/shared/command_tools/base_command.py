@@ -179,5 +179,5 @@ class BaseCommand(ABC):
                 self.send_info_event(
                     progress=(i+1)/total,
                     task=task,
-                    message=f"{task.replace('-', ' ')} : {i+1} elements processed."
+                    message=f"{task.replace('-', ' ')} : {i+1}/{total} elements processed."
                 )

@@ -427,14 +427,16 @@ class PUBMED_API:
             "venues" : []
         }
 
-        if any([
-            record['abstract'] is None,
-            record['date'] is None,
-            len(record['teams']) == 0,
-        ]):
+        dt = None
+
+        if record['date']:
+
+            dt = datetime.fromisoformat(record['date'].replace("Z", "+00:00"))
+
+        return record
+
+        if dt is None:
             return None
-                
-        dt = datetime.fromisoformat(record['date'].replace("Z", "+00:00"))
 
         if self.config.from_ != '*':
 
@@ -449,6 +451,13 @@ class PUBMED_API:
 
             if dt > to:
                 return None
+
+        if any([
+            record['abstract'] is None,
+            record['date'] is None,
+            len(record['teams']) == 0,
+        ]):
+            return None
 
         return record
 

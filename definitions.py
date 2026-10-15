@@ -17,6 +17,10 @@ os.makedirs(FEATURES_DIR, exist_ok=True)
 EMS_DIR = os.path.join(DATA_DIR, "expertise_maps")
 os.makedirs(EMS_DIR, exist_ok=True)
 
+EVAL_DIR = os.path.join(DATA_DIR, "eval")
+os.makedirs(EVAL_DIR, exist_ok=True)
+
+
 SCRIPTS_DIR = os.path.join(ROOT_DIR, "scripts")
 EXTERNAL_DIR = os.path.join(ROOT_DIR, 'external')
 EXPERIMENTS_DIR = os.path.join(ROOT_DIR, 'experiments')

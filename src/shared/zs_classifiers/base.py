@@ -77,18 +77,21 @@ class EmbeddingBasedZeroShotClassifier(ZeroShotClassifier):
         model_name : str, 
         device : str = 'cuda' if torch.cuda.is_available() else 'cpu',
         labels : Optional[List[Label]] = None,
-        use_descriptions : bool = False
+        model_kwargs : Optional[Dict] = None,
     ) -> None:
         super().__init__()
 
         self.model_name = model_name
         self.device = device
         self.labels = labels
-        self.use_descriptions = use_descriptions
 
-        print(self.use_descriptions)
+        print(self.device)
 
-        self.model = SentenceTransformer(model_name_or_path=self.model_name)
+        self.model = SentenceTransformer(
+            model_name_or_path=self.model_name,
+            **(model_kwargs or {})
+        )
+
         self._labels_embeddings : Tensor = None
 
     @abstractmethod
@@ -124,7 +127,6 @@ class EmbeddingBasedZeroShotClassifier(ZeroShotClassifier):
                 names.extend(alt_names)
                 indices.extend([idx] * len(alt_names))
             
-
         if self._labels_embeddings is None:
 
             self._labels_embeddings = self._query(
@@ -160,15 +162,25 @@ class EmbeddingBasedZeroShotClassifier(ZeroShotClassifier):
 
         for doc, scores in zip(docs, S):
 
+            labels_scores = {}
+
+            for idx, score in zip(indices, scores):
+
+                label_name = self.labels[idx]['name']
+
+                labels_scores[label_name] = max(
+                    score.item(), 
+                    labels_scores.get(label_name, -1)
+                ) 
+
             results.append({
                 **doc,
                 "labels" : [
                     {
-                        "label" : self.labels[idx]['name'],
-                        "score" : score.item(),
-                        "name" : name
+                        "label" : label,
+                        "score" : score,
                     }
-                    for idx, name, score in zip(indices, names, scores)
+                    for label, score in labels_scores.items()
                 ]
             })
 
@@ -340,13 +352,16 @@ class LLMBasedZeroShotClassifier(ZeroShotClassifier):
         )
     
     def format_labels_section(self, labels: List[Label]) -> str:
+
         """Helper function to format the input domains dynamically."""
+
         formatted = []
+
         for label in labels:
             desc = f" (Definition: {label['description']})" if label.get('description') else ""
             formatted.append(f"- **{label['name']}**{desc}")
-        return "\n".join(formatted)
 
+        return "\n".join(formatted)
 
     def get_multi_label_prompts(self, labels: List[Label]) -> Dict[str, str]:
 

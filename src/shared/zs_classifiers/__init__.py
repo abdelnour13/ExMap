@@ -1,1 +1,1 @@
-from .base import ZeroShotClassifier, ClassificationOutput
+from .base import ZeroShotClassifier, ClassificationOutput, EmbeddingBasedZeroShotClassifier

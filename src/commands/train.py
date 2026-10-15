@@ -1,20 +1,3 @@
-"""
-GNN Training Pipeline
-=====================
-Trains the Knowledge Representation Learning module using K-Fold cross-validation.
-
-For each hyper-parameter configuration:
-  • Run K trials (one per fold), saving per-trial history + predictions.
-  • After all K trials complete, retrain on the full graph and save that
-    model as the canonical artefact for the configuration.
-
-Only the full-graph model is saved as a .pt checkpoint.
-Per-trial histories (.csv) and predictions (.pt) are always preserved.
-
-Entry-point (CLI):
-    cli run train --experiment default
-"""
-
 import os
 import pandas as pd
 import torch
@@ -32,7 +15,7 @@ from instance import cli
 from torch_geometric.loader import NeighborLoader
 from torch_geometric.data import HeteroData, Data
 from src import helpers
-from src.commands.feature_extraction import Graph
+from src.commands.feature_extraction_old import Graph
 from src.gnn import (
     HetGNNConfig,
     HetModel,
@@ -567,7 +550,7 @@ class Trainer(BaseCommand):
             torch.ones_like(edge_index[1]),
         ]).float()
 
-        etype   = torch.cat([edge_type, edge_type], dim=0)
+        etype = torch.cat([edge_type, edge_type], dim=0)
 
         return new_ei, etype, y_hat
 
@@ -575,8 +558,7 @@ class Trainer(BaseCommand):
     def negative_sample(y: Tensor) -> Tuple[Tensor, Tensor]:
         pos = torch.argwhere(y).t()
         neg = gnn_utils.negative_sampling(edge_index=pos, num_nodes=(y.size(0), y.size(1)))
-        row, col = torch.cat([pos, neg], dim=-1)
-        return row, col
+        return torch.cat([pos, neg], dim=-1)
 
     @staticmethod
     def loss(
@@ -598,6 +580,8 @@ class Trainer(BaseCommand):
 
             if negative_sample is not None:
                 row, col = negative_sample[label]
+                mask = row < batch_size
+                row, col = row[mask], col[mask]
                 losses[f"{label}_guidance_loss"] = F.binary_cross_entropy_with_logits(
                     y_hat[row, col], y[row, col].float()
                 )
@@ -640,15 +624,15 @@ class Trainer(BaseCommand):
             y     = batch['Article'][f'y_{label}'][:batch_size]
             y_hat = results.articles_predictions[label][:batch_size]
 
-            if negative_sample is not None:
-                row, col = negative_sample
-                y, y_hat = y[row, col], y_hat[row, col]
-                metrics[f"{label}_guidance_acc"] = accuracy(y_hat, y, task="binary").item()
-                metrics[f"{label}_guidance_f1"]  = f1_score(y_hat, y, task="binary").item()
-            else:
-                n = batch['Article'][f'y_{label}'].size(-1)
-                metrics[f"{label}_guidance_acc"] = accuracy(y_hat, y, task="multilabel", num_labels=n, average="macro").item()
-                metrics[f"{label}_guidance_f1"]  = f1_score(y_hat, y, task="multilabel", num_labels=n, average="macro").item()
+            # if negative_sample is not None:
+            #     row, col = negative_sample
+            #     y, y_hat = y[row, col], y_hat[row, col]
+            #     metrics[f"{label}_guidance_acc"] = accuracy(y_hat, y, task="binary").item()
+            #     metrics[f"{label}_guidance_f1"]  = f1_score(y_hat, y, task="binary").item()
+            # else:
+            n = batch['Article'][f'y_{label}'].size(-1)
+            metrics[f"{label}_guidance_acc"] = accuracy(y_hat, y, task="multilabel", num_labels=n, average="macro").item()
+            metrics[f"{label}_guidance_f1"]  = f1_score(y_hat, y, task="multilabel", num_labels=n, average="macro").item()
 
         # if config.add_ssl_loss:
         #     metrics["structure_acc"] = accuracy(results.structure_y_hat, labels, task="binary").item()
@@ -748,7 +732,7 @@ class Trainer(BaseCommand):
 
                             neg_smpl  = (
                                 {
-                                    label : self.negative_sample(batch['Article'][f'y_{label}'][:config.batch_size])
+                                    label : self.negative_sample(batch['Article'][f'y_{label}'])
                                     for label in config.labels
                                 }
                                 if is_training and config.do_negative_sampling
@@ -954,7 +938,7 @@ class Trainer(BaseCommand):
 
                 self.send_info_event(
                     progress=step_progress,
-                    message=f"[{step_label}] Starting trial …",
+                    message=f"[{step_label}] Starting trial {trial_id+1}",
                 )
 
                 trial_history, model = self.run_experiment(

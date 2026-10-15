@@ -10,7 +10,7 @@ from torch import Tensor
 from definitions import EXPERIMENTS_DIR, EMS_DIR
 from instance import cli
 from torch_geometric.data import HeteroData
-from src.commands.feature_extraction import EdgeType, Graph
+from src.commands.feature_extraction_old import EdgeType, Graph
 from src.commands.train import Trainer, Config as TrainerConfig
 from src.gnn import HetModel, HetModelReturn
 from src.shared.command_tools import BaseCommand
@@ -25,9 +25,20 @@ from src import helpers
 def entropy(en : Tensor) -> Tensor:
     return -torch.sum(en * torch.log(en + 10e-5), dim=-1).clip(max=0)
 
-# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------communities
 # Configuration
 # ---------------------------------------------------------------------------
+
+MASK = torch.tensor([ 
+    True,  True, False, False,  True,  True,  True,  True, False,
+    True, False,  True, False, False, False,  True,  True, False,
+    False,  True, False, False, False, False,  True,  True,  True,
+    False, False,  True,  True,  True, False, False, False, False,
+    True, False, False,  True, False,  True, False,  True,  True,
+    False,  True,  True, False, False, False, False, False,  True,
+    True, False, False, False, False,  True,  True,  True, False,
+    False,  True
+])
 
 class BEMConfig(BaseModel):
 
@@ -54,6 +65,7 @@ class BEMConfig(BaseModel):
 
     # ── Representative node selection ──────────────────────────────────
     llm : str = "deepseek-chat" # LLM used for llm-based labeling
+    guided : bool = True
 
     # ── Root Node ──────────────────────────────────────────────────────
     name : str
@@ -211,7 +223,7 @@ class ExpertiseMapBuilder(BaseCommand):
         entity_label_probas = inference_results.entities_predictions['subdomain'].sigmoid()
 
         edge_weight = self.jaccard_index(
-            edge_index, entity_label_probas,
+            edge_index, entity_label_probas[:,MASK],
             mode=self.config.jaccard_mode,
             threshold=self.config.jaccard_threshold,
         )
@@ -238,6 +250,9 @@ class ExpertiseMapBuilder(BaseCommand):
                 )
             )
         ))
+
+        if not self.config.guided:
+            communities = communities_probas.argmax(dim=-1)
 
         n_communities = int(communities.max().item() + 1)
 
@@ -349,7 +364,7 @@ class ExpertiseMapBuilder(BaseCommand):
         for i,community in enumerate(self.track(
             communities_nodelist,
             task="representative-node-querying",
-            update_every=16
+            update_every=1
         )):
             communities_nodelist[i] = self.query_representative_node(community)
 
@@ -408,6 +423,7 @@ class ExpertiseMapBuilder(BaseCommand):
             temperature=0,  # No randomness
             top_p=1,  # Disable sampling
             seed=42,  # Seed
+            extra_body={"thinking": {"type": "disabled"}}
         )
 
         content = response.choices[0].message.content
@@ -430,6 +446,16 @@ class ExpertiseMapBuilder(BaseCommand):
         Entity_BELONGSTO_Expertise = EdgeType("Entity", "Expertise", "BELONGSTO")
 
         Domain_BELONGSTO_ExpertiseMap = EdgeType("Domain", "ExpertiseMap", "BELONGSTO")
+
+        for node in graph._nodes['SubDomain'].nodes:
+            
+            graph.add_node(
+                type='SubDomain',
+                id=node.id, 
+                properties={
+                    **node.properties,
+                }
+            )
         
         ### Community Node & Community <-> SubDomain links & Community <-> Entity Links
         for community in self.track(
@@ -535,6 +561,17 @@ class ExpertiseMapBuilder(BaseCommand):
                 type=Domain_BELONGSTO_ExpertiseMap,
                 src=domain.id,
                 dst=self.config.expertise_id
+            )
+
+        for sub_domain, is_valid in zip(graph.get_nodes('SubDomain'), MASK):
+        
+            graph.add_node(
+                type="SubDomain",
+                id=sub_domain.id,
+                properties={
+                    **sub_domain.properties,
+                    "is_valid" : is_valid.item()
+                }
             )
 
         return graph
