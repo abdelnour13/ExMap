@@ -8,6 +8,9 @@ os.makedirs(DATA_DIR, exist_ok=True)
 CORPUS_DIR = os.path.join(DATA_DIR, "corpus")
 os.makedirs(CORPUS_DIR, exist_ok=True)
 
+ANNOTATION_DIR = os.path.join(DATA_DIR, "annotation")
+os.makedirs(ANNOTATION_DIR, exist_ok=True)
+
 KGS_DIR = os.path.join(DATA_DIR, "knowledge_graphs")
 os.makedirs(KGS_DIR, exist_ok=True)
 
@@ -35,6 +38,7 @@ def rel_path(path : str) -> str:
     return os.path.relpath(path, ROOT_DIR)
 
 ENV = os.path.join(ROOT_DIR, ".env")
+ENVIRONMENT = os.path.join(ROOT_DIR, "env.json")
 
 def hf_model_dir(name : str) -> str:
     return os.path.join(MODELS_DIR, name.replace('/', '--'))

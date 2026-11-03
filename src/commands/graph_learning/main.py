@@ -243,7 +243,7 @@ class Trainer(BaseCommand):
         
 
         G.raw_metadata = {
-            "predicates2id" : G.predicates2id,
+            # "predicates2id" : G.predicates2id,
             "labels" : {
                 "subdomain" : [node.id for node in graph.get_nodes("SubDomain").nodes_generator],
                 "lab" : [node.id for node in graph.get_nodes("Lab").nodes_generator]
@@ -353,7 +353,7 @@ class Trainer(BaseCommand):
                 batch_size=split['Article'].node_id.size(0),
                 shuffle=is_train,
                 drop_last=is_train,
-                repeats=10
+                repeats=(split['Article'].node_id.size(0) // config.batch_size)
             )
 
     def create_samplers(self, data: HeteroData, config : ExperimentConfig) -> Tuple[List[Tuple[HybridSampler, HybridSampler]], Tensor]:
@@ -531,10 +531,7 @@ class Trainer(BaseCommand):
 
             epoch_rows: List[Dict[str, Any]] = []
 
-            from collections import Counter
-
             for phase in ("train", "val"):
-
 
                 is_training = phase == "train"
                 model.train(mode=is_training)
@@ -580,6 +577,9 @@ class Trainer(BaseCommand):
                     epoch_rows.append({
                         "epoch": epoch,
                         "phase": phase,
+                        "grad_min" : min(param.min().abs().item() for param_name, param in model.named_parameters()),
+                        "grad_max" : max(param.max().abs().item() for param_name, param in model.named_parameters()),
+                        "grad_mean" : sum(param.mean().abs().item() for param_name, param in model.named_parameters()) / len(list((model.named_parameters()))),
                         **{k: v.item() for k, v in losses.items()},
                     })
 

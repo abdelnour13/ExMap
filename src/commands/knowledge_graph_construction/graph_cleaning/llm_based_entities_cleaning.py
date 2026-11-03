@@ -4,15 +4,14 @@ import os
 import math
 import asyncio
 import faiss
-from nltk import pos_tag, word_tokenize
+import json
 from sentence_transformers import SentenceTransformer
-from typing import List, Tuple, Dict, Any, Literal, Optional
+from typing import List, Tuple, Dict, Any, Optional
 from src.shared.command_tools import Stage, StageConfig, add_handlers
 from src.shared.file_tools import BatchedReader, BufferedWriter
 from definitions import hf_model_dir
 from pycli import Field
 from instance import cli
-from sklearn.neighbors import NearestNeighbors
 from src.shared.env import env, LLM
 from src.shared.prompts import PromptsManager
 from returns.result import ResultE
@@ -149,11 +148,14 @@ class IterativeLLMBasedEntitiesCleaning(Stage):
     def make_faiss_index(self, X : np.ndarray) -> faiss.IndexIVFPQ:
 
         N, D = X.shape
+        search_nlist = self.search_nlist or int(math.sqrt(N))
+
+        print(search_nlist)
 
         index = faiss.IndexIVFPQ(
             faiss.IndexFlatIP(D),
             D,
-            self.search_nlist or int(math.sqrt(N)),
+            search_nlist,
             self.search_m,
             self.search_nbits,
             faiss.METRIC_INNER_PRODUCT,
@@ -173,12 +175,11 @@ class IterativeLLMBasedEntitiesCleaning(Stage):
     ) -> Tuple[List[str], List[int]]:
 
         Q = X[[idx],:]
-        distances, indices = index.search(x=Q, k=10)
+        _, indices = index.search(x=Q, k=self.search_k)
 
-        distances = distances.flatten()
-        indices = indices.flatten()
-
-        indices = indices[1:,]
+        indices = indices[0]
+        indices = indices[indices >= 0]
+        indices = indices[indices != idx]
 
         return df.iloc[indices].tolist(), indices.tolist()
 
@@ -225,7 +226,11 @@ class IterativeLLMBasedEntitiesCleaning(Stage):
     ) -> ResultE[Dict[str, str | List[str]]]:
 
         if len(candidates) == 0:
-            return ResultE.from_value([])
+
+            return ResultE.from_value({
+                "selected" : [],
+                "representative" : None
+            })
 
         result = await PromptsManager.make_request(
             prompt_name='EquivalentEntitiesQuerying',
@@ -298,9 +303,14 @@ class IterativeLLMBasedEntitiesCleaning(Stage):
 
         for batch in self.track(tasks_info, task="equivalent-subset-querying"):
 
+            batch = [
+                task_info
+                for task_info in batch if task_info['target'] not in visited
+            ]
+
             results = self.batch_query_equivelant([
                 (task_info['target'], task_info['candidates'])
-                for task_info in batch if task_info['target'] not in visited
+                for task_info in batch
             ])
 
             for result, task_info in zip(results, batch):
@@ -312,6 +322,10 @@ class IterativeLLMBasedEntitiesCleaning(Stage):
                     continue
 
                 result = result.unwrap()
+                result['candidates'] = task_info['candidates']
+
+                with open("/home/fellah-a/Documents/Text2KG/data/knowledge_graphs/industry_of_future_v2/llm_based_entities_cleaning/debug.jsonl", "a") as f:
+                    f.write(json.dumps(result) + "\n")
 
                 if len(result['selected']) == 0:
                     continue
@@ -363,25 +377,19 @@ class IterativeLLMBasedEntitiesCleaning(Stage):
 
     def transform(self, doc : Dict) -> Dict:
     
-        head = self.mapping.get(doc['head'], doc['head'])
-        tail = self.mapping.get(doc['tail'], doc['tail'])
+        head = self.mapping.get(doc['head'], doc['head']).strip()
+        tail = self.mapping.get(doc['tail'], doc['tail']).strip()
 
         if head is not None and head != "":
             doc['head'] = head
 
         if tail is not None and tail != "":
-            doc['head'] = tail
+            doc['tail'] = tail
 
         return doc
 
     def before_start(self):
         self.mapping = self.get_entities_mapping()
-        yield from []
-
-    def transform(self, doc):
-        return None
-
-    def __iter__(self):
         yield from []
 
     @classmethod

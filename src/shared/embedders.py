@@ -72,9 +72,9 @@ class Embedder:
         return self.__class__ == Embedder
     
     @staticmethod
-    def from_name(model_name : str, device : str) -> 'Embedder':
+    def from_name(model_name : str, device : str, **kwargs) -> 'Embedder':
 
-        model = SentenceTransformer(model_name, device=device)
+        model = SentenceTransformer(model_name, device=device, **kwargs)
 
         if 'e5' in model_name.lower():
             return E5Embedder(model)

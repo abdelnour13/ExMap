@@ -44,7 +44,7 @@ class AcronymsExtractor(Stage):
 
         self.qa_model = qa_model
         self.threshold = threshold
-        self.pipeline = pipeline("question-answering", hf_model_dir(qa_model), device='cuda')
+        self.pipeline = pipeline("document-question-answering", hf_model_dir(qa_model), device='cuda')
 
         self.expansion_pattern = r"\([^()]*\b\w+\b[^()]*\b\w+\b[^()]*\)"
 

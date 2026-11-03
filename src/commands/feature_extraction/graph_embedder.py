@@ -270,13 +270,15 @@ class GraphEmbedder:
         ### PageRank Score
         G = nx.DiGraph()
 
-        for e in graph.get_edges(EdgeTypes.Entity_HASRELATIONWITH_Entity).edges_generator:
-            G.add_edge(e.src, e.dst)
+        G.add_nodes_from(list(range(len(graph.get_nodes('Entity').ids()))))
+
+        for src_id, dst_id in graph.pygeo["Entity", "HASRELATIONWITH", "Entity"].edge_index.t().tolist():
+            G.add_edge(src_id, dst_id)
 
         G = G.to_undirected()
 
         scores = nx.pagerank(G)
-        scores = torch.tensor([scores[e] for e in graph.get_nodes('Entity').ids()])
+        scores = torch.tensor([scores[e] for e in graph.get_nodes('Entity')._id2idx.values()])
 
         features['nodes']['Entity']['pagerank'] = scores
         features['nodes']['Entity']['specificity_weighted_pagerank'] = scores * (
@@ -296,11 +298,10 @@ class GraphEmbedder:
                 "Article" : "abstract",
                 "Entity"  : "name",
                 "SubDomain" : "name",
-                "AltLabel" : "name"
+                "AltLabel" : "name",
+                "Predicate" : "name"
             },
-            "edges" : {
-                EdgeTypes.Entity_HASRELATIONWITH_Entity : "predicate"
-            }
+            "edges" : {}
         }
 
         features : Features = {
@@ -352,6 +353,7 @@ class GraphEmbedder:
         features = self._compute_scores(graph, features)
 
         for n_type, features_dict in features['nodes'].items():
+
             graph._nodes[n_type]._features = {
                 **graph._nodes[n_type]._features,
                 **features_dict

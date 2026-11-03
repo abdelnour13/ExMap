@@ -15,6 +15,7 @@ RPC/openie6/data
 resources/models
 
 .env
+env.json
 
 external/*
 data/*

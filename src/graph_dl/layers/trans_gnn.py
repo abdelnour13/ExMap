@@ -4,11 +4,13 @@ from torch import nn, Tensor
 from typing import Literal, Optional, TypedDict
 from torch_geometric import utils as gnn_utils
 from src.graph_dl.layers.activation import Activation
+from src.graph_dl.layers.norm import Norm, NORM_TYPE
+from src.graph_dl.utils import AdjMatrix, SparseTensor, EdgeIndex
 from src import helpers
 
 class TransGNNOutput(TypedDict):
     x : Tensor
-    edge_attr : Tensor
+    edge_attr : Optional[Tensor]
 
 KGScoringFn = Literal['TransE', 'RotatE', 'DistMult']
 
@@ -131,7 +133,8 @@ class TransGNN(nn.Module):
         combine : Literal['cat', 'sum'] = 'cat',
         bias : bool = False,
         activation : Optional[str]  = 'relu',
-        norm : bool = False,
+        norm : Optional[NORM_TYPE] = None,
+        update_edges : bool = True
     ) -> None:
         super().__init__()
 
@@ -144,6 +147,7 @@ class TransGNN(nn.Module):
         self.bias = bias
         self.activation = activation
         self.norm = norm
+        self.update_edges = update_edges
 
         self.kg_scoring = self.create_scoring_fn(name = kg_scoring_fn)
 
@@ -154,16 +158,17 @@ class TransGNN(nn.Module):
         else:
             self.W_node = nn.Linear(2 * in_channels, out_channels, bias = bias)
 
+        self.W_norm = Norm(type=norm, num_features=out_channels)
+
         ### Edges
-        m =  2 + int(use_edges_info)
-        self.W_edge = nn.Linear(m * in_channels, out_channels, bias = bias)
+        if self.update_edges:
+            m =  2 + int(use_edges_info)
+            self.W_edge = nn.Linear(m * in_channels, out_channels, bias = bias)
+            self.E_norm = Norm(type=norm, num_features=out_channels)
 
         ### Activation
         self.act = Activation(activation)
 
-        ### Normalization
-        self.W_norm = nn.BatchNorm1d(out_channels) if norm else nn.Identity()
-        self.E_norm = nn.BatchNorm1d(out_channels) if norm else nn.Identity()
 
         if variant == 'attn':
 
@@ -188,73 +193,236 @@ class TransGNN(nn.Module):
         else:
             raise ValueError(f"Unknown scoring function {name}")
 
-    def calculate_attn_weights(self,
-        x : Tensor,
-        edge_index : Tensor,
-        edge_attr : Tensor= None,
+    def calculate_attn_weights(
+        self,
+        x: Tensor,
+        adj: AdjMatrix,
+        edge_attr: Optional[Tensor] = None,
     ) -> Optional[Tensor]:
 
         if self.variant != 'attn':
             return None
-        
-        row, col = edge_index
-        h, t = x[row], x[col]
 
-        if self.use_edges_info:
-            r = edge_attr
-            r_inv = self.kg_scoring.inv_rel(r)
-            attn_weights1 = self.attn(torch.cat([h, t, r], dim = -1))
-            attn_weights2 = self.attn(torch.cat([t, h, r_inv], dim = -1))
-        else:
-            attn_weights1 = self.attn(torch.cat([h, t], dim = -1))
-            attn_weights2 = self.attn(torch.cat([t, h], dim = -1))
+        adj = adj.get_default()
 
-        attn_weights = gnn_utils.softmax(
-            src = torch.cat([attn_weights1, attn_weights2],dim=0),
-            index = torch.cat([row, col]),
-            num_nodes = x.size(0),
-            dim = 0
+        if isinstance(adj, Tensor):
+            return self._dense_calculate_attn_weights(x, adj, edge_attr)
+        elif isinstance(adj, SparseTensor):
+            return self._sparse_calculate_attn_weights(x, adj, edge_attr)
+        elif isinstance(adj, EdgeIndex):
+            return self._edge_index_calculate_attn_weights(x, adj, edge_attr)
+
+        raise TypeError(f"Unsupported adjacency representation: {type(adj).__name__}")
+
+
+    def _dense_calculate_attn_weights(
+        self,
+        x: Tensor,
+        adj: Tensor,
+        edge_attr: Optional[Tensor] = None,
+    ) -> Tensor:
+        raise NotImplementedError(
+            "Attention weights are not available for the dense adjacency representation; "
+            "use an AdjMatrix backed by a SparseTensor or an EdgeIndex."
         )
 
-        return attn_weights
-    
-    def message_and_aggregate(self, 
-        x : Tensor,
-        edge_index : Tensor,
-        edge_attr : Optional[Tensor] = None,     
-        attn_weights : Optional[Tensor] = None                   
+
+    def _sparse_calculate_attn_weights(
+        self,
+        x: Tensor,
+        adj: SparseTensor,
+        edge_attr: Optional[Tensor] = None,
+    ) -> Tensor:
+        # Reads the SparseTensor's own COO storage (no conversion to another representation).
+        # NOTE: entries are in SparseTensor order (sorted by row, then col),
+        # so edge_attr must follow that same order.
+        row, col, _ = adj.coo()
+        return self._row_col_calculate_attn_weights(x, row, col, edge_attr)
+
+
+    def _edge_index_calculate_attn_weights(
+        self,
+        x: Tensor,
+        adj: EdgeIndex,
+        edge_attr: Optional[Tensor] = None,
+    ) -> Tensor:
+        return self._row_col_calculate_attn_weights(x, adj.row, adj.col, edge_attr)
+
+
+    def _row_col_calculate_attn_weights(
+        self,
+        x: Tensor,
+        row: Tensor,
+        col: Tensor,
+        edge_attr: Optional[Tensor] = None,
     ) -> Tensor:
         
-        row, col = edge_index
-
-        ### Get head tail and relation
         h, t = x[row], x[col]
 
         if self.use_edges_info:
+
+            if edge_attr is None:
+                raise ValueError("edge_attr is required when use_edges_info=True.")
+            
             r = edge_attr
-            out = self.kg_scoring.translate(h, r) if self.use_edges_info else h
-            in_ = self.kg_scoring.inv_translate(t, r) if self.use_edges_info else t
+            r_inv = self.kg_scoring.inv_rel(r)
+            attn_weights1 = self.attn(torch.cat([h, t, r], dim=-1))
+            attn_weights2 = self.attn(torch.cat([t, h, r_inv], dim=-1))
+
+        else:
+            attn_weights1 = self.attn(torch.cat([h, t], dim=-1))
+            attn_weights2 = self.attn(torch.cat([t, h], dim=-1))
+
+        return gnn_utils.softmax(
+            src=torch.cat([attn_weights1, attn_weights2], dim=0),
+            index=torch.cat([row, col]),
+            num_nodes=x.size(0),
+            dim=0,
+        )
+    
+    def message_and_aggregate(
+        self,
+        x: Tensor,
+        adj: AdjMatrix,
+        edge_attr: Optional[Tensor] = None,
+        attn_weights: Optional[Tensor] = None,
+    ) -> Tensor:
+
+        adj = adj.get_default()
+
+        if isinstance(adj, Tensor):
+            return self._dense_message_and_aggregate(x, adj, edge_attr, attn_weights)
+        elif isinstance(adj, SparseTensor):
+            return self._sparse_message_and_aggregate(x, adj, edge_attr, attn_weights)
+        elif isinstance(adj, EdgeIndex):
+            return self._edge_index_message_and_aggregate(x, adj, edge_attr, attn_weights)
+
+        raise TypeError(f"Unsupported adjacency representation: {type(adj).__name__}")
+
+
+    def _dense_message_and_aggregate(
+        self,
+        x: Tensor,
+        adj: Tensor,
+        edge_attr: Optional[Tensor] = None,
+        attn_weights: Optional[Tensor] = None,
+    ) -> Tensor:
+
+        if attn_weights is not None:
+            raise ValueError(
+                "attn_weights cannot be used with the dense adjacency representation."
+            )
+        assert not self.use_edges_info, (
+            "use_edges_info is not supported with the dense adjacency representation."
+        )
+
+        adj = adj.to(x.dtype)  # no-op if already the right dtype
+
+        # Node i receives:
+        #   in_ messages:  sum_j A[i, j] * x_j  ->  A   @ x
+        #   out messages:  sum_j A[j, i] * x_j  ->  A^T @ x   (A.t() is a view, no copy)
+        num = adj @ x
+        num = num + adj.t() @ x
+
+        # Sum of weights per node: row sums (as head) + column sums (as tail)
+        den = adj.sum(dim=1, keepdim=True)
+        den += adj.sum(dim=0).unsqueeze(1)
+        den = den.masked_fill(den == 0, 1)
+
+        return num / den  # weighted mean, 0 for isolated nodes
+
+
+    def _sparse_message_and_aggregate(
+        self,
+        x: Tensor,
+        adj: SparseTensor,
+        edge_attr: Optional[Tensor] = None,
+        attn_weights: Optional[Tensor] = None,
+    ) -> Tensor:
+        # Native COO storage of the SparseTensor (sorted by row, then col):
+        # edge_attr and attn_weights must follow this order.
+        row, col, value = adj.coo()
+        return self._row_col_message_and_aggregate(
+            x, row, col, value, edge_attr, attn_weights
+        )
+
+
+    def _edge_index_message_and_aggregate(
+        self,
+        x: Tensor,
+        adj: EdgeIndex,
+        edge_attr: Optional[Tensor] = None,
+        attn_weights: Optional[Tensor] = None,
+    ) -> Tensor:
+        return self._row_col_message_and_aggregate(
+            x, adj.row, adj.col, adj.value, edge_attr, attn_weights
+        )
+
+
+    def _row_col_message_and_aggregate(
+        self,
+        x: Tensor,
+        row: Tensor,
+        col: Tensor,
+        value: Optional[Tensor] = None,
+        edge_attr: Optional[Tensor] = None,
+        attn_weights: Optional[Tensor] = None,
+    ) -> Tensor:
+
+        ### Head, tail and relation
+        h, t = x[row], x[col]
+
+        if self.use_edges_info:
+            if edge_attr is None:
+                raise ValueError("edge_attr is required when use_edges_info=True.")
+            r = edge_attr
+            out = self.kg_scoring.translate(h, r)
+            in_ = self.kg_scoring.inv_translate(t, r)
         else:
             out = h
             in_ = t
 
-        ### Messages
-        src = torch.cat([in_,out], dim = 0)
+        ### Messages: in_ goes to row, out goes to col
+        src = torch.cat([in_, out], dim=0)
+        index = torch.cat([row, col], dim=0)
+        num_nodes = x.size(0)
 
+        ### Computed attention weights: already softmax-normalised -> weighted sum
         if attn_weights is not None:
-            src = src * attn_weights
 
-        messages = torch_scatter.scatter(
-            src = src,
-            index = torch.cat([row, col], dim=0),
-            dim = 0,
-            dim_size = x.size(0),
-            reduce = ('mean' if attn_weights is None else 'sum')
-        )
+            return torch_scatter.scatter(
+                src=src * attn_weights,
+                index=index,
+                dim=0,
+                dim_size=num_nodes,
+                reduce='sum',
+            )
 
-        return messages
+        ### No edge weights: one where there is an edge -> plain mean
+        if value is None:
+
+            messages = torch_scatter.scatter(
+                src=src,
+                index=index,
+                dim=0,
+                dim_size=num_nodes,
+                reduce='mean',
+            )
+
+            if not torch.isfinite(messages).all():
+                raise Exception("Messages are non-finite")
+
+            return messages
+
+        ### Adjacency weights -> weighted mean
+        w = torch.cat([value, value], dim=0).to(src.dtype).view(-1, 1)
+
+        num = torch_scatter.scatter(src * w, index, dim=0, dim_size=num_nodes, reduce='sum')
+        den = torch_scatter.scatter(w, index, dim=0, dim_size=num_nodes, reduce='sum')
+
+        return num / den.masked_fill(den == 0, 1)
     
-    def node_update(self,
+    def _node_update(self,
         x : Tensor,
         messages : Tensor         
     ) -> Tensor:
@@ -268,22 +436,109 @@ class TransGNN(nn.Module):
         x = self.act(x)
 
         return x
-    
-    def edge_update(self,
-        x : Tensor,
-        edge_index : Tensor,
-        edge_attr : Optional[Tensor] = None                
-    ) -> Tensor:
-        
-        row, col = edge_index
-        h, t = x[row], x[col]
-        r = edge_attr
-        
-        if self.use_edges_info:
-            e = self.W_edge(torch.cat([h, t, r],dim = -1))
+
+    def node_update(self, x, messages : Tensor):
+
+        if self.combine == 'sum':
+            z = self.W_node(messages) + self.res(x)
         else:
-            e = self.W_edge(torch.cat([h,t],dim = -1))
+            z = self.W_node(torch.cat([x, messages], dim=-1))
+
+            if not torch.isfinite(z).all():
+                raise RuntimeError(f"""
+                    Non-finite after W_node / residual | {messages.isfinite().all()} | {x.isfinite().all()} |
+                    {self.W_node.bias.isfinite().all()} | {self.W_node.weight.isfinite().all()} | {self.W_node.weight.min()} |
+                    {self.W_node.weight.max()}
+                """)
+
+        z = self.W_norm(z)
+        if not torch.isfinite(z).all():
+            raise RuntimeError("Non-finite after W_norm")
+
+        z = self.act(z)
+        if not torch.isfinite(z).all():
+            raise RuntimeError("Non-finite after activation")
+
+        return z
+    
+    def edge_update(
+        self,
+        x: Tensor,
+        adj: AdjMatrix,
+        edge_attr: Optional[Tensor] = None,
+    ) -> Optional[Tensor]:
+
+        adj = adj.get_default()
+
+        if isinstance(adj, Tensor):
+            return self._dense_edge_update(x, adj, edge_attr)
+        elif isinstance(adj, SparseTensor):
+            return self._sparse_edge_update(x, adj, edge_attr)
+        elif isinstance(adj, EdgeIndex):
+            return self._edge_index_edge_update(x, adj, edge_attr)
+
+        raise TypeError(f"Unsupported adjacency representation: {type(adj).__name__}")
+
+
+    def _dense_edge_update(
+        self,
+        x: Tensor,
+        adj: Tensor,
+        edge_attr: Optional[Tensor] = None,
+    ) -> Optional[Tensor]:
+        assert not self.update_edges, (
+            "update_edges is not supported with the dense adjacency representation."
+        )
+        return None
+
+
+    def _sparse_edge_update(
+        self,
+        x: Tensor,
+        adj: SparseTensor,
+        edge_attr: Optional[Tensor] = None,
+    ) -> Optional[Tensor]:
         
+        if not self.update_edges:
+            return None
+        # Native COO storage (sorted by row, then col): edge_attr must follow this order,
+        # and the returned edge features are in this order too.
+        row, col, _ = adj.coo()
+        return self._row_col_edge_update(x, row, col, edge_attr)
+
+
+    def _edge_index_edge_update(
+        self,
+        x: Tensor,
+        adj: EdgeIndex,
+        edge_attr: Optional[Tensor] = None,
+    ) -> Optional[Tensor]:
+        if not self.update_edges:
+            return None
+        return self._row_col_edge_update(x, adj.row, adj.col, edge_attr)
+
+
+    def _row_col_edge_update(
+        self,
+        x: Tensor,
+        row: Tensor,
+        col: Tensor,
+        edge_attr: Optional[Tensor] = None,
+    ) -> Tensor:
+
+        h, t = x[row], x[col]
+
+        if self.use_edges_info:
+
+            if edge_attr is None:
+
+                raise ValueError("edge_attr is required when use_edges_info=True.")
+            
+            e = self.W_edge(torch.cat([h, t, edge_attr], dim=-1))
+
+        else:
+            e = self.W_edge(torch.cat([h, t], dim=-1))
+
         e = self.E_norm(e)
         e = self.act(e)
 
@@ -291,44 +546,65 @@ class TransGNN(nn.Module):
     
     def forward(self,
         x : Tensor,
-        edge_index : Tensor,
+        edge_index : AdjMatrix | Tensor,
         edge_attr : Optional[Tensor] = None            
     ) -> TransGNNOutput:
+
+        adj = edge_index
+
+        if isinstance(adj, Tensor):
+
+            row, col = adj
+            N = x.size(0)
+
+            adj = AdjMatrix(
+                _edge_index=EdgeIndex(
+                    row=row,
+                    col=col,
+                    num_nodes=(N, N)
+                )
+            )
 
         assert (edge_attr is not None) or (not self.use_edges_info)
         
         attn_weights = self.calculate_attn_weights(
             x,
-            edge_index,
+            adj,
             edge_attr
         )
 
         messages = self.message_and_aggregate(
             x,
-            edge_index,
+            adj,
             edge_attr,
             attn_weights
         )
 
+        if not torch.isfinite(messages).all():
+            raise Exception("Messages are non-finite")
+
         edge_attr = self.edge_update(
             x,
-            edge_index,
+            adj,
             edge_attr
         )
 
         x = self.node_update(x, messages)
+
+        if x.isnan().sum():
+            print(f"{type(edge_index.get_default())}")
+            print(f"{edge_index.edge_index.value is None}")
 
         return TransGNNOutput(x=x,edge_attr=edge_attr)
     
 if __name__ == '__main__':
 
     G = helpers.create_toy_graph(
-        num_nodes = 10,
-        num_edges = 20,
-        num_types = 3,
-        node_features = 16,
-        edge_features = 16,
-        type_features = 16
+        num_entities=50,
+        num_articles=10,
+        num_features=16,
+        ee=100,
+        ea=40
     )
 
     for combine in ['cat','sum']:
@@ -348,9 +624,9 @@ if __name__ == '__main__':
                 )
 
                 out = model.forward(
-                    x = G["x"],
-                    edge_index = G["edge_index"],
-                    edge_attr = G["e"]
+                    x = G["xe"],
+                    edge_index = G["EE"],
+                    edge_attr = G["edge_attr"]
                 )
 
                 print(f"x.size() = {out['x'].size()}")

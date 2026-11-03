@@ -83,31 +83,32 @@ class PredicatesNormalizer(Stage):
 
     def transform(self, doc: Dict) -> Dict:
 
-        head, tail, predicate = doc["head"], doc["tail"], doc["predicate"]
+        head, tail, unormalized_predicate = doc["head"], doc["tail"], doc["predicate"]
 
-        predicate = ' '.join([token for token in predicate.split(' ') if token not in TOKENS_TO_REMOVE])
+        unormalized_predicate = ' '.join([token for token in unormalized_predicate.split(' ') if token not in TOKENS_TO_REMOVE])
 
-        if len(predicate.strip()) == 0:
+        if len(unormalized_predicate.strip()) == 0:
             return None
 
         ### Initial Normalization
-        predicate = self.base_normalize(predicate)
+        unormalized_predicate = self.base_normalize(unormalized_predicate)
 
         ### Clean Predicate
-        if predicate in self._cache:
+        if unormalized_predicate in self._cache:
 
-            template = self._cache[predicate]["template"]
-            predicate_lemma = self._cache[predicate]["lemma"]
-            is_valid = self._cache[predicate]["is_valid"]
+            template = self._cache[unormalized_predicate]["template"]
+            predicate_lemma = self._cache[unormalized_predicate]["lemma"]
+            is_valid = self._cache[unormalized_predicate]["is_valid"]
 
             template = template.format(head=head, tail=tail)
             head, predicate, tail = template.split(' | ')
 
         else:
 
-            template = self.normalize_predicate(predicate) # self.clean_predicate(predicate)
-            template = template.format(head=head, tail=tail)
-            head, predicate, tail = template.split(' | ')
+            template = self.normalize_predicate(unormalized_predicate) # self.clean_predicate(predicate)
+            formatted_template = template.format(head=head, tail=tail)
+            head, predicate, tail = formatted_template.split(' | ')
+            head, predicate, tail = head.strip(), predicate.strip(), tail.strip()
 
             ### Validate Triple
             is_valid = self.is_valid_predicate(Predicate.from_string(predicate))
@@ -115,7 +116,7 @@ class PredicatesNormalizer(Stage):
             ### Lemmatization
             predicate_lemma = self.lemmetize(predicate)
 
-            self._cache[predicate] = {
+            self._cache[unormalized_predicate] = {
                 "template" : template,
                 "lemma" : predicate_lemma,
                 "is_valid" :  is_valid   

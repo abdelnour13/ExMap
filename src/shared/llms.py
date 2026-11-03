@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict
-from openai import Client, AsyncClient
+from typing import Dict, Optional
 
 @dataclass(frozen=True)
 class LLM:
@@ -26,6 +25,12 @@ _llms : Dict[str, LLM] = {
     ),
     "deepseek-v4-flash" : LLM(
         name="deepseek-v4-flash",
+        url="https://api.deepseek.com",
+        price_per_1m_in_tokens=0.28,
+        price_per_1m_out_tokens=0.42
+    ),
+    "deepseek-flash" : LLM(
+        name="deepseek-flash",
         url="https://api.deepseek.com",
         price_per_1m_in_tokens=0.28,
         price_per_1m_out_tokens=0.42

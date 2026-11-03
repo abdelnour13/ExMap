@@ -72,7 +72,6 @@ def decode_openai_response(
         return json_data
 
     return completion
-
     
 async def make_openai_request(
     client : AsyncOpenAI,

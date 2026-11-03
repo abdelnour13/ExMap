@@ -5,6 +5,7 @@ from typing import Optional, Dict, List, Type, Union
 from src.graph_dl.layers.activation import  Activation
 from src.graph_dl.layers.trans_gnn import  TransGNN
 from src.graph_dl.layers.rgnn import RGNNLayer
+from src.graph_dl.layers.norm import Norm, NORM_TYPE
 from typing import Union, Literal, Optional
 
 def _Linear(feature_name : str):
@@ -15,7 +16,7 @@ def _Linear(feature_name : str):
             in_channels, 
             out_channels, 
             activation : str, 
-            norm: bool, 
+            norm: Optional[NORM_TYPE] = None, 
             bias = True, 
             device=None, 
             dtype=None, 
@@ -23,7 +24,7 @@ def _Linear(feature_name : str):
         ):
             super().__init__(in_channels, out_channels, bias, device, dtype)
             self.activation = Activation(activation)
-            self.bn = nn.BatchNorm1d(num_features=out_channels) if norm else nn.Identity()
+            self.bn = Norm(type=norm, num_features=out_channels)
 
         def forward(self, x : Tensor, **kwargs) -> Dict[str, Tensor]:
 
@@ -157,12 +158,13 @@ class TransEncoder(GNNEncoder):
         hidden_channels : List[int],
         variant: Literal["conv", "attn"] = "conv",
         activation: str = "relu",
-        norm: bool = False,
+        norm: Optional[NORM_TYPE] = None,
         shortcut: bool = False,
         shortcut_dim: int | None = None,
         jk: bool = True,
         mlp : bool = False,
-        use_edges_info : bool = True
+        use_edges_info : bool = True,
+        update_edges : bool = True
     ) -> None:
 
         self.in_channels = in_channels
@@ -172,6 +174,7 @@ class TransEncoder(GNNEncoder):
         self.activation = activation
         self.norm = norm
         self.use_edges_info = use_edges_info
+        self.update_edges = update_edges
 
         channels = [in_channels, *hidden_channels]
         
@@ -180,15 +183,16 @@ class TransEncoder(GNNEncoder):
             layers_args=[
                 {
                     "in_channels" : in_channels,
-                    "out_channels" : out_channels
+                    "out_channels" : out_channels,
+                    "use_edges_info" : (use_edges_info if i == 0 else update_edges),
+                    "update_edges" : update_edges
                 }
-                for in_channels, out_channels in zip(channels[:-1], channels[1:])
+                for i, (in_channels, out_channels) in enumerate(zip(channels[:-1], channels[1:]))
             ],
             common_args={
                 "variant" : variant,
                 "activation" : activation,
                 "norm" : norm,
-                "use_edges_info" : self.use_edges_info,
                 **self.__trans_gnn__,
             },
             shortcut=shortcut,
@@ -207,7 +211,7 @@ class RGNNEncoder(GNNEncoder):
         num_relations : int = 1,
         activation : Optional[str] = "relu",
         agg : str = 'mean',
-        norm : bool = True,
+        norm : Optional[NORM_TYPE] = False,
         root : bool = True,
         shortcut: bool = False,
         shortcut_dim : Optional[int] = None,

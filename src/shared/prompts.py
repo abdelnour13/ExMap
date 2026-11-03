@@ -6,11 +6,10 @@ from typing import Type, Dict, List, Any
 from src.helpers import make_openai_request
 from returns.pipeline import is_successful
 from returns.result import Result
-from openai import AsyncOpenAI, RateLimitError, APIError
-from openai.types.chat import ChatCompletion
+from openai import RateLimitError, APIError
 from openai import AsyncClient
 
-__TYPES_MAPPING__ = {
+__TYPES_MAPPING__ : Dict[str, Type] = {
     type_.__name__ : type_
     for type_ in [str, bool , int, float, list]
 }
@@ -152,12 +151,13 @@ class PromptsManager:
 
         if is_successful(result):
 
+            result = result.unwrap()
+            
             try:
                 result = Result.from_value(json.loads(result))
             except Exception as e:
                 result = Result.from_failure(e)
         
-
         if validate_output and is_successful(result):
 
             result = result.unwrap()
@@ -431,4 +431,196 @@ class RepresentativeEntityQuerying:
             'output',
             representative=str
         )
+    )
+
+@PromptsManager.register_prompt
+class DomainRelevanceLevels:
+
+    en_prompt = PromptContent(
+
+        system_prompt = """
+            You are an expert in scientific article classification and domain relevance assessment.
+
+            Your task is to evaluate the degree of alignment between a research article and a target scientific domain.
+
+            The article is defined by its title, abstract, and an optional list of keywords.
+            The domain is defined by its name and definition.
+
+            Analyze the article's main objectives, methodology, terminology, application area, scientific context,
+            and primary contributions to determine how strongly the article aligns with the specified domain.
+
+            ### Classification Levels:
+
+            * 3 (Perfect Alignment): The article's core problems, objectives, and contributions are exactly what is expected in this domain.
+
+            * 2 (Strong Alignment): The article is highly relevant and clearly fits within this domain, although the focus may not be exclusively centered on it.
+
+            * 1 (Weak Alignment): The article has limited or indirect topical overlap with the domain but is not a primary fit.
+
+            * 0 (No Alignment): The article is completely unrelated to the domain.
+
+            ### Important Guidelines:
+
+            - Use semantic understanding rather than keyword matching alone.
+            - Consider synonyms, related concepts, interdisciplinary overlap, and implicit domain relevance.
+            - Focus on the article's primary scientific contribution rather than incidental mentions of domain-related terms.
+            - Evaluate methodological and application-level relevance in addition to terminology overlap.
+            - Be strict and consistent when distinguishing between weak and strong alignment.
+
+            ### Output Format:
+
+            Return only valid JSON, with no Markdown or additional text, using exactly this structure:
+
+            {
+                "score": <score>
+            }
+
+            The score must be an integer from 0 to 3, inclusive.
+
+            Do not provide explanations, reasoning, confidence scores, or additional text.
+        """,
+
+        user_prompt = """
+            ### Article:
+            {content:str}
+
+            ### Target Domain:
+            Name: {domain_name:str}
+            Definition: {domain_definition:str}
+        """,
+
+        output_model=create_model(
+            'output',
+            score=float
+        )
+
+    )
+
+
+@PromptsManager.register_prompt
+class DomainRelevanceBinary:
+
+    en_prompt = PromptContent(
+
+        system_prompt = """
+            You are an expert in scientific article classification and domain relevance assessment.
+
+            Your task is to evaluate the degree of alignment between a research article and a target scientific domain.
+
+            The article is defined by its title, abstract, and an optional list of keywords.
+            The domain is defined by its name and definition.
+
+            Analyze the article's main objectives, methodology, terminology, application area, scientific context,
+            and primary contributions to determine whether the article aligns with the specified domain.
+
+            ### Classification Levels:
+
+            * 1 (Aligned): The article is relevant and fits within this domain, including perfect, strong, or weak alignment,
+              showing clear topical, methodological, or application-level overlap.
+
+            * 0 (Not Aligned): The article is completely unrelated to the domain.
+
+            ### Important Guidelines:
+
+            - Use semantic understanding rather than keyword matching alone.
+            - Consider synonyms, related concepts, interdisciplinary overlap, and implicit domain relevance.
+            - Focus on the article's primary scientific contribution rather than incidental mentions of domain-related terms.
+            - Evaluate methodological and application-level relevance in addition to terminology overlap.
+            - Be strict and consistent when distinguishing between aligned and not aligned articles.
+
+            ### Output Format:
+
+            Return only valid JSON, with no Markdown or additional text, using exactly this structure:
+
+            {
+                "score": <score>
+            }
+
+            The score must be either 0 or 1.
+
+            Do not provide explanations, reasoning, confidence scores, or additional text.
+        """,
+
+        user_prompt = """
+            ### Article:
+            {content:str}
+
+            ### Target Domain:
+            Name: {domain_name:str}
+            Definition: {domain_definition:str}
+        """,
+
+        output_model=create_model(
+            'output',
+            score=float
+        )
+
+    )
+
+
+@PromptsManager.register_prompt
+class DomainRelevanceScore:
+
+    en_prompt = PromptContent(
+
+        system_prompt = """
+            You are an expert in scientific article classification and domain relevance assessment.
+
+            Your task is to evaluate the degree of alignment between a research article and a target scientific domain.
+
+            The article is defined by its title, abstract, and an optional list of keywords.
+            The domain is defined by its name and definition.
+
+            Analyze the article's main objectives, methodology, terminology, application area, scientific context,
+            and primary contributions to determine how strongly the article aligns with the specified domain.
+
+            ### Classification Levels:
+
+            Assign an integer score from 0 to 10 based on the following framework:
+
+            * 9-10 (Perfect Alignment): The article's core problems, objectives, and contributions are exactly what is expected in this domain.
+
+            * 6-8 (Strong Alignment): The article is highly relevant and clearly fits within this domain, although the focus may not be exclusively centered on it.
+
+            * 3-5 (Moderate/Weak Alignment): The article has limited, partial, or indirect topical overlap with the domain but is not a primary fit.
+
+            * 1-2 (Marginal Alignment): The article has almost no relevance, with only incidental or superficial mentions of domain-related concepts.
+
+            * 0 (No Alignment): The article is completely unrelated to the domain.
+
+            ### Important Guidelines:
+
+            - Use semantic understanding rather than keyword matching alone.
+            - Consider synonyms, related concepts, interdisciplinary overlap, and implicit domain relevance.
+            - Focus on the article's primary scientific contribution rather than incidental mentions of domain-related terms.
+            - Evaluate methodological and application-level relevance in addition to terminology overlap.
+            - Be strict, nuanced, and consistent when assigning the specific score within the 0-10 range.
+
+            ### Output Format:
+
+            Return only valid JSON, with no Markdown or additional text, using exactly this structure:
+
+            {
+                "score": <score>
+            }
+
+            The score must be a single integer from 0 to 10, inclusive.
+
+            Do not provide explanations, reasoning, confidence scores, or additional text.
+        """,
+
+        user_prompt = """
+            ### Article:
+            {content:str}
+
+            ### Target Domain:
+            Name: {domain_name:str}
+            Definition: {domain_definition:str}
+        """,
+
+        output_model=create_model(
+            'output',
+            score=float
+        )
+
     )

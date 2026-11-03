@@ -45,7 +45,7 @@ class Config(StageConfig):
     )
 
     num_iterations : int = Field(
-        default=1,
+        default=2,
         description="The number of times the operation should be repreated."
     )
 
@@ -188,7 +188,7 @@ class IterativePredicatesCleaning(Stage):
     ) -> ResultE[Dict[str, str | List[str]]]:
 
         if len(candidates) == 0:
-            return ResultE.from_value([])
+            return ResultE.from_value({ "selected" : [], 'representative': '' })
 
         result = await PromptsManager.make_request(
             prompt_name='EquivelantPredicateTokensQuerying' if kind == 'token' else 'EquivelantPredicatesQuerying',
@@ -298,9 +298,14 @@ class IterativePredicatesCleaning(Stage):
 
         for batch in self.track(tasks_info, task="equivalent-subset-querying"):
 
+            batch = [
+                task_info
+                for task_info in batch if task_info['target'] not in visited
+            ]
+
             results = self.batch_query_equivelant([
                 (task_info['target'], task_info['candidates'])
-                for task_info in batch if task_info['target'] not in visited
+                for task_info in batch
             ], kind=col)
 
             for result, task_info in zip(results, batch):
@@ -331,6 +336,7 @@ class IterativePredicatesCleaning(Stage):
         return mapping
 
     def mapping_path(self, i : int) -> str:
+        os.makedirs(self.mapping_dir, exist_ok=True)
         return os.path.join(self.mapping_dir, f'mapping_{i}.json')
 
     def get_predicates_mapping(self) -> Dict[str, str]:
@@ -344,11 +350,12 @@ class IterativePredicatesCleaning(Stage):
 
             if not os.path.exists(self.mapping_path(i)):
                 mapping = self.get_mapping(tokens_df=predicates_df, col='predicate')
-                predicates_df['predicate'] = predicates_df['predicate'].apply(lambda x : mapping.get(x, x))
                 helpers.save_json_file(path=self.mapping_path(i), data=mapping)
             else:
+                print(f"loaded {self.mapping_path(i)}")
                 mapping = helpers.load_json_file(self.mapping_path(i))
 
+            predicates_df['predicate'] = predicates_df['predicate'].apply(lambda x : mapping.get(x, x))
             mappings.append(mapping)
 
         final_mapping = mappings[0]

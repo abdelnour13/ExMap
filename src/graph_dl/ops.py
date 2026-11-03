@@ -1,6 +1,6 @@
 import torch
 from torch import Tensor
-from typing import Tuple, Optional
+from typing import Tuple, Optional, Callable
 from torch.nn import functional as F
 from torch_scatter import scatter
 from torch_geometric import utils as gnn_utils
@@ -80,7 +80,7 @@ def STE(
     codebook : Tensor,
     x : Tensor,
     assignments : Tensor,
-    distance = F.mse_loss
+    distance : Callable[[Tensor, Tensor], Tensor] = F.mse_loss
 ) -> Tuple[Tensor, Tensor, Tensor]:
 
     indices = assignments.argmax(dim=-1)

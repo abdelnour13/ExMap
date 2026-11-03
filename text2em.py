@@ -1,5 +1,5 @@
 import os
-from src.commands import download
+from src.commands.data_download import main
 from src.commands.knowledge_graph_construction import main
 from src.commands.feature_extraction import main
 from src.commands.graph_learning import main

@@ -23,6 +23,15 @@ class AdjMatrix:
     _sparse: Optional[SparseTensor] = None
     _edge_index: Optional[EdgeIndex] = None
 
+    def get_default(self) -> Tensor | SparseTensor | EdgeIndex:
+
+        if self._edge_index is not None:
+            return self._edge_index
+        elif self._sparse is not None:
+            return self._sparse
+        else:
+            return self._dense
+
     def __post_init__(self):
         
         v = (

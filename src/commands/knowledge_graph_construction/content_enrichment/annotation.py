@@ -3,10 +3,10 @@ from typing import Dict, List, Any
 from src.shared.command_tools.vasync import Stage, StageConfig, add_handlers
 from src.shared.file_tools import FileWriter, FileReader, TextfileCache
 from src.helpers import load_json_file
-from src.shared.env import env, Domain
 from src.shared.zs_classifiers import ZeroShotClassifier
+from src.commands.helpers import DomainConfig, Domain
 from pycli import Field
-from definitions import domain_dir, hf_model_dir
+from definitions import domain_dir
 from instance import cli
 from returns.pipeline import is_successful
 from pydantic import BaseModel
@@ -15,7 +15,7 @@ class ClassifierConfig(BaseModel):
     name : str
     args : Dict[str, Any] = Field(default_factory=dict)
 
-class Config(StageConfig):
+class Config(StageConfig, DomainConfig('domain')):
 
     models : List[ClassifierConfig] = Field(
         default_factory=lambda : [ClassifierConfig(name="llm:deepseek-chat", args={ "prompt_name" : "binary" })],
@@ -44,12 +44,10 @@ class CorpusAnnotatator(Stage):
         reader : FileReader, 
         writer : FileWriter, 
         models : Dict[str, ZeroShotClassifier],
-        domains : List[Domain],
     ) -> None:
         super().__init__(reader, writer)
 
         self.models = models
-        self.domains = domains
 
     def encode_document(self, doc: Dict) -> str:
 
@@ -106,32 +104,18 @@ class CorpusAnnotatator(Stage):
         models = {}
 
         for model in config.models:
-            
-            llm = None
-            kind, model_name = model.name.split(':')
-
-            if kind in ['e5', 'qwen']:
-                model_name = hf_model_dir(model_name)
-
-            if kind in ['llm']:
-                llm = env.llms[model_name]
-
-            new_model_name = ':'.join([kind, model_name])
-
-            print(f"LLM : {llm}")
 
             models[model.name] = ZeroShotClassifier.from_name(
-                name=new_model_name,
+                name=model.name,
                 labels=[
                     {
                         "name" : domain.sub_domain,
                         "description" : domain.definition,
                         "alt_names" : domain.alt_names
                     }
-                    for domain in env.fields[config.domain].domains
+                    for domain in config.domains
                 ],
                 device=config.device,
-                llm=llm,
                 **model.args
             )
 
@@ -150,7 +134,6 @@ class CorpusAnnotatator(Stage):
                 .from_filename(config.output_filename)
                 .buffered(config.buffer_size, cache),
             models=cls.create_classifiers(config),
-            domains=env.fields[config.domain].domains,
         )
 
         return cmd
@@ -185,7 +168,6 @@ if __name__ == '__main__':
                     }
                     for domain in domains
                 ],
-                llm=env.llms['deepseek-chat'],
                 prompt_name="binary",
                 mode="seperate"
             )

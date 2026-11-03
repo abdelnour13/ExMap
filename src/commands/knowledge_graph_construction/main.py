@@ -8,7 +8,6 @@ from pydantic import BaseModel, computed_field, model_validator
 from instance import cli
 from definitions import rel_path, CORPUS_DIR, KGS_DIR
 from multiprocessing import set_start_method, Process
-from dataclasses import dataclass
 
 set_start_method('spawn', force=True)
 
@@ -16,14 +15,13 @@ from src.commands.knowledge_graph_construction.preprocessing import coreference_
 from src.commands.knowledge_graph_construction.content_enrichment import annotation, acronym_extraction, keyword_extraction
 from src.commands.knowledge_graph_construction.triplet_extraction import (
     triples_extractor, 
-    entities_mapping, 
     knowledge_completion,
-    entities_cleaning,
 )
 from src.commands.knowledge_graph_construction.graph_cleaning import (
     llm_based_predicates_cleaning,
     llm_based_entities_cleaning,
-    rule_based_predicates_cleaning
+    rule_based_predicates_cleaning,
+    entities_cleaning
 )
 
 from pycli.field import Field
@@ -39,7 +37,6 @@ STAGES : Dict[str, Tuple[Type[Stage], Type[StageConfig]]] = {
     "entities_normalization" : (entities_cleaning.EntitiesNormalizer, entities_cleaning.Config),
     "knowledge_completion" : (knowledge_completion.KnowledgeCompletion, knowledge_completion.Config),
     "rule_based_predicate_cleaning" : (rule_based_predicates_cleaning.PredicatesNormalizer, rule_based_predicates_cleaning.Config),
-    "entities_mapping" : (entities_mapping.EntitiesMapping, entities_mapping.Config),
     "llm_based_predicate_cleaning" : (llm_based_predicates_cleaning.IterativePredicatesCleaning, llm_based_predicates_cleaning.Config),
     "llm_based_entities_cleaning" : (llm_based_entities_cleaning.IterativeLLMBasedEntitiesCleaning, llm_based_entities_cleaning.Config)
 }

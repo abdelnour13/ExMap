@@ -1,7 +1,7 @@
 import torch
 from src.shared.command_tools import BaseCommand
 from src.shared.file_tools import FileReader
-from src.commands.feature_extraction.graph_utils import Graph, EdgeTypes
+from src.commands.feature_extraction.graph_utils import Graph, EdgeTypes, NodeTypes
 from src.shared.env import env
 
 def _slugify(s : str) -> str:
@@ -99,208 +99,204 @@ class GraphBuilder:
 
         article = doc['sentence']['document'] if doc['sentence'] is not None else None
 
-        if article is not None:
+        if article is None:
+            return
 
-            # Article
-            added = graph.add_node(
-                type="Article",
-                id=article['id'],
+        # Article
+        added = graph.add_node(
+            type="Article",
+            id=article['id'],
+            properties={
+                "id" : article['id'],
+                "title" : article['title'],
+                "abstract" : article['abstract'],
+                "date" : article['date']
+            }
+        )            
+
+        # Article Labels
+        if added:
+            
+            for method, items in article['pseudo_labels'].items():
+
+                t = torch.tensor([i['score'] for i in items])
+                
+                if method not in graph._nodes['Article']._features:
+                    graph._nodes['Article']._features[method] = t[None,:]
+                else:
+                    graph._nodes['Article']._features[method] = torch.cat([
+                        graph._nodes['Article']._features[method],
+                        t[None,:]
+                    ], dim=0)
+
+        # Predicate
+        predicate_id = _slugify(doc['predicate'])
+
+        graph.add_node(
+            type=NodeTypes.Predicate,
+            id=predicate_id,
+            properties={
+                "name" : doc['predicate']
+            }
+        )
+
+        # Triple
+        triple_id = _slugify('_'.join([doc['head'], doc['predicate'], doc['tail']]))
+        head_id = _slugify(doc['head'])
+        tail_id = _slugify(doc['tail'])
+
+        graph.add_node(
+            type=NodeTypes.Triple,
+            id=triple_id
+        )
+
+        graph.add_edge(
+            type=EdgeTypes.Triple_HASHEAD_Entity,
+            src=triple_id,
+            dst=_slugify(doc['head'])
+        )
+
+        graph.add_edge(
+            type=EdgeTypes.Triple_HASTAIL_Entity,
+            src=triple_id,
+            dst=_slugify(doc['tail'])
+        )
+
+        graph.add_edge(
+            type=EdgeTypes.Triple_HASPREDICATE_Predicate,
+            src=triple_id,
+            dst=predicate_id
+        )
+
+        graph.add_edge(
+            type=EdgeTypes.Triple_BELONGSTO_Article,
+            src=triple_id,
+            dst=article['id']
+        )
+
+        # Entity
+        for entity_id, entity in zip([head_id, tail_id],[doc['head'], doc['tail']]):
+
+            graph.add_node(
+                type='Entity',
+                id=entity_id,
                 properties={
-                    "id" : article['id'],
-                    "title" : article['title'],
-                    "abstract" : article['abstract'],
-                    "date" : article['date']
+                    "name" : entity
                 }
             )
 
-            # Article Labels
-            if added:
-                
-                for method, items in article['pseudo_labels'].items():
+        # Lab
+        for lab in article['teams']:
 
-                    t = torch.tensor([i['score'] for i in items])
-                    
-                    if method not in graph._nodes['Article']._features:
-                        graph._nodes['Article']._features[method] = t[None,:]
-                    else:
-                        graph._nodes['Article']._features[method] = torch.cat([
-                            graph._nodes['Article']._features[method],
-                            t[None,:]
-                        ], dim=0)
+            lab_id = _slugify(lab)
 
-            # Entity
-            for entity in [doc['head'], doc['tail']]:
-
-                entity_id = _slugify(entity)
-
-                graph.add_node(
-                    type='Entity',
-                    id=entity_id,
-                    properties={
-                        "name" : entity
-                    }
-                )
-
-                graph.add_edge(
-                    type=EdgeTypes.Entity_APPEARNSIN_Article,
-                    src=entity_id,
-                    dst=article['id']
-                )
-
-            head_id = _slugify(doc['head'])
-            tail_id = _slugify(doc['tail'])
+            graph.add_node(
+                type='Lab',
+                id=lab_id,
+                properties={
+                    "name" : lab
+                }
+            )
 
             graph.add_edge(
-                type=EdgeTypes.Entity_HASRELATIONWITH_Entity,
-                src=head_id,
-                dst=tail_id,
-                id=f"{head_id}-{doc['predicate']}-{tail_id}",
+                type=EdgeTypes.Article_BELONGSTO_Lab,
+                src=article['id'],
+                dst=lab_id
+            )
+
+        # Venue
+        for venue in article['venues']:
+
+            graph.add_node(
+                type='Venue',
+                id=venue,
                 properties={
-                    "predicate" : doc['predicate'],
-                    "articles" : set([article['id']]) if article is not None else set(),
-                    "source" : set(["llm"]) if article is not None else set()
+                    "name" : venue
                 }
             )
 
-            # Lab
-            for lab in article['teams']:
+            graph.add_edge(
+                type=EdgeTypes.Article_BELONGSTO_Venue,
+                src=article['id'],
+                dst=venue
+            )
 
-                lab_id = _slugify(lab)
-
-                graph.add_node(
-                    type='Lab',
-                    id=lab_id,
-                    properties={
-                        "name" : lab
-                    }
-                )
-
-                graph.add_edge(
-                    type=EdgeTypes.Article_BELONGSTO_Lab,
-                    src=article['id'],
-                    dst=lab_id
-                )
-
-            # Venue
-            for venue in article['venues']:
+            for v1, v2 in _pairs(venue.split('.')):
 
                 graph.add_node(
                     type='Venue',
-                    id=venue,
+                    id=v1,
                     properties={
-                        "name" : venue
+                        "name" : v1
                     }
                 )
-
-                graph.add_edge(
-                    type=EdgeTypes.Article_BELONGSTO_Venue,
-                    src=article['id'],
-                    dst=venue
-                )
-
-                for v1, v2 in _pairs(venue.split('.')):
-
-                    graph.add_node(
-                        type='Venue',
-                        id=v1,
-                        properties={
-                            "name" : v1
-                        }
-                    )
-
-                    graph.add_node(
-                        type='Venue',
-                        id=v2,
-                        properties={
-                            "name" : v2
-                        }
-                    )
-
-                    graph.add_edge(
-                        type=EdgeTypes.Venue_ISSUBVENUEOF_Venue,
-                        src=v2,
-                        dst=v1
-                    )
-
-            # Author
-            for author in article['authors']:
-
-                author_id = _slugify(author)
 
                 graph.add_node(
-                    type='Author',
-                    id=author_id,
+                    type='Venue',
+                    id=v2,
                     properties={
-                        "name" : author
+                        "name" : v2
                     }
                 )
 
                 graph.add_edge(
-                    type=EdgeTypes.Article_WRITTENBY_Author,
-                    src=article['id'],
-                    dst=author_id
+                    type=EdgeTypes.Venue_ISSUBVENUEOF_Venue,
+                    src=v2,
+                    dst=v1
                 )
 
-            # Keyword
-            for keyword in article['keywords']:
+        # Author
+        for author in article['authors']:
 
-                keyword = keyword['keyword']
+            author_id = _slugify(author)
 
-                keyword_id = _slugify(keyword)
+            graph.add_node(
+                type='Author',
+                id=author_id,
+                properties={
+                    "name" : author
+                }
+            )
+
+            graph.add_edge(
+                type=EdgeTypes.Article_WRITTENBY_Author,
+                src=article['id'],
+                dst=author_id
+            )
+
+        # Keyword
+        for keyword in article['keywords']:
+
+            keyword = keyword['keyword']
+
+            keyword_id = _slugify(keyword)
+
+            graph.add_node(
+                type='Keyword',
+                id=keyword_id,
+                properties={
+                    "name" : keyword
+                }
+            )
+
+            graph.add_edge(
+                type=EdgeTypes.Article_HASKEYWORD_Keyword,
+                src=article['id'],
+                dst=keyword_id
+            )
+
+        # SubDomains
+        for method, items in article['pseudo_labels'].items():
+
+            for item in items:
+                
+                domain = item['label']
+                domain_id = _slugify(domain)
 
                 graph.add_node(
-                    type='Keyword',
-                    id=keyword_id,
+                    type='SubDomain',
+                    id=domain_id,
                     properties={
-                        "name" : keyword
+                        "name" : domain
                     }
                 )
-
-                graph.add_edge(
-                    type=EdgeTypes.Article_HASKEYWORD_Keyword,
-                    src=article['id'],
-                    dst=keyword_id
-                )
-
-            # SubDomains
-            for method, items in article['pseudo_labels'].items():
-
-                for item in items:
-                    
-                    domain = item['label']
-                    domain_id = _slugify(domain)
-
-                    graph.add_node(
-                        type='SubDomain',
-                        id=domain_id,
-                        properties={
-                            "name" : domain
-                        }
-                    )
-
-            ### Labels
-            # for method, items in article['pseudo_labels'].items():
-                    
-                # for item in items:
-                    
-                #     domain = item['label']
-                #     score = item['score']
-
-                #     if score == 0.0:
-                #         continue
-
-                #     domain_id = _slugify(domain)
-
-                #     graph.add_node(
-                #         type='SubDomain',
-                #         id=domain_id,
-                #         properties={
-                #             "name" : domain
-                #         }
-                #     )
-
-                #     graph.add_edge(
-                #         type=EdgeTypes.Article_BELONGSTO_SubDomain,
-                #         src=article['id'],
-                #         dst=domain_id
-                #     )

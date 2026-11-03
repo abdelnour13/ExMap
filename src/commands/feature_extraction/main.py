@@ -40,7 +40,7 @@ class FeatureExtractionConfig(BaseModel):
     @computed_field
     @property
     def raw_path(self) -> str:
-        return os.path.join(KGS_DIR, self.kg_id, 'entities_mapping', 'data.jsonl')
+        return os.path.join(KGS_DIR, self.kg_id, 'llm_based_entities_cleaning', 'data.jsonl')
     
 class Config(BaseModel):
     features_id : str
@@ -94,7 +94,7 @@ class FeatureExtractor(BaseCommand):
         graph = GraphBuilder(self, self.reader).build()
 
         ### Stage 02 : Filtering
-        graph = GraphFilter(self, self.filter).filter_graph(graph)
+        # graph = GraphFilter(self, self.filter).filter_graph(graph)
 
         ### Stage 03 : Feature Extraction
         graph = GraphEmbedder(self, self.model_name, self.batch_size, self.device).extract_features(graph)

@@ -5,6 +5,7 @@ from torch import nn
 from torch_scatter import scatter
 from src.graph_dl.layers.activation import Activation
 from torch_geometric import utils as gnn_utils
+from src.graph_dl.layers.norm import Norm, NORM_TYPE
 
 class RGNNOutput(TypedDict):
     x : Tensor
@@ -21,7 +22,7 @@ class RGNNLayer(nn.Module):
         use_edges_info : bool = False,
         activation : Optional[str] = None,
         agg : str = 'mean',
-        norm : bool = True,
+        norm : Optional[NORM_TYPE] = None,
         res : bool = True
     ) -> None:
         super().__init__()
@@ -49,8 +50,8 @@ class RGNNLayer(nn.Module):
         self.w_edge = nn.Linear(in_features=3 * in_channels,out_features=out_channels) if use_edges_info else nn.Identity()
 
         ### Batch Norm And Activation
-        self.bn_node = nn.BatchNorm1d(num_features=out_channels) if self.norm else nn.Identity()
-        self.bn_edge= nn.BatchNorm1d(num_features=out_channels) if (self.norm and self.use_edges_info) else nn.Identity()
+        self.bn_node = Norm(type=norm, num_features=out_channels)
+        self.bn_edge= Norm(type=norm, num_features=out_channels) if use_edges_info else nn.Identity()
         
         self.act = Activation(name=activation)
 

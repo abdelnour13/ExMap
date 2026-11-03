@@ -1,15 +1,16 @@
 import torch
 from torch import nn, Tensor
 from src import helpers
-from src.graph_dl.pooling.cluster_pool import create_pooling_layer, POOLING_KIND, Pool, ClusterPoolOutput
+from src.graph_dl.pooling.cluster_pool import create_pooling_layer, POOLING_KIND, Pool, ClusterPoolOutput, UNPOOL_KIND
 from src.graph_dl.models.base_model import TopicModel, Context, IterationContext
 from src.graph_dl.layers.trans_gnn import TransGNN
-from src.graph_dl.layers.encoder import _Linear
-from src.graph_dl.layers.activation import Activation
+from src.graph_dl.layers.encoder import _Linear, TransEncoder
+from src.graph_dl.layers.reduction import Reduction
+from src.graph_dl.layers.mlp import MLP, NORM_TYPE
 from src.graph_dl import losses
 from torch_geometric.data import HeteroData
 from src.graph_dl.utils import AdjMatrix, EdgeIndex
-from typing import List, Literal, Optional, Dict
+from typing import List, Literal, Optional, Dict, Any
 from dataclasses import dataclass
 from pydantic import BaseModel, Field
 
@@ -27,29 +28,76 @@ class _Wrap(nn.Module):
 
 _Layer = _Linear('x')
 
+class GraphUNetBlock(nn.Module):
+
+    def __init__(self, 
+        in_channels : int,
+        out_channels : int,
+        norm : Optional[NORM_TYPE],
+        use_edges_info : bool,
+        update_edges : bool,
+        activation : str,
+        gnn_depth : int,
+        mlp_depth : int,
+    ) -> None:
+        super().__init__()
+
+        self.in_channels = in_channels
+        self.out_channels = out_channels
+        self.norm = norm
+        self.use_edges_info = use_edges_info
+        self.update_edges = update_edges
+        self.activation = activation
+        self.mlp_depth = mlp_depth
+
+        self.gnn = TransEncoder(
+            in_channels=in_channels,
+            out_channels=out_channels,
+            hidden_channels=[out_channels] * (gnn_depth),
+            variant='conv',
+            activation=activation,
+            norm=norm,
+            shortcut=True,
+            jk=True,
+            mlp=False,
+            use_edges_info=use_edges_info,
+            update_edges=self.update_edges
+        )
+
+        self.mlp = MLP(
+            input_dim=out_channels,
+            channels=[out_channels] * (mlp_depth - 1),
+            output_dim=out_channels,
+            hidden_activation=activation,
+            norm=self.norm,
+            output_activation=None
+        ) if mlp_depth > 1 else nn.Identity()
+
+    def forward(self, x : Tensor, edge_index : Tensor, edge_attr : Optional[Tensor]) -> Tensor:
+        out = self.gnn.forward({ 'x' : x, 'edge_index' : edge_index, 'edge_attr' : edge_attr })
+        x = self.mlp.forward(out)
+        return x
+
 @TopicModel.register
 class GraphUNet(TopicModel):
 
-    __trans_args__ = {
-        'kg_scoring_fn' : 'TransE',
-        'variant' : 'conv',
-        'combine' : 'cat',
-        'bias' : True
-    }
-
     class Config(BaseModel):
         hidden_channels : List[int] = Field(default_factory=list)
+        gnn_depth : int = 2
+        mlp_depth : int = 0
         out_channels : int = 256
         use_edges_info : bool = False
         activation : Optional[str] = 'relu'
-        norm : bool = True
+        norm : Optional[NORM_TYPE] = 'batchnorm'
         pooling_layer : POOLING_KIND = 'dmon'
         norm_pool : bool = False
         num_clusters : List[int] = Field(default_factory=lambda x : [256])
         assign_nn : ASSIGN_NN = 'gnn'
+        unpooling_type : UNPOOL_KIND = 'matmul'
 
     @dataclass
     class Output:
+        xd_hat : Tensor
         x_hidden : Tensor
         x_hat : Tensor
         S : List[Tensor]
@@ -62,6 +110,10 @@ class GraphUNet(TopicModel):
                     x1=self.x_hat,
                     y1=batch['Entity'].x
                 ),
+                "doc_rec_loss" : losses.CosineRecLossContext(
+                    x1=batch['Article'].x,
+                    y1=self.xd_hat,
+                ),
                 "aux_loss" : losses.Identity(value=self.aux_loss)
             }
 
@@ -71,11 +123,14 @@ class GraphUNet(TopicModel):
         out_channels : int,
         use_edges_info : bool,
         activation : Optional[str],
-        norm : bool,
+        norm : Optional[NORM_TYPE],
         pooling_layer : POOLING_KIND,
         norm_pool : bool,
         num_clusters : List[int],
         assign_nn : ASSIGN_NN,
+        gnn_depth : int,
+        mlp_depth : int,
+        unpooling_type : UNPOOL_KIND
     ) -> None:
         
         super().__init__()
@@ -86,19 +141,25 @@ class GraphUNet(TopicModel):
         self.use_edges_info = use_edges_info
         self.activation = activation
         self.norm = norm
-        self.pooling_layer = pooling_layer
+        self.pooling_layer : POOLING_KIND = pooling_layer
         self.norm_pool = norm_pool
         self.num_clusters = num_clusters
         self.assign_nn = assign_nn
+        self.gnn_depth = gnn_depth
+        self.mlp_depth = mlp_depth
+        self.unpooling_type : UNPOOL_KIND = unpooling_type
 
-        self.encoder_layers : List[TransGNN] = nn.ModuleList(self.create_encoder_layers())
-        self.decoder_layers : List[TransGNN] = nn.ModuleList(self.create_decoder_layers())
+        self.encoder_layers : List[GraphUNetBlock] = nn.ModuleList(self.create_encoder_layers())
+        self.decoder_layers : List[GraphUNetBlock] = nn.ModuleList(self.create_decoder_layers())
         self.pooling_layers : List[Pool] = nn.ModuleList(self.create_pooling_layers())
 
-        self.proj = nn.Sequential(
-            nn.Linear(out_channels, out_channels),
-            Activation(activation),
-            nn.Linear(out_channels, out_channels)
+        self.reduce = Reduction(
+            kind='attn',
+            weights_nn=nn.Sequential(
+                nn.Linear(in_features=out_channels, out_features=out_channels),
+                nn.LeakyReLU(negative_slope=0.2),
+                nn.Linear(in_features=out_channels, out_features=1)
+            )
         )
 
     @staticmethod
@@ -113,18 +174,20 @@ class GraphUNet(TopicModel):
             **config.model_dump()
         )
 
-    def create_encoder_layers(self) -> List[TransGNN]:
+    def create_encoder_layers(self) -> List[GraphUNetBlock]:
 
         channels = [self.in_channels, *self.hidden_channels, self.out_channels]
 
         return [
-            TransGNN(
-                in_channels=in_channels,
-                out_channels=out_channels,
-                activation=self.activation,
-                norm=self.norm,
-                use_edges_info=self.use_edges_info,
-                **self.__class__.__trans_args__
+            GraphUNetBlock(
+               in_channels=in_channels,
+               out_channels=out_channels,
+               norm=self.norm,
+               use_edges_info=self.use_edges_info,
+               activation=self.activation,
+               gnn_depth=self.gnn_depth,
+               mlp_depth=self.mlp_depth,
+               update_edges=True
             )
             for i, (in_channels, out_channels) in enumerate(zip(channels[:-1], channels[1:]))
         ]
@@ -134,13 +197,15 @@ class GraphUNet(TopicModel):
         channels = [self.out_channels, *self.hidden_channels[::-1], self.out_channels]
 
         return [
-            TransGNN(
+            GraphUNetBlock(
                 in_channels=in_channels,
                 out_channels=out_channels,
                 activation=self.activation,
                 norm=self.norm,
-                use_edges_info=self.use_edges_info,
-                **self.__class__.__trans_args__
+                use_edges_info=False,
+                gnn_depth=self.gnn_depth,
+                mlp_depth=self.mlp_depth,
+                update_edges=(self.pooling_layer == 'vq')
             )
             for i, (in_channels, out_channels) in enumerate(zip(channels[:-1], channels[1:]))
         ]
@@ -158,8 +223,8 @@ class GraphUNet(TopicModel):
                 out_channels=out_channels,
                 activation=None,
                 norm=False,
-                use_edges_info=use_edges_info,
-                **self.__class__.__trans_args__
+                use_edges_info=False,
+                **TransEncoder.__trans_gnn__
             )
 
         else:
@@ -180,19 +245,22 @@ class GraphUNet(TopicModel):
         return [
             create_pooling_layer(
                 kind=self.pooling_layer,
-                in_channels=out_channels,
+                in_channels=in_channels,
                 norm=self.norm_pool,
                 nn=self.create_assign_nn(
                     in_channels=in_channels,
                     out_channels=out_channels,
                     use_edges_info=self.use_edges_info
-                )
+                ) if self.pooling_layer != 'vq' else None,
+                num_prototypes=out_channels,
+                unpool_kind=self.unpooling_type
             )
             for i, (in_channels, out_channels) in enumerate(zip(channels[1:], self.num_clusters))
         ]
 
     def encode(self, 
         x : Tensor,
+        edge_attr : Optional[Tensor],
         EE : AdjMatrix,
         EA : AdjMatrix   
     ) -> List[ClusterPoolOutput]:
@@ -203,27 +271,21 @@ class GraphUNet(TopicModel):
 
             out = encoder_layer.forward(
                 x=x,
-                edge_index=EE.edge_index.edge_index,
-                edge_attr=None
+                edge_index=EE,
+                edge_attr=edge_attr
             )
             
             out = pooling_layer.pool(
-                x=out['x'],
+                x=out,
                 EE=EE,
                 EA=EA
             )
 
-            x= out.x
+            x = out.x
             EE = out.EE
             EA = out.EA
 
             outputs.append(out)
-
-        # out = self.encoder_layers[-1].forward(
-        #     x=out.x,
-        #     edge_index=out.EE.edge_index.edge_index,
-        #     edge_attr=None
-        # )
 
         return outputs
 
@@ -245,20 +307,17 @@ class GraphUNet(TopicModel):
                 out=cluster_output
             )
 
-            gnn_out = encoder_layer.forward(
+            x = encoder_layer.forward(
                 x=out.x,
-                edge_index=EE.edge_index.edge_index,
+                edge_index=out.EE,
                 edge_attr=None
             )
     
-            x  = gnn_out['x']
             out.x = x
             EE = out.EE
             EA = out.EA
 
             outputs.append(out)
-
-        outputs[-1].x = self.proj(outputs[-1].x)
 
         return outputs
 
@@ -268,6 +327,9 @@ class GraphUNet(TopicModel):
     ) -> None:
 
         x = data['Entity'].x
+
+        ED = data['Entity', 'APPEARIN', 'Article'].edge_index
+        N = data['Article'].x.size(0)
 
         EE = AdjMatrix(
             _edge_index=EdgeIndex(
@@ -281,12 +343,13 @@ class GraphUNet(TopicModel):
             _edge_index=EdgeIndex(
                 row=data['Entity', 'APPEARIN', 'Article'].edge_index[0],
                 col=data['Entity', 'APPEARIN', 'Article'].edge_index[1],
-                num_nodes=(x.size(0), data['Article'].x.size(0))
+                num_nodes=(x.size(0), N)
             )
         )
 
         pooling_outputs = self.encode(
             x=x, 
+            edge_attr=data['Entity', 'HASRELATIONWITH', 'Entity'].edge_attr,
             EE=EE, 
             EA=EA
         )
@@ -298,11 +361,18 @@ class GraphUNet(TopicModel):
             outs=pooling_outputs
         )
 
+        xd_hat, weights, _ = self.reduce.forward(
+            x=unpooling_outputs[-1].x,
+            edge_index=ED,
+            num_nodes=N
+        ).astuple()
+
         return self.Output(
+            xd_hat=xd_hat,
             x_hidden=pooling_outputs[-1].x,
             x_hat=unpooling_outputs[-1].x,
             S=[o.S for o in pooling_outputs],
-            aux_loss=sum(out.aux_loss for out in pooling_outputs)
+            aux_loss=sum(out.aux_loss for out in pooling_outputs if out.aux_loss is not None)
         )
 
 

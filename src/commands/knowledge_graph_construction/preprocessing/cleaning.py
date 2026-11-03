@@ -44,7 +44,8 @@ class CorpusCleaner(Stage):
         return new_keywords
 
     def remove_html_tags(self, text : str) -> str:
-        return re.sub(" +"," ",BeautifulSoup(text, 'html.parser').get_text().replace("\n"," ")).strip()
+        bs = BeautifulSoup(text, 'html.parser')
+        return re.sub(" +"," ",bs.get_text().replace("\n"," ")).strip()
     
     def remove_latex_equations(self, text : str, placeholder : str ="[EQUATION]"):
 

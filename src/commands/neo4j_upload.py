@@ -5,7 +5,7 @@ from pydantic import BaseModel, computed_field
 from neo4j import Session, Transaction, Driver
 from instance import cli
 from definitions import EMS_DIR
-from src.shared.env import env
+from src.envirenment import env
 from src.commands.feature_extraction.graph_utils import Graph, Edge, Node
 from src.shared.command_tools import BaseCommand
 from src.shared.handlers import ConsoleLogger
@@ -20,11 +20,16 @@ class Config(BaseModel):
 
     expertise_id: str
     batch_size: int = 500
+    neo4j_driver : str = "local"
 
     @computed_field
     @property
     def expertise_dir(self) -> str:
         return os.path.join(EMS_DIR, self.expertise_id)
+
+    @property
+    def driver(self) -> Driver:
+        return env.neo4j[self.neo4j_driver].driver
 
 
 # ---------------------------------------------------------------------------
@@ -59,7 +64,7 @@ class Neo4jUploader(BaseCommand):
         uploaded = 0
 
         def run_tx(tx : Transaction, batch):
-            tx.run(query, batch=batch)
+            tx.run(query, batch=batch, timeout=120)
 
         for batch in self._batches(items, self.config.batch_size):
 
@@ -188,7 +193,6 @@ class Neo4jUploader(BaseCommand):
             message=f"[Neo4j] Graph loaded — {n_nodes:,} nodes, {n_edges:,} edges",
         )
 
-
         graph_id = next(iter(graph.get_nodes('ExpertiseMap').nodes_generator)).id
 
         with self.driver.session() as session:
@@ -208,6 +212,12 @@ class Neo4jUploader(BaseCommand):
 
     @classmethod
     def from_config(cls, config: Config) -> Self:
-        uploader = Neo4jUploader(config=config,driver=env.driver)
+
+        uploader = Neo4jUploader(
+            config=config,
+            driver=config.driver
+        )
+
         uploader.add_handler(ConsoleLogger("Neo4jUploader"))
+
         return uploader

@@ -8,10 +8,6 @@ from pycli import Field
 from definitions import ENV
 from instance import cli
 
-class Entity(TypedDict):
-    name : str
-    types : List[str]
-
 dotenv.load_dotenv(ENV)
 
 class Config(StageConfig):

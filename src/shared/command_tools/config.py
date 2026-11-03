@@ -3,14 +3,14 @@ import shutil
 from functools import wraps
 from src.shared.handlers import SocketHandler, ConsoleLogger, FileLogger
 from typing import Any, TypeVar, Optional, Annotated
-from pycli import toml_parser
+from pycli import json_parser
 from pydantic import Field, BaseModel, BeforeValidator, computed_field
 
 T = TypeVar('T')
 
 class Connection(BaseModel):
     host : str = Field(description="The host of the socket connection.")
-    port : str = Field(description="The port of the socket connection.")
+    port : int = Field(description="The port of the socket connection.")
 
 class InputFileOption(BaseModel):
     # Annotated[str, BeforeValidator(assert_file_exists)]
@@ -19,7 +19,7 @@ class InputFileOption(BaseModel):
     buffer_size : int = Field(default=4,description="The size of the buffer used to update the file on the disk.")
 
 class ConnectionOption(BaseModel):
-    connection : Optional[Annotated[Connection, BeforeValidator(toml_parser)]] = Field(
+    connection : Optional[Annotated[Connection, BeforeValidator(json_parser)]] = Field(
         default=None, 
         description="The socket connection used to send updates through."
     )
@@ -46,7 +46,7 @@ class OutputDirOption(BaseModel):
     @computed_field
     @property
     def log_filename(self) -> str:
-        return os.path.join(self.output_dir(), "output.log")
+        return os.path.join(self.output_dir(), "log.jsonl")
     
     @computed_field
     @property

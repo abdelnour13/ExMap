@@ -8,12 +8,13 @@ from src.graph_dl.utils import AdjMatrix, EdgeIndex
 from torch import nn, Tensor
 from torch_scatter import scatter
 from torch_geometric import utils as gnn_utils
-from typing import Tuple, Optional, Literal, Dict, Callable, Protocol
+from typing import Tuple, Optional, Literal, Dict, Callable, List
 from dataclasses import dataclass, field
+from src.graph_dl.layers.codebook import MultiLevelCodebook, CodebookOutput
 
-POOLING_KIND = Literal['dmon', 'diffpool', 'mincut', 'enad']
-AUX_LOSS_KIND = Literal['dmon', 'diffpool', 'mincut']
-
+POOLING_KIND = Literal['dmon', 'diffpool', 'mincut', 'enad', 'vq']
+AUX_LOSS_KIND = Literal['dmon', 'diffpool', 'mincut', 'enad']
+UNPOOL_KIND = Literal['restore', 'weighted_restore', 'matmul']
 
 @dataclass
 class Input:
@@ -55,14 +56,16 @@ class ClusterPool(nn.Module):
         nn : nn.Module, 
         in_channels : int,
         kind : AUX_LOSS_KIND,
+        unpool_kind : UNPOOL_KIND,
         norm : bool = False
     ) -> None:
         super().__init__()
 
         self.nn = nn
         self.in_channels = in_channels
-        self.kind = kind
+        self.kind : AUX_LOSS_KIND = kind
         self.norm = norm
+        self.unpool_kind : UNPOOL_KIND = unpool_kind
 
         _LOSSES : Dict[AUX_LOSS_KIND, Callable[['ClusterPool', Tensor, Tensor], Tensor]] = {
             'dmon' : self.dmon_aux_loss,
@@ -73,34 +76,48 @@ class ClusterPool(nn.Module):
 
         self._aux_loss = _LOSSES[kind]
 
-    def aux_loss(self, EE : Tensor, S : Tensor) -> Tensor:
+    def aux_loss(self, EE : Tensor, S : Tensor) -> Dict[str, Tensor]:
         return self._aux_loss(EE, S)
 
-    def assign(self, x : Tensor, edge_index : Tensor) -> Tuple[Tensor, Tensor, Tensor]:
+    def assign(self, x : Tensor, edge_index : Tensor) -> Tensor:
 
         S_raw = self.nn(x=x, edge_index=edge_index, edge_attr=None)
         S = torch.softmax(S_raw, dim=-1)
 
-        return S, S_raw
+        return S
 
-    def enad_aux_loss(self, EE : Tensor, S : Tensor) -> Tensor:
-        return torch.scalar_tensor(0.0).to(S.device)
+    def one_hot(self, S : Tensor) -> Tensor:
+    
+        idx = S.argmax(dim=-1)
+        I = torch.eye(n=S.size(-1), device=idx.device, dtype=torch.float)
+        S_h = I[idx,:]
 
-    def diffpool_aux_loss(self, EE : Tensor, S : Tensor) -> Tensor:
+        S = S + (S_h - S).detach()
 
-        lp_loss = torch.norm(EE.detach() - S @ S.t(), p='fro')
-        entropy_loss = ops.entropy(x=S, dim=-1, binary=False).mean()
+        return S
 
-        return lp_loss - entropy_loss
+    def enad_aux_loss(self, EE : Tensor, S : Tensor) -> Dict[str, Tensor]:
+        return {}
 
-    def mincut_aux_loss(self, EE : Tensor, S : Tensor) -> Tensor:
+    def diffpool_aux_loss(self, EE : Tensor, S : Tensor) -> Dict[str, Tensor]:
+
+        lp_loss = torch.norm(EE.detach() - S @ S.t(), p='fro')        # Link Prediction Loss
+        entropy_loss = ops.entropy(x=S, dim=-1, binary=False).mean()  # Entropy loss
+
+        return {
+            "lp" : lp_loss,
+            "entropy" : entropy_loss,
+            "aux_loss" : lp_loss - entropy_loss
+        }
+
+    def mincut_aux_loss(self, EE : Tensor, S : Tensor) -> Dict[str, Tensor]:
 
         D = torch.diag(EE.detach().sum(dim=-1))
 
         a = torch.trace(S.t() @ EE.detach() @ S)
         b = torch.trace(S.t() @ D @ S)
 
-        l1 = - a / b
+        l1 = - a / b   # Community Detection Term
 
         CC = S.t() @ S
         CC = CC / torch.norm(CC, p='fro')
@@ -108,9 +125,13 @@ class ClusterPool(nn.Module):
         I = torch.eye(S.size(-1)).to(S.device)
         I = I / math.sqrt(S.size(-1))
 
-        l2 = torch.norm(CC - I)
+        l2 = torch.norm(CC - I)  # Collapse Prevention term
 
-        return l1 + l2
+        return {
+            "community_detection" : l1,
+            "collapse_term" : l2,
+            "aux_loss" : l1 + l2
+        }
 
     def dmon_aux_loss(self, EE : Tensor, S : Tensor) -> Tensor:
 
@@ -127,8 +148,12 @@ class ClusterPool(nn.Module):
         lambda_ = math.sqrt(S.size(-1)) / S.size(0)
         l2 = lambda_* torch.norm(S.sum(dim=0), p='fro') - 1
 
-        return l1 + l2
-
+        return {
+            "community_detection" : l1,
+            "collapse_term" : l2,
+            "aux_loss" : l1 + l2
+        }
+    
     def node_pool(self, x : Tensor, S : Tensor) -> Tensor:
 
         eps = 1e-6
@@ -152,7 +177,11 @@ class ClusterPool(nn.Module):
         EA : AdjMatrix,
     ) -> ClusterPoolOutput:
 
-        S, S_raw = self.assign(x, edge_index=EE.edge_index.edge_index) # (N_e, N'_e)
+        S = self.assign(x, edge_index=EE.edge_index.edge_index) # (N_e, N'_e)
+
+        if self.kind == 'enad':
+            S = self.one_hot(S)
+
         aux_loss = self.aux_loss(EE=EE.dense, S=S)
 
         x_pooled  = self.node_pool(x=x, S=S)
@@ -168,9 +197,36 @@ class ClusterPool(nn.Module):
             x=x_pooled,
             EE=AdjMatrix(_dense=EE_pooled),
             EA=AdjMatrix(_dense=EA_pooled),
-            aux_loss=aux_loss,
-            input=Input(EE=EE, EA=EA)
+            aux_loss=aux_loss.get('aux_loss'),
+            input=Input(EE=EE, EA=EA),
+            metadata=aux_loss 
         )
+
+    def edge_unpool(self, output : ClusterPoolOutput) -> Tuple[AdjMatrix, AdjMatrix]:
+
+        if self.unpool_kind == 'restore':
+            EE, EA = output.input.EE, output.input.EA
+        elif self.unpool_kind == 'weighted_restore':
+
+            row, col = output.input.EE.edge_index.edge_index
+            W = output.S @ output.S.t()
+            w = W[row, col]
+
+            EE = AdjMatrix(_edge_index=EdgeIndex(
+                row=row,
+                col=col,
+                num_nodes=output.input.EE.edge_index.num_nodes,
+                value=w
+            ))
+
+            EA = output.input.EA
+
+        else:
+
+            EE = AdjMatrix(_dense=output.S @ output.EE.dense @ output.S.t())
+            EA = output.input.EA
+
+        return EE, EA
 
     def unpool(self, 
         x : Tensor,
@@ -182,17 +238,13 @@ class ClusterPool(nn.Module):
         S = out.S.t()
         x_unpooled  = self.node_pool(x=x, S=S)
 
-        EE_unpooled, EA_unpooled = self.edge_pool(
-            EE=EE.dense,
-            EA=EA.dense,
-            S=S
-        )
+        EE_unpooled, EA_unpooled = self.edge_unpool(output=out)
 
         return ClusterPoolOutput(
             S=S,
             x=x_unpooled,
-            EE=AdjMatrix(_dense=EE_unpooled),
-            EA=AdjMatrix(_dense=EA_unpooled),
+            EE=EE_unpooled,
+            EA=EA_unpooled,
             aux_loss=None,
             input=Input(EE=EE, EA=EA)
         )
@@ -240,7 +292,20 @@ class ENADPool(nn.Module):
 
     def assign(self, x : Tensor, edge_index : Tensor) -> Tuple[Tensor, Tensor]: 
 
+        if x.isnan().sum() > 0:
+            raise Exception("Assign input is nan")
+
+        if not x.isfinite().all():
+            raise Exception("Assign input is inf")
+
         S_raw = self.nn(x, edge_index=edge_index, edge_attr=None)
+
+        if S_raw.isnan().sum() > 0:
+            raise Exception("Assign input is nan")
+
+        if not S_raw.isfinite().all():
+            raise Exception("Assign input is inf")
+
         S = torch.softmax(S_raw, dim=-1)
 
         return S, S_raw
@@ -270,19 +335,71 @@ class ENADPool(nn.Module):
         EA : Tensor
     ) -> Tensor:
 
+        if S_h.isnan().sum() > 0:
+            raise Exception("S_h has nan.")
+
+        if x.isnan().sum() > 0:
+            raise Exception("x has nan.")
+
+        if not S_h.isfinite().all():
+            raise Exception("S_h has inf.")
+
+        if not x.isfinite().all():
+             raise Exception("x has inf.")
+
+        if not EE.isfinite().all():
+            raise Exception(f"EE contains inf : {id(EE)}")
+
         x_l = self.w_e1(x)
         x_r = self.w_e2(x)
-        S = x_l + x_r.t()
-        S = torch.exp(S - S.mean()) # NxN
+        S_raw = x_l + x_r.t()
+        S = torch.exp(S_raw - S_raw.max()) # NxN
 
         c = S_h.argmax(dim=-1)
 
-        A = scatter(src=S, index=c,dim=0,dim_size=c.max() + 1) # c has cluster of each node
-        B = scatter(src=A, index=c,dim=1,dim_size=c.max() + 1) # CxC
-        E = S / B[c, c]
+        eps = 1e-5
+
+        A = scatter(src=S, index=c,dim=0,dim_size=S_h.size(-1), reduce="sum") # c has cluster of each node
+        B = scatter(src=A, index=c,dim=1,dim_size=S_h.size(-1), reduce="sum") # CxC
+        E = S / (B[c, c] + eps)
+
+        if not EE.isfinite().all():
+            raise Exception(f"EE contains inf : {id(EE)}")
+
+        if not S.isfinite().all():
+            print(x_l.min(), x_r.max())
+            print(S_raw.min(), S_raw.max())
+            raise Exception("S contains inf")
+
+        if not A.isfinite().all():
+            raise Exception("A contains inf")
+
+        if not B.isfinite().all():
+            raise Exception("B contains inf")
+
+        if not E.isfinite().all():
+            raise Exception(f"E contains inf {torch.sum(B == 0)}")
+
+        if S_h.isnan().sum() > 0:
+            raise Exception("NaN in S_h")
+
+        if A.isnan().sum() > 0:
+            raise Exception("NaN in A")
+
+        if B.isnan().sum() > 0:
+            raise Exception("NaN in B")
+
+        if S.isnan().sum() > 0:
+            raise Exception("NaN in S")
+
+        if E.isnan().sum() > 0:
+            raise Exception("NaN in E")
 
         EE_pooled = S_h.t() @ (EE * E) @ S_h
         EA_pooled = S_h.t() @ EA
+
+        if EE_pooled.isnan().sum() > 0:
+            raise Exception("NaN in EE_pooled")
 
         return EE_pooled, EA_pooled
         
@@ -296,12 +413,23 @@ class ENADPool(nn.Module):
         S, S_raw = self.assign(x, edge_index=EE.edge_index.edge_index)
         S_h = self.one_hot(S)
 
-        x_pooled = self.attn_node_pool(x=x, S_h=S_h)
+        x_pooled = self.node_pool(x, S_h)
 
-        EE_pooled, EA_pooled = self.attn_edge_pool(
-            x=x, 
-            S_h=S_h, 
-            EE=EE.dense, 
+        dense = EE.dense
+
+        if not dense.isfinite().all():
+            raise Exception("EE contains inf (wtf)")
+
+        # EE_pooled, EA_pooled = self.attn_edge_pool(
+        #     x=x, 
+        #     S_h=S_h, 
+        #     EE=dense, 
+        #     EA=EA.dense
+        # )
+
+        EE_pooled, EA_pooled = self.edge_pool(
+            S=S_h, 
+            EE=dense, 
             EA=EA.dense
         )
 
@@ -310,7 +438,7 @@ class ENADPool(nn.Module):
             x=x_pooled,
             EE=AdjMatrix(_dense=EE_pooled),
             EA=AdjMatrix(_dense=EA_pooled),
-            aux_loss=None,
+            aux_loss=torch.scalar_tensor(0.0).to(x.device),
             input=Input(EE=EE, EA=EA),
             metadata={ "S_h" : S_h }
         )
@@ -339,7 +467,7 @@ class ENADPool(nn.Module):
     ) -> ClusterPoolOutput:
 
         S = out.metadata['S_h'].t()
-        x_unpooled  = self.node_pool(x=x, S=S)
+        x_unpooled = self.node_pool(x=x, S=S)
 
         EE_unpooled, EA_unpooled = self.edge_pool(
             EE=EE.dense,
@@ -352,77 +480,42 @@ class ENADPool(nn.Module):
             x=x_unpooled,
             EE=AdjMatrix(_dense=EE_unpooled),
             EA=AdjMatrix(_dense=EA_unpooled),
-            aux_loss=None,
+            aux_loss=torch.scalar_tensor(0.0).to(x.device),
             input=Input(EE=EE, EA=EA)
         )
 
 class VQPool(nn.Module):
 
-    def __init__(self, 
-        in_channels : int,
-        n_prototypes : int,
-        weighted : bool = False
-    ) -> None:
+    def __init__(self, codebook : MultiLevelCodebook) -> None:
 
         super().__init__()
 
-        self.in_channels = in_channels
-        self.n_prototypes = n_prototypes
-        self.weighted = weighted
+        self.codebook = codebook
+        self.n_prototypes = self.codebook.levels[-1]
 
-        self.C = tnn.Parameter(
-            torch.empty(n_prototypes, in_channels),
-            requires_grad=True
-        )
+    def node_pool(self, outputs : List[CodebookOutput]) -> Tuple[Tensor, Tensor, Tensor]:
 
-        self.reset_parameters()
+        q = torch.cat([out.q for out in outputs], dim=-1)
+        clusters = outputs[-1].S.argmax(dim=-1)
+        codebook_loss = sum(out.codebook_loss for out in outputs) / len(outputs)
+        commitement_loss = sum(out.commitement_loss for out in outputs) / len(outputs)
 
-    def reset_parameters(self) -> None:
-        tnn.init.kaiming_uniform_(self.C, a=math.sqrt(5))
-
-    def assign(self, x : Tensor, temp : Tensor | float = 1.0) -> Tensor:
-
-        S = -ops.dist(x, self.C) # Euclidean distance
-        S = S / temp             # temp scaling
-        S = S.softmax(dim=-1)    # Probability
-
-        return S
-
-    def node_pool(self, x : Tensor, S : Tensor) -> Tuple[Tensor, Tensor, Tensor]:
-
-        values, clusters = S.max(dim=-1)
-        q = self.C[clusters,:]
-
-        codebook_loss = F.mse_loss(q, x.detach())
-        commitement_loss = F.mse_loss(q.detach(), x)
-
-        if self.weighted:
-
-            weights = gnn_utils.softmax(
-                src=values[:,None].log(),
-                index=clusters,
-                num_nodes=S.size(0),
-                dim=0
-            )
-
-            x = x * weights
-    
-        x = scatter(
-            src=x,
+        x_new = scatter(
+            src=q,
             index=clusters,
             dim=0,
-            dim_size=S.size(-1),
-            reduce=('sum' if self.weighted else 'mean')
+            dim_size=outputs[-1].S.size(-1),
+            reduce='mean'
         )
 
-        return x, codebook_loss, commitement_loss
+        return x_new, codebook_loss, commitement_loss
 
     def edge_pool(self, 
         S : Tensor,
         edge_index : Tensor, 
-        entity_article : Tensor,
+        entity_article : Optional[Tensor] = None,
         edge_attr : Optional[Tensor] = None,
-    ) -> Tuple[Tensor, Tensor, Optional[Tensor]]:
+    ) -> Tuple[Tensor, Optional[Tensor], Optional[Tensor]]:
 
         clusters = S.argmax(dim=-1)
         src, dst = edge_index
@@ -444,16 +537,18 @@ class VQPool(nn.Module):
         )
 
         ### Entity<->Article Pooling
-        src, dst = entity_article
-        src = clusters[src]
+        if entity_article is not None:
 
-        entity_article, _ = gnn_utils.coalesce(
-            edge_index=entity_article,
-            num_nodes=S.size(0),
-            reduce='mean'
-        )
+            src, dst = entity_article
+            src = clusters[src]
 
-        entity_article, _ = gnn_utils.remove_self_loops(edge_index=entity_article)
+            entity_article, _ = gnn_utils.coalesce(
+                edge_index=entity_article,
+                num_nodes=S.size(0),
+                reduce='mean'
+            )
+
+            entity_article, _ = gnn_utils.remove_self_loops(edge_index=entity_article)
 
         return edge_index, entity_article, edge_attr
 
@@ -481,22 +576,21 @@ class VQPool(nn.Module):
         self,
         x : Tensor,
         EE : AdjMatrix,
-        EA : AdjMatrix,
+        EA : Optional[AdjMatrix],
     ) -> ClusterPoolOutput:
 
-        S = self.assign(x)
-
-        x_pooled, codebook_loss, commitement_loss = self.node_pool(x=x, S=S)
+        outputs = self.codebook.forward(x)
+        x_pooled, codebook_loss, commitement_loss = self.node_pool(outputs)
 
         EE_pooled, EA_pooled, _ = self.edge_pool(
-            S=S,
+            S=outputs[-1].S,
             edge_index=torch.stack([EE.edge_index.row, EE.edge_index.col], dim=0),
             entity_article=torch.stack([EA.edge_index.row, EA.edge_index.col], dim=0),
             edge_attr=None
         )
 
         return ClusterPoolOutput(
-            S=S,
+            S=outputs[-1].S,
             x=x_pooled,
             EE=AdjMatrix(_edge_index=EdgeIndex(
                 row=EE_pooled[0], 
@@ -509,7 +603,11 @@ class VQPool(nn.Module):
                 num_nodes=(self.n_prototypes, EA.edge_index.num_nodes[1])
             )),
             aux_loss=codebook_loss + commitement_loss,
-            input=Input(EA=EA, EE=EE)
+            input=Input(EA=EA, EE=EE),
+            metadata={
+                "codebook_loss" : codebook_loss,
+                "commitement_loss" : commitement_loss
+            }
         )
 
 
@@ -517,13 +615,31 @@ def create_pooling_layer(
     kind : POOLING_KIND,
     in_channels : int,
     nn : Optional[nn.Module] = None,
-    norm : bool = False
+    num_prototypes : Optional[int] = None,
+    norm : bool = False,
+    unpool_kind : UNPOOL_KIND = 'matmul'
 ) -> Pool:
 
-    if kind == 'enad':
-        return ENADPool(nn=nn, in_channels=in_channels, norm=norm)
+    # if kind == 'enad':
+    #     return ENADPool(nn=nn, in_channels=in_channels, norm=norm)
+    if kind == 'vq':
+
+        return VQPool(
+            codebook=MultiLevelCodebook(
+                channels=in_channels, 
+                levels=[num_prototypes]
+            )
+        )
+    
     else:
-        return ClusterPool(nn=nn, in_channels=in_channels, kind=kind, norm=norm)
+
+        return ClusterPool(
+            nn=nn, 
+            in_channels=in_channels, 
+            kind=kind, 
+            norm=norm, 
+            unpool_kind=unpool_kind
+        )
     
 
 if __name__ == '__main__':
@@ -550,14 +666,20 @@ if __name__ == '__main__':
         )
     )
 
-    for kind in ['diffpool', 'mincut', 'dmon', 'enad']:
+    from itertools import product
+
+    for kind, unpool_kind in product(
+        ['diffpool', 'mincut', 'dmon', 'enad'],
+        ['restore', 'weighted_restore', 'matmul']
+    ):
 
         print(f"Kind : {kind}")
 
         m = create_pooling_layer(
             nn=nn.Linear(in_features=D, out_features=N_e // 4, bias=False),
             kind=kind,
-            in_channels=D
+            in_channels=D,
+            unpool_kind=unpool_kind
         )
 
         out = m.pool(x=x, EE=EE, EA=EA)

@@ -1,7 +1,9 @@
 from src.shared.handlers import Event, EventLevel
-from typing import Any, Generator,Protocol,List, TypeVar, Self, Optional, Dict, Iterable
+from typing import Any, Generator,Protocol,List, TypeVar, Self, Optional, Dict, Iterable, Type
 from abc import ABC, abstractmethod
 from itertools import chain
+from dataclasses import asdict
+from queue import Queue
 
 T = TypeVar('T')
 
@@ -17,13 +19,22 @@ class BaseCommand(ABC):
     """
 
     def __init__(self):
+
         super().__init__()
+
         self.handlers : List[Handler] = []
         self.stop = False
+        self.events : Queue[Event] = Queue()
 
     def add_handler(self, handler : Handler) -> 'BaseCommand':
         self.handlers.append(handler)
         return self
+
+    def remove_handlers(self, cls : Type[Handler]) -> int:
+        n = len(self.handlers)
+        self.handlers = [handler for handler in self.handlers if not isinstance(handler, cls)]
+        m = len(self.handlers)
+        return n - m
 
     @abstractmethod
     def __iter__(self) -> Generator[Event, None, None]:
@@ -40,13 +51,28 @@ class BaseCommand(ABC):
         raise NotImplementedError
 
     def run(self) -> None:
-
-        for event in chain(self.before_start(), self, self.after_end()):
-
-            if self.stop:
-                break
-
+            
+        for event in self.generator():
             self.send_event(event)
+
+    def generator(self) -> Generator[Event, None, None]:
+    
+        try:
+
+            for event in chain(self.before_start(), self, self.after_end()):
+
+                if self.stop:
+                    break
+
+                yield event
+
+        except Exception as e:
+            raise e
+            yield self.make_critical_event(progress=0.0, message=f"Command stopping due to the following error : {e}")
+
+    def cancel(self):
+        self.send_info_event(progress=0.0, message="Command stopping by user demand.")
+        self.stop = True
 
     def make_event(self,
         progress : Optional[float],
@@ -111,7 +137,7 @@ class BaseCommand(ABC):
             handler.consume(event)
 
             if event.level == EventLevel.CRITICAL:
-                event = Event(**dict(event))
+                event = Event(**asdict(event))
                 event.message = "Stopping job due to a critical error, check logs for details."
                 handler.consume(event)
                 self.stop = True

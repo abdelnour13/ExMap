@@ -3,7 +3,7 @@ import json
 import torch
 import asyncio
 import numpy as np
-from typing import List, Dict, Any, TypeVar, Union, TypedDict
+from typing import List, Dict, Any, TypeVar, Union, TypedDict, Type, Callable
 from openai import AsyncOpenAI, RateLimitError, APIError
 from openai.types.chat import ChatCompletion
 from returns.result import Result
@@ -12,6 +12,7 @@ from torch import Tensor
 from scipy.sparse import csgraph, csr_matrix
 from torch_sparse import SparseTensor
 from torch_geometric.data import Data, HeteroData
+from functools import wraps
 # from src.gnn import ArticleAsKG
 
 ArticleAsKG = HeteroData

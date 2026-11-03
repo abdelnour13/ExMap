@@ -1,7 +1,8 @@
 import torch
 from torch import nn, Tensor
 from typing import Optional
-from src.gnn.layers.activation import Activation
+from src.graph_dl.layers.activation import Activation
+from src.graph_dl.layers.norm import Norm, NORM_TYPE
 
 class MLP(nn.Module):
 
@@ -10,7 +11,7 @@ class MLP(nn.Module):
         channels : list[int],
         output_dim  : int,
         hidden_activation : str = 'relu',
-        norm : bool = False,
+        norm : Optional[NORM_TYPE] = None,
         output_activation : Optional[str | nn.Module] = None
     ) -> None:
         super().__init__()
@@ -37,7 +38,7 @@ class MLP(nn.Module):
             layers.append(
                 nn.Sequential(
                     nn.Linear(in_features = d_in, out_features = d_out),
-                    nn.BatchNorm1d(d_out) if self.norm else nn.Identity()
+                    Norm(self.norm, d_out)
                 )
             )
 

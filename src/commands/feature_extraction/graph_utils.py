@@ -7,6 +7,7 @@ from collections import defaultdict, Counter
 from functools import cached_property
 from dataclasses import dataclass, field, is_dataclass, fields
 from typing import Dict, Any, Optional, List, Tuple, Generator, TypedDict
+from src.commands.feature_extraction.data import KGData
 
 def _as_raw(o : object, exclude : Optional[List[str]] = None) -> object:
 
@@ -290,6 +291,8 @@ class NodeTypes:
     SubDomain = "SubDomain"
     Domain = "Domain"
     AltLabel = "AltLabel"
+    Triple = "Triple"
+    Predicate = "Predicate"
 
 class EdgeTypes:
     Entity_APPEARNSIN_Article = EdgeType("Entity", "Article", "APPEARIN")
@@ -302,6 +305,10 @@ class EdgeTypes:
     Venue_ISSUBVENUEOF_Venue = EdgeType("Venue", "Venue", "ISSUBVENUEOF")
     SubDomain_ISSUBDOMAINOF_Domain = EdgeType("SubDomain", "Domain", "ISSUBDOMAINOF")
     SubDomain_HASALTLABEL_Domain = EdgeType("SubDomain", "AltLabel", "HASALTLABEL")
+    Triple_BELONGSTO_Article = EdgeType("Triple", "Article", "BELONGSTO")
+    Triple_HASHEAD_Entity = EdgeType("Triple", "Entity","HAS-HEAD")
+    Triple_HASTAIL_Entity = EdgeType("Triple", "Entity","HAS-TAIL")
+    Triple_HASPREDICATE_Predicate = EdgeType("Triple", "Predicate", "HAS-PREDICATE")
 
 @dataclass
 class Graph:
@@ -393,6 +400,9 @@ class Graph:
 
             for feature_name, feature_tensor in edge_store._features.items():
                 data[edge_type.src, edge_type.name, edge_type.dst][feature_name] = feature_tensor
+
+        if ('Entity', 'HASRELATIONWITH', 'Entity') not in data.edge_types:
+            data = KGData(data.to_dict())
 
         return data
 

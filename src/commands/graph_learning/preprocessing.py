@@ -104,7 +104,7 @@ def _select_nodes(data: HeteroData, n_types: List[str]) -> HeteroData:
             for key, value in data[e_type].items():
                 G[e_type][key] = value.clone() if torch.is_tensor(value) else value
 
-    G.predicates2id = data.predicates2id
+    # G.predicates2id = data.predicates2id
 
     return G
 
@@ -133,7 +133,10 @@ def _add_metapaths(data : HeteroData, types : Optional[List[str]] = None) -> Het
 
     for i, type_ in enumerate(types):
 
-        e_type = [e for e in data.edge_types if (e[0] == 'Article' and e[2] == type_) or (e[0] == type_ and e[2] == 'Article')][0]
+        e_type = [
+            e 
+            for e in data.edge_types if (e[0] == 'Article' and e[2] == type_) or (e[0] == type_ and e[2] == 'Article')
+        ][0]
 
         row, col = data[e_type].edge_index
         n1, _, n2 = e_type
