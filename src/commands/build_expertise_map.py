@@ -1,7 +1,6 @@
 import os
 import torch
 import networkx as nx
-from openai import Client
 from typing import Dict, List, Literal, Tuple
 from pydantic import BaseModel, computed_field
 from sknetwork.clustering import Leiden, Louvain
@@ -10,12 +9,14 @@ from torch import Tensor
 from definitions import EXPERIMENTS_DIR, EMS_DIR
 from instance import cli
 from torch_geometric.data import HeteroData
-from src.commands.feature_extraction_old import EdgeType, Graph
-from src.commands.train import Trainer, Config as TrainerConfig
-from src.gnn import HetModel, HetModelReturn
+from src.commands.feature_extraction.graph_utils import EdgeType, Graph
+from src.commands.graph_learning.main import Config as TrainerConfig
+from src.graph_dl.models import Context
+from src.graph_dl.models.classifier import ArticleClassifier
 from src.shared.command_tools import BaseCommand
+from src.shared.file_tools import Batched, Map, Enumerate
 from src.shared.handlers import ConsoleLogger
-from src.shared.env import env
+from src.shared.platforms import LLM, RequestReturnType
 from src import helpers
 
 # ---------------------------------------------------------------------------
@@ -114,22 +115,20 @@ class Config(BaseModel):
 )
 class ExpertiseMapBuilder(BaseCommand):
 
-    def __init__(self, config: BEMConfig, client : Client) -> None:
+    def __init__(self, config: BEMConfig, llm : LLM) -> None:
         super().__init__()
         self.config = config
-        self.client = client
+        self.llm = llm
 
-    def load_data_and_model(self) -> Tuple[HeteroData, Graph, HetModel]:
+    def load_data_and_model(self) -> Tuple[HeteroData, Graph, ArticleClassifier]:
 
         self.send_info_event(
             progress=None,
             message="[Load] Starting — loading trainer config and data",
         )
 
-        ### Domains
-        trainer_cfg = TrainerConfig(experiment=self.config.experiment)
-        trainer     = Trainer(experiment=trainer_cfg.experiment, config=trainer_cfg.training_config)
-        configs     = trainer.get_configs()
+        main_config = TrainerConfig(experiment=self.config.experiment).training_config
+        configs = main_config.configs
 
         if self.config.model_name not in configs:
 
@@ -146,12 +145,10 @@ class ExpertiseMapBuilder(BaseCommand):
         )
 
         # Load data through the trainer (handles normalisation)
-        data , graph = trainer.load_data(return_raw=True)
+        data , graph = run_config.load_data(return_raw=True)
 
         # model
-        model = trainer.create_model(config=run_config, data=data)
-        state_dict = torch.load(self.config.model_path, weights_only=False, map_location="cpu")
-        model.load_state_dict(state_dict)
+        model = run_config.load_model(ctx=Context(data), postfix='final')
 
         self.send_info_event(
             progress=None,
@@ -164,7 +161,7 @@ class ExpertiseMapBuilder(BaseCommand):
 
         return data, graph, model
     
-    def inference(self, model: HetModel, data: HeteroData) -> HetModelReturn:
+    def inference(self, model: ArticleClassifier, data: HeteroData) -> ArticleClassifier.Output:
 
         self.send_info_event(progress=None, message="[Infer] Running full-graph forward pass …")
 
@@ -180,7 +177,7 @@ class ExpertiseMapBuilder(BaseCommand):
             progress=None,
             message=(
                 f"[Infer] Done — "
-                f"entity embeddings: {list(results.entities_embeddings.shape)}, "
+                f"entity embeddings: {list(results.entities_sem_embeddings.shape)}, "
             ),
         )
 
@@ -204,11 +201,17 @@ class ExpertiseMapBuilder(BaseCommand):
         jacc         = intersection / union
 
         return torch.where(jacc.isnan(), torch.zeros_like(jacc), jacc)
+
+    def domains(self, labels : Dict[str, Tensor]) -> Tensor:
+        return labels['llm:deepseek-chat']
+
+    def labs(self, labels : Dict[str, Tensor]) -> Tensor:
+        return labels['lab']
     
     def cluster(
         self,
-        model : HetModel,
-        inference_results : HetModelReturn,
+        model : ArticleClassifier,
+        inference_results : ArticleClassifier.Output,
         edge_index : Tensor,
     ) -> Tuple[Tensor, Tensor, Dict[str, Tensor]]:
 
@@ -220,7 +223,7 @@ class ExpertiseMapBuilder(BaseCommand):
             ),
         )
 
-        entity_label_probas = inference_results.entities_predictions['subdomain'].sigmoid()
+        entity_label_probas = self.domains(inference_results.entities_labels).sigmoid()
 
         edge_weight = self.jaccard_index(
             edge_index, entity_label_probas[:,MASK],
@@ -238,7 +241,7 @@ class ExpertiseMapBuilder(BaseCommand):
 
         alg_cls = Leiden if self.config.clustering_alg == "leiden" else Louvain
         alg  = alg_cls(resolution=self.config.clustering_resolution)
-        communities = torch.from_numpy(alg.fit_predict(adj)).to(inference_results.entities_embeddings.device)
+        communities = torch.from_numpy(alg.fit_predict(adj))
 
         communities_probas = torch.from_numpy(alg.fit_predict_proba(
             from_edge_list(
@@ -262,25 +265,29 @@ class ExpertiseMapBuilder(BaseCommand):
         )
 
         # community-level domains
+        
         with torch.no_grad():
 
-            community_embeddings = model.readout_fn.forward(
-                x = inference_results.entities_embeddings,
-                index = communities,
-                dim_size = n_communities,
-                dim = 0
-            )
+            x_sem = inference_results.entities_sem_embeddings
+            x_imp = inference_results.entities_importance_embeddings
 
-            communities_labels = {}
+            community_embeddings, _, _ = model.reduce.forward(
+                x = x_sem,
+                edge_index=torch.stack([
+                    torch.arange(x_sem.size(0)).to(x_sem.device),
+                    communities.to(x_sem.device)
+                ]),
+                num_nodes=n_communities,
+                weights_x=x_imp
+            ).astuple()
 
-            for k, m in model.heads.items():
-                communities_labels[k] = m(community_embeddings).sigmoid()
+            communities_labels = model.head.forward(community_embeddings)
 
         self.send_debug_event(
             progress=None,
             message=(
                 f"[Cluster] Community label probas shape: "
-                f"{list(communities_labels['subdomain'].shape)} {list(communities_labels['lab'].shape)}"
+                f"{list(self.domains(communities_labels).shape)} {list(self.labs(communities_labels).shape)}"
             ),
         )
 
@@ -333,7 +340,7 @@ class ExpertiseMapBuilder(BaseCommand):
                 }
             })
         
-        for community, labels in enumerate(community_labels['subdomain']):
+        for community, labels in enumerate(self.domains(community_labels)):
 
             for label_name, label_proba in zip(data.raw_metadata['labels']['subdomain'], labels):
 
@@ -361,12 +368,20 @@ class ExpertiseMapBuilder(BaseCommand):
             if len(community['entities']) >= self.config.min_nodes_per_community
         ]
 
-        for i,community in enumerate(self.track(
-            communities_nodelist,
-            task="representative-node-querying",
-            update_every=1
-        )):
-            communities_nodelist[i] = self.query_representative_node(community)
+        it = Map(communities_nodelist, self._task_info)
+        it = Enumerate(it)
+        it = Batched(iterable=it, n=16)
+        it = self.track(it=it, task="representative-node-querying")
+
+        for batch in it:
+
+            inputs = [item for _, item in batch]
+            indices = [i for i,_ in batch]
+
+            outputs = self.query_representative_node(inputs)
+
+            for i, out in zip(indices, outputs):
+                communities_nodelist[i]['llm_label'] = out
 
         self.send_info_event(
             progress=None,
@@ -378,64 +393,35 @@ class ExpertiseMapBuilder(BaseCommand):
     def _select_representative_node(self, community : Dict, attr : str) -> str:
         return sorted(community['entities'], key=lambda e : e[attr], reverse=True)[0]['name']
 
-    def query_representative_node(self, community : Dict) -> Dict:
+    def _task_info(self, community : Dict) -> Dict:
 
         community = {**community}
-
+        
         for attr in ['specificity_weighted_pagerank', 'personalized_pagerank']:
             community[f'{attr}_name'] = self._select_representative_node(community, attr)
 
         sorted_entities = sorted(community['entities'], key=lambda e : e['personalized_pagerank'], reverse=True)
-        sorted_entities = [e['name'] for e in sorted_entities[:min(len(sorted_entities), 25)]]
+        sorted_entities = [e['name'] for e in sorted_entities[:min(len(sorted_entities), 50)]]
 
-        messages = [
-            {
-                "role": "system",
-                "content": (
-                    "You are an expert academic taxonomist. Your task is to generate a precise, professional "
-                    "label that synthesizes a researcher's expertise based on a provided list of up to 20 concepts. "
-                    
-                    "### Requirements:\n"
-                    "1. **Granularity**: Ensure the label is neither too broad nor too specific. It must "
-                    "accurately encapsulate the specific intersection of the provided concepts.\n"
-                    "2. **Tone**: Use formal, scientific, and academic terminology.\n"
-                    "3. **Format**: Provide a concise noun phrase only. Do not use full sentences or "
-                    "lengthy descriptions.\n"
-                    "4. **Example**: 'AI-driven environmental risk assessment'."
-                    
-                    "### Output Format:\n"
-                    "The response should only contain the number that coresponds to the level with no additional explanation."
-                ),
-            },
-            {
-                "role": "user",
-                "content": (
-                    f"This expertise is described by the following entities : \n"
-                    "\n".join(sorted_entities)
-                )
-            }
-        ]
+        return { "concepts" : sorted_entities }
 
-        response = self.client.chat.completions.create(
-            model=self.config.llm,
-            messages=messages,
-            stream=False,
-            temperature=0,  # No randomness
-            top_p=1,  # Disable sampling
-            seed=42,  # Seed
-            extra_body={"thinking": {"type": "disabled"}}
+    def query_representative_node(self, inputs : List[Dict]) -> List[str]:
+
+        outputs = self.llm.batch_make_async_request(
+            prompt_name='ResearcherExpertiseNaming',
+            inputs=inputs,
         )
 
-        content = response.choices[0].message.content
-        community['llm_label'] = content.strip()
-
-        return community
+        return [
+            out.unwrap()["label"] 
+            for out in outputs
+        ]
     
     def update_graph(self,
         graph : Graph,
         data : HeteroData,
         communities_nodelist : List[Dict],
-        results : HetModelReturn
+        results : ArticleClassifier.Output
     ) -> Graph:
 
         Expertise_BELONGSTO_SubDomain = EdgeType("Expertise", "SubDomain", "BELONGSTO")
@@ -447,7 +433,7 @@ class ExpertiseMapBuilder(BaseCommand):
 
         Domain_BELONGSTO_ExpertiseMap = EdgeType("Domain", "ExpertiseMap", "BELONGSTO")
 
-        for node in graph._nodes['SubDomain'].nodes:
+        for node in graph._nodes['SubDomain']:
             
             graph.add_node(
                 type='SubDomain',
@@ -509,9 +495,13 @@ class ExpertiseMapBuilder(BaseCommand):
 
         ### Add Entity <-> SubDomain links
         for entity, subdomain_probas, lab_probas in zip(
-            self.track(graph.get_nodes('Entity'), task="update-graph/adding-entities-relations", update_every=512),
-            results.entities_predictions['subdomain'], 
-            results.entities_predictions['lab']
+            self.track(
+                graph.get_nodes('Entity'), 
+                task="update-graph/adding-entities-relations", 
+                update_every=512
+            ),
+            self.domains(results.entities_labels), 
+            self.labs(results.entities_labels)
         ):
 
             for subdomain_id, proba in zip(data.raw_metadata['labels']['subdomain'], subdomain_probas):
@@ -606,29 +596,6 @@ class ExpertiseMapBuilder(BaseCommand):
 
         return torch.tensor(list(pr.values()))
     
-    def inference_entities_v2(self, 
-        model : HetModel, 
-        output : HetModelReturn,
-        data : HeteroData
-    ) -> Dict[str, Tensor]:
-
-        ### TODO: include node itself
-        row, col = data['Entity', 'HASRELATIONWITH', 'Entity'].edge_index
-
-        entities_embeddings = model.readout_fn.forward(
-            x = torch.cat([output.entities_embeddings[col],output.entities_embeddings[row]], dim=0),
-            index = torch.cat([row, col], dim=-1),
-            dim_size = output.entities_embeddings.shape[0],
-            dim = 0
-        )
-
-        labels = {}
-
-        for k, m in model.heads.items():
-            labels[f'{k}_v2'] = m(entities_embeddings).sigmoid()
-
-        return labels
-    
     def __iter__(self):
 
         ### Load models & data
@@ -640,7 +607,7 @@ class ExpertiseMapBuilder(BaseCommand):
         graph._nodes['Entity']._features = {
             **{
                 k : v.sigmoid()
-                for k, v in inferece_results.entities_predictions.items()
+                for k, v in inferece_results.entities_labels.items()
             },
             **graph._nodes['Entity']._features
         }
@@ -662,16 +629,6 @@ class ExpertiseMapBuilder(BaseCommand):
         )
 
         graph._nodes['Entity']._features['personalized_pagerank'] = self._personalized_pagerank(graph)
-
-        # # ── New PageRank metrics ───────────────────────────────────────────────────
-        # n_entities = data['Entity'].x.size(0)
-        # global_pr, local_pr = self.compute_pagerank_metrics(
-        #     edge_index   = data['Entity', 'HASRELATIONWITH', 'Entity'].edge_index,
-        #     communities  = communities,
-        #     n_entities   = n_entities,
-        # )
-        # graph._nodes['Entity']._features['global_pagerank'] = global_pr
-        # graph._nodes['Entity']._features['local_pagerank']  = local_pr     
 
         ### Clean communities, entities ranking & representative entities selection
         communities_nodelist = self.process_communities(
@@ -701,6 +658,6 @@ class ExpertiseMapBuilder(BaseCommand):
 
     @classmethod
     def from_config(cls, config: Config) -> 'ExpertiseMapBuilder':
-        builder = ExpertiseMapBuilder(config=config.conf, client=env.llms[config.conf.llm].client)
+        builder = ExpertiseMapBuilder(config=config.conf, llm=LLM(config.conf.llm))
         builder.add_handler(ConsoleLogger("ExpertiseMapBuilder"))
         return builder

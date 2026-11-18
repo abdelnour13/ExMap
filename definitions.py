@@ -2,6 +2,8 @@ import os
 
 ROOT_DIR = os.path.dirname(__file__)
 
+EXPERIMENTS_DIR = os.path.join(ROOT_DIR, 'experiments')
+
 DATA_DIR = os.path.join(ROOT_DIR, "data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
@@ -23,28 +25,22 @@ os.makedirs(EMS_DIR, exist_ok=True)
 EVAL_DIR = os.path.join(DATA_DIR, "eval")
 os.makedirs(EVAL_DIR, exist_ok=True)
 
-
+ENVIRONMENT = os.path.join(ROOT_DIR, "env.json")
+MANIFEST = os.path.join(ROOT_DIR, "manifest.json")
 SCRIPTS_DIR = os.path.join(ROOT_DIR, "scripts")
-EXTERNAL_DIR = os.path.join(ROOT_DIR, 'external')
-EXPERIMENTS_DIR = os.path.join(ROOT_DIR, 'experiments')
-RESOURCES_DIR = os.path.join(ROOT_DIR, "resources")
-NEO4J_DIR = os.path.join(ROOT_DIR, '.neo4j')
 
+RESOURCES_DIR = os.path.join(ROOT_DIR, "resources")
 MODELS_DIR = os.path.join(RESOURCES_DIR, "models")
 FIELDS_DIR = os.path.join(RESOURCES_DIR, "fields")
+
+NEO4J_DIR = os.path.join(ROOT_DIR, '.neo4j')
 PLUGINS_DIR = os.path.join(NEO4J_DIR, "plugins")
 
 def rel_path(path : str) -> str:
     return os.path.relpath(path, ROOT_DIR)
 
-ENV = os.path.join(ROOT_DIR, ".env")
-ENVIRONMENT = os.path.join(ROOT_DIR, "env.json")
-
 def hf_model_dir(name : str) -> str:
     return os.path.join(MODELS_DIR, name.replace('/', '--'))
 
-def nlp_dir(name : str) -> str:
-    return os.path.join(FIELDS_DIR, name, 'nlp.json')
-
 def domain_dir(name : str) -> str:
-    return os.path.join(FIELDS_DIR, name, 'domains.json')
+    return os.path.join(FIELDS_DIR, f'{name}.json')

@@ -1,30 +1,27 @@
-{
-    "docker" : {
-        "neo4j" : {
-            "add" : true
-        },
-        "allennlp" : {
-            "add" : true,
-            "port" : 8080,
-            "enable_gpu_access" : false
-        },
-        "openie6" : {
-            "add" : true,
-            "port" : 8081,
-            "enable_gpu_access" : true   
-        }
-    },
-    "models" : [
-        "timpal0l/mdeberta-v3-base-squad2",
-        "SpanBERT/spanbert-large-cased",
-        "snrspeaks/KeyPhraseTransformer",
-        "sentence-transformers/all-MiniLM-L6-v2"
+{   
+    "spacy_models" : [
+        { "name" : "en_core_web_lg" }, 
+        { "name" : "en_core_web_sm" }, 
+        { "name" : "en_core_web_trf" }
     ],
-    "external_repos" : [
-        "https://github.com/abdelnour13/pycli.git",
-        "https://github.com/dair-iitd/openie6.git"
+    "hf_models" : [
+        { "name" : "timpal0l/mdeberta-v3-base-squad2", "kind" : "question-answering", "required" : true },
+        { "name" : "SpanBERT/spanbert-large-cased", "kind" : "coreference-resolution", "required" : true },
+        { "name" : "snrspeaks/KeyPhraseTransformer", "kind" : "keyword-extraction", "required" : true },
+        { "name" : "sentence-transformers/all-MiniLM-L6-v2", "kind" : "document-representation", "required" : true },
+        { "name" : "Qwen/Qwen3-Embedding-0.6B", "kind" : "document-representation", "required" : false },
+        { "name" : "intfloat/e5-base-v2", "kind" : "document-representation", "required" : false }
+    ],
+    "coreferee_resources" : [
+        { "name" : "en" }
+    ],
+    "nltk_resources" : [
+        { "name" : "stopwords" },
+        { "name" : "punkt_tab" },
+        { "name" : "punkt" },
+        { "name" : "averaged_perceptron_tagger_eng", "fallback" : "averaged_perceptron_tagger" }
     ],
     "neo4j_plugins" : [
-        "https://github.com/neo4j/apoc/releases/download/2025.11.2/apoc-2025.11.2-core.jar"
+        { "name" : "apoc", "url" : "https://github.com/neo4j/apoc/releases/download/2025.11.2/apoc-2025.11.2-core.jar" }
     ]
 }

@@ -2,7 +2,8 @@ import torch
 from src.shared.command_tools import BaseCommand
 from src.shared.file_tools import FileReader
 from src.commands.feature_extraction.graph_utils import Graph, EdgeTypes, NodeTypes
-from src.shared.env import env
+from src.envirenment import Domain
+from typing import List
 
 def _slugify(s : str) -> str:
     return s.lower().replace(' ','_')
@@ -19,10 +20,12 @@ class GraphBuilder:
 
     def __init__(self, 
         _host : BaseCommand,
-        reader : FileReader
+        reader : FileReader,
+        domains : List[Domain]
     ) -> None:
         self._host = _host
         self.reader = reader
+        self.domains = domains
 
     def build(self) -> Graph:
 
@@ -39,13 +42,17 @@ class GraphBuilder:
             for record in records:
                 self.update(record, graph)
 
+            print(len(graph._edges[EdgeTypes.Triple_HASTAIL_Entity]._edges))
+            print(len(graph._edges[EdgeTypes.Triple_HASHEAD_Entity]._edges))
+            print(len(graph._nodes[NodeTypes.Triple]._nodes))
+
             self._host.send_info_event(
                 progress=progress,
                 task="graph-construction",
                 message=f"Processed {len(records)} records."
             )
 
-        for domain in env.fields['industry_of_future'].domains:
+        for domain in self.domains:
             
             for d in map(str.strip, domain.domain.split(',')):
 
@@ -119,10 +126,13 @@ class GraphBuilder:
             
             for method, items in article['pseudo_labels'].items():
 
+                items = sorted(items, key=lambda x : x['label'])
                 t = torch.tensor([i['score'] for i in items])
                 
-                if method not in graph._nodes['Article']._features:
+                if method not in graph._metadata:
+                    assert method not in graph._nodes['Article']._features
                     graph._nodes['Article']._features[method] = t[None,:]
+                    graph._metadata[method] = [item['label'] for item in items]
                 else:
                     graph._nodes['Article']._features[method] = torch.cat([
                         graph._nodes['Article']._features[method],
@@ -141,9 +151,20 @@ class GraphBuilder:
         )
 
         # Triple
-        triple_id = _slugify('_'.join([doc['head'], doc['predicate'], doc['tail']]))
         head_id = _slugify(doc['head'])
         tail_id = _slugify(doc['tail'])
+        triple_id = '::'.join([head_id, predicate_id, tail_id]) # :: is important
+
+        # Entity
+        for entity_id, entity in zip([head_id, tail_id],[doc['head'], doc['tail']]):
+
+            graph.add_node(
+                type='Entity',
+                id=entity_id,
+                properties={
+                    "name" : entity
+                }
+            )
 
         graph.add_node(
             type=NodeTypes.Triple,
@@ -153,13 +174,13 @@ class GraphBuilder:
         graph.add_edge(
             type=EdgeTypes.Triple_HASHEAD_Entity,
             src=triple_id,
-            dst=_slugify(doc['head'])
+            dst=head_id
         )
 
         graph.add_edge(
             type=EdgeTypes.Triple_HASTAIL_Entity,
             src=triple_id,
-            dst=_slugify(doc['tail'])
+            dst=tail_id
         )
 
         graph.add_edge(
@@ -173,17 +194,6 @@ class GraphBuilder:
             src=triple_id,
             dst=article['id']
         )
-
-        # Entity
-        for entity_id, entity in zip([head_id, tail_id],[doc['head'], doc['tail']]):
-
-            graph.add_node(
-                type='Entity',
-                id=entity_id,
-                properties={
-                    "name" : entity
-                }
-            )
 
         # Lab
         for lab in article['teams']:
@@ -286,7 +296,7 @@ class GraphBuilder:
             )
 
         # SubDomains
-        for method, items in article['pseudo_labels'].items():
+        for method, items in article.get('pseudo_labels', []).items():
 
             for item in items:
                 

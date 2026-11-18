@@ -1,43 +1,36 @@
 import numpy as np
 import pandas as pd
 import os
-import math
-import asyncio
-import faiss
-import json
-from sentence_transformers import SentenceTransformer
 from typing import List, Tuple, Dict, Any, Optional
 from src.shared.command_tools import Stage, StageConfig, add_handlers
 from src.shared.file_tools import BatchedReader, BufferedWriter
-from definitions import hf_model_dir
 from pycli import Field
 from instance import cli
-from src.shared.env import env, LLM
-from src.shared.prompts import PromptsManager
-from returns.result import ResultE
 from returns.pipeline import is_successful
+from src.shared.platforms import LLM, RequestReturnType
 from src.shared.file_tools import Batched, Map, FileReader, FileWriter, TextfileCache, Enumerate
 from src import helpers
-from src.shared.embedders import Embedder
+from src.methods.embedders import EmbedderRegistry, Embedder
+from src.methods.nn import NNRetrieverRegistry, NNRetriever
 
 class Config(StageConfig):
 
     ### pre-trained language model params
-    pretrained_language_model : str = Field(
-        default="sentence-transformers/all-MiniLM-L6-v2", 
+    embedder : str = Field(
+        default="sbert:sentence-transformers/all-MiniLM-L6-v2", 
         description="The language model used to compute the similarity."
     )
 
-    plm_device : int = Field(
+    device : int = Field(
         default=-1, 
         description="The device used to perform the computation '-1' for cpu, '0' for gpu."
     )
 
-    plm_batch_size : int = 128
+    plm_batch_size : int = 32
 
     ### Large Language Model
     llm_batch_size : int = 32
-    llm_name : str = 'deepseek-v4-flash'
+    llm : str = 'deepseek-v4-flash'
 
     ### Search
     search_k : int = Field(default=16, description="The number of neighbors to consider.")
@@ -47,10 +40,6 @@ class Config(StageConfig):
     search_nprobe : int = Field(default=10,description="Number of clusters to search in.")
 
     num_iterations : int = Field(default=1, description="Number of entities steps.")
-
-    @property
-    def llm(self) -> LLM:
-        return env.llms[self.llm_name]
 
     @property
     def mapping_dir(self) -> str:
@@ -75,18 +64,13 @@ class IterativeLLMBasedEntitiesCleaning(Stage):
         reader : BatchedReader, 
         writer : BufferedWriter, 
 
-        pretrained_language_model : str,
-        plm_device : int,
+        embedder : Embedder,
         plm_batch_size : int,
 
         llm : LLM,
         llm_batch_size : int,
 
-        search_k : int,
-        search_m : int,
-        search_nbits : int,
-        search_nlist : int,
-        search_nprobe : int,
+        nn : NNRetriever,
 
         num_iterations : int,
         mapping_dir : str
@@ -95,31 +79,17 @@ class IterativeLLMBasedEntitiesCleaning(Stage):
         
         super().__init__(reader, writer)
 
-        self.pretrained_language_model = pretrained_language_model
-        self.plm_device = 'cpu' if plm_device == -1 else 'gpu'
+        self.embedder = embedder
         self.plm_batch_size = plm_batch_size
 
         self.llm = llm
         self.llm_batch_size = llm_batch_size
 
-        self.search_k = search_k
-        self.search_m = search_m
-        self.search_nbits = search_nbits
-        self.search_nlist = search_nlist
-        self.search_nprobe = search_nprobe
+        self.nn = nn
 
         self.num_iterations = num_iterations
-        self.mapping = None
 
         self.mapping_dir = mapping_dir
-
-        self.embedder = Embedder(
-            model=SentenceTransformer(
-                hf_model_dir(pretrained_language_model),
-                local_files_only=True,
-                device=self.plm_device
-            )
-        )
 
     def get_entities_df(self) -> pd.DataFrame:
     
@@ -145,136 +115,43 @@ class IterativeLLMBasedEntitiesCleaning(Stage):
 
         return M
 
-    def make_faiss_index(self, X : np.ndarray) -> faiss.IndexIVFPQ:
-
-        N, D = X.shape
-        search_nlist = self.search_nlist or int(math.sqrt(N))
-
-        print(search_nlist)
-
-        index = faiss.IndexIVFPQ(
-            faiss.IndexFlatIP(D),
-            D,
-            search_nlist,
-            self.search_m,
-            self.search_nbits,
-            faiss.METRIC_INNER_PRODUCT,
-        )
-
-        index.train(X)
-        index.add(X)
-        index.nprobe = self.search_nprobe
-
-        return index
+    def k_neighbors(self, X : np.ndarray) -> NNRetriever:
+        return self.nn.fit(X)
 
     def most_similar(self,
         idx : int,
-        index : faiss.IndexIVFPQ, 
+        nn : NNRetriever, 
         df : pd.Series,
-        X : np.ndarray
     ) -> Tuple[List[str], List[int]]:
+        
+        distances, indices = nn.nn(nn.X[[idx],:])
 
-        Q = X[[idx],:]
-        _, indices = index.search(x=Q, k=self.search_k)
-
-        indices = indices[0]
-        indices = indices[indices >= 0]
-        indices = indices[indices != idx]
+        distances = distances.flatten()
+        indices = indices.flatten()
+        indices = indices[1:,]
 
         return df.iloc[indices].tolist(), indices.tolist()
 
-    async def query_representative_entity(self, predicates : List[str]) -> ResultE[str]:
-    
-        result = await PromptsManager.make_request(
-            prompt_name='RepresentativeEntityQuerying',
-            client=self.llm.async_client,
-            model_name=self.llm.info.name,
-            input={
-                "predicates" : predicates,
-            },
-            lang='en',
-            validate_input=True,
-            validate_output=True
-        )
+    def query_equivelant_entities(self, inputs : List[Dict]) -> List[RequestReturnType[Dict]]:
 
-        result = result.map(lambda x : x['representative'])
-
-        return result
-
-    async def _batch_query_representative_entity(
-        self,
-        input : List[List[str]],
-    ) -> List[ResultE[str]]:
-        
-        r = await asyncio.gather(*[
-            self.query_representative_entity(predicates=predicates)
-            for predicates in input
-        ])
-
-        return r
-
-    def batch_query_representative_entity(
-        self,
-        input : List[List[str]],
-    ) -> List[ResultE[str]]:
-        r = asyncio.run(self._batch_query_representative_entity(input=input))
-
-    async def query_equivelant(
-        self,
-        target : str,
-        candidates : List[str],
-    ) -> ResultE[Dict[str, str | List[str]]]:
-
-        if len(candidates) == 0:
-
-            return ResultE.from_value({
-                "selected" : [],
-                "representative" : None
-            })
-
-        result = await PromptsManager.make_request(
+        result = self.llm.batch_make_async_request(
             prompt_name='EquivalentEntitiesQuerying',
-            client=self.llm.async_client,
-            model_name=self.llm.info.name,
-            input={
-                "target" : target,
-                "candidates" : candidates
-            },
+            inputs=inputs,
             lang='en',
             validate_input=True,
             validate_output=True
         )
 
         return result
-
-    async def _batch_query_equivelant(
-        self,
-        input : List[Tuple[str, List[str]]],
-    ) -> List[ResultE[List[str]]]:
-        
-        r = await asyncio.gather(*[
-            self.query_equivelant(target=target, candidates=candidates)
-            for target, candidates in input
-        ])
-
-        return r
-
-    def batch_query_equivelant(
-        self,
-        input : List[Tuple[str, List[str]]],
-    ) -> List[ResultE[List[str]]]:
-        r = asyncio.run(self._batch_query_equivelant(input=input))
-        return r
 
     def _task_info(self, 
         target_id : int, 
         target : str, 
-        index : faiss.IndexIVFPQ, 
+        nn : NNRetriever, 
         candidates : pd.Series,
-        X : np.ndarray
     ) -> Dict[str, Any]:
 
-        top_k_tokens, top_k_indices = self.most_similar(target_id, index, candidates, X)
+        top_k_tokens, top_k_indices = self.most_similar(target_id, nn, candidates)
 
         return {
             "target_id" : target_id,
@@ -287,12 +164,12 @@ class IterativeLLMBasedEntitiesCleaning(Stage):
 
         col = 'entity'
         X = self.embeddings(sentences=df[col].tolist())
-        index = self.make_faiss_index(X)
+        nn = self.k_neighbors(X)
 
         tasks_info = Batched(
             iterable=Map(
                 iterable=Enumerate(df[col].tolist()),
-                fn=lambda t : self._task_info(target_id=t[0], target=t[1], index=index, candidates=df[col], X=X)
+                fn=lambda t : self._task_info(target_id=t[0], target=t[1], nn=nn, candidates=df[col])
             ),
             n=self.llm_batch_size
         )
@@ -308,8 +185,11 @@ class IterativeLLMBasedEntitiesCleaning(Stage):
                 for task_info in batch if task_info['target'] not in visited
             ]
 
-            results = self.batch_query_equivelant([
-                (task_info['target'], task_info['candidates'])
+            results = self.query_equivelant_entities([
+                {
+                    'target' : task_info['target'], 
+                    'candidates' : task_info['candidates']
+                }
                 for task_info in batch
             ])
 
@@ -323,9 +203,6 @@ class IterativeLLMBasedEntitiesCleaning(Stage):
 
                 result = result.unwrap()
                 result['candidates'] = task_info['candidates']
-
-                with open("/home/fellah-a/Documents/Text2KG/data/knowledge_graphs/industry_of_future_v2/llm_based_entities_cleaning/debug.jsonl", "a") as f:
-                    f.write(json.dumps(result) + "\n")
 
                 if len(result['selected']) == 0:
                     continue
@@ -407,18 +284,23 @@ class IterativeLLMBasedEntitiesCleaning(Stage):
                 .from_filename(config.output_filename)
                 .buffered(config.buffer_size, cache),
 
-            pretrained_language_model=config.pretrained_language_model,
+            embedder=EmbedderRegistry.create(
+                name=config.embedder,
+                device=config.device
+            ),
             plm_batch_size=config.plm_batch_size,
-            plm_device=config.plm_device,
 
-            llm=config.llm,
+            llm=LLM(name=config.llm),
             llm_batch_size=config.llm_batch_size,
 
-            search_k=config.search_k,
-            search_m=config.search_m,
-            search_nbits=config.search_nbits,
-            search_nlist=config.search_nlist,
-            search_nprobe=config.search_nprobe,
+            nn=NNRetrieverRegistry.create(
+                name="faiss",
+                k=config.search_k,
+                search_m=config.search_m,
+                search_nbits=config.search_nbits,
+                search_nlist=config.search_nlist,
+                search_nprobe=config.search_nprobe
+            ),
 
             num_iterations=config.num_iterations,
             mapping_dir=config.mapping_dir

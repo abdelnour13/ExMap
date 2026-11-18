@@ -12,10 +12,6 @@ from torch import Tensor
 from scipy.sparse import csgraph, csr_matrix
 from torch_sparse import SparseTensor
 from torch_geometric.data import Data, HeteroData
-from functools import wraps
-# from src.gnn import ArticleAsKG
-
-ArticleAsKG = HeteroData
 
 DS = TypeVar('DS')
 
@@ -168,7 +164,7 @@ def move_data_to_device(
     device : Union[str,torch.device]                 
 ) -> Any:
         
-    if isinstance(data, (Tensor,SparseTensor,Data,ArticleAsKG,HeteroData)):
+    if isinstance(data, (Tensor,SparseTensor,Data,HeteroData)):
         return data.to(device)
     
     if isinstance(data, list):

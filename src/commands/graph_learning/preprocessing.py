@@ -68,7 +68,11 @@ def _augment(
 
     return batch
 
-def _subgraph_by_articles(data : HeteroData, article_ids : Tensor, save_old_idx : bool = False) -> HeteroData:
+def _subgraph_by_articles(
+    data : HeteroData, 
+    article_ids : Tensor, 
+    save_old_idx : bool = False
+) -> HeteroData:
 
     entities, articles = data['Entity', 'APPEARIN', 'Article'].edge_index
 
@@ -80,13 +84,17 @@ def _subgraph_by_articles(data : HeteroData, article_ids : Tensor, save_old_idx 
     })
 
     for n_type in subset.node_types:
-        if save_old_idx:
+
+        if 'og_node_id' not in subset[n_type]:
             subset[n_type].og_node_id = subset[n_type].node_id
+
         subset[n_type].node_id = torch.arange(len(subset[n_type].x))
 
     for e_type in subset.edge_types:
-        if save_old_idx:
+
+        if 'og_edge_id' not in subset[e_type]:
             subset[e_type].og_edge_id = subset[e_type].edge_id
+
         subset[e_type].edge_id = torch.arange(len(subset[e_type].edge_index[0]))
 
     return subset
@@ -120,7 +128,7 @@ def _add_labels(data : HeteroData, n_types : List[str]) -> HeteroData:
 
         A = SparseTensor(row=row,col=col,sparse_sizes=(num_cols,num_rows))
 
-        data['Article'][f'y_{type_.lower()}'] = A.to_dense().clone()
+        data['Article'][f'{type_.lower()}'] = A.to_dense().clone()
 
     return data
 
@@ -173,5 +181,35 @@ def _norm_features(data : HeteroData) -> HeteroData:
             mean = t.mean(0, keepdim=True)
             std  = t.std(0,  keepdim=True)
             data[e_type].x = (t - mean) / (std + 1e-3)
+
+    return data
+
+def _merge_labels(
+    data : HeteroData,
+    label : str,
+    merges : List[List[str]]
+) -> HeteroData:
+
+    label_names : List[str] = data.raw_metadata["labels"][label]
+    labels_matrix : Tensor  = data['Article'][label]
+
+    merged_label_names : List[str] = []
+    merged_label_matrix : List[Tensor] = []
+
+    for merge in merges:
+
+        label_col = []
+
+        for l in merge:
+            idx = label_names.index(l)
+            label_col.append(labels_matrix[:,idx])
+
+        label_col = torch.stack(label_col, dim=0).max(dim=0).values
+        merged_label_matrix.append(label_col)
+        merged_label_names.append('/'.join(merge))
+
+    M = torch.stack(merged_label_matrix, dim=1)
+    data.raw_metadata["labels"][label] = data.raw_metadata["labels"][label] + merged_label_names
+    data['Article'][label] = torch.cat([labels_matrix, M], dim=-1)
 
     return data

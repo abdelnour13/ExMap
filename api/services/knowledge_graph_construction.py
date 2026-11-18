@@ -10,68 +10,73 @@ from pydantic import BaseModel
 from returns.result import Result
 
 template = """{{
-    "corpus_id" : "{corpus_id}",
-    "glob" : {{
-        "domain" : "industry_of_future",
-        "batch_size" : 1,
-        "buffer_size" : 4,
-        "resume" : true
+    "corpus_id": "{corpus_id}/data.jsonl",
+    "glob": {{
+        "domain": "{domain}",
+        "batch_size": 1,
+        "buffer_size": 4,
+        "resume": true
     }},
-    "stages" : {{
-        "corpus_cleaning" : {{
-            "stage" : "corpus_cleaning",
-            "batch_size" : 32,
-            "buffer_size" : 32
+    "stages": {{
+        "corpus_cleaning": {{
+            "stage": "corpus_cleaning",
+            "batch_size": 32,
+            "buffer_size": 32
         }},
-        "coreference_resolution" : {{
-            "stage" : "coreference_resolution",
-            "model" : "spanbert-large",
+        "coreference_resolution": {{
+            "stage": "coreference_resolution",
+            "model": "spanbert-large",
+            "device": -1
+        }},
+        "keywords_extraction": {{
+            "stage": "keywords_extraction",
+            "batch_size": 1,
+            "buffer_size": 4,
             "device" : -1
         }},
-        "keywords_extraction" : {{
-            "stage" : "keywords_extraction",
-            "batch_size" : 1,
-            "buffer_size" : 4
+        "sentence_segmentation": {{
+            "stage": "sentence_segmentation",
+            "segmentor" : "stanza",
+            "use_gpu": false,
+            "batch_size": 128,
+            "buffer_size": 128
         }},
-        "sentence_segmentation" : {{
-            "stage" : "sentence_segmentation",
-            "use_gpu" : false,
-            "batch_size" : 128,
-            "buffer_size" : 128
-        }},
-        "acronyms_extraction" : {{
-            "stage" : "acronyms_extraction",
-            "qa_model" : "timpal0l/mdeberta-v3-base-squad2",
-            "threshold" : 0.5
+        "acronyms_extraction": {{
+            "stage": "acronyms_extraction",
+            "model": "qa:timpal0l/mdeberta-v3-base-squad2",
+            "device" : -1
         }},
         "triples_extraction": {{
-            "stage" : "triples_extraction",
-            "batch_size" : 16,
-            "buffer_size" : 16,
-            "type" : "two-step-llm/{llm_name}"
+            "stage": "triples_extraction",
+            "batch_size": 16,
+            "buffer_size": 16,
+            "extractor": "two-step-llm:{llm_name}"
         }},
-        "entities_normalization" : {{
-            "stage" : "entities_normalization",
-            "batch_size" : 128,
-            "buffer_size" : 128
+        "entities_normalization": {{
+            "stage": "entities_normalization",
+            "batch_size": 128,
+            "buffer_size": 128
         }},
-        "rule_based_predicate_cleaning" : {{
-            "stage" : "rule_based_predicate_cleaning",
-            "batch_size" : 128,
-            "buffer_size" : 128
+        "rule_based_predicate_cleaning": {{
+            "stage": "rule_based_predicate_cleaning",
+            "batch_size": 128,
+            "buffer_size": 128
         }},
-        "llm_based_predicate_cleaning" : {{
-            "llm_name" : "{llm_name}",
-            "stage" : "llm_based_predicate_cleaning",
-            "batch_size" : 128,
-            "buffer_size" : 128
+        "llm_based_predicate_cleaning": {{
+            "embedder" : "sbert:sentence-transformers/all-MiniLM-L6-v2",
+            "llm_name": "{llm_name}",
+            "stage": "llm_based_predicate_cleaning",
+            "batch_size": 128,
+            "buffer_size": 128,
+            "device" : -1
         }},
-        "llm_based_entities_cleaning" : {{
-            "llm_name" : "{llm_name}",
-            "stage" : "llm_based_entities_cleaning",
-            "batch_size" : 128,
-            "buffer_size" : 128,
-            "plm_device" : -1
+        "llm_based_entities_cleaning": {{
+            "embedder" : "sbert:sentence-transformers/all-MiniLM-L6-v2",
+            "llm_name": "{llm_name}",
+            "stage": "llm_based_entities_cleaning",
+            "batch_size": 128,
+            "buffer_size": 128,
+            "device": -1
         }}
     }}
 }}"""
@@ -117,7 +122,9 @@ class KnowledgeGraphConstructionService:
                 )
             )
 
-        if self.annotation_service.get_by_id(data.config.corpus_id) is None:
+        annotation = self.annotation_service.get_by_id(data.config.corpus_id)
+
+        if annotation is None:
 
             return Result.from_failure(
                 CreateKGFailure(
@@ -130,7 +137,8 @@ class KnowledgeGraphConstructionService:
         configpath = os.path.join(fullpath, "config.json")
 
         config = template.format(
-            corpus_id=f"{data.config.corpus_id}/data.jsonl",
+            domain=annotation.config.domain,
+            corpus_id=data.config.corpus_id,
             llm_name=data.config.llm_name
         )
 
@@ -170,7 +178,7 @@ class KnowledgeGraphConstructionService:
 
                 config = PipelineConfig(
                     corpus_id=f"{config['corpus_id']}".split('/')[0],
-                    llm_name=config['stages']['triples_extraction']['type'].split('/')[-1]
+                    llm_name=config['stages']['triples_extraction']['extractor'].split('/')[-1]
                 )
 
             else:

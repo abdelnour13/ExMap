@@ -24,7 +24,11 @@ class BaseCommand(ABC):
 
         self.handlers : List[Handler] = []
         self.stop = False
-        self.events : Queue[Event] = Queue()
+        # self.events : Queue[Event] = Queue()
+        self.progresses = { "main" : 0.0 }
+
+    def get_task_progress(self, task : str = "main") -> float | None:
+        return self.progresses[task]
 
     def add_handler(self, handler : Handler) -> 'BaseCommand':
         self.handlers.append(handler)
@@ -132,22 +136,27 @@ class BaseCommand(ABC):
     
     def send_event(self, event : Event) -> None:
 
-        for handler in self.handlers:
+        self.progresses[event.task] = event.progress
 
+        for handler in self.handlers:
             handler.consume(event)
 
-            if event.level == EventLevel.CRITICAL:
-                event = Event(**asdict(event))
-                event.message = "Stopping job due to a critical error, check logs for details."
+        if event.level == EventLevel.CRITICAL:
+
+            event = Event(**asdict(event))
+            event.message = "Stopping job due to a critical error, check logs for details."
+
+            for handler in self.handlers:
                 handler.consume(event)
-                self.stop = True
+            
+            self.stop = True
 
     def send_debug_event(self,
         progress : Optional[float],
         message : str,
         task : str = "main",
         extra : Optional[Dict] = None
-    ) -> Event:
+    ) -> None:
         self.send_event(self.make_event(progress, EventLevel.DEBUG, message, task, extra))
     
     def send_info_event(self,
@@ -155,7 +164,7 @@ class BaseCommand(ABC):
         message : str,
         task : str = "main",
         extra : Optional[Dict] = None
-    ) -> Event:
+    ) -> None:
         self.send_event(self.make_event(progress, EventLevel.INFO, message, task, extra))
     
     def send_error_event(self,
@@ -163,7 +172,7 @@ class BaseCommand(ABC):
         message : str,
         task : str = "main",
         extra : Optional[Dict] = None
-    ) -> Event:
+    ) -> None:
         self.send_event(self.make_event(progress, EventLevel.ERROR, message, task, extra))
     
     def send_warn_event(self,
@@ -171,7 +180,7 @@ class BaseCommand(ABC):
         message : str,
         task : str = "main",
         extra : Optional[Dict] = None
-    ) -> Event:
+    ) -> None:
         self.send_event(self.make_event(progress, EventLevel.WARN, message, task, extra))
 
     def send_critical_event(self,
@@ -179,13 +188,14 @@ class BaseCommand(ABC):
         message : str,
         task : str = "main",
         extra : Optional[Dict] = None
-    ) -> Event:
+    ) -> None:
         self.send_event(self.make_event(progress, EventLevel.CRITICAL, message, task, extra))
 
     def track(self, 
         it : Iterable[T], 
         task : str,
-        update_every : int = 1
+        update_every : int = 1,
+        log_message : bool = True
     ) -> Generator[T, None, None]:
         
         total = len(it)
@@ -193,7 +203,8 @@ class BaseCommand(ABC):
         self.send_info_event(
             progress=0.0,
             task=task,
-            message=f"Starting {task.replace('-', ' ')}..."
+            message=f"Starting {task.replace('-', ' ')}...",
+            extra={ "log_message" : log_message }
         )
 
         for i, item in enumerate(it):
@@ -205,5 +216,6 @@ class BaseCommand(ABC):
                 self.send_info_event(
                     progress=(i+1)/total,
                     task=task,
-                    message=f"{task.replace('-', ' ')} : {i+1}/{total} elements processed."
+                    message=f"{task.replace('-', ' ')} : {i+1}/{total} elements processed.",
+                    extra={ "log_message" : log_message }
                 )

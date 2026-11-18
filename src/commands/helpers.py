@@ -2,15 +2,28 @@ import os
 import torch
 from pydantic import BaseModel, BeforeValidator, ValidationError
 from functools import cached_property
-from typing import List, Optional, Annotated
+from typing import List, Optional, Annotated, TypeVar, Callable
 from definitions import domain_dir
 from src import helpers
+
+T = TypeVar('t')
 
 class Domain(BaseModel):
     sub_domain : str
     definition : Optional[str] = None
     domain : Optional[str] = None
     alt_names : Optional[List[str]] = None
+
+def one_of(values : List[T]) -> Callable[[T], T]:
+
+    def _verifier(value : T) -> T:
+
+        if value in values:
+            return T
+
+        raise ValidationError(f"value {value} is not one of {values}.")
+
+    return _verifier
 
 def file_exists(filename : str) -> str:
 

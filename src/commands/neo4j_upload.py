@@ -4,7 +4,7 @@ from typing import List, Self, TypeVar
 from pydantic import BaseModel, computed_field
 from neo4j import Session, Transaction, Driver
 from instance import cli
-from definitions import EMS_DIR
+from definitions import DATA_DIR
 from src.envirenment import env
 from src.commands.feature_extraction.graph_utils import Graph, Edge, Node
 from src.shared.command_tools import BaseCommand
@@ -18,14 +18,14 @@ T = TypeVar('T')
 
 class Config(BaseModel):
 
-    expertise_id: str
+    graph_id: str
     batch_size: int = 500
     neo4j_driver : str = "local"
 
     @computed_field
     @property
     def expertise_dir(self) -> str:
-        return os.path.join(EMS_DIR, self.expertise_id)
+        return os.path.join(DATA_DIR, *self.graph_id.split('/'))
 
     @property
     def driver(self) -> Driver:

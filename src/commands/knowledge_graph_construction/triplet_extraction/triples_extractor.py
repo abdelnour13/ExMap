@@ -1,18 +1,14 @@
-import dotenv
-from typing import List, Dict, TypedDict
+from typing import List, Dict
 from src.shared.command_tools import Stage, StageConfig, add_handlers
 from src.shared.file_tools import FileWriter, FileReader, TextfileCache, Cache
 from returns.pipeline import is_successful
-from src.shared.triples_extractors import TriplesExtractorFactory, BaseTriplesExtractor
+from src.methods.triple_extractors import TriplesExtractorRegistry, BaseTriplesExtractor
 from pycli import Field
-from definitions import ENV
 from instance import cli
-
-dotenv.load_dotenv(ENV)
 
 class Config(StageConfig):
 
-    type : str = Field(
+    extractor : str = Field(
         default='two-step-llm/deepseek-chat',
         description=f"The type of the extractor used.",
     )
@@ -83,5 +79,5 @@ class TriplesExtractor(Stage):
                 .from_filename(config.output_filename)
                 .buffered(config.buffer_size),
             cache=cache,
-            triple_extractor=TriplesExtractorFactory.from_name(config.type),
+            triple_extractor=TriplesExtractorRegistry.create(config.extractor),
         )

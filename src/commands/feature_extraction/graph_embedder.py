@@ -3,6 +3,7 @@ import networkx as nx
 from itertools import batched
 from torch_geometric import utils as gnn_utils
 from torch import Tensor
+from src.methods.embedders import Embedder, EmbedderRegistry, EmbedKey
 from src.shared.command_tools import BaseCommand
 from src.commands.feature_extraction.graph_utils import Graph, Node, EdgeType, EdgeTypes
 from sentence_transformers import SentenceTransformer
@@ -18,108 +19,26 @@ class Features(TypedDict):
     nodes : Dict[str, Dict[str, Tensor]]
     edges : Dict[str, Dict[str, Tensor]]
 
-class Embedder:
-
-    def __init__(self, 
-        model : SentenceTransformer,
-    ) -> None:
-        self.model = model
-
-    def _query(self, sentences : List[str], **kwargs) -> Tensor:
-        
-        return self.model.encode(
-            sentences=sentences,
-            **kwargs
-        )
-
-    def _passage(self, sentences : List[str], **kwargs) -> Tensor:
-        
-        return self.model.encode(
-            sentences=sentences,
-            **kwargs
-        )
-    
-    def extract(
-        self,
-        sentences : List[str],
-        query : bool,
-        **kwargs
-    ) -> Tensor:
-        
-        if query:
-            return self._query(sentences, **kwargs)
-        
-        return self._passage(sentences, **kwargs)
-    
-    def is_basic(self) -> bool:
-        return self.__class__ == Embedder
-    
-    @staticmethod
-    def from_name(model_name : str, device : str) -> 'Embedder':
-
-        model = SentenceTransformer(model_name,device=device)
-
-        if 'e5' in model_name.lower():
-            return E5Embedder(model)
-        
-        if 'qwen' in model_name.lower():
-            return QwenEmbedder(model)
-        
-        return Embedder(model)
-
-class QwenEmbedder(Embedder):
-
-    def _query(self, sentences : List[str], **kwargs) -> Tensor:
-
-        return self.model.encode(
-            sentences=sentences,
-            prompt_name="query",
-            **kwargs
-        )
-    
-    def _passage(self, sentences : List[str], **kwargs) -> Tensor:
-        
-        return self.model.encode(
-            sentences=sentences,
-            **kwargs
-        )
-    
-class E5Embedder(Embedder):
-
-    def _query(self, sentences : List[str], **kwargs) -> Tensor:
-
-        return self.model.encode(
-            sentences=[f"query: {sent}" for sent in sentences],
-            **kwargs
-        )
-    
-    def _passage(self, sentences : List[str], **kwargs) -> Tensor:
-        
-        return self.model.encode(
-            sentences=[f"passage: {sent}" for sent in sentences],
-            **kwargs
-        )
-
 class GraphEmbedder:
 
     def __init__(self,
         _host : BaseCommand,
         model_name : str,
         batch_size : int,
-        device : str             
+        device : int             
     ) -> None:
         self._host = _host
         self.model_name = model_name
         self.batch_size = batch_size
         self.device = device
+        self.model = EmbedderRegistry.create(model_name, device=device)
     
     def _extract_for_node(self, 
         n_type : str,
         attr_name : str,
         graph : Graph,
         model : Embedder, 
-        query : bool
-    ) -> Tensor:
+    ) -> Dict[EmbedKey, Tensor]:
 
         progress = 0.0
 
@@ -136,15 +55,8 @@ class GraphEmbedder:
 
         for batch in batched(map(_map, graph.get_nodes(n_type).nodes_generator), self.batch_size):
         
-            features = model.extract(
-                sentences=list(batch),
-                query=query,
-                batch_size=self.batch_size,
-                device=self.device,
-                show_progress_bar=False,
-                convert_to_tensor=True,
-                normalize_embeddings=True,
-            ).cpu()
+            features = model.extract(sentences=list(batch))
+            features = { k: v.cpu() for k, v in features.items() }
 
             F.append(features)
 
@@ -156,12 +68,13 @@ class GraphEmbedder:
                 message=f"[STAGE 3] {len(batch)} embeddings computed..."
             )
 
-        F = torch.cat(F, dim=0)
+        keys = list(F[0].keys()) if len(F) > 0 else []
+        F = { k : torch.cat([f[k] for f in F], dim=0) for k in keys }
 
         self._host.send_debug_event(
             progress=1.0,
             task=f"feature-extraction/{n_type}",
-            message=f"[STAGE 3] Feature Matrix Shape for node {n_type} is {'x'.join(map(str,F.shape))}..."
+            message=f"[STAGE 3] Feature Matrix Shape for node {n_type} is {'x'.join(map(str,F['query'].shape))}..."
         )
 
         return F
@@ -171,8 +84,7 @@ class GraphEmbedder:
         attr_name : str,
         graph : Graph,
         model : Embedder, 
-        query : bool
-    ) -> Tensor:
+    ) -> Dict[EmbedKey, Tensor]:
 
         progress = 0.0
 
@@ -189,16 +101,7 @@ class GraphEmbedder:
 
         for batch in batched(map(_map, graph.get_edges(e_type).edges_generator), self.batch_size):
         
-            features = model.extract(
-                sentences=list(batch),
-                query=query,
-                batch_size=self.batch_size,
-                device=self.device,
-                show_progress_bar=False,
-                convert_to_tensor=True,
-                normalize_embeddings=True,
-            ).cpu()
-
+            features = model.query(sentences=list(batch)).cpu()
             F.append(features)
 
             progress += len(batch) / len(graph.get_edges(e_type))
@@ -210,7 +113,7 @@ class GraphEmbedder:
             )
 
         F = torch.cat(F, dim=0)
-
+        
         self._host.send_debug_event(
             progress=1.0,
             task=f"feature-extraction/{e_type}",
@@ -316,22 +219,16 @@ class GraphEmbedder:
             task="feature-extraction",
             message="[STAGE 3] Feature Extraction..."
         )
-
-        model = Embedder.from_name(hf_model_dir(self.model_name), device=self.device)
         
         ### Nodes
         for i, (n_type, attr_name) in enumerate(spec['nodes'].items()):
-            
-            features['nodes'][n_type]["x"] = self._extract_for_node(n_type, attr_name, graph, model, query=True)
+
+            F = self._extract_for_node(n_type, attr_name, graph, self.model)
+            features['nodes'][n_type]["x"] = F['query']
 
             if n_type == 'Article':
-
-                if model.is_basic():
-                    features['nodes'][n_type]["x_passage"] = features['nodes'][n_type]["x"]
-                else:
-                    features['nodes'][n_type]["x_passage"] = self._extract_for_node(n_type, attr_name, graph, model, query=False)
+                features['nodes'][n_type]["x_passage"] = F['passage']
             
-
             self._host.send_info_event(
                 progress=(i+1)/total,
                 task="feature-extraction",
@@ -341,7 +238,7 @@ class GraphEmbedder:
         ### Edges
         for i, (e_type, attr_name) in enumerate(spec['edges'].items()):
 
-            features['edges'][e_type]["edge_attr"] = self._extract_for_edge(e_type, attr_name, graph, model, query=True)
+            features['edges'][e_type]["edge_attr"] = self._extract_for_edge(e_type, attr_name, graph, self.model)
 
             self._host.send_info_event(
                 progress=(i+1+len(spec['nodes'].items()))/total,

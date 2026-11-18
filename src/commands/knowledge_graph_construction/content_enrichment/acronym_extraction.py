@@ -1,22 +1,24 @@
 import re
 from src.shared.file_tools import FileWriter, FileReader, TextfileCache
 from src.shared.command_tools import Stage, StageConfig, add_handlers
+from src.shared.handlers import Event, EventLevel
 from pydantic import Field
 from typing import Dict, List
 from instance import cli
-from definitions import hf_model_dir
+from src.methods.acronyms_extraction import AcronymExtractor, AcronymExtractorRegistry
+from returns.pipeline import is_successful
 
 class Config(StageConfig):
 
-    qa_model : str = Field(
-        default="timpal0l/mdeberta-v3-base-squad2",
-        description="The question answering model used to extract the expnasion of candidate acronyms."
+    model : str = Field(
+        default="qa:timpal0l/mdeberta-v3-base-squad2",
+        description="The method used for Acronym Extraction."
     )
 
     ### Default threshold was modified
-    threshold : float = Field(
-        default=0.8,
-        description="The minimum threshold to retain the acronym expansion."
+    device : int = Field(
+        default=-1,
+        description="The device to run the model on if available."
     )
 
 @cli.register_stage(
@@ -34,91 +36,71 @@ class AcronymsExtractor(Stage):
     def __init__(self, 
         reader : FileReader, 
         writer : FileWriter, 
-        qa_model : str,
-        threshold : float
+        extractor : AcronymExtractor
     ) -> None:
-        
-        from transformers import pipeline
-
         super().__init__(reader, writer)
 
-        self.qa_model = qa_model
-        self.threshold = threshold
-        self.pipeline = pipeline("document-question-answering", hf_model_dir(qa_model), device='cuda')
+        self.extractor = extractor
 
-        self.expansion_pattern = r"\([^()]*\b\w+\b[^()]*\b\w+\b[^()]*\)"
+    def before_start(self):
 
-        self.base_acronym_patterns = [
-            r"[A-Z0-9-]+s?",
-            r"[A-Z]+[a-z-0-9-]+[A-Z]+s?",
-            r"[a-z-0-9-][A-Z]+s?"
-        ]
-
-        self.acronym_patterns = [fr"\(\s*{pattern}\s*\)" for pattern in self.base_acronym_patterns]
-        self.acronym_patterns.extend([fr"{pattern}\s*{self.expansion_pattern}" for pattern in self.base_acronym_patterns])
-
-    def is_valid_acronym(self, candidate : str) -> bool:
-
-        candidate = candidate.strip().replace('-','')
-            
-        return  not candidate.isnumeric() \
-            and len(candidate) > 1
-    
-    def get_acronym(self, candidate : str) -> str:
-
-        if candidate.startswith('('):
-            candidate = candidate.lstrip('(').rstrip(')')
-        else:
-            candidate = re.sub(self.expansion_pattern, "", candidate)
-
-        return candidate.strip()
-
-    def parse_acronyms_type1(self, sentence : str) -> List[str]:
-
-        ### Preprocessing
-        sentence = re.sub(r"\s+", " ", sentence)        
-
-        ### Extract Acronyms
-        candidates = set()
-        
-        for pattern in self.acronym_patterns:
-            candidates.update(re.findall(pattern, sentence))
-
-        ### Filter-out invalid acronyms
-        candidates = list(
-            filter(
-                self.is_valid_acronym,
-                map(self.get_acronym,candidates)
-            )
+        yield Event(
+            progress=0.0,
+            level=EventLevel.INFO,
+            extra={
+                'total_processed' : 0,
+                'total_saved' : 0,
+                'total_skipped' : 0
+            },
+            message=f"Loading {self.extractor.__class__.__name__}..."
         )
 
-        return candidates
+        self.extractor.load()
+
+        yield Event(
+            progress=0.0,
+            level=EventLevel.INFO,
+            extra={
+                'total_processed' : 0,
+                'total_saved' : 0,
+                'total_skipped' : 0
+            },
+            message=f"{self.extractor.__class__.__name__} Loaded."
+        )
     
-    def transform(self, doc : Dict) -> List[Dict]:
+    def transform(self, doc : Dict) -> Dict:
+        return self.transform_chunk([doc])
         
-        sentence = doc['sentence']
-        candidates = self.parse_acronyms_type1(sentence)
-        acronyms = []
+    def transform_chunk(self, chunk : List[Dict]) -> List[Dict]:
 
-        for acronym in candidates:
+        responses = self.extractor.extract([
+            doc['sentence'] 
+            for doc in chunk
+        ])
 
-            ### Use QA Model to get the expansion of acronym & the score
-            question = f"What is the expansion of the acronym \"{acronym}\" ?"
-            result = self.pipeline(question = question, context = sentence)
+        errors = []
+        records = []
+        docs = []
 
-            ### Filter by threshold
-            acronyms.append({
-                "acronym" : acronym,
-                "expansion" : result['answer'].strip('() '),
-                "score" : result['score']
-            })
+        for doc,response in zip(chunk, responses):
 
-        doc["acronyms"] = [
-            *doc.get('acronyms', []),
-            *acronyms
-        ]
+            if is_successful(response):
 
-        return doc
+                acronyms = response.unwrap()
+
+                docs.append(doc)    
+
+                records.append({
+                    **doc,
+                    "acronyms" : [
+                        *doc.get('acronyms', []),
+                        *acronyms
+                    ]
+                })
+            else:
+                errors.append(response.failure())
+
+        return docs, records, errors
 
     @classmethod
     def from_config(cls, config : Config) -> Stage:
@@ -132,31 +114,9 @@ class AcronymsExtractor(Stage):
             writer=FileWriter
                 .from_filename(config.output_filename)
                 .buffered(config.buffer_size, cache),
-            qa_model=config.qa_model,
-            threshold=config.threshold
+            extractor=AcronymExtractorRegistry.create(
+                name=config.model,
+                device=config.device
+            )
         )
-    
-if __name__ == '__main__':
 
-    examples = [
-        {
-
-            "sentence" : 'A large language model (LLM) is a neural network trained on a vast amount of text for natural language processing tasks, especially language generation.'
-        },
-        {
-            "sentence" : 'An LLM (large language model) is a neural network trained on a vast amount of text for natural language processing tasks, especially language generation.'
-        },
-        {
-            "sentence" : 'Machine learning operations (MLOps) is a set of workflow practices aiming to streamline the process of deploying and maintaining machine learning (ML) models. '
-        }
-    ]
-
-    config = Config(
-        input_filename="/home/fellah-a/Documents/Text2KG/data/corpus/ls2n-duke/data.jsonl",
-        out="/home/fellah-a/Documents/Text2KG/data/corpus/ls2n-duke/out",
-    )
-
-    acronyms_extractor = AcronymsExtractor.from_config(config)
-
-    for example in examples:
-        print(acronyms_extractor.transform(example))

@@ -59,8 +59,15 @@ class ConsoleLogger(Handler):
                 event.message,
             )            
 
-        self.logger.log(level=event.level.value,msg=message)
+        if event.extra.get("log_message", True):
+            self.logger.log(level=event.level.value,msg=message)
 
         if event.progress is not None:
+
             task = self.pbar._tasks[self.tasks[task_id]]
-            self.pbar.update(self.tasks[task_id], advance=event.progress - task.completed, refresh=True)
+
+            self.pbar.update(
+                self.tasks[task_id], 
+                advance=event.progress - task.completed, 
+                refresh=True
+            )

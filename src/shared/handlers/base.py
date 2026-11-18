@@ -20,10 +20,6 @@ class Event:
     level : EventLevel = EventLevel.INFO # Level
     message : Optional[str] = None # Message
     extra : Dict = field(default_factory=dict)
-
-    # total_processed : int = 0 # Total records already processed
-    # total_saved : int = 0 # Total records processed and saved to disk
-    # total_skipped : int = 0 # Total records skipped due to an exception
     
 
 class Handler(ABC):

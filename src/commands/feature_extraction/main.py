@@ -21,11 +21,13 @@ from src import helpers
 from src.shared.file_tools import FileReader
 from src.shared.command_tools import BaseCommand
 from src.shared.handlers import Event, ConsoleLogger
-from src.commands.feature_extraction.graph_utils import EdgeType, Graph
+from src.commands.feature_extraction.graph_utils import Graph
 from src.commands.feature_extraction.graph_filter import FilterConfig, GraphFilter
 from src.commands.feature_extraction.graph_builder import GraphBuilder
 from src.commands.feature_extraction.graph_embedder import GraphEmbedder
-from typing import Generator
+from src.commands.knowledge_graph_construction.main import Config as KGConfig, PipeConfig
+from src.envirenment import Domain, env
+from typing import Generator, List
 from pydantic import BaseModel, computed_field
 from definitions import KGS_DIR, FEATURES_DIR
 from instance import cli
@@ -34,13 +36,25 @@ class FeatureExtractionConfig(BaseModel):
     kg_id : str
     model_name: str
     batch_size: int
-    device: str
+    device: int
     filter : FilterConfig
+    stage : str =  'llm_based_entities_cleaning'
+
+    @computed_field
+    @property
+    def kg_config(self) -> PipeConfig:
+        return KGConfig(graph_id=self.kg_id).conf
+
+    @computed_field
+    @property
+    def domains(self) -> List[Domain]:
+        domains_id = self.kg_config.glob.domain
+        return env.fields[domains_id].domains
 
     @computed_field
     @property
     def raw_path(self) -> str:
-        return os.path.join(KGS_DIR, self.kg_id, 'llm_based_entities_cleaning', 'data.jsonl')
+        return os.path.join(KGS_DIR, self.kg_id, self.stage, 'data.jsonl')
     
 class Config(BaseModel):
     features_id : str
@@ -78,23 +92,27 @@ class FeatureExtractor(BaseCommand):
         model_name : str,
         batch_size : int,
         device : str,
-        graph_dir : str
+        graph_dir : str,
+        domains : List[Domain]
     ) -> None:
+        
         super().__init__()
+
         self.reader = reader
         self.filter = filter
         self.model_name = model_name
         self.batch_size = batch_size
         self.device = device
         self.graph_dir = graph_dir
+        self.domains = domains
 
     def __iter__(self) -> Generator[Event, None, None]:
 
         ### Stage 01 : Graph Building
-        graph = GraphBuilder(self, self.reader).build()
+        graph = GraphBuilder(self, self.reader, self.domains).build()
 
         ### Stage 02 : Filtering
-        # graph = GraphFilter(self, self.filter).filter_graph(graph)
+        graph = GraphFilter(self, self.filter).filter_graph(graph)
 
         ### Stage 03 : Feature Extraction
         graph = GraphEmbedder(self, self.model_name, self.batch_size, self.device).extract_features(graph)
@@ -119,7 +137,8 @@ class FeatureExtractor(BaseCommand):
             model_name=config.conf.model_name,
             batch_size=config.conf.batch_size,
             device=config.conf.device,
-            graph_dir=config.features_dir
+            graph_dir=config.features_dir,
+            domains=config.conf.domains
         )
 
         fe.add_handler(ConsoleLogger("FeatureExtraction"))

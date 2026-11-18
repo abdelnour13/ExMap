@@ -30,7 +30,7 @@ STAGES : Dict[str, Tuple[Type[Stage], Type[StageConfig]]] = {
     "coreference_resolution" : (coreference_resolution.CoreferenceResolver, coreference_resolution.Config),
     "corpus_annotation" : (annotation.CorpusAnnotatator, annotation.Config),
     "keywords_extraction" : (keyword_extraction.KeywordsExtractor, keyword_extraction.StageConfig),
-    "sentence_segmentation" : (sentence_segmentation.SentenceSegmentor, sentence_segmentation.Config),
+    "sentence_segmentation" : (sentence_segmentation.SentenceSegmentation, sentence_segmentation.Config),
     "acronyms_extraction" : (acronym_extraction.AcronymsExtractor, acronym_extraction.Config),
     "triples_extraction" : (triples_extractor.TriplesExtractor, triples_extractor.Config),
     "entities_normalization" : (entities_cleaning.EntitiesNormalizer, entities_cleaning.Config),

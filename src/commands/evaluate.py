@@ -1,42 +1,37 @@
 import os
-import asyncio
-import json
-import pandas as pd
 import numpy as np
-from pydantic import BaseModel
-from functools import cached_property
-from itertools import batched, product
-from src.commands.feature_extraction_old import Graph, EdgeType
-from src.shared.command_tools import BaseCommand
-from src.shared.handlers import ConsoleLogger
-from src.shared.env import env, LLM
-from src import helpers
+import pandas as pd
 from dataclasses import asdict
-from definitions import EMS_DIR, EVAL_DIR
-from src.shared.file_tools import FileWriter, FileReader, Batched, Product
-from typing import TypedDict, Dict, List, TypeVar
+from functools import cached_property
+from typing import Any, Dict, List
+from pydantic import BaseModel
 from returns.pipeline import is_successful
+from definitions import EMS_DIR, EVAL_DIR
 from instance import cli
+from src.helpers import utils
+from src.commands.feature_extraction.graph_utils import Graph, EdgeType
+from src.shared.command_tools import BaseCommand
+from src.shared.file_tools import FileWriter, FileReader, Batched, Product
+from src.shared.handlers import ConsoleLogger
+from src.shared.platforms import LLM
 
 
-T = TypeVar("T")
+ALIGN_PROMPT = 'ExpertiseDomainAlignment'
+COVER_PROMPT = 'ExpertiseEntitiesCoverage'
 
-class AlignmentOutput(TypedDict):
-    score : float
 
 def to_dict(n) -> dict:
-
     d = asdict(n)
     p = d.pop('properties', {})
-    d = { **d, **p }
+    return {**d, **p}
 
-    return d
 
-class Config(BaseModel):
+class EvaluationConfig(BaseModel):
 
-    expertise_id: str 
-    llm : str
-    batch_size : int
+    expertise_id: str
+    llm: str
+    batch_size: int
+    lang: str = 'en'
 
     @property
     def eval_dir(self) -> str:
@@ -52,9 +47,15 @@ class Config(BaseModel):
     def graph(self) -> Graph:
         return Graph.load(self.expertise_dir)
 
-    @property
+    @cached_property
     def cache_path(self) -> str:
-        return os.path.join(self.eval_dir, 'cache.jsonl')
+
+        path = os.path.join(self.eval_dir, 'cache.jsonl')
+
+        with open(path, "w"):
+            pass
+
+        return path
 
     @cached_property
     def file_writer(self) -> FileWriter:
@@ -70,6 +71,14 @@ class Config(BaseModel):
         os.makedirs(dir, exist_ok=True)
         return dir
 
+class Config(BaseModel):
+    evaluation_id : str
+
+    @property
+    def evaluation_config(self) -> EvaluationConfig:
+        path = os.path.join(EVAL_DIR, self.evaluation_id, "config.json")
+        raw_data = utils.load_json_file(path)
+        return EvaluationConfig(**raw_data)
 
 @cli.register_stage(
     name="evaluate",
@@ -81,13 +90,14 @@ class Config(BaseModel):
 )
 class ExpertiseMapEvaluator(BaseCommand):
 
-    def __init__(self, 
-        llm : LLM, 
-        graph : Graph,
-        batch_size : int,
-        writer : FileWriter,
-        reader : FileReader,
-        graph_dir : str
+    def __init__(self,
+        llm: LLM,
+        graph: Graph,
+        batch_size: int,
+        writer: FileWriter,
+        reader: FileReader,
+        graph_dir: str,
+        lang: str = 'en'
     ) -> None:
         super().__init__()
 
@@ -97,25 +107,23 @@ class ExpertiseMapEvaluator(BaseCommand):
         self.writer = writer
         self.reader = reader
         self.graph_dir = graph_dir
+        self.lang = lang
+
+    # ------------------------------------------------------------------ #
+    # Data preparation
+    # ------------------------------------------------------------------ #
 
     def dataframe(self) -> pd.DataFrame:
 
-        graph = self.graph 
+        graph = self.graph
 
         df = pd.DataFrame([
-            to_dict(e) 
+            to_dict(e)
             for e in graph._edges[EdgeType(src="Entity", dst="Expertise", name="BELONGSTO")]._edges
         ])
 
-        entities = pd.DataFrame([
-            to_dict(e)
-            for e in graph._nodes['Entity']._nodes
-        ])
-
-        expertises = pd.DataFrame([
-            to_dict(e)
-            for e in graph._nodes['Expertise']._nodes
-        ])
+        entities = pd.DataFrame([to_dict(e) for e in graph._nodes['Entity']._nodes])
+        expertises = pd.DataFrame([to_dict(e) for e in graph._nodes['Expertise']._nodes])
 
         entities.columns = [f'{col}_entity' for col in entities.columns]
         expertises.columns = [f'{col}_expertise' for col in expertises.columns]
@@ -125,334 +133,233 @@ class ExpertiseMapEvaluator(BaseCommand):
         df = df.drop(columns=['src', 'dst', 'id'])
 
         df = df.groupby('id_expertise').agg({
-            'llm_label_expertise' : 'first',
-            'id_entity' : list,
-            'name_entity' : list
+            'llm_label_expertise': 'first',
+            'id_entity': list,
+            'name_entity': list
         }).reset_index()
 
         return df
 
-    async def align(self, 
-        expertise_name : str,
-        domain : str
-    ) -> Dict:
-        
-        result = await helpers.make_openai_request(
-            client=self.llm.async_client,
-            model=self.llm.info.name,
-            messages=[
-                {
-                    "role" : "system",
-                    "content" : """
+    # ------------------------------------------------------------------ #
+    # LLM requests
+    # ------------------------------------------------------------------ #
 
-                        You are an expert in scientific classification and domain relevance assessment. 
-                        Your task is to evaluate the degree of alignment between a research expertise and a target scientific domain. 
-                        The research expertise is defined by its title. 
-                        The domain is defined by its name. 
+    def _run_prompt(self, prompt_name: str, inputs: List[Dict[str, Any]]) -> List[Dict]:
 
-                        Analyze the expertise' main objectives and application area to dermine the degree of relevance to
-                        the scientific domain.
+        """Runs a batch of requests and wraps each output in the cache format:
+        {"result": {...}} on success, {"error": {...}} on failure."""
 
-                        ### **Output Format** :
-                            - Score between 0 (not alignment) and 1 (perfect alignment).
-                            - The return should be in json format and should contain only one field named "score" of type "float" :
-                            {
-                                "score" : {score}
-                            }
-                            - Important : Do not provide explanations, reasoning or additional text.
-                        
-                    """,
-                },
-                {
-                    "role" : "user",
-                    "content" : """
-                        - Expertise name: {expertise_name}
-                        - Label / Domain: {domain}
-                    """.format(expertise_name=expertise_name, domain=domain)
-                }
-            ]
+        outputs = self.llm.batch_make_async_request(
+            prompt_name=prompt_name,
+            inputs=inputs,
+            lang=self.lang,
         )
 
-        content = result.map(lambda x : x.choices[0].message.content)
-        result = content.map(json.loads)
+        results = []
 
-        if is_successful(result):
-            result = result.unwrap()
-            return { "result" : result }
-        else:
-            return { 
-                "error" : {
-                    "name" : result.failure().__class__.__name__,
-                    "raw_content" : content.unwrap() if is_successful(content) else None
-                } 
-            }
+        for out in outputs:
 
-    async def cover(self, 
-        expertise_name : str,
-        entities : List[str]
-    ) -> Dict:
-        
-        result = await helpers.make_openai_request(
-            client=self.llm.async_client,
-            model=self.llm.info.name,
-            messages=[
-                {
-                    "role" : "system",
-                    "content" : """
-
-                        You are an expert in scientific text analysis. 
-                        Your task is to evaluate the degree of coverage between a research expertise and a setf of entities. 
-                        The research expertise is defined by its title. 
-                        The entities are defined by their names. 
-
-                        Analyze the expertise' main objectives and application area to dermine the degree of relevance to
-                        the entities.
-
-                        ### **Output Format** :
-                            - Score between 0 (not alignment) and 1 (perfect alignment).
-                            - The return should be in json format and should contain only one field named "score" of type "float" :
-                            {
-                                "score" : {score}
-                            }
-                            - Important : Do not provide explanations, reasoning or additional text.
-                        
-                    """,
-                },
-                {
-                    "role" : "user",
-                    "content" : """
-                        - Expertise name: {expertise_name}
-                        - Entities: {entities}
-                    """.format(expertise_name=expertise_name, entities=' | '.join(entities))
-                }
-            ]
-        )
-
-        content = result.map(lambda x : x.choices[0].message.content)
-        result = content.map(json.loads)
-
-        if is_successful(result):
-            result = result.unwrap()
-            return { "result" : result }
-        else:
-            return { 
-                "error" : {
-                    "name" : result.failure().__class__.__name__,
-                    "raw_content" : content.unwrap() if is_successful(content) else None
-                } 
-            }
-
-    async def _align_batch(self, batch : List[Dict]) -> List[Dict]:
-
-        results = await asyncio.gather(*[
-            self.align(expertise_name=task_info['expertise_name'], domain=task_info['domain'])
-            for task_info in batch
-        ])
+            if is_successful(out):
+                results.append({"result": out.unwrap()})
+            else:
+                failure = out.failure()
+                results.append({
+                    "error": {
+                        "name": failure.__class__.__name__,
+                        "message": str(failure),
+                    }
+                })
 
         return results
 
-    def align_batch(self, batch : List[Dict]) -> List[Dict]:
-        return asyncio.run(self._align_batch(batch))
+    def align_batch(self, batch: List[Dict]) -> List[Dict]:
 
-    async def _cover_batch(self, batch : List[Dict]) -> List[Dict]:
-    
-        results = await asyncio.gather(*[
-            self.cover(expertise_name=task_info['expertise_name'], entities=task_info['entities'])
-            for task_info in batch
-        ])
+        return self._run_prompt(
+            prompt_name=ALIGN_PROMPT,
+            inputs=[
+                {"expertise_name": task['expertise_name'], "domain": task['domain']}
+                for task in batch
+            ],
+        )
 
-        return results
+    def cover_batch(self, batch: List[Dict]) -> List[Dict]:
+        
+        return self._run_prompt(
+            prompt_name=COVER_PROMPT,
+            inputs=[
+                {"expertise_name": task['expertise_name'], "entities": ' | '.join(task['entities'])}
+                for task in batch
+            ],
+        )
 
-    def cover_batch(self, batch : List[Dict]) -> List[Dict]:
-        return asyncio.run(self._cover_batch(batch))
+    # ------------------------------------------------------------------ #
+    # Scoring
+    # ------------------------------------------------------------------ #
 
-    def align_score(self, row : pd.Series) -> float | None:
+    @staticmethod
+    def align_score(row: pd.Series) -> float | None:
 
-        scores = []
+        scores = [
+            score
+            for domain, score in zip(row['domain_id'], row['score'])
+            if domain in row['dst']
+        ]
 
-        for domain, score in zip(row['domain_id'], row['score']):
-
-            if domain in row['dst']:
-                scores.append(score)
-
-        return sum(scores) / len(scores) if len(scores) > 0 else None
+        return sum(scores) / len(scores) if scores else None
 
     def compute_scores(self) -> pd.DataFrame:
 
         df = pd.read_json(self.reader.filename, lines=True)
 
-        ### Expertise 2 Domain
+        # Failed tasks are re-run and appended, so keep only the latest
+        # entry per task and drop the ones that are still failing.
+        df = df.drop_duplicates(subset='task_id', keep='last')
+        df = df[df['result'].apply(lambda x: 'result' in x)]
+        df['score'] = df['result'].apply(lambda x: x['result']['score'])
+
+        ### Expertise -> SubDomain
         expertise2subdomain = pd.DataFrame([
-            to_dict(e) 
+            to_dict(e)
             for e in self.graph._edges[EdgeType(src="Expertise", dst="SubDomain", name="BELONGSTO")]._edges
         ])
-        expertise2subdomain = expertise2subdomain[['src', 'dst']]
-        expertise2subdomain = expertise2subdomain.groupby('src').agg(list).reset_index()
+        expertise2subdomain = expertise2subdomain[['src', 'dst']].groupby('src').agg(list).reset_index()
 
-        ### Align Score
-        df_align = df[df['task'] == 'align']
-        df_align['score'] = df_align['result'].apply(lambda x : x['result']['score'])
-        df_align = df_align[['expertise_id', 'domain_id', 'score']]
+        ### Align Score (DAS)
+        df_align = df.loc[df['task'] == 'align', ['expertise_id', 'domain_id', 'score']]
         df_align = df_align.groupby(by='expertise_id').agg(list).reset_index()
         df_align = df_align.merge(right=expertise2subdomain, left_on='expertise_id', right_on='src')
         df_align['DAS'] = df_align.apply(self.align_score, axis=1)
         df_align = df_align[['expertise_id', 'DAS']]
 
-        ### Cover Score
-        df_cover = df[df['task'] == 'cover']
-        df_cover['CCS'] = df_cover['result'].apply(lambda x : x['result']['score'])
-        df_cover = df_cover[['expertise_id', 'CCS']]
+        ### Cover Score (CCS)
+        df_cover = df.loc[df['task'] == 'cover', ['expertise_id', 'score']]
+        df_cover = df_cover.rename(columns={'score': 'CCS'})
 
         ### CWAS
-        df_scores = df_align.merge(df_cover, right_on='expertise_id', left_on='expertise_id')
+        df_scores = df_align.merge(df_cover, on='expertise_id')
 
-        CCS = df_scores['CCS'].to_numpy() 
-        DAS = df_scores['DAS'].to_numpy() 
+        CCS = df_scores['CCS'].to_numpy(dtype=float)
+        DAS = df_scores['DAS'].to_numpy(dtype=float)
         df_scores['CWAS'] = np.sqrt(CCS * DAS)
 
         return df_scores
 
-    def update_graph(self, data : pd.DataFrame) -> None:
+    def update_graph(self, data: pd.DataFrame) -> None:
 
-        for idx, row in data.iterrows():
-
+        for _, row in data.iterrows():
             self.graph.add_node(
                 type='Expertise',
                 id=row['expertise_id'],
                 properties={
-                    "DAS" : row['DAS'],
-                    "CCS" : row['CCS'],
-                    "CWAS" : row['CWAS']
+                    "DAS": row['DAS'],
+                    "CCS": row['CCS'],
+                    "CWAS": row['CWAS']
                 }
             )
+
+    # ------------------------------------------------------------------ #
+    # Pipeline
+    # ------------------------------------------------------------------ #
+
+    def _load_cache(self) -> Dict[str, bool]:
+        """task_id -> True if the cached result is an error (must be re-run)."""
+        return {
+            doc['task_id']: "error" in doc['result']
+            for doc, _ in self.reader.generate()
+        }
+
+    @staticmethod
+    def _needs_run(task: Dict, cache: Dict[str, bool]) -> bool:
+        return cache.get(task['task_id'], True)
+
+    def _process(self, tasks, task_name: str, build, run) -> None:
+
+        cache = self._load_cache()
+
+        for batch in self.track(it=tasks, task=task_name):
+
+            batch = [build(item) for item in batch]
+            batch = [task for task in batch if self._needs_run(task, cache)]
+
+            if not batch:
+                continue
+
+            for task, result in zip(batch, run(batch)):
+                task['result'] = result
+
+            self.writer.write(batch)
 
     def __iter__(self):
 
         df = self.dataframe()
+        records = df.to_dict(orient='records')
         domains = list(map(to_dict, self.graph._nodes['SubDomain']._nodes))
 
-        cache = {
-            doc['task_id'] : "error" in doc['result'] 
-            for doc, _ in self.reader.generate() 
-        }
-
         ### Alignment Score
-        yield self.make_info_event(
-            progress=0.0,
-            message="Starting Alignment Score calculation"
+        yield self.make_info_event(progress=0.0, message="Starting Alignment Score calculation")
+
+        def build_align(item) -> Dict:
+            expertise, domain = item
+            return {
+                "task_id": f"{expertise['id_expertise']}_{domain['id']}_align",
+                "expertise_id": expertise['id_expertise'],
+                "expertise_name": expertise['llm_label_expertise'],
+                "domain": domain['name'],
+                "domain_id": domain['id'],
+                "entities": expertise['name_entity'],
+                "task": "align",
+            }
+
+        self._process(
+            tasks=Batched(Product(records, domains), self.batch_size),
+            task_name="alignment-score",
+            build=build_align,
+            run=self.align_batch,
         )
-
-        tasks = Batched(
-            Product(*[
-                df.to_dict(orient='records'),
-                domains
-            ]),
-            self.batch_size
-        )
-
-        for batch in self.track(
-            it=tasks,
-            task="alignment-score"
-        ):
-            
-            batch = [
-                {
-                    "task_id" : f'{expertise['id_expertise']}_{domain['id']}_align',
-                    "expertise_id" : expertise['id_expertise'],
-                    "expertise_name" : expertise['llm_label_expertise'],
-                    "domain" : domain['name'],
-                    "domain_id" : domain['id'],
-                    "entities" : expertise['name_entity'],
-                    "task" : "align"
-                }
-                for expertise, domain in batch
-            ]
-
-            batch = [task for task in batch if task['task_id'] not in cache or cache[task['task_id']]]
-
-            if len(batch) == 0:
-                continue
-
-            results = self.align_batch(batch)
-
-            for task, result in zip(batch, results):
-                task['result'] = result
-
-            self.writer.write(batch)
 
         ### Cover Score
-        yield self.make_info_event(
-            progress=0.5,
-            message="Starting Cover Score calculation"
+        yield self.make_info_event(progress=0.5, message="Starting Cover Score calculation")
+
+        def build_cover(expertise) -> Dict:
+            return {
+                "task_id": f"{expertise['id_expertise']}_cover",
+                "expertise_id": expertise['id_expertise'],
+                "expertise_name": expertise['llm_label_expertise'],
+                "entities": expertise['name_entity'],
+                "task": "cover",
+            }
+
+        self._process(
+            tasks=Batched(records, self.batch_size),
+            task_name="cover-score",
+            build=build_cover,
+            run=self.cover_batch,
         )
-
-        tasks = Batched(
-            df.to_dict(orient='records'),
-            self.batch_size
-        )
-
-        for batch in self.track(
-            it=tasks,
-            task="cover-score"
-        ):
-            
-            batch = [
-                {
-                    "task_id" : f'{expertise['id_expertise']}_cover',
-                    "expertise_id" : expertise['id_expertise'],
-                    "expertise_name" : expertise['llm_label_expertise'],
-                    "entities" : expertise['name_entity'],
-                    "task" : "cover"
-                }
-                for expertise in batch
-            ]
-
-            batch = [task for task in batch if task['task_id'] not in cache or cache[task['task_id']]]
-            
-            if len(batch) == 0:
-                continue
-
-            results = self.cover_batch(batch)
-
-            for task, result in zip(batch, results):
-                task['result'] = result
-
-            self.writer.write(batch)
 
         ### Compute Scores
-        yield self.make_info_event(
-            progress=0.8,
-            message="Computing Scores"
-        )
-
+        yield self.make_info_event(progress=0.8, message="Computing Scores")
         scores_df = self.compute_scores()
 
-        yield self.make_info_event(
-            progress=0.9,
-            message="Updating Graph"
-        )
-
         ### Update Graph
+        yield self.make_info_event(progress=0.9, message="Updating Graph")
         self.update_graph(scores_df)
         self.graph.save(self.graph_dir)
 
-        yield self.make_info_event(
-            progress=1.0,
-            message="Graph Update Completed"
-        )
-
-        yield from []
+        yield self.make_info_event(progress=1.0, message="Graph Update Completed")
 
     @classmethod
     def from_config(cls, config: Config) -> 'ExpertiseMapEvaluator':
 
-        evaluator = ExpertiseMapEvaluator(
-            graph=config.graph,
-            llm=env.llms[config.llm],
-            batch_size=config.batch_size,
-            writer=config.file_writer,
-            reader=config.file_reader,
-            graph_dir=config.graph_dir
+        evaluation_config = config.evaluation_config
+
+        evaluator = cls(
+            graph=evaluation_config.graph,
+            llm=LLM(evaluation_config.llm),
+            batch_size=evaluation_config.batch_size,
+            writer=evaluation_config.file_writer,
+            reader=evaluation_config.file_reader,
+            graph_dir=evaluation_config.graph_dir,
+            lang=evaluation_config.lang,
         )
 
         evaluator.add_handler(ConsoleLogger("ExpertiseMapEvaluator"))

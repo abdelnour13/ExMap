@@ -3,7 +3,7 @@ from nltk import word_tokenize
 from bs4 import BeautifulSoup
 from src.shared.command_tools import Stage, StageConfig, add_handlers
 from src.shared.file_tools import FileReader, FileWriter, TextfileCache
-from src.shared.language_detectors import LanguageDetector
+from src.methods.language_detectors import LanguageDetector, LanguageDetectorRegistry
 from typing import Dict
 from instance import cli
 
@@ -132,7 +132,7 @@ class CorpusCleaner(Stage):
             writer=FileWriter
                 .from_filename(config.output_filename)
                 .buffered(config.buffer_size, cache),
-            language_detector=LanguageDetector.create("lingua")
+            language_detector=LanguageDetectorRegistry.create("lingua")
         )
     
 if __name__ == '__main__':

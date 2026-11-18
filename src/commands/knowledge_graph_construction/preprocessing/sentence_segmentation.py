@@ -1,11 +1,13 @@
 from src.shared.file_tools import FileWriter, FileReader, TextfileCache
 from src.shared.command_tools import Stage, StageConfig, add_handlers
+from src.shared.handlers import Event, EventLevel
+from src.methods.sentence_segmentors import SentenceSegmentorRegistry, SentenceSegmentor
 from pycli import Field
 from typing import Dict,List
-from stanza import Pipeline
 from instance import cli
 
 class Config(StageConfig):
+    segmentor : str = Field(default="stanza")
     use_gpu : bool = Field(default=False,description="whether to use GPU acceleration or not, only available for strategy=stanza")
 
 @cli.register_stage(
@@ -17,31 +19,45 @@ class Config(StageConfig):
     add_save_to=False
 )
 @add_handlers
-class SentenceSegmentor(Stage):
+class SentenceSegmentation(Stage):
 
     def __init__(self, 
         reader : FileReader, 
         writer : FileWriter, 
-        use_gpu : bool
+        segmentor : SentenceSegmentor
     ) -> None:
         super().__init__(reader, writer)
+        self.segmentor = segmentor
 
-        self.use_gpu = use_gpu
+    def before_start(self):
+            
+        yield Event(
+            progress=0.0,
+            level=EventLevel.INFO,
+            extra={
+                'total_processed' : 0,
+                'total_saved' : 0,
+                'total_skipped' : 0
+            },
+            message=f"Loading {self.segmentor.__class__.__name__}..."
+        )
 
-        self.nlp = Pipeline(lang='en', processors='tokenize', use_gpu=use_gpu)
+        self.segmentor.load()
 
-    def tokenize(self, text : str) -> List[str]:
-
-        document = self.nlp(text)
-
-        return [
-            sentence.text 
-            for sentence in document.sentences
-        ]
+        yield Event(
+            progress=0.0,
+            level=EventLevel.INFO,
+            extra={
+                'total_processed' : 0,
+                'total_saved' : 0,
+                'total_skipped' : 0
+            },
+            message=f"{self.segmentor.__class__.__name__} Loaded."
+        )
         
     def transform(self, doc : Dict) -> List[Dict]:
 
-        sentences = self.tokenize(doc['abstract'])
+        sentences = self.segmentor.segment(doc['abstract'])
         
         return [
             {
@@ -60,12 +76,15 @@ class SentenceSegmentor(Stage):
 
         cache = TextfileCache(config.checkpoint_filename)
         
-        return SentenceSegmentor(
+        return SentenceSegmentation(
             reader=FileReader
                 .from_filename(config.input_filename, cache)
                 .batched(config.batch_size),
             writer=FileWriter
                 .from_filename(config.output_filename)
                 .buffered(config.buffer_size, cache),
-            use_gpu=config.use_gpu
+            segmentor=SentenceSegmentorRegistry.create(
+                config.segmentor, 
+                use_gpu=config.use_gpu
+            )
         )

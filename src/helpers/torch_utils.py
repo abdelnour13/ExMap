@@ -1,7 +1,7 @@
 import torch
 import random
 import numpy as np
-from typing import Any, Union, Tuple
+from typing import Any, Union, Tuple,  Dict, Hashable, Any
 from scipy.sparse import csgraph, csr_matrix
 from torch import Tensor
 from torch.nn import Module
@@ -15,6 +15,75 @@ def seed_everything(seed : int) -> None:
     torch.cuda.manual_seed(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
+
+class TensorDict(Dict[Hashable, Any]):
+
+    def __getitem__(self, key):
+
+        if isinstance(key, str):
+            return dict.__getitem__(self, key)
+
+        return TensorDict({
+            k : v[key]
+            for k, v in self.items()
+        })
+
+def create_knn_graph(
+    x: Tensor, 
+    k: int, 
+    batch_size: int = 1024
+) -> Tuple[Tensor, Tensor]:
+
+    n = x.size(0)
+    chunks = x.split(batch_size)
+    neighbors = torch.full((n, k), -1, device=x.device, dtype=torch.long)
+    scores = torch.full((n, k), -torch.inf, device=x.device, dtype=x.dtype)
+
+    def merge(rows: slice, cand_s: Tensor, cand_i: Tensor) -> None:
+        s = torch.cat([scores[rows], cand_s], dim=1)
+        idx = torch.cat([neighbors[rows], cand_i], dim=1)
+        top = s.topk(k, dim=1)
+        scores[rows] = top.values
+        neighbors[rows] = idx.gather(1, top.indices)
+
+    for i, xi in enumerate(chunks):
+
+        off_i = i * batch_size
+        rows_i = slice(off_i, off_i + len(xi))
+
+        for j in range(i, len(chunks)):
+
+            xj = chunks[j]
+            off_j = j * batch_size
+            S = xi @ xj.T
+            diag = i == j
+
+            if diag:
+                S.fill_diagonal_(-torch.inf)
+
+            kr = min(k, S.size(1) - diag)          # never select the masked self
+            
+            if kr > 0:
+                t = S.topk(kr, dim=1)
+                merge(rows_i, t.values, t.indices + off_j)
+
+            if not diag:
+                kc = min(k, S.size(0))
+                t = S.T.topk(kc, dim=1)
+                merge(slice(off_j, off_j + len(xj)), t.values, t.indices + off_i)
+
+    # Flatten to COO: one edge per (node, neighbor) pair
+    src = neighbors.reshape(-1)                                          # [N*k]
+    dst = torch.arange(n, device=x.device).repeat_interleave(k)         # [N*k]
+    weight = scores.reshape(-1)                                          # [N*k]
+
+    # Drop padding (only present when N - 1 < k)
+    valid = src >= 0
+    edge_index = torch.stack([src[valid], dst[valid]], dim=0)            # [2, E]
+    edge_weight = weight[valid]                                          # [E]
+
+    return edge_index, edge_weight
+                
 
 def create_similarity_graph( 
     x : Tensor, 

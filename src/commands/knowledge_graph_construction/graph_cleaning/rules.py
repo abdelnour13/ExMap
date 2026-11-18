@@ -11,7 +11,6 @@ from src.commands.knowledge_graph_construction.graph_cleaning.utils import (
     parse_rule,
     PredicateToken
 )
-from src.helpers import load_json_file
 from pydantic import BaseModel
 
 VAR_NAMES = Literal[

@@ -79,7 +79,10 @@ python -m pip install \
 # Spacy & NLTK resourcesclear
 # -------------------------------------------------
 
+python -m spacy download en_core_web_lg
 python -m spacy download en_core_web_sm
+python -m spacy download en_core_web_trf
+python -m coreferee install en
 
 # NLTK data
 python - <<'PY'

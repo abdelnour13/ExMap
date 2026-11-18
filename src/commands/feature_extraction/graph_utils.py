@@ -1,5 +1,6 @@
 import torch
 import os
+import pandas as pd
 from src import helpers
 from torch_geometric.data import HeteroData
 from torch import Tensor
@@ -58,6 +59,20 @@ class NodeStore:
     _nodes : List[Node] = field(default_factory=list,init=False)
     _id2idx : Dict[str, int] = field(default_factory=dict,init=False)
     _features : Dict[str, Tensor] = field(default_factory=dict,init=False)
+
+    @property
+    def dataframe(self) -> pd.DataFrame:
+
+        return pd.DataFrame([
+            {
+                "id" : node.id,
+                **node.properties
+            }
+            for node in self._nodes
+        ])
+
+    def __iter__(self):
+        yield from self.nodes_generator
 
     @property
     def nodes_generator(self) -> Generator[Node, None, None]:
@@ -144,6 +159,19 @@ class EdgeStore:
     _id2idx : Dict[str, int] = field(default_factory=dict,init=False)
     _features : Dict[str, Tensor] = field(default_factory=dict,init=False)
 
+    @property
+    def dataframe(self) -> pd.DataFrame:
+        
+        return pd.DataFrame([
+            {
+                "id" : edge.id,
+                "src" : edge.src,
+                "dst" : edge.dst,
+                **edge.properties
+            }
+            for edge in self._edges
+        ])
+
     @cached_property
     def source_edges(self) -> Dict[str, List[Edge]]:
 
@@ -173,6 +201,9 @@ class EdgeStore:
             r[(edge.src,edge.dst)].append(edge)
 
         return r
+
+    def __iter__(self):
+        yield from self.edges_generator
     
     @property
     def edges_generator(self) -> Generator[Edge, None, None]:
@@ -263,11 +294,14 @@ class EdgeType:
     dst : str
     name : str
 
+    def as_tuple(self) -> Tuple[str, str, str]:
+        return (self.src, self.name, self.dst)
+
     def __repr__(self):
         return f'{self.src}_{self.dst}_{self.name}'
 
     def __str__(self):
-        return self.__repr__() 
+        return self.__repr__()
 
 class RawNodeStore(TypedDict):
     nodes : List[Dict]
@@ -293,6 +327,9 @@ class NodeTypes:
     AltLabel = "AltLabel"
     Triple = "Triple"
     Predicate = "Predicate"
+    ### Expertise map
+    Topic = "Topic"
+    Expertise = "Expertise"
 
 class EdgeTypes:
     Entity_APPEARNSIN_Article = EdgeType("Entity", "Article", "APPEARIN")
@@ -309,11 +346,19 @@ class EdgeTypes:
     Triple_HASHEAD_Entity = EdgeType("Triple", "Entity","HAS-HEAD")
     Triple_HASTAIL_Entity = EdgeType("Triple", "Entity","HAS-TAIL")
     Triple_HASPREDICATE_Predicate = EdgeType("Triple", "Predicate", "HAS-PREDICATE")
+    ### Expertise map (src -> dst follows the edge index tensors built in mine_expertises)
+    Topic_INCLUDES_Entity = EdgeType("Topic", "Entity", "INCLUDES")
+    Topic_COVERS_Article = EdgeType("Topic", "Article", "COVERS")
+    Expertise_COVERS_Article = EdgeType("Expertise", "Article", "COVERS")
+    Expertise_COMBINES_Topic = EdgeType("Expertise", "Topic", "COMBINES")
 
 @dataclass
 class Graph:
+    _metadata : Dict[str, Any] = field(default_factory=dict)
     _nodes : Dict[str, NodeStore] = field(default_factory=lambda : defaultdict(NodeStore),init=False)
     _edges : Dict[EdgeType, EdgeStore] = field(default_factory=lambda : defaultdict(EdgeStore),init=False)
+
+
 
     @property
     def node_types(self) -> List[str]:
@@ -401,8 +446,13 @@ class Graph:
             for feature_name, feature_tensor in edge_store._features.items():
                 data[edge_type.src, edge_type.name, edge_type.dst][feature_name] = feature_tensor
 
+
         if ('Entity', 'HASRELATIONWITH', 'Entity') not in data.edge_types:
-            data = KGData(data.to_dict())
+            data = data.to_dict()
+            data.pop('_global_store', None)
+            data = KGData(data)
+
+        data.raw_metadata = self._metadata.copy()
 
         return data
 

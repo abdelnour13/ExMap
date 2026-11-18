@@ -1,3 +1,4 @@
+import math
 from typing import Generic, TypeVar, Tuple
 from collections.abc import Iterable, Iterator, Sized, Callable
 from itertools import product, batched
@@ -53,6 +54,22 @@ class Batched(Generic[T]):
 
         return (len(self.iterable) + self.n - 1) // self.n
 
+class Range:
+
+    def __init__(self, 
+        stop : int,
+        start : int = 0,
+        step : int = 1
+    ) -> None:
+        self.stop = stop
+        self.start = start
+        self.step = step
+
+    def __iter__(self):
+        yield from range(self.start, self.stop, self.step)
+
+    def __len__(self) -> None:
+        return math.ceil((self.stop - self.start) / self.step)
 
 class Product(Generic[T]):
 

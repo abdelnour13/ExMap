@@ -1,7 +1,7 @@
 import torch
 from torch import Tensor
 from torch.nn import functional as F
-from typing import Optional, Dict, Tuple, Literal, Type, TypeVar, Any
+from typing import Optional, Dict, Tuple, Literal, Type, TypeVar, List
 from torch_scatter import scatter
 from torch_geometric import utils as gnn_utils
 from pydantic import BaseModel
@@ -448,4 +448,19 @@ class Identity:
     def loss(self, params : IdentityLossParams) -> Tensor:
         return self.value
 
+class AggregateParams(BaseModel):
+    agg : Literal['sum', 'avg'] = 'avg'
+    losses_params : List[BaseLossParams]
 
+@Losses.register
+class AggregateContext:
+    losses : List[BaseLossContext]
+
+    def loss(self, params : AggregateParams) -> Tensor:
+
+        s = sum(loss.loss() for loss in self.losses)
+
+        if params.agg == 'avg':
+            s = s / len(self.losses)
+
+        return s

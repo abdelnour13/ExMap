@@ -1,12 +1,11 @@
 import os
 from typing import Dict
-from src.shared.zs_classifiers import LLMBasedZeroShotClassifier, LLM, ZeroShotClassifier
+from src.methods.zs_classifiers import LLMBasedZeroShotClassifier, LLM, ZeroShotClassifier, Label
 from src.helpers import load_json_file
 from src.shared.file_tools import FileReader, FileWriter, TextfileCache
 from src.shared.command_tools.vasync import OutputDirOption, ConnectionOption, add_handlers
 from src.commands.helpers import DomainConfig
 from definitions import ANNOTATION_DIR, CORPUS_DIR
-from pydantic import BaseModel
 from functools import cached_property
 from src.commands.knowledge_graph_construction.content_enrichment.annotation import CorpusAnnotatator as _CorpusAnnotatator
 
@@ -47,14 +46,7 @@ class CorpusAnnotatator(_CorpusAnnotatator):
         models[f'llm:{config.stage_config.model}'] = LLMBasedZeroShotClassifier(
             llm=LLM(name=config.stage_config.model, api_key=config.api_key),
             prompt_name="binary",
-            labels=[
-                {
-                    "name" : domain.sub_domain,
-                    "description" : domain.definition,
-                    "alt_names" : domain.alt_names
-                }
-                for domain in config.stage_config.domains
-            ],
+            batch_size=config.stage_config.batch_size
         )
 
         return models
@@ -72,6 +64,11 @@ class CorpusAnnotatator(_CorpusAnnotatator):
                 .from_filename(config.output_filename)
                 .buffered(config.stage_config.buffer_size, cache),
             models=cls.create_classifiers(config),
+            labels=[Label(
+                name=d.sub_domain,
+                description=d.definition,
+                alt_names=d.alt_names
+            ) for d in config.stage_config.domains]
         )
 
         return cmd
