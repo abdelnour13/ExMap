@@ -17,6 +17,7 @@ fi
 # --------------------------------------------------
 # 1. Build images from scratch and start containers
 # --------------------------------------------------
+docker pull neo4j:latest
 $COMPOSE build --no-cache --pull
 $COMPOSE up -d --force-recreate
 
