@@ -28,14 +28,16 @@ class GraphFilter:
 
     def __init__(self, 
         _host : BaseCommand,
-        filter : FilterConfig
+        filter : FilterConfig,
+        label_name : str
     ) -> None:
         self._host = _host
         self.filter = filter
+        self.label_name = label_name
 
     def require_subdomain(self, graph : HeteroData) -> Tensor:
     
-        y = graph['Article']['llm:deepseek-chat']
+        y = graph['Article'][self.label_name]
         y = y / y.max()
         y = y.gt(0.5)
 

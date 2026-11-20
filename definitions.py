@@ -1,11 +1,13 @@
 import os
 
 ROOT_DIR = os.path.dirname(__file__)
+API_DIR = os.path.join(ROOT_DIR, "api", "mount")
 
-EXPERIMENTS_DIR = os.path.join(ROOT_DIR, 'experiments')
-
-DATA_DIR = os.path.join(ROOT_DIR, "data")
+DATA_DIR = os.path.join(API_DIR, "data")
 os.makedirs(DATA_DIR, exist_ok=True)
+
+EXPERIMENTS_DIR = os.path.join(API_DIR, 'experiments')
+os.makedirs(EXPERIMENTS_DIR, exist_ok=True)
 
 CORPUS_DIR = os.path.join(DATA_DIR, "corpus")
 os.makedirs(CORPUS_DIR, exist_ok=True)
@@ -39,8 +41,12 @@ PLUGINS_DIR = os.path.join(NEO4J_DIR, "plugins")
 def rel_path(path : str) -> str:
     return os.path.relpath(path, ROOT_DIR)
 
+def domain_path(name : str) -> str:
+
+    if name.endswith('.json'):
+        return os.path.join(FIELDS_DIR, name)
+
+    return os.path.join(FIELDS_DIR, f'{name}.json')
+
 def hf_model_dir(name : str) -> str:
     return os.path.join(MODELS_DIR, name.replace('/', '--'))
-
-def domain_dir(name : str) -> str:
-    return os.path.join(FIELDS_DIR, f'{name}.json')

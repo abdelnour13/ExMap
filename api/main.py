@@ -8,6 +8,8 @@ from api.routes.annotation import router as annotations_router
 from api.routes.domains_list import router as domains_list_router
 from api.routes.jobs import router as jobs_router
 from api.routes.knowledge_graph import router as kg_router
+from api.routes.feature_extraction import router as features_router
+from api.routes.graph_learning import router as gl_router
 from definitions import ROOT_DIR
 
 JOBS_DIR = os.path.join(ROOT_DIR, 'api', 'jobs')
@@ -30,3 +32,5 @@ app.include_router(annotations_router)
 app.include_router(domains_list_router)
 app.include_router(jobs_router)
 app.include_router(kg_router)
+app.include_router(features_router)
+app.include_router(gl_router)

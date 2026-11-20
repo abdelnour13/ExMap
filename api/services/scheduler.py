@@ -15,7 +15,7 @@ from api.wrappers import annotation as DataAnnotation, knowledge_graph_construct
 from definitions import CORPUS_DIR, ANNOTATION_DIR, KGS_DIR
 
 STATUS = Literal["PENDING", "RUNNING", "ERROR", "COMPLETED"]
-JobType = Literal["DOWNLOAD", "ANNOTATION", "KG_CONSTRUCTION"]
+JobType = Literal["DOWNLOAD", "ANNOTATION", "KG_CONSTRUCTION", "FEATURE_EXTRACTION", "GRAPH_LEARNING", "MAP_CONSTRUCTION"]
 LEVEL = Literal["DEBUG", "INFO", "WARN", "ERROR", "CRITICAL"]
 
 JOB2CLS :Dict[JobType, Tuple[Type[BaseModel], Type[BaseCommand], str]] = {
@@ -53,6 +53,10 @@ class Job:
     num_events : int = field(default=0, init=False)
 
     def __post_init__(self):
+
+        if not os.path.exists(self.log_filename):
+            self.num_events = 0
+            return
 
         ### Load logfile initially from logfile then 
         ### increment as more events arrive

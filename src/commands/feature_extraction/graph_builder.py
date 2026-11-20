@@ -42,10 +42,6 @@ class GraphBuilder:
             for record in records:
                 self.update(record, graph)
 
-            print(len(graph._edges[EdgeTypes.Triple_HASTAIL_Entity]._edges))
-            print(len(graph._edges[EdgeTypes.Triple_HASHEAD_Entity]._edges))
-            print(len(graph._nodes[NodeTypes.Triple]._nodes))
-
             self._host.send_info_event(
                 progress=progress,
                 task="graph-construction",

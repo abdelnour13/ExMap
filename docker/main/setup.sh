@@ -73,29 +73,7 @@ python -m pip check
 # -------------------------------------------------
 
 python -m pip install \
-    git+https://github.com/abdelnour13/pycli.git
-
-# --------------------------------------------------
-# Spacy & NLTK resourcesclear
-# -------------------------------------------------
-
-python -m spacy download en_core_web_lg
-python -m spacy download en_core_web_sm
-python -m spacy download en_core_web_trf
-python -m coreferee install en
-
-# NLTK data
-python - <<'PY'
-import nltk
-
-nltk.download("punkt_tab")
-nltk.download("punkt")
-
-try:
-    nltk.download("averaged_perceptron_tagger_eng", raise_on_error=True)
-except Exception:
-    nltk.download("averaged_perceptron_tagger")
-PY
+    git+https://github.com/abdelnour13/pycli.git@f7091f08fbb4dd201eb57a419cca5573bedd5660
 
 # Hugging Face CLI
 curl -LsSf https://hf.co/cli/install.sh | bash

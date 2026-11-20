@@ -4,7 +4,7 @@ from typing import Dict, Annotated, List, Optional
 from neo4j import GraphDatabase, Driver
 from functools import cached_property
 from src import helpers
-from definitions import ENVIRONMENT, FIELDS_DIR
+from definitions import ENVIRONMENT, FIELDS_DIR, domain_path
 from src.helpers.common import load_json_file
 
 class Domain(BaseModel):
@@ -20,22 +20,14 @@ class EntityType(BaseModel):
 
 class FieldInfo(BaseModel):
     domains : List[Domain]
-    ontology : Optional[List[EntityType]]
 
     @staticmethod
-    def load(path : str) -> 'FieldInfo':
+    def load(name : str) -> 'FieldInfo':
 
-        domains_path = os.path.join(path, 'domains.json')
-        ontology_path = os.path.join(path, 'ontology.json')
-
+        domains_path = domain_path(name)
         domains = [Domain(**domain) for domain in load_json_file(domains_path)]
 
-        entities = None
-
-        if os.path.exists(ontology_path):
-            entities = [EntityType(**domain) for domain in load_json_file(ontology_path)]
-
-        return FieldInfo(domains=domains,ontology=entities)
+        return FieldInfo(domains=domains)
 
 class EnvLLMConfig(BaseModel):
     platform : str
@@ -54,6 +46,12 @@ class Neo4jConfig(BaseModel):
             auth=(self.user, self.password),
         )
 
+NEO4J_LOCAL_CONFIG = Neo4jConfig(
+    uri="neo4j://localhost:7687",
+    user="neo4j",
+    password="password1234"
+)
+
 def parse(data : List[Dict]) -> Dict[str, EnvLLMConfig]:
 
     data = [EnvLLMConfig(**item) for item in data]
@@ -64,7 +62,7 @@ def parse(data : List[Dict]) -> Dict[str, EnvLLMConfig]:
     }
 
 class Env(BaseModel):
-    hf_token : str
+    hf_token : str | None
     llms : Annotated[Dict[str, EnvLLMConfig], BeforeValidator(parse)]
     neo4j : Dict[str, Neo4jConfig]
     fields : Dict[str, FieldInfo]
@@ -79,11 +77,23 @@ class Env(BaseModel):
     @classmethod
     def load(self) -> 'Env':
 
+        if not os.path.exists(ENVIRONMENT):
+
+            env_data = {
+                "hf_token" : None,
+                "llms" : {},
+                "neo4j" : {
+                    "local" : NEO4J_LOCAL_CONFIG.model_dump(exclude_computed_fields=True)
+                },
+            }
+
+            helpers.save_json_file(ENVIRONMENT, env_data)
+
         data = helpers.load_json_file(ENVIRONMENT)
 
         data['fields']  = {
-            fname : FieldInfo.load(os.path.join(FIELDS_DIR, fname))
-            for fname in os.listdir(FIELDS_DIR)
+            fname : FieldInfo.load(fname)
+            for fname, _ in map(os.path.splitext, os.listdir(FIELDS_DIR))
         }
 
         return Env(**data)

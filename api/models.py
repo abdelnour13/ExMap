@@ -5,6 +5,32 @@ from typing import List
 from api.wrappers.annotation import CorpusAnnotatorConfig
 from api.services.scheduler import JobInfo
 
+class GraphLearningJobConfig(BaseModel):
+    features_id : str
+
+class CreateGraphLearningJobBody(BaseModel):
+    id : str
+    config : GraphLearningJobConfig
+
+class GraphLearningJobDetails(BaseModel):
+    name : str
+    config : GraphLearningJobConfig
+    jobs : List[JobInfo]
+
+class FeatureExtractionJobConfig(BaseModel):
+    kg_id : str
+    embedder : str
+    batch_size : int
+
+class CreateFeaturesExtractionJobBody(BaseModel):
+    id : str
+    config : FeatureExtractionJobConfig
+
+class FeatureExtractionJobDetails(BaseModel):
+    name : str
+    config : FeatureExtractionJobConfig
+    jobs : List[JobInfo] = Field(default=list)
+
 class PipelineConfig(BaseModel):
     corpus_id : str
     llm_name : str

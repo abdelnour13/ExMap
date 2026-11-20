@@ -7,7 +7,7 @@ from instance import cli
 from definitions import DATA_DIR
 from src.envirenment import env
 from src.commands.feature_extraction.graph_utils import Graph, Edge, Node
-from src.shared.command_tools import BaseCommand
+from src.shared.command_tools import BaseCommand, add_handlers, ConnectionOption, OutputDirOption
 from src.shared.handlers import ConsoleLogger
 
 T = TypeVar('T')
@@ -16,11 +16,14 @@ T = TypeVar('T')
 # Configuration
 # ---------------------------------------------------------------------------
 
-class Config(BaseModel):
+class Config(ConnectionOption, OutputDirOption):
 
     graph_id: str
     batch_size: int = 500
     neo4j_driver : str = "local"
+
+    def output_dir(self):
+        return os.path.join(DATA_DIR, "neo4j")
 
     @computed_field
     @property
@@ -42,6 +45,7 @@ class Config(BaseModel):
     add_from_conf=False,
     add_save_to=False,
 )
+@add_handlers
 class Neo4jUploader(BaseCommand):
 
     def __init__(self, config: Config, driver : Driver) -> None:
@@ -72,7 +76,6 @@ class Neo4jUploader(BaseCommand):
 
                 batch[i] = {
                     'graph_id' : graph_id,
-                    'id' : f"{graph_id}_{batch[i].id}",
                     **(
                         {
                             "src" : f"{graph_id}_{batch[i].src}",
@@ -83,7 +86,8 @@ class Neo4jUploader(BaseCommand):
                         k : v
                         for k, v in batch[i].properties.items()
                         if not isinstance(v, Tensor)
-                    }
+                    },
+                    'id' : f"{graph_id}_{batch[i].id}",
                 }
 
             session.execute_write(run_tx, batch)
@@ -150,6 +154,7 @@ class Neo4jUploader(BaseCommand):
             src_type = edge_key.src
             dst_type = edge_key.dst
             rel_type = edge_key.name.upper()
+            rel_type = rel_type.replace("-", "_").upper()
 
             if src_type in self.IGNORED_NODE_TYPES or dst_type in self.IGNORED_NODE_TYPES:
                 continue
@@ -218,6 +223,6 @@ class Neo4jUploader(BaseCommand):
             driver=config.driver
         )
 
-        uploader.add_handler(ConsoleLogger("Neo4jUploader"))
+        # uploader.add_handler(ConsoleLogger("Neo4jUploader"))
 
         return uploader

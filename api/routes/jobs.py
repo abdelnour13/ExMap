@@ -1,13 +1,92 @@
-import os
 from fastapi import APIRouter, Path, Query, HTTPException, status, Header
 from fastapi.sse import EventSourceResponse
 from typing import Optional, Annotated, AsyncIterable, List
 from api.services.scheduler import JobInfo, Job, JobType, Event, STATUS
-from api.services import scheduler_service, kg_construction_service, annotation_serivce, corpuses_service
 from src.commands.data_download.main import Config as DataDownloaderConfig, DataDownloader
-from api.wrappers import annotation, knowledge_graph_construction
+from src.commands.graph_learning import main as graph_learning
+from api.wrappers import annotation, knowledge_graph_construction, feature_extraction
+from api.services import (
+    scheduler_service, 
+    kg_construction_service, 
+    annotation_serivce, 
+    corpuses_service,
+    feature_extraction_service,
+    graph_learning_service
+)
 
 router = APIRouter(prefix="/jobs")
+
+@router.post("/graph_learning/{exp_id}/start")
+async def start_graph_learning(exp_id : str = Path()) -> JobInfo:
+    
+    if graph_learning_service.get_by_id(exp_id) is None:
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={ "id" : exp_id }
+        )
+
+    config = graph_learning.Config(
+        experiment=exp_id,
+        log=True
+    )
+
+    instance = graph_learning.Trainer.from_config(config=config)
+
+    job = Job(
+        log_filename=config.log_filename,
+        cmd=instance,
+        type="GRAPH_LEARNING",
+        config_id=exp_id,
+        conf=config
+    )
+
+    added = await scheduler_service.add_job(job)
+
+    if not added:
+
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail={ "id" : exp_id, "reason" : f"another job that operates on '{exp_id}' is pending or running." }
+        )
+
+    return job.info
+
+@router.post("/feature_extraction/{features_id}/start")
+async def start_feature_extraction(features_id : str = Path()) -> JobInfo:
+    
+    if feature_extraction_service.get_by_id(features_id) is None:
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={ "id" : features_id }
+        )
+
+    config = feature_extraction.Config(
+        features_id=features_id,
+        log=True
+    )
+
+    instance = feature_extraction.FeatureExtractor.from_config(config=config)
+
+    job = Job(
+        log_filename=config.log_filename,
+        cmd=instance,
+        type="FEATURE_EXTRACTION",
+        config_id=features_id,
+        conf=config
+    )
+
+    added = await scheduler_service.add_job(job)
+
+    if not added:
+
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail={ "id" : features_id, "reason" : f"another job that operates on '{features_id}' is pending or running." }
+        )
+
+    return job.info
 
 @router.post("/kg_construction/{kg_id}/start")
 async def start_kg_construction(

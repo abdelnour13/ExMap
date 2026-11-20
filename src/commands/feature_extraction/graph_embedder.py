@@ -212,7 +212,7 @@ class GraphEmbedder:
             "edges" : defaultdict(dict)
         }
 
-        total = len(spec['nodes']) + len(spec['edges'])
+        total = len(spec['nodes']) + len(spec['edges']) + 1 ### 1: is for the scores
 
         self._host.send_info_event(
             progress=0.0,
@@ -262,5 +262,11 @@ class GraphEmbedder:
                 **graph._edges[e_type]._features,
                 **features_dict
             }
+
+        self._host.send_info_event(
+            progress=(i+1+len(spec['nodes'].items()))/total,
+            task="feature-extraction",
+            message=f"[STAGE 3] Feature Extraction Stage Was Completed."
+        )
 
         return graph

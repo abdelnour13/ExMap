@@ -5,7 +5,7 @@ from api.services.scheduler import Scheduler
 from api.services.corpuses import CorpusesService
 from api.services.domains_list import DomainsListService
 from typing import List, Optional, Dict, Literal
-from definitions import ANNOTATION_DIR, CORPUS_DIR
+from definitions import ANNOTATION_DIR
 from src.helpers import load_json_file, save_json_file
 from pydantic import BaseModel
 from returns.result import Result
@@ -38,7 +38,7 @@ class AnnotationService:
         if details is None:
             return DeleteAnnotationResponse(deleted=False, details=None)
 
-        fullpath = os.path.join(CORPUS_DIR, id)
+        fullpath = os.path.join(ANNOTATION_DIR, id)
         shutil.rmtree(fullpath)
                 
         return DeleteAnnotationResponse(deleted=True, details=details)
@@ -107,10 +107,6 @@ class AnnotationService:
             datapath = os.path.join(fullpath, "data.jsonl")
 
             exists = os.path.exists(datapath)
-
-            print(filename)
-            print(configpath)
-            print(os.path.exists(configpath))
     
             if os.path.exists(configpath):
                 config = load_json_file(configpath)

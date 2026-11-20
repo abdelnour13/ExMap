@@ -1,5 +1,5 @@
 import os
-from definitions import FIELDS_DIR, domain_dir
+from definitions import FIELDS_DIR, domain_path
 from typing import List, Optional
 from api.models import GetDomainsList, Domain, CreateDomainsList
 from src.helpers import load_json_file, save_json_file
@@ -19,9 +19,9 @@ class DomainsListService:
         results = []
 
         for filename in os.listdir(FIELDS_DIR):
-            fullpath = domain_dir(filename)
+            fullpath = domain_path(filename)
             domains = [Domain(**domain) for domain in load_json_file(fullpath)]
-            results.append(GetDomainsList(name=filename, domains=domains))
+            results.append(GetDomainsList(name=os.path.splitext(filename)[0], domains=domains))
 
         return results
 
@@ -44,10 +44,7 @@ class DomainsListService:
         if details is not None:
             return CreateDomainsListResponse(created=False, details=details)
 
-        dirname = os.path.join(FIELDS_DIR, data.name)
-        filename = domain_dir(data.name)
-        os.mkdir(dirname)
-
+        filename = domain_path(data.name)
         save_json_file(path=filename, data=[item.model_dump() for item in data.domains])
 
         return CreateDomainsListResponse(created=True, details=self.get_by_id_assert(id=data.name))

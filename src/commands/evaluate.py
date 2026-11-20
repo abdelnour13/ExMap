@@ -247,6 +247,7 @@ class ExpertiseMapEvaluator(BaseCommand):
     def update_graph(self, data: pd.DataFrame) -> None:
 
         for _, row in data.iterrows():
+            
             self.graph.add_node(
                 type='Expertise',
                 id=row['expertise_id'],

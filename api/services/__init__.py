@@ -3,6 +3,8 @@ from .domains_list import DomainsListService
 from .scheduler import Scheduler
 from .annotations import AnnotationService
 from .knowledge_graph_construction import KnowledgeGraphConstructionService
+from .feature_extraction import FeaturesExtractionService
+from .graph_learning import GraphLearningService
 
 scheduler_service = Scheduler(n=1)
 corpuses_service = CorpusesService(scheduler=scheduler_service)
@@ -17,4 +19,14 @@ annotation_serivce = AnnotationService(
 kg_construction_service = KnowledgeGraphConstructionService(
     scheduler=scheduler_service,
     annotation_service=annotation_serivce
+)
+
+feature_extraction_service = FeaturesExtractionService(
+    scheduler=scheduler_service,
+    kg_service=kg_construction_service
+)
+
+graph_learning_service = GraphLearningService(
+    scheduler=scheduler_service,
+    features_service=feature_extraction_service
 )

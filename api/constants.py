@@ -1,0 +1,1 @@
+SUBDOMAINS_LABEL_KEY = "subdomains"

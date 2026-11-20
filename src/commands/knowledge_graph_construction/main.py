@@ -13,10 +13,7 @@ set_start_method('spawn', force=True)
 
 from src.commands.knowledge_graph_construction.preprocessing import coreference_resolution, cleaning, sentence_segmentation
 from src.commands.knowledge_graph_construction.content_enrichment import annotation, acronym_extraction, keyword_extraction
-from src.commands.knowledge_graph_construction.triplet_extraction import (
-    triples_extractor, 
-    knowledge_completion,
-)
+from src.commands.knowledge_graph_construction.triplet_extraction import triples_extractor
 from src.commands.knowledge_graph_construction.graph_cleaning import (
     llm_based_predicates_cleaning,
     llm_based_entities_cleaning,
@@ -35,7 +32,6 @@ STAGES : Dict[str, Tuple[Type[Stage], Type[StageConfig]]] = {
     "acronyms_extraction" : (acronym_extraction.AcronymsExtractor, acronym_extraction.Config),
     "triples_extraction" : (triples_extractor.TriplesExtractor, triples_extractor.Config),
     "entities_normalization" : (entities_cleaning.EntitiesNormalizer, entities_cleaning.Config),
-    "knowledge_completion" : (knowledge_completion.KnowledgeCompletion, knowledge_completion.Config),
     "rule_based_predicate_cleaning" : (rule_based_predicates_cleaning.PredicatesNormalizer, rule_based_predicates_cleaning.Config),
     "llm_based_predicate_cleaning" : (llm_based_predicates_cleaning.IterativePredicatesCleaning, llm_based_predicates_cleaning.Config),
     "llm_based_entities_cleaning" : (llm_based_entities_cleaning.IterativeLLMBasedEntitiesCleaning, llm_based_entities_cleaning.Config)

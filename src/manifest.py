@@ -194,7 +194,6 @@ class Manifest(BaseModel):
             names = ", ".join(f"{k}::{n}" for k, n, _ in failures)
             raise RuntimeError(f"Failed to download required resources: {names}") from failures[0][2]
 
-
 if __name__ == "__main__":
     manifest = Manifest.load()
-    manifest.download_all()
+    manifest.download_all(required_only=True)

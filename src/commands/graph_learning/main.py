@@ -35,8 +35,9 @@ from src.commands.graph_learning.preprocessing import (
     _select_nodes, _remove_self_loops, AugmentationConfig,
     _subgraph_by_articles, _merge_labels
 )
+from src.commands.feature_extraction.main import Config as FEConfig
 from src.commands.graph_learning.sampler import HybridSampler
-from src.shared.command_tools import BaseCommand
+from src.shared.command_tools import BaseCommand, add_handlers, ConnectionOption, OutputDirOption
 from src.shared.handlers import ConsoleLogger
 from definitions import EXPERIMENTS_DIR, FEATURES_DIR
 from rich.progress import Progress
@@ -46,16 +47,19 @@ from rich.progress import Progress
 # Configuration
 # --------------------------------------------------------------------------- 
 
-class Config(BaseModel):
+class Config(ConnectionOption, OutputDirOption):
 
     experiment: str = "default"
     configs : Optional[List[str]] = None
+
+    def output_dir(self):
+        return os.path.join(EXPERIMENTS_DIR, *self.experiment.split('/'))
 
     @computed_field
     @property
     def training_config(self) -> "TrainingConfig":
 
-        config_path = os.path.join(EXPERIMENTS_DIR, *self.experiment.split('/'), "config.json")
+        config_path = os.path.join(self.output_dir(), "config.json")
         conf = helpers.load_json_file(config_path)
 
         return TrainingConfig(**{
@@ -111,6 +115,11 @@ class BaseTrainingConfig(BaseModel):
     def validate_model_params(self):
         TopicModel.validate_model_config(self.model_name, self.model_params)
         return self
+
+    @computed_field
+    @property
+    def fe_config(self) -> FEConfig:
+        return FEConfig(features_id=self.graph)
 
 class ExperimentConfig(BaseTrainingConfig):
     experiment : str
@@ -350,6 +359,7 @@ class TrainingConfig(BaseTrainingConfig):
     add_from_conf=False,
     add_save_to=False,
 )
+@add_handlers
 class Trainer(BaseCommand):
 
     def __init__(self, 
@@ -563,6 +573,8 @@ class Trainer(BaseCommand):
 
         loaders = {"train": train_loader, "val": val_loader}
         history: List[pd.DataFrame] = []
+
+        print(f"{label} : ({len(loaders['train'])}, {len(loaders['val'])})")
 
         epochs_it = self.track(
             it=Range(config.num_epochs),

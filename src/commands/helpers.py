@@ -3,7 +3,7 @@ import torch
 from pydantic import BaseModel, BeforeValidator, ValidationError
 from functools import cached_property
 from typing import List, Optional, Annotated, TypeVar, Callable
-from definitions import domain_dir
+from definitions import domain_path
 from src import helpers
 
 T = TypeVar('t')
@@ -37,13 +37,19 @@ def device(device : Optional[int]) -> int:
 
     return device
 
-def DomainConfig(name : str = "domain"):
+def DomainConfig(field_name : str = "domain"):
 
     class _Domain(BaseModel):
 
         @cached_property
         def domains(self) -> List[Domain]:
-            return [Domain(**domain) for domain in helpers.load_json_file(domain_dir(getattr(self, name)))]
+
+            name = getattr(self, field_name)
+
+            return [
+                Domain(**domain) 
+                for domain in helpers.load_json_file(domain_path(name))
+            ]
 
     return _Domain
 

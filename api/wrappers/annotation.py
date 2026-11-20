@@ -7,6 +7,7 @@ from src.shared.command_tools.vasync import OutputDirOption, ConnectionOption, a
 from src.commands.helpers import DomainConfig
 from definitions import ANNOTATION_DIR, CORPUS_DIR
 from functools import cached_property
+from api.constants import SUBDOMAINS_LABEL_KEY
 from src.commands.knowledge_graph_construction.content_enrichment.annotation import CorpusAnnotatator as _CorpusAnnotatator
 
 class CorpusAnnotatorConfig(DomainConfig('domain')):
@@ -43,7 +44,7 @@ class CorpusAnnotatator(_CorpusAnnotatator):
 
         models = {}
 
-        models[f'llm:{config.stage_config.model}'] = LLMBasedZeroShotClassifier(
+        models[SUBDOMAINS_LABEL_KEY] = LLMBasedZeroShotClassifier(
             llm=LLM(name=config.stage_config.model, api_key=config.api_key),
             prompt_name="binary",
             batch_size=config.stage_config.batch_size

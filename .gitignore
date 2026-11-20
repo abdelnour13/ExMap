@@ -32,3 +32,6 @@ queries.cypher.txt
 old_experiments
 
 evaluation_subset.csv
+
+api/mount/*
+api/jobs/*
