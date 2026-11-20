@@ -1,10 +1,13 @@
 #!/bin/bash
+# GPU setup: FAISS GPU + PyTorch 2.6.0 (CUDA 11.8) + PyG
+# requirements.txt and install_resources.sh are run by the Dockerfile, not here.
 set -euo pipefail
 
-ENV_NAME=text2kg   # must be the env that `python` below points to
+ENV_NAME=text2kg
 
 # --------------------------------------------------
-# FAISS GPU (conda) — FIRST, and WITHOUT pytorch
+# FAISS GPU (conda) — FIRST, and WITHOUT the conda `pytorch` package
+# (conda's pytorch channel stops at 2.5.1 and would downgrade torch)
 # --------------------------------------------------
 conda install -n "$ENV_NAME" -y \
     faiss-gpu=1.8.0 \
@@ -31,24 +34,9 @@ python -m pip install \
     -c /tmp/torch-constraints.txt
 
 # --------------------------------------------------
-# General requirements
-# --------------------------------------------------
-python -m pip install --no-cache-dir -r requirements.txt -c /tmp/torch-constraints.txt
-python -m pip install --no-deps --force-reinstall numpy==2.2.6 pandas==2.2.3
-
-# --------------------------------------------------
-# Extras
+# Extras: PyCli, FastAPI, Hugging Face CLI
 # --------------------------------------------------
 python -m pip install -c /tmp/torch-constraints.txt \
     "git+https://github.com/abdelnour13/pycli.git@f7091f08fbb4dd201eb57a419cca5573bedd5660" \
-    "fastapi[standard]"
-
-curl -LsSf https://hf.co/cli/install.sh | bash
-
-bash ./install_resources.sh
-
-# --------------------------------------------------
-# Sanity checks (report, don't kill the build)
-# --------------------------------------------------
-python -m pip check || echo "WARNING: pip check reported conflicts (see above)"
-python -c "import torch, torchvision, faiss; print(torch.__version__, torchvision.__version__, faiss.__version__, torch.cuda.is_available())"
+    "fastapi[standard]" \
+    "huggingface_hub[cli]"

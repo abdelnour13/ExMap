@@ -9,7 +9,6 @@ from pydantic import BaseModel, Field
 from src.helpers.utils import load_json_file, save_json_file
 from api.services.scheduler import Scheduler
 from api.services.graph_learning import GraphLearningService
-from api.constants import SUBDOMAINS_LABEL_KEY
 from src.commands.build_expertise_map import BEMConfig
 
 FAILURE_KIND = Literal['EXISTS', 'MODEL_NOT_EXISTS']
@@ -111,7 +110,7 @@ class ExpertiseMapService:
             if os.path.exists(configpath):
 
                 inner_config = load_json_file(configpath)
-                inner_config = BEMConfig(features_id=inner_config['graph'])
+                inner_config = BEMConfig(**inner_config)
 
                 config = ExpertiseMapConfig(
                     model=inner_config.model_id.split('/')[0],

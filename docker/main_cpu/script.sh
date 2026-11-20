@@ -1,4 +1,6 @@
 #!/bin/bash
+# CPU setup: PyTorch 2.6.0 (CPU) + FAISS CPU + PyG
+# requirements.txt and install_resources.sh are run by the Dockerfile, not here.
 set -euo pipefail
 
 # --------------------------------------------------
@@ -12,7 +14,7 @@ python -m pip install \
 python -m pip freeze | grep -E '^(torch|torchvision|torchaudio)==' > /tmp/torch-constraints.txt
 
 # --------------------------------------------------
-# FAISS CPU (pip is fine for the CPU build)
+# FAISS CPU (pip)
 # --------------------------------------------------
 python -m pip install faiss-cpu -c /tmp/torch-constraints.txt
 
@@ -26,11 +28,9 @@ python -m pip install \
     -c /tmp/torch-constraints.txt
 
 # --------------------------------------------------
-# Extras
+# Extras: PyCli, FastAPI, Hugging Face CLI
 # --------------------------------------------------
 python -m pip install -c /tmp/torch-constraints.txt \
     "git+https://github.com/abdelnour13/pycli.git@f7091f08fbb4dd201eb57a419cca5573bedd5660" \
     "fastapi[standard]" \
     "huggingface_hub[cli]"
-
-python -c "import torch, torchvision, faiss; print(torch.__version__, torchvision.__version__, faiss.__version__)"

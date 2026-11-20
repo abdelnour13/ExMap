@@ -33,6 +33,6 @@ graph_learning_service = GraphLearningService(
 )
 
 expertise_map_service = ExpertiseMapService(
-    scheduler=scheduler,
+    scheduler=scheduler_service,
     gl_service=graph_learning_service
 )

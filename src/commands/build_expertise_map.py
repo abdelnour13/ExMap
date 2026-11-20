@@ -13,7 +13,7 @@ from src.commands.feature_extraction.graph_utils import EdgeType, Graph
 from src.commands.graph_learning.main import Config as TrainerConfig
 from src.graph_dl.models import Context
 from src.graph_dl.models.classifier import ArticleClassifier
-from src.shared.command_tools import BaseCommand
+from src.shared.command_tools import BaseCommand, add_handlers, ConnectionOption, OutputDirOption
 from src.shared.file_tools import Batched, Map, Enumerate
 from src.shared.handlers import ConsoleLogger
 from src.shared.platforms import LLM
@@ -92,16 +92,19 @@ class BEMConfig(BaseModel):
     def expertise_dir(self) -> str:
         return os.path.join(EMS_DIR, self.expertise_id)
 
-class Config(BaseModel):
+class Config(ConnectionOption, OutputDirOption):
 
     expertise_id : str
+
+    def output_dir(self):
+        return os.path.join(EMS_DIR, self.expertise_id)
 
     @computed_field
     @property
     def conf(self) -> BEMConfig:
         return BEMConfig(**{
             'expertise_id' : self.expertise_id,
-            **helpers.load_json_file(os.path.join(EMS_DIR, self.expertise_id, 'config.json'))
+            **helpers.load_json_file(os.path.join(self.output_dir(), 'config.json'))
         })
     
 @cli.register_stage(
@@ -113,6 +116,7 @@ class Config(BaseModel):
     add_from_conf=False,
     add_save_to=False,
 )
+@add_handlers
 class ExpertiseMapBuilder(BaseCommand):
 
     def __init__(self, config: BEMConfig, llm : LLM) -> None:
@@ -123,7 +127,7 @@ class ExpertiseMapBuilder(BaseCommand):
     def load_data_and_model(self) -> Tuple[HeteroData, Graph, ArticleClassifier]:
 
         self.send_info_event(
-            progress=None,
+            progress=0.0,
             message="[Load] Starting — loading trainer config and data",
         )
 
@@ -140,7 +144,7 @@ class ExpertiseMapBuilder(BaseCommand):
         run_config = configs[self.config.model_name]
 
         self.send_debug_event(
-            progress=None,
+            progress=0.0,
             message=f"[Load] Using run config '{self.config.model_name}': {run_config}",
         )
 
@@ -151,7 +155,7 @@ class ExpertiseMapBuilder(BaseCommand):
         model = run_config.load_model(ctx=Context(data), postfix='final')
 
         self.send_info_event(
-            progress=None,
+            progress=0.0,
             message=(
                 f"[Load] Ready — "
                 f"{data['Article'].x.size(0):,} articles, "
@@ -163,7 +167,7 @@ class ExpertiseMapBuilder(BaseCommand):
     
     def inference(self, model: ArticleClassifier, data: HeteroData) -> ArticleClassifier.Output:
 
-        self.send_info_event(progress=None, message="[Infer] Running full-graph forward pass …")
+        self.send_info_event(progress=0.0, message="[Infer] Running full-graph forward pass …")
 
         model = model.eval().cpu()
         data  = data.cpu()
@@ -174,7 +178,7 @@ class ExpertiseMapBuilder(BaseCommand):
             results = model.forward(data)
 
         self.send_info_event(
-            progress=None,
+            progress=0.0,
             message=(
                 f"[Infer] Done — "
                 f"entity embeddings: {list(results.entities_sem_embeddings.shape)}, "
@@ -216,7 +220,7 @@ class ExpertiseMapBuilder(BaseCommand):
     ) -> Tuple[Tensor, Tensor, Dict[str, Tensor]]:
 
         self.send_info_event(
-            progress=None,
+            progress=0.0,
             message=(
                 f"[Cluster] Running {self.config.clustering_alg} "
                 f"(resolution={self.config.clustering_resolution}) …"
@@ -226,7 +230,7 @@ class ExpertiseMapBuilder(BaseCommand):
         entity_label_probas = self.domains(inference_results.entities_labels).sigmoid()
 
         edge_weight = self.jaccard_index(
-            edge_index, entity_label_probas[:,MASK],
+            edge_index, entity_label_probas, #[:,MASK],
             mode=self.config.jaccard_mode,
             threshold=self.config.jaccard_threshold,
         )
@@ -260,7 +264,7 @@ class ExpertiseMapBuilder(BaseCommand):
         n_communities = int(communities.max().item() + 1)
 
         self.send_info_event(
-            progress=None,
+            progress=0.0,
             message=f"[Cluster] Found {n_communities} communities",
         )
 
@@ -284,7 +288,7 @@ class ExpertiseMapBuilder(BaseCommand):
             communities_labels = model.head.forward(community_embeddings)
 
         self.send_debug_event(
-            progress=None,
+            progress=0.0,
             message=(
                 f"[Cluster] Community label probas shape: "
                 f"{list(self.domains(communities_labels).shape)} {list(self.labs(communities_labels).shape)}"
@@ -384,7 +388,7 @@ class ExpertiseMapBuilder(BaseCommand):
                 communities_nodelist[i]['llm_label'] = out
 
         self.send_info_event(
-            progress=None,
+            progress=0.0,
             message=f"Number of communities after processing : {len(communities_nodelist)} "
         )
 
@@ -553,14 +557,15 @@ class ExpertiseMapBuilder(BaseCommand):
                 dst=self.config.expertise_id
             )
 
-        for sub_domain, is_valid in zip(graph.get_nodes('SubDomain'), MASK):
+        # for sub_domain, is_valid in zip(graph.get_nodes('SubDomain'), MASK):
+        for sub_domain in graph.get_nodes('SubDomain'):
         
             graph.add_node(
                 type="SubDomain",
                 id=sub_domain.id,
                 properties={
                     **sub_domain.properties,
-                    "is_valid" : is_valid.item()
+                    # "is_valid" : is_valid.item()
                 }
             )
 
@@ -652,12 +657,11 @@ class ExpertiseMapBuilder(BaseCommand):
         graph.save(self.config.expertise_dir)
 
         yield self.make_debug_event(
-            progress=None,
+            progress=1.0,
             message=f"Expertise map saved to path : {self.config.expertise_dir}"
         )
 
     @classmethod
     def from_config(cls, config: Config) -> 'ExpertiseMapBuilder':
         builder = ExpertiseMapBuilder(config=config.conf, llm=LLM(config.conf.llm))
-        builder.add_handler(ConsoleLogger("ExpertiseMapBuilder"))
         return builder
