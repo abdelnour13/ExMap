@@ -8,8 +8,16 @@ fi
 
 if docker run --rm --gpus all alpine true >/dev/null 2>&1; then
   echo "GPU detected, starting in GPU mode"
-  docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d --build
+  COMPOSE="docker compose -f docker-compose.yml -f docker-compose.gpu.yml"
 else
   echo "No GPU available, starting in CPU mode"
-  docker compose up -d --build
+  COMPOSE="docker compose"
 fi
+
+$COMPOSE up -d --build
+
+echo "Downloading resources from the manifest..."
+$COMPOSE exec text2kg python -m manifest download
+
+# Neo4j only loads plugins at startup
+$COMPOSE restart neo4j

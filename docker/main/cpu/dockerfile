@@ -27,18 +27,12 @@ RUN bash setup_cpu.sh
 # 3. Project requirements (torch versions locked)
 #    requirements.txt must not list faiss-gpu, nvidia-* or cupy.
 # --------------------------------------------------
-COPY ../requirements.txt ./
+COPY requirements.txt ./
 RUN python -m pip install -r requirements.txt -c /tmp/torch-constraints.txt && \
     python -m pip install --no-deps --force-reinstall numpy==2.2.6 pandas==2.2.3
 
 # --------------------------------------------------
-# 4. NLP resources
-# --------------------------------------------------
-COPY ../install_resources.sh ./
-RUN bash install_resources.sh
-
-# --------------------------------------------------
-# 5. Checks (report only, never fail the build)
+# 4. Checks (report only, never fail the build)
 # --------------------------------------------------
 RUN python -m pip check || echo "WARNING: pip check reported conflicts" ; \
     python -c "import torch, torchvision, faiss; print('torch', torch.__version__, '| torchvision', torchvision.__version__, '| faiss', faiss.__version__)"
