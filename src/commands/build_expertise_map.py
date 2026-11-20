@@ -16,7 +16,7 @@ from src.graph_dl.models.classifier import ArticleClassifier
 from src.shared.command_tools import BaseCommand
 from src.shared.file_tools import Batched, Map, Enumerate
 from src.shared.handlers import ConsoleLogger
-from src.shared.platforms import LLM, RequestReturnType
+from src.shared.platforms import LLM
 from src import helpers
 
 # ---------------------------------------------------------------------------

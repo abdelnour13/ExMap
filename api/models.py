@@ -4,6 +4,24 @@ from src.commands.helpers import Domain
 from typing import List
 from api.wrappers.annotation import CorpusAnnotatorConfig
 from api.services.scheduler import JobInfo
+from typing import Literal
+
+class ExpertiseMapConfig(BaseModel):
+    model : str
+    llm : str
+    name : str
+    description : str
+    clustering_alg : Literal["leiden", "louvain"] = "leiden"
+    resolution : int = 15
+
+class CreateExpertiseMapBody(BaseModel):
+    id : str
+    config : ExpertiseMapConfig
+
+class ExpertiseMapDetails(BaseModel):
+    name : str
+    config : ExpertiseMapConfig
+    jobs : List[JobInfo]
 
 class GraphLearningJobConfig(BaseModel):
     features_id : str

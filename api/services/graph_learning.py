@@ -1,4 +1,3 @@
-
 import os
 import shutil
 import json
@@ -109,7 +108,7 @@ class GraphLearningService:
                 
         return DeleteResponse(deleted=True, details=details)
 
-    def create(self, data : CreateGraphLearningJobBody) -> Result[CreateGraphLearningJobBody, CreateFailure]:
+    def create(self, data : CreateGraphLearningJobBody) -> Result[GraphLearningJobDetails, CreateFailure]:
 
         details = self.get_by_id(data.id)
 
@@ -129,7 +128,7 @@ class GraphLearningService:
             return Result.from_failure(
                 CreateFailure(
                     kind='KG_NOT_EXISTS',
-                    details={ "reason" : f"Knowledge graph with id : '{data.config.kg_id}' doesn't exists." }
+                    details={ "reason" : f"Knowledge graph with id : '{data.config.features_id}' doesn't exists." }
                 )
             )
 

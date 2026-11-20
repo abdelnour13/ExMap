@@ -5,6 +5,7 @@ from .annotations import AnnotationService
 from .knowledge_graph_construction import KnowledgeGraphConstructionService
 from .feature_extraction import FeaturesExtractionService
 from .graph_learning import GraphLearningService
+from .expertise_maps import ExpertiseMapService
 
 scheduler_service = Scheduler(n=1)
 corpuses_service = CorpusesService(scheduler=scheduler_service)
@@ -29,4 +30,9 @@ feature_extraction_service = FeaturesExtractionService(
 graph_learning_service = GraphLearningService(
     scheduler=scheduler_service,
     features_service=feature_extraction_service
+)
+
+expertise_map_service = ExpertiseMapService(
+    scheduler=scheduler,
+    gl_service=graph_learning_service
 )
