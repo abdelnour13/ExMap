@@ -36,7 +36,7 @@ RUN conda create -n text2kg python=3.12 -y
 ENV PATH="/opt/conda/envs/text2kg/bin:/opt/conda/bin:${PATH}"
 
 # Install Python packages
-COPY setup.sh requirements.txt ./
+COPY setup.sh install_resources.sh requirements.txt ./
 RUN chmod +x setup.sh && bash setup.sh
 
 CMD ["tail", "-f", "/dev/null"]

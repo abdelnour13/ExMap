@@ -81,3 +81,8 @@ curl -LsSf https://hf.co/cli/install.sh | bash
 # Fastapi
 curl -LsSf https://astral.sh/uv/0.13.5/install.sh | sh
 pip install fastapi[standard]
+
+# --------------------------------------------------
+# NLP resources (generated from the manifest)
+# --------------------------------------------------
+bash ./install_resources.sh

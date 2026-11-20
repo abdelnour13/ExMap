@@ -25,14 +25,6 @@ services:
     build: ./docker/main
     volumes:
     - .:/text2kg
-    deploy:
-      resources:
-        reservations:
-          devices:
-          - driver: nvidia
-            count: all
-            capabilities:
-            - gpu
     depends_on:
     - allennlp
     - neo4j
