@@ -15,7 +15,7 @@ from api.wrappers import annotation as DataAnnotation, knowledge_graph_construct
 from definitions import CORPUS_DIR, ANNOTATION_DIR, KGS_DIR
 
 STATUS = Literal["PENDING", "RUNNING", "ERROR", "COMPLETED"]
-JobType = Literal["DOWNLOAD", "ANNOTATION", "KG_CONSTRUCTION", "FEATURE_EXTRACTION", "GRAPH_LEARNING", "MAP_CONSTRUCTION"]
+JobType = Literal["DOWNLOAD", "ANNOTATION", "KG_CONSTRUCTION", "FEATURE_EXTRACTION", "GRAPH_LEARNING", "MAP_CONSTRUCTION", "NEO4J_UPLOAD"]
 LEVEL = Literal["DEBUG", "INFO", "WARN", "ERROR", "CRITICAL"]
 
 JOB2CLS :Dict[JobType, Tuple[Type[BaseModel], Type[BaseCommand], str]] = {

@@ -1,9 +1,11 @@
 from fastapi import APIRouter, Path, Query, HTTPException, status, Header
 from fastapi.sse import EventSourceResponse
 from typing import Optional, Annotated, AsyncIterable, List
+from definitions import EMS_DIR, rel_path
 from api.services.scheduler import JobInfo, Job, JobType, Event, STATUS
 from src.commands.data_download.main import Config as DataDownloaderConfig, DataDownloader
 from src.commands.graph_learning import main as graph_learning
+from src.commands import neo4j_upload
 from api.wrappers import annotation, knowledge_graph_construction, feature_extraction, build_map
 from api.services import (
     scheduler_service, 
@@ -16,6 +18,42 @@ from api.services import (
 )
 
 router = APIRouter(prefix="/jobs")
+
+@router.post("/upload/{map_id}/start")
+async def upload_expertise_map(map_id : str = Path()) -> JobInfo:
+    
+    if expertise_map_service.get_by_id(map_id) is None:
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={ "id" : map_id }
+        )
+
+    config = neo4j_upload.Config(
+        graph_id=f"{rel_path(EMS_DIR)}/{map_id}",
+        log=True,
+    )
+
+    instance = neo4j_upload.Neo4jUploader.from_config(config=config)
+
+    job = Job(
+        log_filename=config.log_filename,
+        cmd=instance,
+        type="NEO4J_UPLOAD",
+        config_id=map_id,
+        conf=config
+    )
+
+    added = await scheduler_service.add_job(job)
+
+    if not added:
+
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail={ "id" : map_id, "reason" : f"another job that operates on '{map_id}' is pending or running." }
+        )
+
+    return job.info
 
 @router.post("/maps/{map_id}/start")
 async def start_expertise_map(
