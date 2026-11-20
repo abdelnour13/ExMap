@@ -32,29 +32,29 @@ print(response.json())
 
 ### Launch Job
 
-# print("\n" + ("#" * 4) + "[POST /jobs/expertise_maps]" + ("#" * 4) + "\n")
+print("\n" + ("#" * 4) + "[POST /jobs/maps]" + ("#" * 4) + "\n")
 
-# corpus_id = data["id"]
-# URL = f"{JOBS_BASE_URL}/expertise_maps/{corpus_id}/start"
+corpus_id = data["id"]
+URL = f"{JOBS_BASE_URL}/maps/{corpus_id}/start"
 
-# response = httpx.post(URL, headers={ "X-Api-Key" : env.get_api_key('deepseek') })
-# print(response.status_code)
-# print(response.json())
+response = httpx.post(URL, headers={ "X-Api-Key" : env.get_api_key('deepseek') })
+print(response.status_code)
+print(response.json())
 
-# assert response.status_code == status.HTTP_200_OK
+assert response.status_code == status.HTTP_200_OK
 
-# print("\n" + ("#" * 4) + "[SSE /jobs/expertise_maps]" + ("#" * 4) + "\n")
+print("\n" + ("#" * 4) + "[SSE /jobs/maps]" + ("#" * 4) + "\n")
 
-# job_id = response.json()['id']
-# URL = f"{JOBS_BASE_URL}/sse/{job_id}"
+job_id = response.json()['id']
+URL = f"{JOBS_BASE_URL}/sse/{job_id}"
 
-# with httpx.stream("GET", URL, timeout=None) as response:
+with httpx.stream("GET", URL, timeout=None) as response:
     
-#     response.raise_for_status()
+    response.raise_for_status()
 
-#     for line in response.iter_lines():
-#         if line:
-#             print(line)
+    for line in response.iter_lines():
+        if line:
+            print(line)
 
 ### Delete
 

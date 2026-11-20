@@ -18,7 +18,10 @@ from api.services import (
 router = APIRouter(prefix="/jobs")
 
 @router.post("/maps/{map_id}/start")
-async def start_expertise_map(map_id : str = Path()) -> JobInfo:
+async def start_expertise_map(
+    map_id : str = Path(),
+    x_api_key : Annotated[str | None, Header()] = None
+) -> JobInfo:
     
     if expertise_map_service.get_by_id(map_id) is None:
 
@@ -27,9 +30,17 @@ async def start_expertise_map(map_id : str = Path()) -> JobInfo:
             detail={ "id" : map_id }
         )
 
+    if x_api_key is None:
+        
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={ "reason" : "Header api_key is not set." }
+        )
+
     config = build_map.Config(
         expertise_id=map_id,
-        log=True
+        log=True,
+        api_key=x_api_key
     )
 
     instance = build_map.ExpertiseMapBuilder.from_config(config=config)

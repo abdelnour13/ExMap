@@ -1,10 +1,11 @@
 services:  
   text2kg:
-      deploy:
-        resources:
-          reservations:
-            devices:
-            - driver: nvidia
-              count: all
-              capabilities:
-              - gpu
+    build: ./docker/main/gpu
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: all
+            capabilities:
+            - gpu

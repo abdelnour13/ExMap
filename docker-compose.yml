@@ -22,7 +22,7 @@ services:
     - NEO4J_AUTH=neo4j/password1234
     restart: always
   text2kg:
-    build: ./docker/main
+    build: ./docker/main/cpu
     volumes:
     - .:/text2kg
     depends_on:

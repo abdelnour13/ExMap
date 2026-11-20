@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
 
 WORKDIR /text2kg
 
@@ -9,36 +9,51 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 # --------------------------------------------------
 # 1. System packages
-#    Add build-essential here if a requirement fails with "gcc: not found".
 # --------------------------------------------------
 RUN apt-get update && \
     apt-get install -y --no-install-recommends curl git ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-RUN python -m pip install --upgrade pip
+# --------------------------------------------------
+# 2. Miniconda + text2kg env (Python 3.12)
+# --------------------------------------------------
+ENV CONDA_DIR=/opt/conda
+RUN curl -fsSL https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o /tmp/miniconda.sh && \
+    bash /tmp/miniconda.sh -b -p ${CONDA_DIR} && \
+    rm /tmp/miniconda.sh
+ENV PATH="/opt/conda/bin:${PATH}"
+
+RUN conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main && \
+    conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+
+RUN conda create -n text2kg python=3.12 -y
+# `python` and `pip` now point to the text2kg env
+ENV PATH="/opt/conda/envs/text2kg/bin:/opt/conda/bin:${PATH}"
 
 # --------------------------------------------------
-# 2. Heavy layer: torch + FAISS + PyG (CPU)
+# 3. Heavy layer: FAISS + torch + PyG
+#    Only setup.sh is copied, so this layer stays cached
+#    when requirements.txt or install_resources.sh change.
 # --------------------------------------------------
-COPY setup_cpu.sh ./
-RUN bash setup_cpu.sh
+COPY setup.sh ./
+RUN bash setup.sh && conda clean -afy
 
 # --------------------------------------------------
-# 3. Project requirements (torch versions locked)
-#    requirements.txt must not list faiss-gpu, nvidia-* or cupy.
+# 4. Project requirements (torch versions locked)
 # --------------------------------------------------
-COPY requirements.txt ./
+COPY ../requirements.txt ./
 RUN python -m pip install -r requirements.txt -c /tmp/torch-constraints.txt && \
     python -m pip install --no-deps --force-reinstall numpy==2.2.6 pandas==2.2.3
 
 # --------------------------------------------------
-# 4. NLP resources
+# 5. NLP resources
 # --------------------------------------------------
-COPY install_resources.sh ./
+COPY ../install_resources.sh ./
 RUN bash install_resources.sh
 
 # --------------------------------------------------
-# 5. Checks (report only, never fail the build)
+# 6. Checks (report only, never fail the build)
+#    torch.cuda.is_available() is False during build: no GPU in docker build.
 # --------------------------------------------------
 RUN python -m pip check || echo "WARNING: pip check reported conflicts" ; \
     python -c "import torch, torchvision, faiss; print('torch', torch.__version__, '| torchvision', torchvision.__version__, '| faiss', faiss.__version__)"
