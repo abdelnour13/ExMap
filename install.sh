@@ -25,7 +25,7 @@ $COMPOSE up -d --force-recreate
 #    (runs inside the container, where the project is mounted)
 # --------------------------------------------------
 echo "Downloading resources from the manifest..."
-$COMPOSE exec text2kg python -m manifest download
+$COMPOSE exec text2kg python -m src.manifest download
 
 # --------------------------------------------------
 # 3. Restart Neo4j so it loads the downloaded plugins
