@@ -8,8 +8,8 @@ fi
 
 if docker run --rm --gpus all alpine true >/dev/null 2>&1; then
   echo "GPU detected, starting in GPU mode"
-  docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
+  docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d --build
 else
   echo "No GPU available, starting in CPU mode"
-  docker compose up -d
+  docker compose up -d --build
 fi
