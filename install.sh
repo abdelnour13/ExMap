@@ -14,10 +14,22 @@ else
   COMPOSE="docker compose"
 fi
 
-$COMPOSE up -d --build
+# --------------------------------------------------
+# 1. Build images from scratch and start containers
+# --------------------------------------------------
+$COMPOSE build --no-cache --pull
+$COMPOSE up -d --force-recreate
 
+# --------------------------------------------------
+# 2. Download resources from the manifest
+#    (runs inside the container, where the project is mounted)
+# --------------------------------------------------
 echo "Downloading resources from the manifest..."
 $COMPOSE exec text2kg python -m manifest download
 
-# Neo4j only loads plugins at startup
+# --------------------------------------------------
+# 3. Restart Neo4j so it loads the downloaded plugins
+# --------------------------------------------------
 $COMPOSE restart neo4j
+
+echo "Installation complete."
