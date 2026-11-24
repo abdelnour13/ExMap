@@ -1,5 +1,4 @@
 from fastapi import HTTPException, status
-from fastapi import Depends
 from api.db.queries import (
     fetch_all_graphs,
     fetch_graph_by_id,
@@ -10,7 +9,7 @@ from api.db.queries import (
     fetch_expertise_detail,
     fetch_summary_stats
 )
-from neo4j import Driver
+from neo4j import Driver, Session
 from api.schemas.graph import (
     GraphSummary,
     GraphDetail,
@@ -29,8 +28,6 @@ class GraphService:
             with self.driver.session() as session:
                 rows = fetch_all_graphs(session)
         except Exception as exc:
-
-            print(exc)
 
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -156,17 +153,15 @@ class GraphService:
 
     # ── Private helpers ───────────────────────────────────────────────────────
 
-    def _assert_exists(self, graph_id: str) -> None:
+    def _assert_exists(self, session : Session, graph_id: str) -> None:
 
-        with self.driver.session() as session:
-
-            try:
-                exists = graph_exists(session, graph_id)
-            except Exception as exc:
-                raise HTTPException(
-                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail=f"Database error while checking graph '{graph_id}': {exc}",
-                ) from exc
+        try:
+            exists = graph_exists(session, graph_id)
+        except Exception as exc:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Database error while checking graph '{graph_id}': {exc}",
+            ) from exc
         
         if not exists:
 

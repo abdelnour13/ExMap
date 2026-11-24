@@ -73,15 +73,12 @@ def download_graph(
     summary="Generate Domain → SubDomain taxonomy visualisation",
     responses={404: {"description": "Graph not found"}},
 )
-def vis_taxonomy(
-    graph_id: str,
-    settings: Neo4jConfig = Depends(get_config),
-) -> VisualisationResponse:
+def vis_taxonomy(graph_id: str) -> VisualisationResponse:
 
     data = graph_service.get_taxonomy_data(graph_id)
     filename = vis_service.build_taxonomy_vis(data)
 
-    return VisualisationResponse(url=_vis_url(settings, filename), filename=filename)
+    return VisualisationResponse(url=_vis_url(filename), filename=filename)
 
 
 # ── 5. Visualise all expertises ───────────────────────────────────────────────
@@ -94,7 +91,6 @@ def vis_taxonomy(
 )
 def vis_expertises(
     graph_id: str,
-    settings: Neo4jConfig = Depends(get_config),
     domains : Optional[list[str]] = Query(default=None),
     subdomains : Optional[list[str]] = Query(default=None),
     labs : Optional[list[str]] = Query(default=None),
@@ -103,7 +99,7 @@ def vis_expertises(
     data = graph_service.get_expertises_data(graph_id, subdomains, domains, labs)
     filename = vis_service.build_expertises_vis(data)
 
-    return VisualisationResponse(url=_vis_url(settings, filename), filename=filename)
+    return VisualisationResponse(url=_vis_url(filename), filename=filename)
 
 
 # ── 6. Visualise a single expertise ──────────────────────────────────────────
@@ -119,11 +115,10 @@ def vis_expertises(
 def vis_expertise_detail(
     graph_id: str,
     expertise_id: str,
-    settings: Neo4jConfig = Depends(get_config),
 ) -> VisualisationResponse:
     data = graph_service.get_expertise_detail_data(graph_id, expertise_id)
     filename = vis_service.build_expertise_detail_vis(data)
-    return VisualisationResponse(url=_vis_url(settings, filename), filename=filename)
+    return VisualisationResponse(url=_vis_url(filename), filename=filename)
 
 # ── 7. Summary statistics visualisation ──────────────────────────────────────
 
@@ -133,10 +128,7 @@ def vis_expertise_detail(
     summary="Generate summary statistics bar charts",
     responses={404: {"description": "Graph not found"}},
 )
-def vis_summary(
-    graph_id: str,
-    settings: Neo4jConfig = Depends(get_config),
-) -> VisualisationResponse:
+def vis_summary(graph_id: str) -> VisualisationResponse:
     data = graph_service.get_summary_data(graph_id)
     filename = vis_service.build_summary_vis(data)
-    return VisualisationResponse(url=_vis_url(settings, filename), filename=filename)
+    return VisualisationResponse(url=_vis_url(filename), filename=filename)

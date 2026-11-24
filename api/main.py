@@ -1,6 +1,8 @@
 import asyncio
+import os
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, status, HTTPException
+from starlette.responses import FileResponse
 from api.services import scheduler_service
 from api.routes.corpuses import router as corpuses_router
 from api.routes.annotation import router as annotations_router
@@ -12,7 +14,7 @@ from api.routes.graph_learning import router as gl_router
 from api.routes.expertise_maps import router as em_router
 from api.routes.llms import router as llms_router
 from api.routes.graph import router as graph_router
-from api.constants import JOBS_DIR
+from api.constants import JOBS_DIR, VIS_DIR
 from api.db.neo4j import init_driver, get_config, close_driver
 from src.manifest import manifest
 from src.helpers.torch_utils import get_all_devices
@@ -50,6 +52,28 @@ def embedders() -> List[str]:
         for hf_model in manifest.hf_models
         if _kind(hf_model.name) in opts
     ]
+
+@app.get('/download/{filename}')
+def download(filename : str) -> FileResponse:
+
+    location = os.path.join(VIS_DIR, filename)
+
+    if not os.path.exists(location):
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={
+                "reason" : f"{filename} is not found at : {VIS_DIR}.",
+                "filename" : filename
+            }
+        )
+
+    return FileResponse(
+        location, 
+        media_type='application/octet-stream',
+        filename=filename
+    )
+
 
 @app.get("/devices")
 def devices() -> List[str]:

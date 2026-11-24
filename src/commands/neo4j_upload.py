@@ -116,7 +116,7 @@ class Neo4jUploader(BaseCommand):
 
     def _clear_db(self, session : Session, graph_id : str) -> None:
         self.send_info_event(progress=0.0, message="[Neo4j] Clearing all nodes and relationships …")
-        session.run(f"MATCH (n {{ graph_id: \"{graph_id}\" }}) DETACH DELETE n")
+        session.run(f"MATCH (n {{ graph_id: \"{graph_id}\" }}) DETACH DELETE n;")
         self.send_info_event(progress=0.0, message="[Neo4j] Database cleared")
 
     IGNORED_NODE_TYPES = {"Author", "Keyword"}
@@ -186,6 +186,40 @@ class Neo4jUploader(BaseCommand):
     # Orchestrator
     # ------------------------------------------------------------------
 
+    def _create_missing_relations(self, session : Session, graph_id : str) -> None:
+
+        session.run("""
+            WITH EXISTS {
+                (:Entity {graph_id: $graph_id})-[:APPEARSIN]->(:Article {graph_id: $graph_id})
+            } AS alreadyThere
+            WHERE NOT alreadyThere
+            MATCH (tr:Triple {graph_id: $graph_id})-[:BELONGSTO]->(a:Article {graph_id: $graph_id})
+            CALL {
+                WITH tr, a
+                MATCH (tr)-[:HAS_HEAD|HAS_TAIL]->(e:Entity {graph_id: $graph_id})
+                MERGE (e)-[:APPEARSIN]->(a)
+            } IN TRANSACTIONS OF 5000 ROWS;
+        """, graph_id=graph_id)
+
+        session.run("""
+            WITH EXISTS {
+                (:Entity {graph_id: $graph_id})-[:HASRELATIONWITH]->(:Entity {graph_id: $graph_id})
+            } AS alreadyThere
+            WHERE NOT alreadyThere
+            MATCH (tr:Triple {graph_id: $graph_id})
+            CALL {
+                WITH tr
+                MATCH (tr)-[:HAS_HEAD]->(h:Entity {graph_id: $graph_id})
+                MATCH (tr)-[:HAS_TAIL]->(t:Entity {graph_id: $graph_id})
+                MATCH (tr)-[:HAS_PREDICATE]->(p:Predicate {graph_id: $graph_id})
+                OPTIONAL MATCH (tr)-[:BELONGSTO]->(a:Article {graph_id: $graph_id})
+                WITH h, t, p, collect(DISTINCT toString(a.id)) AS arts
+                MERGE (h)-[r:HASRELATIONWITH {predicate: p.name}]->(t)
+                SET r.articles = coalesce(r.articles, []) +
+                                [x IN arts WHERE NOT x IN coalesce(r.articles, [])]
+            } IN TRANSACTIONS OF 5000 ROWS;
+        """, graph_id=graph_id)
+
     def __iter__(self):
 
         self.send_info_event(
@@ -210,16 +244,19 @@ class Neo4jUploader(BaseCommand):
         with self.driver.session() as session:
 
             self._clear_db(session, graph_id)
-            self.send_info_event(progress=0.25, message="[Neo4j] Database cleared")
+            self.send_info_event(progress=0.2, message="[Neo4j] Database cleared")
 
             self._upload_nodes(session, graph, graph_id)
-            self.send_info_event(progress=0.5, message="[Neo4j] Database cleared")
+            self.send_info_event(progress=0.4, message="[Neo4j] Nodes Uploaded")
 
             self._create_indexes(session, graph)
-            self.send_info_event(progress=0.75, message="[Neo4j] Database cleared")
+            self.send_info_event(progress=0.6, message="[Neo4j] Indexes Created")
 
             self._upload_edges(session, graph, graph_id)
-            self.send_info_event(progress=1.0, message="[Neo4j] Database cleared")
+            self.send_info_event(progress=0.8, message="[Neo4j] Edges Uploaded")
+
+            self._create_missing_relations(session, graph_id)
+            self.send_info_event(progress=1.0, message="[Neo4j] Missing Relations Created.")
 
         # self.driver.close()
 

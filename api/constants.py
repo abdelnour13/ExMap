@@ -1,4 +1,5 @@
 import os
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 from definitions import API_DIR
 
 SUBDOMAINS_LABEL_KEY = "subdomains"
@@ -13,3 +14,8 @@ os.makedirs(VIS_DIR, exist_ok=True)
 
 TEMPLATES_DIR = os.path.join(API_DIR, 'templates')
 API_URL = "http://localhost:8000/"
+
+env = Environment(
+    loader=FileSystemLoader(TEMPLATES_DIR),
+    autoescape=select_autoescape(["html"]),
+)

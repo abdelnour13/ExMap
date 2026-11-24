@@ -286,8 +286,6 @@ class Scheduler:
         job = self.get_job_or_throw(id=id)
         index = 0
 
-        print(job.log_filename)
-
         while job.status == "PENDING":
             await asyncio.sleep(0.1)
 

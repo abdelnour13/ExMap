@@ -252,32 +252,30 @@ def fetch_expertise_detail(session: Session, graph_id: str, expertise_id: str) -
         """
         MATCH (ex:Expertise {graph_id: $graph_id, id: $expertise_id})
 
-        CALL {
-            WITH ex
-            MATCH p =
-                (en:Entity)-[:BELONGSTO]->(ex)
-                -[:BELONGSTO]->(sd:SubDomain {graph_id: $graph_id})
-                -[:ISSUBDOMAINOF]->(d:Domain {graph_id: $graph_id})
+        CALL (ex) {
+            // Entities belonging to the expertise
+            MATCH (en:Entity)-[r:BELONGSTO]->(ex)
+            RETURN r
+
+            UNION
+
+            // Expertise -> SubDomain -> Domain (independent of entities)
+            MATCH p = (ex)-[:BELONGSTO]->(sd:SubDomain {graph_id: $graph_id})
+                      -[:ISSUBDOMAINOF]->(d:Domain {graph_id: $graph_id})
             UNWIND relationships(p) AS r
             RETURN r
 
-            UNION ALL
+            UNION
 
-            WITH ex
-            MATCH p = (ex)<-[:BELONGSTO]-(e1:Entity)
-                    -[:HASRELATIONWITH]->(e2:Entity)
-                    -[:BELONGSTO]->(ex)
-            UNWIND relationships(p) AS r
+            // Relations between entities of the same expertise
+            MATCH (ex)<-[:BELONGSTO]-(e1:Entity)-[r:HASRELATIONWITH]->(e2:Entity)-[:BELONGSTO]->(ex)
             RETURN r
 
-            UNION ALL
+            UNION
 
-            WITH ex
-            MATCH p = (ex)-[:BELONGSTO]->(:Lab)
-
-            UNWIND relationships(p) AS r
+            // Expertise -> Lab
+            MATCH (ex)-[r:BELONGSTO]->(:Lab)
             RETURN r
-
         }
 
         WITH r, startNode(r) AS src, endNode(r) AS dst

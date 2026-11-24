@@ -13,11 +13,11 @@ neo4j-viz API summary used here:
 """
 
 import uuid
-import os
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.io as pio
+from api.constants import env
 from plotly.subplots import make_subplots
 from pathlib import Path
 from collections import Counter
@@ -449,7 +449,13 @@ class VisualizationService:
         exp_narrow       = "\n".join(chart_divs[5:8])  # 3 simple
         exp_sd_lab       = chart_divs[9]                # full-width stacked
     
-        html = ""
+        html = env.get_template("vis.summary.html").render(
+            art_narrow=art_narrow,
+            domain_lab_row=domain_lab_row,
+            art_sd_lab=art_sd_lab,
+            exp_narrow=exp_narrow,
+            exp_sd_lab=exp_sd_lab,
+        )
     
         filename = self._new_filename()
         (VIS_DIR / filename).write_text(html, encoding="utf-8")
