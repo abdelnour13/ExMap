@@ -2,7 +2,7 @@ import os
 import shutil
 import json
 from definitions import EXPERIMENTS_DIR
-from api.models import CreateGraphLearningJobBody, GraphLearningJobConfig, GraphLearningJobDetails
+from api.schemas.models import CreateGraphLearningJobBody, GraphLearningJobConfig, GraphLearningJobDetails
 from returns.result import Result
 from typing import Literal, Dict, List, Optional
 from pydantic import BaseModel, Field
@@ -41,7 +41,7 @@ template = """{{
         }}
     ],
 
-    "batch_size" : 2,
+    "batch_size" : {batch_size},
     "num_articles_neighbors" : [8, 4],
     "domain" : null,
     "full_batch_training": false,
@@ -60,12 +60,12 @@ template = """{{
         "readout" : "mean"
     }},
 
-    "lr" : 0.001,
-    "num_epochs" : 10,
+    "lr" : {lr},
+    "num_epochs" : {num_epochs},
     "accumelation_steps" : 1,
     "weight_decay" : 1e-4,
 
-    "device" : "cuda",
+    "device" : "{device}",
 
     "log_every" : 1,
 
@@ -137,7 +137,11 @@ class GraphLearningService:
 
         config = json.loads(template.format(
             graph=data.config.features_id,
-            label=SUBDOMAINS_LABEL_KEY
+            label=SUBDOMAINS_LABEL_KEY,
+            lr=data.config.learning_rate,
+            num_epochs=data.config.num_epochs,
+            batch_size=data.config.batch_size,
+            device=data.config.device
         ))
 
         os.mkdir(path=fullpath)
@@ -170,7 +174,13 @@ class GraphLearningService:
             if os.path.exists(configpath):
 
                 inner_config = load_json_file(configpath)
-                config = GraphLearningJobConfig(features_id=inner_config['graph'])
+                config = GraphLearningJobConfig(
+                    features_id=inner_config['graph'],
+                    num_epochs=inner_config['num_epochs'],
+                    batch_size=inner_config['batch_size'],
+                    learning_rate=inner_config['lr'],
+                    device=inner_config['device']
+                )
 
             else:
                 continue
@@ -178,7 +188,8 @@ class GraphLearningService:
             results.append(GraphLearningJobDetails(
                 name=filename,
                 config=config,
-                jobs=[job.info for job in jobs if job.config_id == filename]
+                jobs=[job.info for job in jobs if job.config_id == filename],
+                exists=os.path.exists(os.path.join(fullpath, "models", "model_baseline_final.pt"))
             ))
     
         return results 

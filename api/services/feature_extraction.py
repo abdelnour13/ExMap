@@ -2,7 +2,7 @@ import os
 import shutil
 from definitions import FEATURES_DIR
 from src.commands.feature_extraction.main import FeatureExtractionConfig, FilterConfig
-from api.models import CreateFeaturesExtractionJobBody, FeatureExtractionJobDetails, FeatureExtractionJobConfig
+from api.schemas.models import CreateFeaturesExtractionJobBody, FeatureExtractionJobDetails, FeatureExtractionJobConfig
 from returns.result import Result
 from typing import Literal, Dict, List, Optional
 from pydantic import BaseModel, Field
@@ -124,7 +124,8 @@ class FeaturesExtractionService:
             results.append(FeatureExtractionJobDetails(
                 name=filename,
                 config=config,
-                jobs=[job.info for job in jobs if job.config_id == filename]
+                jobs=[job.info for job in jobs if job.config_id == filename],
+                exists=os.path.exists(os.path.join(fullpath, "raw.json"))
             ))
     
         return results 

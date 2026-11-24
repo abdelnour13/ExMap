@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Path, HTTPException, status
 from typing import List
 from api.services import graph_learning_service
-from api.models import CreateGraphLearningJobBody, GraphLearningJobDetails
+from api.schemas.models import CreateGraphLearningJobBody, GraphLearningJobDetails
 from returns.pipeline import is_successful
 
 router = APIRouter(prefix="/experiments")

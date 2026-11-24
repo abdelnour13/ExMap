@@ -1,6 +1,6 @@
 import os
 import shutil
-from api.models import AnnotationDetails, CreateAnnotationBody
+from api.schemas.models import AnnotationDetails, CreateAnnotationBody
 from api.services.scheduler import Scheduler
 from api.services.corpuses import CorpusesService
 from api.services.domains_list import DomainsListService

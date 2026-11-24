@@ -3,9 +3,13 @@ import ijson
 import os
 import lmdb
 import msgpack
-from typing import Generator, Tuple, Optional, List, Dict
+from typing import Generator, Tuple, Optional, List, Dict, TypedDict
 from abc import ABC, abstractmethod
 from .cache import Cache
+
+
+class Header(TypedDict):
+    num_records : int
 
 ReaderOutput = Tuple[Dict, Optional[float]]
 BatchedReaderOutput = Tuple[List[Dict], Optional[float]]
@@ -81,7 +85,7 @@ class FileReader(Reader):
         elif extension in ['json']:
             return JSONFileReader(filename, cache)
         elif extension in ['jsonl']:
-            return JSONlFileReader(filename, cache)
+            return HeadlessJSONFileReader(filename, cache)
         elif extension in ['lmdb']:
             return LMDBReader(filename, cache)
         else:
@@ -131,6 +135,33 @@ class TextFileReader(FileReader):
                 yield record, progress
 
 class JSONFileReader(FileReader):
+
+    def __init__(self, 
+        filename : str, 
+        cache : Optional[Cache] = None
+    ) -> None:
+        super().__init__(filename, cache)
+
+        if not os.path.exists(filename):
+            os.mkdir(filename)
+
+        self._header_file = os.path.join(filename, "header.json")
+        self._data_file = os.path.join(filename, "data.jsonl")
+        self._header_data : Header = self._load_header()
+
+    def _load_header(self) -> Header:
+
+        with open(self._header_file, "r") as f:
+            return json.load(f)
+
+    def generate(self) -> Generator[ReaderOutput, None, None]:
+        
+        with open(self._data_file, 'r') as f:
+
+            for item in ijson.items(f, "item"):
+                yield item, None
+
+class HeadlessJSONFileReader(FileReader):
 
     def __init__(self, filename : str, cache : Optional[Cache] = None) -> None:
         super().__init__(filename, cache)

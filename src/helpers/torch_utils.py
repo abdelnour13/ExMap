@@ -1,7 +1,7 @@
 import torch
 import random
 import numpy as np
-from typing import Any, Union, Tuple,  Dict, Hashable, Any
+from typing import Any, Union, Tuple,  Dict, Hashable, Any, List
 from scipy.sparse import csgraph, csr_matrix
 from torch import Tensor
 from torch.nn import Module
@@ -15,6 +15,27 @@ def seed_everything(seed : int) -> None:
     torch.cuda.manual_seed(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
+
+def get_all_devices() -> List[str]:
+    
+    devices = ["cpu"]
+
+    # NVIDIA CUDA (also covers AMD ROCm builds)
+    if torch.cuda.is_available():
+        devices += [f"cuda:{i}" for i in range(torch.cuda.device_count())]
+
+    # Apple Silicon (Metal)
+    if torch.backends.mps.is_available():
+        devices.append("mps")
+
+    # Intel GPUs
+    if hasattr(torch, "xpu") and torch.xpu.is_available():
+        devices += [f"xpu:{i}" for i in range(torch.xpu.device_count())]
+
+    if "cuda:0" in devices:
+        devices.append("cuda")
+
+    return devices
 
 class TensorDict(Dict[Hashable, Any]):
 

@@ -574,8 +574,6 @@ class Trainer(BaseCommand):
         loaders = {"train": train_loader, "val": val_loader}
         history: List[pd.DataFrame] = []
 
-        print(f"{label} : ({len(loaders['train'])}, {len(loaders['val'])})")
-
         epochs_it = self.track(
             it=Range(config.num_epochs),
             task=label,

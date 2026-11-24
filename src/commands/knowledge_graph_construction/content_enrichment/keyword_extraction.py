@@ -8,7 +8,6 @@ from src.methods.keywords_extractors import KeyphraseExtractorRegistry, Keyphras
 class Config(StageConfig):
     device : int = -1
 
-
 @cli.register_stage(
     name="keywords_extraction",
     description=(

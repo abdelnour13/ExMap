@@ -1,14 +1,16 @@
 import os
 from torch import Tensor
 from typing import List, Self, TypeVar
-from pydantic import BaseModel, computed_field
+from pydantic import computed_field
 from neo4j import Session, Transaction, Driver
 from instance import cli
 from definitions import DATA_DIR
+from src.shared.file_tools import Batched
 from src.envirenment import env
 from src.commands.feature_extraction.graph_utils import Graph, Edge, Node
 from src.shared.command_tools import BaseCommand, add_handlers, ConnectionOption, OutputDirOption
-from src.shared.handlers import ConsoleLogger
+from uuid import uuid4
+from functools import cached_property
 
 T = TypeVar('T')
 
@@ -34,6 +36,10 @@ class Config(ConnectionOption, OutputDirOption):
     def driver(self) -> Driver:
         return env.neo4j[self.neo4j_driver].driver
 
+    @computed_field
+    @cached_property
+    def log_filename(self) -> str:
+        return os.path.join(self.output_dir(), f"{self.graph_id.replace('/', '::')}-{str(uuid4())}-log.jsonl")
 
 # ---------------------------------------------------------------------------
 # Uploader
@@ -48,7 +54,10 @@ class Config(ConnectionOption, OutputDirOption):
 @add_handlers
 class Neo4jUploader(BaseCommand):
 
-    def __init__(self, config: Config, driver : Driver) -> None:
+    def __init__(self, 
+        config: Config, 
+        driver : Driver
+    ) -> None:
         super().__init__()
         self.config = config
         self.driver = driver
@@ -57,20 +66,28 @@ class Neo4jUploader(BaseCommand):
     # Helpers
     # ------------------------------------------------------------------
 
-    @staticmethod
-    def _batches(items: List[T], size: int):
-        for i in range(0, len(items), size):
-            yield items[i : i + size]
-
-    def _run_batched(self, session : Session, query: str, items: List[Edge] | List[Node], label: str, graph_id : str) -> None:
+    def _run_batched(self, 
+        session : Session, 
+        query: str, 
+        name : str,
+        items: List[Edge] | List[Node], 
+        graph_id : str
+    ) -> None:
 
         total = len(items)
         uploaded = 0
+        is_edge = isinstance(items[0], Edge)
+        hint = 'edge' if is_edge else 'node'
 
         def run_tx(tx : Transaction, batch):
             tx.run(query, batch=batch, timeout=120)
 
-        for batch in self._batches(items, self.config.batch_size):
+        it = Batched(items, self.config.batch_size)
+        it = self.track(it=it, task=f"[UPLOADING {hint}::{name} | {total} {hint.capitalize()+'s'}.]")
+
+        for batch in it:
+
+            batch = list(batch)
 
             for i in range(len(batch)):
 
@@ -80,7 +97,7 @@ class Neo4jUploader(BaseCommand):
                         {
                             "src" : f"{graph_id}_{batch[i].src}",
                             "dst" : f"{graph_id}_{batch[i].dst}"
-                        } if isinstance(batch[i], Edge) else {}
+                        } if is_edge else {}
                     ),
                     **{
                         k : v
@@ -93,33 +110,23 @@ class Neo4jUploader(BaseCommand):
             session.execute_write(run_tx, batch)
             uploaded += len(batch)
 
-            self.send_debug_event(
-                progress=uploaded / total,
-                message=f"[Upload] {label}: {uploaded:,} / {total:,}",
-            )
-
     # ------------------------------------------------------------------
     # Upload steps
     # ------------------------------------------------------------------
 
-    def _clear_db(self, session : Session) -> None:
+    def _clear_db(self, session : Session, graph_id : str) -> None:
         self.send_info_event(progress=0.0, message="[Neo4j] Clearing all nodes and relationships …")
-        session.run("MATCH (n) DETACH DELETE n")
+        session.run(f"MATCH (n {{ graph_id: \"{graph_id}\" }}) DETACH DELETE n")
         self.send_info_event(progress=0.0, message="[Neo4j] Database cleared")
 
     IGNORED_NODE_TYPES = {"Author", "Keyword"}
 
     def _upload_nodes(self, session : Session, graph : Graph, graph_id : str) -> None:
 
-        for node_type, node_list in graph._nodes.items():
+        for node_type, node_list in self.track(graph._nodes.items(), task="[NODES UPLOAD]"):
 
             if not node_list or node_type in self.IGNORED_NODE_TYPES:
                 continue
-
-            self.send_info_event(
-                progress=0.0,
-                message=f"[Upload] Uploading {len(node_list._nodes):,} '{node_type}' nodes …",
-            )
 
             query = (
                 f"UNWIND $batch AS node "
@@ -127,7 +134,13 @@ class Neo4jUploader(BaseCommand):
                 f"SET n = node"
             )
 
-            self._run_batched(session, query, node_list.nodes, f"{node_type} nodes", graph_id)
+            self._run_batched(
+                session, 
+                query, 
+                node_type,
+                node_list.nodes, 
+                graph_id
+            )
 
     def _create_indexes(self, session : Session, graph : Graph) -> None:
 
@@ -146,7 +159,7 @@ class Neo4jUploader(BaseCommand):
 
     def _upload_edges(self, session: Session, graph : Graph, graph_id : str) -> None:
 
-        for edge_key, edge_list in graph._edges.items():
+        for edge_key, edge_list in self.track(graph._edges.items(), task="[EDGES UPLOAD]"):
 
             if not edge_list:
                 continue
@@ -159,14 +172,6 @@ class Neo4jUploader(BaseCommand):
             if src_type in self.IGNORED_NODE_TYPES or dst_type in self.IGNORED_NODE_TYPES:
                 continue
 
-            self.send_info_event(
-                progress=0.0,
-                message=(
-                    f"[Upload] Uploading {len(edge_list._edges):,} "
-                    f"(:{src_type})-[:{rel_type}]->(:{dst_type}) edges …"
-                ),
-            )
-
             query = (
                 f"UNWIND $batch AS edge "
                 f"MATCH (src:{src_type} {{id: edge.src}}) "
@@ -175,7 +180,7 @@ class Neo4jUploader(BaseCommand):
                 f"SET r = edge"
             )
 
-            self._run_batched(session, query, edge_list._edges, f"{edge_key} edges", graph_id)
+            self._run_batched(session, query, edge_key, edge_list._edges, graph_id)
 
     # ------------------------------------------------------------------
     # Orchestrator
@@ -184,6 +189,7 @@ class Neo4jUploader(BaseCommand):
     def __iter__(self):
 
         self.send_info_event(
+            task="main",
             progress=0.0,
             message=f"[Neo4j] Loading graph from {self.config.expertise_dir}",
         )
@@ -194,6 +200,7 @@ class Neo4jUploader(BaseCommand):
         n_edges = sum(graph.edge_counts.values())
 
         self.send_info_event(
+            task="main",
             progress=0.0,
             message=f"[Neo4j] Graph loaded — {n_nodes:,} nodes, {n_edges:,} edges",
         )
@@ -201,12 +208,20 @@ class Neo4jUploader(BaseCommand):
         graph_id = next(iter(graph.get_nodes('ExpertiseMap').nodes_generator)).id
 
         with self.driver.session() as session:
-            self._clear_db(session)
-            self._upload_nodes(session, graph, graph_id)
-            self._create_indexes(session, graph)
-            self._upload_edges(session, graph, graph_id)
 
-        self.driver.close()
+            self._clear_db(session, graph_id)
+            self.send_info_event(progress=0.25, message="[Neo4j] Database cleared")
+
+            self._upload_nodes(session, graph, graph_id)
+            self.send_info_event(progress=0.5, message="[Neo4j] Database cleared")
+
+            self._create_indexes(session, graph)
+            self.send_info_event(progress=0.75, message="[Neo4j] Database cleared")
+
+            self._upload_edges(session, graph, graph_id)
+            self.send_info_event(progress=1.0, message="[Neo4j] Database cleared")
+
+        # self.driver.close()
 
         self.send_info_event(
             progress=1.0,
@@ -222,7 +237,5 @@ class Neo4jUploader(BaseCommand):
             config=config,
             driver=config.driver
         )
-
-        # uploader.add_handler(ConsoleLogger("Neo4jUploader"))
 
         return uploader

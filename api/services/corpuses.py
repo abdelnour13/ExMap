@@ -3,7 +3,7 @@ import shutil
 from definitions import CORPUS_DIR
 from typing import List, Optional
 from api.services.scheduler import Scheduler
-from api.models import CorpusDetails, CreateCorpusBody
+from api.schemas.models import CorpusDetails, CreateCorpusBody
 from src.helpers import load_json_file, save_json_file
 from pydantic import BaseModel
 
@@ -38,6 +38,11 @@ class CorpusesService:
 
         if details is not None:
             return CreateCorpusResponse(created=False, details=details)
+
+        data.config.teams = {
+            api_type : [t.upper() for t in teams]
+            for api_type, teams in data.config.teams.items()
+        }
 
         fullpath = os.path.join(CORPUS_DIR, data.id)
         configpath = os.path.join(fullpath, "config.json")

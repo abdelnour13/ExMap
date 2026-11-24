@@ -11,6 +11,9 @@ class EventLevel(Enum):
     ERROR = logging.ERROR
     DEBUG = logging.DEBUG
     CRITICAL = logging.CRITICAL
+    START = 60
+    END = 70
+    CANCELLED = 80
 
 @dataclass
 class Event:

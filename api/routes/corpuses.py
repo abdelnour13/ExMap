@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status, Body, Path
 from typing import List
-from api.models import CreateCorpusBody, CorpusDetails
+from api.schemas.models import CreateCorpusBody, CorpusDetails
 from api.services import corpuses_service
 
 router = APIRouter(prefix="/corpuses")

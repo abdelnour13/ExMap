@@ -273,6 +273,8 @@ class Manifest(BaseModel):
         return "\n".join(lines)
 
 
+manifest = Manifest.load()
+
 # --------------------------------------------------
 # CLI
 # --------------------------------------------------

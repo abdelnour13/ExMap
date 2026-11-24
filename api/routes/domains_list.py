@@ -1,7 +1,7 @@
 import os
 from fastapi import APIRouter, Body, HTTPException, status
 from typing import List
-from api.models import GetDomainsList, CreateDomainsList
+from api.schemas.models import GetDomainsList, CreateDomainsList
 from api.services import domains_list_service
 
 router = APIRouter(prefix="/domains_list")

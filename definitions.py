@@ -27,6 +27,9 @@ os.makedirs(EMS_DIR, exist_ok=True)
 EVAL_DIR = os.path.join(DATA_DIR, "eval")
 os.makedirs(EVAL_DIR, exist_ok=True)
 
+NEO4J_LOG_DIR = os.path.join(DATA_DIR, "neo4j")
+os.makedirs(NEO4J_LOG_DIR, exist_ok=True)
+
 ENVIRONMENT = os.path.join(ROOT_DIR, "env.json")
 MANIFEST = os.path.join(ROOT_DIR, "manifest.json")
 SCRIPTS_DIR = os.path.join(ROOT_DIR, "scripts")
@@ -39,7 +42,7 @@ NEO4J_DIR = os.path.join(ROOT_DIR, '.neo4j')
 PLUGINS_DIR = os.path.join(NEO4J_DIR, "plugins")
 
 def rel_path(path : str) -> str:
-    return os.path.relpath(path, ROOT_DIR)
+    return os.path.relpath(path, DATA_DIR)
 
 def domain_path(name : str) -> str:
 

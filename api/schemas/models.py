@@ -1,10 +1,11 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, BeforeValidator
 from src.commands.data_download.main import APIConfig, API_TYPE
 from src.commands.helpers import Domain
-from typing import List
+from typing import List, Annotated
 from api.wrappers.annotation import CorpusAnnotatorConfig
 from api.services.scheduler import JobInfo
 from typing import Literal
+from src.helpers.torch_utils import get_all_devices
 
 class ExpertiseMapConfig(BaseModel):
     model : str
@@ -22,9 +23,27 @@ class ExpertiseMapDetails(BaseModel):
     name : str
     config : ExpertiseMapConfig
     jobs : List[JobInfo]
+    exists : bool
+    uploaded : bool
+
+
+def validate_device(device : str) -> str:
+
+    devices = get_all_devices()
+
+    if device not in devices:
+        raise ValueError(f"Device {device} is not available. Available devices are : {'|'.join(devices)}.")
+
+    return device
+
+Device = Annotated[str, BeforeValidator(validate_device)]
 
 class GraphLearningJobConfig(BaseModel):
     features_id : str
+    batch_size : int = 16
+    learning_rate : float = 0.0025
+    num_epochs : int = 10
+    device : Device = "cpu" # -1 for cpu else gpu index, for example "cuda:0" ...etc / find available devices at "/devices"
 
 class CreateGraphLearningJobBody(BaseModel):
     id : str
@@ -34,6 +53,7 @@ class GraphLearningJobDetails(BaseModel):
     name : str
     config : GraphLearningJobConfig
     jobs : List[JobInfo]
+    exists : bool
 
 class FeatureExtractionJobConfig(BaseModel):
     kg_id : str
@@ -48,6 +68,7 @@ class FeatureExtractionJobDetails(BaseModel):
     name : str
     config : FeatureExtractionJobConfig
     jobs : List[JobInfo] = Field(default=list)
+    exists : bool
 
 class PipelineConfig(BaseModel):
     corpus_id : str
@@ -61,6 +82,7 @@ class KnowledgeGraphDetails(BaseModel):
     name : str
     config : PipelineConfig
     jobs : List[JobInfo] = Field(default=list)
+    exists : bool
 
 class CreateCorpusBody(BaseModel):
     id : str

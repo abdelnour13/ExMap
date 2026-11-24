@@ -36,3 +36,5 @@ evaluation_subset.csv
 
 api/mount/*
 api/jobs/*
+
+!api/mount/templates

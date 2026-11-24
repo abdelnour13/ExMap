@@ -6,8 +6,13 @@ from .knowledge_graph_construction import KnowledgeGraphConstructionService
 from .feature_extraction import FeaturesExtractionService
 from .graph_learning import GraphLearningService
 from .expertise_maps import ExpertiseMapService
+from .graph import GraphService
+from .vis import VisualizationService
+from api.db.neo4j import get_driver
 
 scheduler_service = Scheduler(n=1)
+graph_service = GraphService(driver=get_driver())
+vis_service = VisualizationService()
 corpuses_service = CorpusesService(scheduler=scheduler_service)
 domains_list_service = DomainsListService()
 
@@ -34,5 +39,6 @@ graph_learning_service = GraphLearningService(
 
 expertise_map_service = ExpertiseMapService(
     scheduler=scheduler_service,
-    gl_service=graph_learning_service
+    gl_service=graph_learning_service,
+    graph_service=graph_service
 )

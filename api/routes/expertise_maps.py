@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Path, HTTPException, status
 from typing import List
 from api.services import expertise_map_service
-from api.models import CreateExpertiseMapBody, ExpertiseMapDetails
+from api.schemas.models import CreateExpertiseMapBody, ExpertiseMapDetails
 from returns.pipeline import is_successful
 
 router = APIRouter(prefix="/maps")

@@ -3,7 +3,6 @@ from typing import Any, Generator,Protocol,List, TypeVar, Self, Optional, Dict, 
 from abc import ABC, abstractmethod
 from itertools import chain
 from dataclasses import asdict
-from queue import Queue
 
 T = TypeVar('T')
 
@@ -63,6 +62,13 @@ class BaseCommand(ABC):
     
         try:
 
+            yield self.make_event(
+                task="main",
+                progress=self.get_task_progress('main'),
+                level=EventLevel.START,
+                message=f"Starting Command {self.__class__.__name__}."
+            )
+
             for event in chain(self.before_start(), self, self.after_end()):
 
                 if self.stop:
@@ -70,12 +76,29 @@ class BaseCommand(ABC):
 
                 yield event
 
+            yield self.make_event(
+                task="main",
+                progress=self.get_task_progress('main'),
+                level=EventLevel.END,
+                message=f"Command {self.__class__.__name__} has been completed with sucess."
+            )
+
         except Exception as e:
-            raise e
-            yield self.make_critical_event(progress=0.0, message=f"Command stopping due to the following error : {e}")
+
+            yield self.make_critical_event(
+                progress=self.get_task_progress(), 
+                message=f"Command stopping due to the following error : {e}"
+            )
 
     def cancel(self):
-        self.send_info_event(progress=0.0, message="Command stopping by user demand.")
+
+        self.send_event(Event(
+            task="main",
+            progress=self.get_task_progress(), 
+            message="Command stopping by user demand.",
+            level=EventLevel.CANCELLED
+        ))
+
         self.stop = True
 
     def make_event(self,

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Path, HTTPException, status
 from typing import List
 from api.services import feature_extraction_service
-from api.models import CreateFeaturesExtractionJobBody, FeatureExtractionJobDetails
+from api.schemas.models import CreateFeaturesExtractionJobBody, FeatureExtractionJobDetails
 from returns.pipeline import is_successful
 
 router = APIRouter(prefix="/features")

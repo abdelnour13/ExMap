@@ -1,7 +1,7 @@
 import os
 from definitions import FIELDS_DIR, domain_path
 from typing import List, Optional
-from api.models import GetDomainsList, Domain, CreateDomainsList
+from api.schemas.models import GetDomainsList, Domain, CreateDomainsList
 from src.helpers import load_json_file, save_json_file
 from pydantic import BaseModel
 

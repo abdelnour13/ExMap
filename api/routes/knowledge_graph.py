@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Path, HTTPException, status
 from typing import List
 from api.services import kg_construction_service
-from api.models import KnowledgeGraphDetails, CreateKnowledgeGraphBody
+from api.schemas.models import KnowledgeGraphDetails, CreateKnowledgeGraphBody
 from returns.pipeline import is_successful
 
 router = APIRouter(prefix="/kgs")

@@ -2,7 +2,8 @@ from fastapi import APIRouter, Path, Query, HTTPException, status, Header
 from fastapi.sse import EventSourceResponse
 from typing import Optional, Annotated, AsyncIterable, List
 from definitions import EMS_DIR, rel_path
-from api.services.scheduler import JobInfo, Job, JobType, Event, STATUS
+from api.services.scheduler import JobInfo, Job, JobType, Event, STATUS, GlobalEvent
+from api.db.neo4j import get_session, Driver
 from src.commands.data_download.main import Config as DataDownloaderConfig, DataDownloader
 from src.commands.graph_learning import main as graph_learning
 from src.commands import neo4j_upload
@@ -34,12 +35,12 @@ async def upload_expertise_map(map_id : str = Path()) -> JobInfo:
         log=True,
     )
 
-    instance = neo4j_upload.Neo4jUploader.from_config(config=config)
+    instance = neo4j_upload.Neo4jUploader.from_config(config)
 
     job = Job(
         log_filename=config.log_filename,
         cmd=instance,
-        type="NEO4J_UPLOAD",
+        type="MAP_UPLOAD",
         config_id=map_id,
         conf=config
     )
@@ -374,4 +375,10 @@ async def stream_job_events(
     last_event_id = (last_event_id + 1) if last_event_id is not None else 0   
 
     async for event in scheduler_service.stream_events(id=job_id, start=last_event_id):
+        yield event
+
+@router.get("/lifecycle-sse", response_class=EventSourceResponse)
+async def stream_lifecycle_events(last_event_id: Annotated[int | None, Header()] = None) -> AsyncIterable[GlobalEvent]:
+
+    async for event in scheduler_service.stream_life_cycle_events(start=last_event_id):
         yield event

@@ -3,7 +3,7 @@ import shutil
 from fastapi import APIRouter, Path, HTTPException, status
 from typing import List
 from api.services import annotation_serivce
-from api.models import AnnotationDetails, CreateAnnotationBody
+from api.schemas.models import AnnotationDetails, CreateAnnotationBody
 from returns.pipeline import is_successful
 
 router = APIRouter(prefix="/annotations")

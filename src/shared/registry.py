@@ -52,25 +52,30 @@ def parse(template : str, text : str) -> Optional[Dict[str, Any]]:
     return result
 
 
-def registry(cls : Type[T]) -> Registry[T]:
-
-    __registry__: Dict[str, Type[T]] = {}
+def registry(cls : Type[T], cached : bool = False) -> Registry[T]:
 
     class _Return(cls):
 
         __id__ = id
+        __registry__: Dict[str, Type[T]] = {}
+        __cache__ : Dict[str, T] = {}
 
         @classmethod
         def available(cls) -> List[str]:
-            return list(__registry__.keys())
+            return list(cls.__registry__.keys())
 
         @classmethod
         def create(cls, name: str, **kwargs: Any) -> T:
 
+            if cached:
+
+                if name in cls.__cache__:
+                    return cls.__cache__[name]
+
             _cls = None
             output = None
 
-            for _cls_name, _cls in __registry__.items():
+            for _cls_name, _cls in cls.__registry__.items():
 
                 output = parse(template=_cls_name, text=name)
 
@@ -80,7 +85,7 @@ def registry(cls : Type[T]) -> Registry[T]:
             if output is None:
 
                 raise ValueError(
-                    f"class under name: '{name}' didn't match any of {__registry__.keys()}."
+                    f"class under name: '{name}' didn't match any of {cls.__registry__.keys()}."
                 )
 
             has_update_fn = hasattr(_cls, 'update_kwargs') and callable(getattr(_cls, 'update_kwargs'))
@@ -112,7 +117,10 @@ def registry(cls : Type[T]) -> Registry[T]:
                         f"Unused argument {k} for class {name}."
                     )
 
-            return _cls(**retained_args)
+            instance = _cls(**retained_args)
+            cls.__cache__[name] = instance
+
+            return instance
 
         @classmethod
         def register(
@@ -122,12 +130,12 @@ def registry(cls : Type[T]) -> Registry[T]:
 
             def inner(_cls: Type[T]) -> Type[T]:
 
-                if name in __registry__:
+                if name in cls.__registry__:
                     raise ValueError(
                         f"Class under name: '{name}' is already registered."
                     )
 
-                __registry__[name] = _cls
+                cls.__registry__[name] = _cls
 
                 return _cls
 

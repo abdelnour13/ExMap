@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Summary Statistics</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, sans-serif;
+    background: #fafaf9;
+    color: #1c1917;
+    padding: 24px 20px 48px;
+  }
+  h1 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #1c1917;
+  }
+  .subtitle {
+    font-size: 0.75rem;
+    color: #78716c;
+    margin-bottom: 28px;
+  }
+  .section-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #a8a29e;
+    margin: 32px 0 14px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-top: 14px;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid #e7e5e4;
+    border-radius: 8px;
+    padding: 4px 8px 8px;
+    overflow: hidden;
+  }
+  .full-width {
+    margin-top: 14px;
+  }
+  @media (max-width: 780px) {
+    .grid-3, .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Summary Statistics</h1>
+<p class="subtitle">Distribution of articles and expertises across labs, domains, and subdomains.</p>
+
+<p class="section-label">Articles</p>
+<div class="grid-3">
+{{ art_narrow | safe }}
+</div>
+
+<p class="section-label">By Domain &amp; Lab</p>
+<div class="grid-2">
+{{ domain_lab_row | safe }}
+</div>
+
+<p class="section-label">Articles by SubDomain &amp; Lab</p>
+<div class="full-width">
+{{ art_sd_lab | safe }}
+</div>
+
+<p class="section-label">Expertises</p>
+<div class="grid-3">
+{{ exp_narrow | safe }}
+</div>
+
+<p class="section-label">Expertises by SubDomain &amp; Lab</p>
+<div class="full-width">
+{{ exp_sd_lab | safe }}
+</div>
+
+</body>
+</html>

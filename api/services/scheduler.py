@@ -4,19 +4,20 @@ import uuid
 import datetime
 import asyncio
 from src.shared.command_tools import BaseCommand
-from src.shared.handlers.base import Handler, Event as _Event
-from src.shared.handlers import ConsoleLogger
+from src.shared.handlers.base import Handler, Event as _Event, EventLevel
+from src.shared.handlers import ConsoleLogger, FileLogger
 from src.helpers import load_json_file, save_json_file
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Literal, AsyncIterable, Set, Type, Tuple
 from dataclasses import dataclass, field, asdict
 from src.commands.data_download import main as DataDownload
 from api.wrappers import annotation as DataAnnotation, knowledge_graph_construction as KGConstruction
-from definitions import CORPUS_DIR, ANNOTATION_DIR, KGS_DIR
+from definitions import CORPUS_DIR, ANNOTATION_DIR, KGS_DIR, DATA_DIR
+from api.constants import GLOBAL_LOG_FILE
 
 STATUS = Literal["PENDING", "RUNNING", "ERROR", "COMPLETED"]
-JobType = Literal["DOWNLOAD", "ANNOTATION", "KG_CONSTRUCTION", "FEATURE_EXTRACTION", "GRAPH_LEARNING", "MAP_CONSTRUCTION", "NEO4J_UPLOAD"]
-LEVEL = Literal["DEBUG", "INFO", "WARN", "ERROR", "CRITICAL"]
+JobType = Literal["DOWNLOAD", "ANNOTATION", "KG_CONSTRUCTION", "FEATURE_EXTRACTION", "GRAPH_LEARNING", "MAP_CONSTRUCTION", "MAP_UPLOAD"]
+LEVEL = Literal["DEBUG", "INFO", "WARN", "ERROR", "CRITICAL", "START", "END", "CANCELLED"]
 
 JOB2CLS :Dict[JobType, Tuple[Type[BaseModel], Type[BaseCommand], str]] = {
     "DOWNLOAD" : (DataDownload.Config, DataDownload.DataDownloader, CORPUS_DIR),
@@ -32,6 +33,16 @@ class Event(BaseModel):
     message : Optional[str] = None # Message
     extra : Dict = field(default_factory=dict)
 
+class GlobalEvent(BaseModel):
+    job_id : str
+    job_type : str
+    config_id : str
+    task : str = "main"
+    progress : Optional[float] = None
+    timestamp : str = field(default_factory=lambda : datetime.now().strftime("%Y-%m-%d %H:%M:%S")) # Timestamp
+    level : LEVEL = "INFO" # Level
+    message : Optional[str] = None # Message
+
 class JobInfo(BaseModel):
     id : str
     status : STATUS
@@ -39,6 +50,33 @@ class JobInfo(BaseModel):
     config_id : str
     last_event : Optional[Event] = None
     log_filename : str
+
+class GlobalFileLogger(FileLogger):
+
+    def __init__(self, 
+        name : str, 
+        job : JobInfo,
+        levels : Optional[Set[EventLevel]] = None
+    ):
+        super().__init__(name, GLOBAL_LOG_FILE)
+        self.job = job
+        self.levels = levels
+
+    def consume(self, event : Event) -> None:
+
+        if (self.levels is not None) and (event.level not in self.levels):
+            return 
+
+        event.extra = {
+            "job_id" : self.job.id,
+            "job_type" : self.job.type,
+            "config_id" : self.job.config_id,
+            "log_filename" : self.job.log_filename
+        }
+
+        event.task = f"{self.job.type}::{event.task}"
+
+        return super().consume(event)
 
 @dataclass
 class Job:
@@ -96,8 +134,24 @@ class Job:
         )
 
     def run(self):
+
         handler = JobHandler(job=self)
         self.cmd.add_handler(handler)
+
+        handler = GlobalFileLogger(
+            name="main", 
+            job=self,
+            levels={ 
+                EventLevel.START, 
+                EventLevel.END, 
+                EventLevel.CANCELLED, 
+                EventLevel.CRITICAL, 
+                EventLevel.WARN 
+            }
+        )
+
+        self.cmd.add_handler(handler)
+
         self.cmd.remove_handlers(cls=ConsoleLogger)
         self.status = "RUNNING"
         self.cmd.run()
@@ -206,39 +260,33 @@ class Scheduler:
         for job in jobs:
             job.cmd.cancel()
 
-    # async def stream_events(self, id : str, start : int = 0) -> AsyncIterable[Event]:
+    async def stream_life_cycle_events(self, start : int = 0) -> AsyncIterable[GlobalEvent]:
 
-    #     job = self.get_job_or_throw(id=id)
+        while not os.path.exists(GLOBAL_LOG_FILE):
+            await asyncio.sleep(0.1)
 
-    #     while job.status == "PENDING":
-    #         await asyncio.sleep(0.1)
+        with open(GLOBAL_LOG_FILE, "r") as f:
+        
+            while True:
 
-    #     cursor = start
+                if index < start:
+                    index += 1
+                    continue
 
-    #     while True:
+                line = f.readline().strip('\n')
+                event = json.loads(s=line)
+                extra = event.pop('extra')
+                event = Event(**{ **event, **extra })
 
-    #         N = len(job.events)
-
-    #         if (cursor >= N):
-
-    #             if job.status != "RUNNING":
-    #                 break
-    #             else:
-    #                 await asyncio.sleep(0.1)
-    #                 continue
-
-    #         local_copy = job.events[cursor:].copy()
-    #         cursor += len(local_copy)
-
-    #         for event in local_copy:
-    #             yield event
-
-    #         await asyncio.sleep(0.1)
+                index += 1
+                yield event
 
     async def stream_events(self, id : str, start : int = 0) -> AsyncIterable[Event]:
     
         job = self.get_job_or_throw(id=id)
         index = 0
+
+        print(job.log_filename)
 
         while job.status == "PENDING":
             await asyncio.sleep(0.1)

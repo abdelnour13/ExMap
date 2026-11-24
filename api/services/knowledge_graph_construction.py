@@ -1,7 +1,7 @@
 import os
 import shutil
 import json
-from api.models import CreateKnowledgeGraphBody, KnowledgeGraphDetails, PipelineConfig
+from api.schemas.models import CreateKnowledgeGraphBody, KnowledgeGraphDetails, PipelineConfig
 from api.services import Scheduler, AnnotationService
 from src.helpers import load_json_file, save_json_file
 from typing import List, Optional, Literal, Dict
@@ -39,7 +39,8 @@ template = """{{
             "segmentor" : "stanza",
             "use_gpu": false,
             "batch_size": 128,
-            "buffer_size": 128
+            "buffer_size": 128,
+            "use_gpu" : false
         }},
         "acronyms_extraction": {{
             "stage": "acronyms_extraction",
@@ -187,7 +188,8 @@ class KnowledgeGraphConstructionService:
             results.append(KnowledgeGraphDetails(
                 name=filename,
                 config=config,
-                jobs=[job.info for job in jobs if job.config_id == filename]
+                jobs=[job.info for job in jobs if job.config_id == filename],
+                exists=os.path.exists(os.path.join(fullpath, "llm_based_entities_cleaning", "data.jsonl"))
             ))
     
         return results        

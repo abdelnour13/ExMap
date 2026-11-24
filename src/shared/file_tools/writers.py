@@ -2,9 +2,12 @@ import lmdb
 import json
 import os
 import msgpack
-from typing import Dict, Iterable, Optional
+from typing import Dict, Iterable, Optional, TypedDict
 from abc import ABC, abstractmethod
 from .cache import Cache
+
+class Header(TypedDict):
+    num_records : int
 
 class BufferedWriter:
 
@@ -72,11 +75,11 @@ class FileWriter(Writer):
         if extension == "lmdb":
             return LMDBWriter(filename)
         elif extension == "jsonl":
-            return JSONlWriter(filename)
+            return HeadlessJSONlWriter(filename)
         else:
             raise ValueError(f"Unsupported extention {extension}.")
         
-class JSONlWriter(FileWriter):
+class HeadlessJSONlWriter(FileWriter):
 
     def write(self, chunk : Iterable[Dict]):
 
@@ -87,6 +90,41 @@ class JSONlWriter(FileWriter):
 
         with open(self.filename, 'a') as f:
             f.write(dump)
+
+class JSONlWriter(FileWriter):
+
+    def __init__(self, filename : str) -> None:
+
+        super().__init__(filename)
+
+        if not os.path.exists(filename):
+            os.mkdir(filename)
+
+        self._header_file = os.path.join(filename, "header.json")
+        self._data_file = os.path.join(filename, "data.jsonl")
+        self._header_data : Header = self._load_header()
+
+    def _load_header(self) -> Header:
+
+        if not os.path.exists(self._header_file):
+            return Header(num_records=0)
+
+        with open(self._header_file, "r") as f:
+            return json.load(f)
+
+    def write(self, chunk : Iterable[Dict]):
+
+        dump = ""
+        
+        for doc in chunk:
+            dump += f"{json.dumps(doc)}\n"
+            self._header_data["num_records"] += 1
+
+        with open(self._data_file, 'a') as f:
+            f.write(dump)
+
+        with open(self._header_file, 'w') as f:
+            f.write(json.dumps(self._header_data))
 
 class LMDBWriter(FileWriter):
 

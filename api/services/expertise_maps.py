@@ -1,8 +1,7 @@
 import os
 import shutil
-import json
 from definitions import EMS_DIR
-from api.models import CreateExpertiseMapBody, ExpertiseMapDetails, ExpertiseMapConfig
+from api.schemas.models import CreateExpertiseMapBody, ExpertiseMapDetails, ExpertiseMapConfig
 from returns.result import Result
 from typing import Literal, Dict, List, Optional
 from pydantic import BaseModel, Field
@@ -10,6 +9,7 @@ from src.helpers.utils import load_json_file, save_json_file
 from api.services.scheduler import Scheduler
 from api.services.graph_learning import GraphLearningService
 from src.commands.build_expertise_map import BEMConfig
+from api.services.graph import GraphService
 
 FAILURE_KIND = Literal['EXISTS', 'MODEL_NOT_EXISTS']
 
@@ -26,10 +26,12 @@ class ExpertiseMapService:
 
     def __init__(self, 
         scheduler : Scheduler,
-        gl_service : GraphLearningService
+        gl_service : GraphLearningService,
+        graph_service : GraphService
     ) -> None:
         self.scheduler = scheduler
         self.gl_service = gl_service
+        self.graph_service = graph_service
 
     def delete(self, id : str) -> DeleteResponse:
         
@@ -101,6 +103,8 @@ class ExpertiseMapService:
 
         results = []
         jobs = self.scheduler.get_all_jobs(type="MAP_CONSTRUCTION")
+
+        uploaded_graphs = [summary.id for summary in self.graph_service.list_graphs()]
             
         for filename in os.listdir(EMS_DIR):
     
@@ -127,7 +131,9 @@ class ExpertiseMapService:
             results.append(ExpertiseMapDetails(
                 name=filename,
                 config=config,
-                jobs=[job.info for job in jobs if job.config_id == filename]
+                jobs=[job.info for job in jobs if job.config_id == filename],
+                exists=os.path.exists(os.path.join(fullpath, "raw.json")),
+                uploaded=filename in uploaded_graphs
             ))
     
         return results 
