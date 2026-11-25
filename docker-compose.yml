@@ -32,6 +32,8 @@ services:
 
   text2kg:
     build: ./docker/main/cpu
+    environment:
+      - ALLENNLP_URL=http://allennlp:8080
     ports:
       # The data service the desktop app talks to, reachable from this machine only.
       - "127.0.0.1:8000:8000"
