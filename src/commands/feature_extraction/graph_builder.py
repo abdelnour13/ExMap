@@ -306,3 +306,11 @@ class GraphBuilder:
                         "name" : domain
                     }
                 )
+
+                if item['score'] >= 0.5:
+
+                    graph.add_edge(
+                        type=EdgeTypes.Article_BELONGSTO_SubDomain,
+                        src=article['id'],
+                        dst=domain_id
+                    )
