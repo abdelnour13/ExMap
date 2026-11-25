@@ -43,9 +43,10 @@ function Step([string]$Number, [string]$Text) {
 
 # ---------- Docker ----------
 
-# Runs docker and stops the script if it fails.
-function Docker {
-  & docker @args
+# Runs docker and stops the script if it fails. (Not named "Docker": PowerShell names are case-insensitive, so
+# a function with that name would hide docker.exe and call itself forever.)
+function Invoke-Docker {
+  & docker.exe @args
   if ($LASTEXITCODE -ne 0) { throw "'docker $($args -join ' ')' failed (exit code $LASTEXITCODE)." }
 }
 
@@ -54,19 +55,19 @@ function Docker {
 function Test-Docker {
   $previous = $ErrorActionPreference
   $ErrorActionPreference = 'Continue'
-  try { & docker @args *> $null; return ($LASTEXITCODE -eq 0) }
+  try { & docker.exe @args *> $null; return ($LASTEXITCODE -eq 0) }
   catch { return $false }
   finally { $ErrorActionPreference = $previous }
 }
 
 function Assert-Docker {
-  if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
+  if (-not (Get-Command docker.exe -ErrorAction SilentlyContinue)) {
     throw 'Docker is not installed. Install Docker Desktop (https://docs.docker.com/desktop/setup/install/windows-install/) and try again.'
   }
   # `docker --version` works without the engine; asking the server for its version only works when the engine runs.
   $previous = $ErrorActionPreference
   $ErrorActionPreference = 'Continue'
-  try { $said = (& docker version --format '{{.Server.Version}}' 2>&1 | Out-String).Trim(); $running = ($LASTEXITCODE -eq 0) }
+  try { $said = (& docker.exe version --format '{{.Server.Version}}' 2>&1 | Out-String).Trim(); $running = ($LASTEXITCODE -eq 0) }
   catch { $said = $_.Exception.Message; $running = $false }
   finally { $ErrorActionPreference = $previous }
   if (-not $running) {
@@ -90,8 +91,8 @@ function Get-SavedMode {
 }
 
 function Compose {
-  if ((Get-SavedMode) -eq 'gpu') { Docker compose -f docker-compose.yml -f docker-compose.gpu.yml @args }
-  else { Docker compose @args }
+  if ((Get-SavedMode) -eq 'gpu') { Invoke-Docker compose -f docker-compose.yml -f docker-compose.gpu.yml @args }
+  else { Invoke-Docker compose @args }
 }
 
 function Assert-Installed {
