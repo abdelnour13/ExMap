@@ -37,4 +37,4 @@ RUN python -m pip install -r requirements.txt -c /tmp/torch-constraints.txt && \
 RUN python -m pip check || echo "WARNING: pip check reported conflicts" ; \
     python -c "import torch, torchvision, faiss; print('torch', torch.__version__, '| torchvision', torchvision.__version__, '| faiss', faiss.__version__)"
 
-CMD ["tail", "-f", "/dev/null"]
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
