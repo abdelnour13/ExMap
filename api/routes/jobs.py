@@ -3,7 +3,6 @@ from fastapi.sse import EventSourceResponse
 from typing import Optional, Annotated, AsyncIterable, List
 from definitions import EMS_DIR, rel_path
 from api.services.scheduler import JobInfo, Job, JobType, Event, STATUS, GlobalEvent
-from api.db.neo4j import get_session, Driver
 from src.commands.data_download.main import Config as DataDownloaderConfig, DataDownloader
 from src.commands.graph_learning import main as graph_learning
 from src.commands import neo4j_upload
@@ -197,7 +196,8 @@ async def start_kg_construction(
 
     config = knowledge_graph_construction.Config(
         graph_id=kg_id,
-        stage=None
+        stage=None,
+        api_key=x_api_key
     )
 
     downloader = knowledge_graph_construction.Pipeline.from_config(config=config)
