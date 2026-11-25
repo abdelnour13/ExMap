@@ -2,14 +2,17 @@
 .SYNOPSIS
   Text2KG backend on Windows: install it, start it, stop it, check it. (Linux/macOS: text2kg.sh.)
 .DESCRIPTION
-  .\text2kg.cmd install [-Rebuild]   build the images, start the containers, download the resources
+  .\text2kg.cmd install [-Rebuild] [-ForceCpu]
+                                     build the images, start the containers, download the resources
+                                     (-ForceCpu: do not look for a GPU, run on the CPU)
   .\text2kg.cmd start                start the containers and wait until the API answers
   .\text2kg.cmd stop                 stop the containers (nothing is deleted)
   .\text2kg.cmd status               show the containers and whether the API answers
   .\text2kg.cmd logs [service]       follow the logs
 
   `install` is safe to run again at any time: it only redoes what is missing. -Rebuild rebuilds every image
-  from scratch (slow). Needs Docker Desktop (WSL 2 backend). Keep this folder inside the WSL file system
+  from scratch (slow). -ForceCpu skips the GPU test and saves the CPU mode; run install without it to detect
+  the GPU again. Needs Docker Desktop (WSL 2 backend). Keep this folder inside the WSL file system
   (or at least on a local disk): bind mounts from network drives are very slow.
 #>
 [CmdletBinding()]
@@ -18,6 +21,7 @@ param(
   [ValidateSet('install', 'start', 'stop', 'status', 'logs', 'help')]
   [string]$Command = 'help',
   [switch]$Rebuild,
+  [switch]$ForceCpu,
   [Parameter(ValueFromRemainingArguments = $true)]
   [string[]]$Rest = @()
 )
@@ -125,9 +129,14 @@ function Install-Backend {
   Assert-Docker
 
   Step '2/5' 'Looking for a GPU'
-  $mode = Get-Mode
+  if ($ForceCpu) {
+    $mode = 'cpu'
+    Write-Host '-ForceCpu: not looking for a GPU, starting in CPU mode.'
+  } else {
+    $mode = Get-Mode
+    if ($mode -eq 'gpu') { Write-Host 'GPU found: starting in GPU mode.' } else { Write-Host 'No GPU available: starting in CPU mode.' }
+  }
   Set-Content -LiteralPath $ModeFile -Value $mode -NoNewline
-  if ($mode -eq 'gpu') { Write-Host 'GPU found: starting in GPU mode.' } else { Write-Host 'No GPU available: starting in CPU mode.' }
 
   Step '3/5' 'Building the images (the first time this takes several minutes)'
   try { Compose pull neo4j } catch { Write-Host '(Could not refresh the Neo4j image; using the one that is already here.)' }

@@ -1,7 +1,9 @@
 #!/bin/sh
 # Text2KG backend: install it, start it, stop it, check it. Linux and macOS (Windows: text2kg.ps1).
 #
-#   ./text2kg.sh install [--rebuild]   build the images, start the containers, download the resources
+#   ./text2kg.sh install [--rebuild] [--force-cpu]
+#                                      build the images, start the containers, download the resources
+#                                      (--force-cpu: do not look for a GPU, run on the CPU)
 #   ./text2kg.sh start                 start the containers and wait until the API answers
 #   ./text2kg.sh stop                  stop the containers (nothing is deleted)
 #   ./text2kg.sh status                show the containers and whether the API answers
@@ -9,6 +11,7 @@
 #
 # `install` is safe to run again at any time: it only redoes what is missing. `--rebuild` rebuilds every
 # image from scratch (slow); use it after a change of the Dockerfiles or to refresh the base images.
+# `--force-cpu` skips the GPU test and saves the CPU mode; run install without it to detect the GPU again.
 set -eu
 cd "$(dirname "$0")"
 
@@ -93,9 +96,11 @@ wait_ready() {
 
 cmd_install() {
   rebuild=0
+  force_cpu=0
   for arg in "$@"; do
     case "$arg" in
       --rebuild) rebuild=1 ;;
+      --force-cpu) force_cpu=1 ;;
       *) die "Unknown option: $arg" ;;
     esac
   done
@@ -104,9 +109,14 @@ cmd_install() {
   check_docker
 
   step 2/5 "Looking for a GPU"
-  detected="$(detect_mode)"
+  if [ "$force_cpu" -eq 1 ]; then
+    detected=cpu
+    say "--force-cpu: not looking for a GPU, starting in CPU mode."
+  else
+    detected="$(detect_mode)"
+    if [ "$detected" = gpu ]; then say "GPU found: starting in GPU mode."; else say "No GPU available: starting in CPU mode."; fi
+  fi
   printf '%s' "$detected" > "$MODE_FILE"
-  if [ "$detected" = gpu ]; then say "GPU found: starting in GPU mode."; else say "No GPU available: starting in CPU mode."; fi
 
   step 3/5 "Building the images (the first time this takes several minutes)"
   compose pull neo4j || say "(Could not refresh the Neo4j image; using the one that is already here.)"
@@ -161,7 +171,7 @@ cmd_logs() {
 }
 
 usage() {
-  sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'
+  sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'
 }
 
 case "${1:-help}" in
