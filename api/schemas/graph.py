@@ -31,7 +31,7 @@ class SubDomainSchema(BaseModel):
 
 class ExpertiseSchema(BaseModel):
     id: str
-    personalized_pagerank_name: str
+    personalized_pagerank_name: str | None
     llm_label: str
     size: int
     domains : list[str] = Field(default_factory=list)

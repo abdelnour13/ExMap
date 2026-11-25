@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, BeforeValidator
-from src.commands.data_download.main import APIConfig, API_TYPE
+from src.commands.data_download.main import APIConfig
 from src.commands.helpers import Domain
 from typing import List, Annotated
 from api.wrappers.annotation import CorpusAnnotatorConfig
