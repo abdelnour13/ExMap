@@ -50,7 +50,7 @@ def embedders() -> List[str]:
     return [
         f"{opts[_kind(hf_model.name)]}:{hf_model.name}"
         for hf_model in manifest.hf_models
-        if _kind(hf_model.name) in opts
+        if _kind(hf_model.name) in opts and hf_model.exists()
     ]
 
 @app.get('/download/{filename}')
