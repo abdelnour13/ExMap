@@ -85,7 +85,7 @@ class FileReader(Reader):
         elif extension in ['json']:
             return JSONFileReader(filename, cache)
         elif extension in ['jsonl']:
-            return HeadlessJSONFileReader(filename, cache)
+            return HeadlessJSONlFileReader(filename, cache)
         elif extension in ['lmdb']:
             return LMDBReader(filename, cache)
         else:
@@ -134,7 +134,7 @@ class TextFileReader(FileReader):
 
                 yield record, progress
 
-class JSONFileReader(FileReader):
+class JSONlFileReader(FileReader):
 
     def __init__(self, 
         filename : str, 
@@ -161,7 +161,7 @@ class JSONFileReader(FileReader):
             for item in ijson.items(f, "item"):
                 yield item, None
 
-class HeadlessJSONFileReader(FileReader):
+class JSONFileReader(FileReader):
 
     def __init__(self, filename : str, cache : Optional[Cache] = None) -> None:
         super().__init__(filename, cache)
@@ -173,7 +173,7 @@ class HeadlessJSONFileReader(FileReader):
             for item in ijson.items(f, "item"):
                 yield item, None
 
-class JSONlFileReader(FileReader):
+class HeadlessJSONlFileReader(FileReader):
 
     def __init__(self, filename : str, cache : Optional[Cache] = None) -> None:
         super().__init__(filename, cache)
