@@ -226,38 +226,55 @@ class Neo4jUploader(BaseCommand):
 
             self._run_batched(session, query, edge_key, edge_list._edges, graph_id)
 
-    def _create_missing_relations(self, session : Session, graph_id : str) -> None:
+    APPEARSIN_QUERY = """
+        UNWIND $ids AS tid
+        MATCH (tr:Triple {id: tid})-[:BELONGSTO]->(a:Article)
+        MATCH (tr)-[:HAS_HEAD|HAS_TAIL]->(e:Entity)
+        WITH DISTINCT e, a
+        MERGE (e)-[:APPEARSIN]->(a)
+    """
 
-        # No "alreadyThere" guard: MERGE is idempotent, so the query is safe to re-run.
-        # The collect() forces the whole read to finish before any inner batch commits,
-        # so the outer query is no longer reading data that its own batches modify.
+    HASRELATIONWITH_QUERY = """
+        UNWIND $ids AS tid
+        MATCH (tr:Triple {id: tid})-[:HAS_HEAD]->(h:Entity),
+              (tr)-[:HAS_TAIL]->(t:Entity),
+              (tr)-[:HAS_PREDICATE]->(p:Predicate)
+        OPTIONAL MATCH (tr)-[:BELONGSTO]->(a:Article)
+        WITH h, t, p.name AS pred, collect(DISTINCT toString(a.id)) AS arts
+        MERGE (h)-[r:HASRELATIONWITH {predicate: pred}]->(t)
+        SET r.articles = coalesce(r.articles, []) +
+                         [x IN arts WHERE NOT x IN coalesce(r.articles, [])]
+    """
 
-        # 1. Entity -[:APPEARSIN]-> Article
-        self._run_auto_commit(session, """
-            MATCH (tr:Triple {graph_id: $graph_id})-[:BELONGSTO]->(a:Article {graph_id: $graph_id})
-            MATCH (tr)-[:HAS_HEAD|HAS_TAIL]->(e:Entity {graph_id: $graph_id})
-            WITH collect(DISTINCT [e, a]) AS pairs
-            UNWIND pairs AS pair
-            WITH pair[0] AS e, pair[1] AS a
-            CALL (e, a) {
-                MERGE (e)-[:APPEARSIN]->(a)
-            } IN TRANSACTIONS OF 5000 ROWS
-        """, {"graph_id": graph_id})
+    def _create_missing_relations(self, session : Session, graph_id : str, chunk_size : int = 2000) -> None:
 
-        # 2. Entity -[:HASRELATIONWITH {predicate}]-> Entity
-        #    Aggregated per (h, t, predicate) first, so each relationship is written exactly once.
-        self._run_auto_commit(session, """
-            MATCH (tr:Triple {graph_id: $graph_id})-[:HAS_HEAD]->(h:Entity {graph_id: $graph_id}),
-                  (tr)-[:HAS_TAIL]->(t:Entity {graph_id: $graph_id}),
-                  (tr)-[:HAS_PREDICATE]->(p:Predicate {graph_id: $graph_id})
-            OPTIONAL MATCH (tr)-[:BELONGSTO]->(a:Article {graph_id: $graph_id})
-            WITH h, t, p.name AS pred, collect(DISTINCT toString(a.id)) AS arts
-            CALL (h, t, pred, arts) {
-                MERGE (h)-[r:HASRELATIONWITH {predicate: pred}]->(t)
-                SET r.articles = coalesce(r.articles, []) +
-                                 [x IN arts WHERE NOT x IN coalesce(r.articles, [])]
-            } IN TRANSACTIONS OF 5000 ROWS
-        """, {"graph_id": graph_id})
+        # Batched from Python: each chunk of triples is its own small write transaction.
+        # - memory per transaction stays bounded (no huge collect())
+        # - no long-running outer read that its own batches modify (no "Outdated" error)
+        # - execute_write retries TransientErrors automatically
+        # Both queries are idempotent (MERGE + de-duplicated article list), so a chunk
+        # that is retried, or a relationship touched by several chunks, stays correct.
+
+        triple_ids = [
+            record["id"]
+            for record in session.run(
+                "MATCH (tr:Triple {graph_id: $graph_id}) RETURN tr.id AS id",
+                graph_id=graph_id,
+            )
+        ]
+
+        @unit_of_work(timeout=120)
+        def run_chunk(tx : Transaction, query : str, ids : List[str]) -> None:
+            tx.run(query, ids=ids).consume()
+
+        for name, query in (
+            ("APPEARSIN", self.APPEARSIN_QUERY),
+            ("HASRELATIONWITH", self.HASRELATIONWITH_QUERY),
+        ):
+            chunks = Batched(triple_ids, chunk_size)
+            chunks = self.track(it=chunks, task=f"[CREATING {name} | {len(triple_ids)} Triples.]")
+            for chunk in chunks:
+                session.execute_write(run_chunk, query, list(chunk))
 
     # ------------------------------------------------------------------
     # Orchestrator
