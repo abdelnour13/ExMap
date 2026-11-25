@@ -1,6 +1,6 @@
 from src.commands.knowledge_graph_construction.graph_cleaning import llm_based_entities_cleaning
 from src.shared.file_tools import FileReader, FileWriter, TextfileCache
-from src.shared.command_tools import Stage
+from src.shared.command_tools import Stage, add_handlers
 from src.methods.embedders import EmbedderRegistry
 from src.methods.nn import NNRetrieverRegistry
 from src.shared.platforms import LLM
@@ -8,6 +8,7 @@ from src.shared.platforms import LLM
 class Config(llm_based_entities_cleaning.Config):
     api_key : str
 
+@add_handlers
 class IterativeLLMBasedEntitiesCleaning(llm_based_entities_cleaning.IterativeLLMBasedEntitiesCleaning):
 
     @classmethod

@@ -1,5 +1,5 @@
 from src.commands.knowledge_graph_construction.graph_cleaning import llm_based_predicates_cleaning
-from src.shared.command_tools import Stage
+from src.shared.command_tools import Stage, add_handlers
 from src.shared.file_tools import FileWriter, FileReader, TextfileCache
 from src.methods.embedders import EmbedderRegistry
 from src.shared.platforms import LLM
@@ -8,6 +8,7 @@ from src.methods.nn import NNRetrieverRegistry
 class Config(llm_based_predicates_cleaning.Config):
     api_key : str
 
+@add_handlers
 class IterativePredicatesCleaning(llm_based_predicates_cleaning.IterativePredicatesCleaning):
 
     @classmethod

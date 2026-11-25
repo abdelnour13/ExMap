@@ -1,10 +1,12 @@
 from src.commands.knowledge_graph_construction.triplet_extraction import triples_extractor
 from src.methods.triple_extractors import TwoStepLLMTripleExtractor, LLM
 from src.shared.file_tools import TextfileCache, FileReader, FileWriter
+from src.shared.command_tools import add_handlers
 
 class Config(triples_extractor.Config):
     api_key : str
 
+@add_handlers
 class TriplesExtractor(triples_extractor.TriplesExtractor):
 
     @classmethod
