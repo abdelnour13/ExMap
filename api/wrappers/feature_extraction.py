@@ -39,7 +39,7 @@ class FeatureExtractionConfig(BaseModel):
     @computed_field
     @property
     def kg_config(self) -> PipeConfig:
-        return KGConfig(graph_id=self.kg_id).conf
+        return KGConfig(graph_id=self.kg_id, api_key="no-need").conf
 
     @computed_field
     @property
