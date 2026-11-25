@@ -72,7 +72,7 @@ class FeaturesExtractionService:
             kg_id=data.config.kg_id,
             model_name=data.config.embedder,
             batch_size=data.config.batch_size,
-            device=0,
+            device=-1,
             filter=FilterConfig(
                 require_subdomain=True,
                 min_entities_per_article=1,
