@@ -20,8 +20,8 @@ RUN python -m pip install --upgrade pip
 # --------------------------------------------------
 # 2. Heavy layer: torch + FAISS + PyG (CPU)
 # --------------------------------------------------
-COPY setup_cpu.sh ./
-RUN bash setup_cpu.sh
+COPY setup.sh ./
+RUN bash setup.sh
 
 # --------------------------------------------------
 # 3. Project requirements (torch versions locked)
