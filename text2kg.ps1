@@ -63,8 +63,14 @@ function Assert-Docker {
   if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
     throw 'Docker is not installed. Install Docker Desktop (https://docs.docker.com/desktop/setup/install/windows-install/) and try again.'
   }
-  if (-not (Test-Docker info)) {
-    throw 'Docker is not running. Start Docker Desktop, wait until it says it is running, then try again.'
+  # `docker --version` works without the engine; asking the server for its version only works when the engine runs.
+  $previous = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  try { $said = (& docker version --format '{{.Server.Version}}' 2>&1 | Out-String).Trim(); $running = ($LASTEXITCODE -eq 0) }
+  catch { $said = $_.Exception.Message; $running = $false }
+  finally { $ErrorActionPreference = $previous }
+  if (-not $running) {
+    throw "Docker is not running, or this user is not allowed to use it. Start Docker Desktop and wait until it says it is running; if it already is, add your Windows user to the 'docker-users' group, then sign out and in. Docker said:`n$said"
   }
   if (-not (Test-Docker compose version)) {
     throw "'docker compose' (Compose v2) is missing. Update Docker Desktop and try again."
