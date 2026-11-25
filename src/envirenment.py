@@ -47,7 +47,7 @@ class Neo4jConfig(BaseModel):
         )
 
 NEO4J_LOCAL_CONFIG = Neo4jConfig(
-    uri="neo4j://localhost:7687",
+    uri="bolt://neo4j:7687",
     user="neo4j",
     password="password1234"
 )
