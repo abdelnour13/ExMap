@@ -1,8 +1,10 @@
 import os
+import time
 from torch import Tensor
-from typing import List, Self, TypeVar
+from typing import Any, List, Self, TypeVar
 from pydantic import computed_field
-from neo4j import Session, Transaction, Driver
+from neo4j import Session, Transaction, Driver, unit_of_work
+from neo4j.exceptions import TransientError
 from instance import cli
 from definitions import DATA_DIR
 from src.shared.file_tools import Batched
@@ -54,8 +56,10 @@ class Config(ConnectionOption, OutputDirOption):
 @add_handlers
 class Neo4jUploader(BaseCommand):
 
-    def __init__(self, 
-        config: Config, 
+    IGNORED_NODE_TYPES = {"Author", "Keyword"}
+
+    def __init__(self,
+        config: Config,
         driver : Driver
     ) -> None:
         super().__init__()
@@ -66,60 +70,100 @@ class Neo4jUploader(BaseCommand):
     # Helpers
     # ------------------------------------------------------------------
 
-    def _run_batched(self, 
-        session : Session, 
-        query: str, 
+    @staticmethod
+    def _run_auto_commit(
+        session : Session,
+        query : str,
+        params : dict[str, Any] | None = None,
+        retries : int = 5,
+    ) -> None:
+        """
+        Run an auto-commit query (needed for CALL { ... } IN TRANSACTIONS),
+        consume it so errors surface here, and retry transient errors.
+        Only use with idempotent queries (MERGE, CREATE INDEX IF NOT EXISTS, ...).
+        """
+        for attempt in range(retries):
+            try:
+                session.run(query, parameters=params or {}).consume()
+                return
+            except TransientError:
+                if attempt == retries - 1:
+                    raise
+                time.sleep(2 ** attempt)
+
+    def _run_batched(self,
+        session : Session,
+        query: str,
         name : str,
-        items: List[Edge] | List[Node], 
+        items: List[Edge] | List[Node],
         graph_id : str
     ) -> None:
 
+        if not items:
+            return
+
         total = len(items)
-        uploaded = 0
         is_edge = isinstance(items[0], Edge)
         hint = 'edge' if is_edge else 'node'
 
+        # The timeout must be set on the transaction, not passed as a query parameter.
+        @unit_of_work(timeout=120)
         def run_tx(tx : Transaction, batch):
-            tx.run(query, batch=batch, timeout=120)
+            tx.run(query, batch=batch).consume()
 
         it = Batched(items, self.config.batch_size)
         it = self.track(it=it, task=f"[UPLOADING {hint}::{name} | {total} {hint.capitalize()+'s'}.]")
 
         for batch in it:
 
-            batch = list(batch)
-
-            for i in range(len(batch)):
-
-                batch[i] = {
+            rows = [
+                {
                     'graph_id' : graph_id,
                     **(
                         {
-                            "src" : f"{graph_id}_{batch[i].src}",
-                            "dst" : f"{graph_id}_{batch[i].dst}"
+                            "src" : f"{graph_id}_{item.src}",
+                            "dst" : f"{graph_id}_{item.dst}"
                         } if is_edge else {}
                     ),
                     **{
                         k : v
-                        for k, v in batch[i].properties.items()
+                        for k, v in item.properties.items()
                         if not isinstance(v, Tensor)
                     },
-                    'id' : f"{graph_id}_{batch[i].id}",
+                    'id' : f"{graph_id}_{item.id}",
                 }
+                for item in batch
+            ]
 
-            session.execute_write(run_tx, batch)
-            uploaded += len(batch)
+            # execute_write retries TransientErrors automatically
+            session.execute_write(run_tx, rows)
 
     # ------------------------------------------------------------------
     # Upload steps
     # ------------------------------------------------------------------
 
     def _clear_db(self, session : Session, graph_id : str) -> None:
-        self.send_info_event(progress=0.0, message="[Neo4j] Clearing all nodes and relationships …")
-        session.run(f"MATCH (n {{ graph_id: \"{graph_id}\" }}) DETACH DELETE n;")
-        self.send_info_event(progress=0.0, message="[Neo4j] Database cleared")
 
-    IGNORED_NODE_TYPES = {"Author", "Keyword"}
+        self.send_info_event(progress=0.0, message="[Neo4j] Clearing all nodes and relationships …")
+
+        # Delete in chunks: one huge DETACH DELETE can exhaust transaction memory.
+        # Each chunk is its own retried write transaction.
+        def delete_chunk(tx : Transaction, gid : str) -> int:
+            record = tx.run(
+                """
+                MATCH (n {graph_id: $graph_id})
+                WITH n LIMIT 10000
+                DETACH DELETE n
+                RETURN count(*) AS deleted
+                """,
+                graph_id=gid,
+            ).single()
+            return record["deleted"]
+
+        while session.execute_write(delete_chunk, graph_id) > 0:
+            pass
+
+        self.send_info_event(progress=0.0, message="[Neo4j] Database cleared")
 
     def _upload_nodes(self, session : Session, graph : Graph, graph_id : str) -> None:
 
@@ -135,10 +179,10 @@ class Neo4jUploader(BaseCommand):
             )
 
             self._run_batched(
-                session, 
-                query, 
+                session,
+                query,
                 node_type,
-                node_list.nodes, 
+                node_list.nodes,
                 graph_id
             )
 
@@ -151,11 +195,12 @@ class Neo4jUploader(BaseCommand):
             if node_type in self.IGNORED_NODE_TYPES:
                 continue
 
-            query = f"CREATE INDEX IF NOT EXISTS FOR (n:{node_type}) ON (n.id)"
-            session.run(query)
+            self._run_auto_commit(session, f"CREATE INDEX IF NOT EXISTS FOR (n:{node_type}) ON (n.id)")
+            self._run_auto_commit(session, f"CREATE INDEX IF NOT EXISTS FOR (n:{node_type}) ON (n.graph_id)")
 
-            query = f"CREATE INDEX IF NOT EXISTS FOR (n:{node_type}) ON (n.graph_id)"
-            session.run(query)
+        # Indexes are populated in the background: wait until they are ONLINE,
+        # otherwise the edge MATCHes run as full label scans.
+        session.run("CALL db.awaitIndexes(600)").consume()
 
     def _upload_edges(self, session: Session, graph : Graph, graph_id : str) -> None:
 
@@ -166,8 +211,7 @@ class Neo4jUploader(BaseCommand):
 
             src_type = edge_key.src
             dst_type = edge_key.dst
-            rel_type = edge_key.name.upper()
-            rel_type = rel_type.replace("-", "_").upper()
+            rel_type = edge_key.name.replace("-", "_").upper()
 
             if src_type in self.IGNORED_NODE_TYPES or dst_type in self.IGNORED_NODE_TYPES:
                 continue
@@ -182,43 +226,42 @@ class Neo4jUploader(BaseCommand):
 
             self._run_batched(session, query, edge_key, edge_list._edges, graph_id)
 
+    def _create_missing_relations(self, session : Session, graph_id : str) -> None:
+
+        # No "alreadyThere" guard: MERGE is idempotent, so the query is safe to re-run.
+        # The collect() forces the whole read to finish before any inner batch commits,
+        # so the outer query is no longer reading data that its own batches modify.
+
+        # 1. Entity -[:APPEARSIN]-> Article
+        self._run_auto_commit(session, """
+            MATCH (tr:Triple {graph_id: $graph_id})-[:BELONGSTO]->(a:Article {graph_id: $graph_id})
+            MATCH (tr)-[:HAS_HEAD|HAS_TAIL]->(e:Entity {graph_id: $graph_id})
+            WITH collect(DISTINCT [e, a]) AS pairs
+            UNWIND pairs AS pair
+            WITH pair[0] AS e, pair[1] AS a
+            CALL (e, a) {
+                MERGE (e)-[:APPEARSIN]->(a)
+            } IN TRANSACTIONS OF 5000 ROWS
+        """, {"graph_id": graph_id})
+
+        # 2. Entity -[:HASRELATIONWITH {predicate}]-> Entity
+        #    Aggregated per (h, t, predicate) first, so each relationship is written exactly once.
+        self._run_auto_commit(session, """
+            MATCH (tr:Triple {graph_id: $graph_id})-[:HAS_HEAD]->(h:Entity {graph_id: $graph_id}),
+                  (tr)-[:HAS_TAIL]->(t:Entity {graph_id: $graph_id}),
+                  (tr)-[:HAS_PREDICATE]->(p:Predicate {graph_id: $graph_id})
+            OPTIONAL MATCH (tr)-[:BELONGSTO]->(a:Article {graph_id: $graph_id})
+            WITH h, t, p.name AS pred, collect(DISTINCT toString(a.id)) AS arts
+            CALL (h, t, pred, arts) {
+                MERGE (h)-[r:HASRELATIONWITH {predicate: pred}]->(t)
+                SET r.articles = coalesce(r.articles, []) +
+                                 [x IN arts WHERE NOT x IN coalesce(r.articles, [])]
+            } IN TRANSACTIONS OF 5000 ROWS
+        """, {"graph_id": graph_id})
+
     # ------------------------------------------------------------------
     # Orchestrator
     # ------------------------------------------------------------------
-
-    def _create_missing_relations(self, session : Session, graph_id : str) -> None:
-
-        session.run("""
-            WITH EXISTS {
-                (:Entity {graph_id: $graph_id})-[:APPEARSIN]->(:Article {graph_id: $graph_id})
-            } AS alreadyThere
-            WHERE NOT alreadyThere
-            MATCH (tr:Triple {graph_id: $graph_id})-[:BELONGSTO]->(a:Article {graph_id: $graph_id})
-            CALL {
-                WITH tr, a
-                MATCH (tr)-[:HAS_HEAD|HAS_TAIL]->(e:Entity {graph_id: $graph_id})
-                MERGE (e)-[:APPEARSIN]->(a)
-            } IN TRANSACTIONS OF 5000 ROWS;
-        """, graph_id=graph_id)
-
-        session.run("""
-            WITH EXISTS {
-                (:Entity {graph_id: $graph_id})-[:HASRELATIONWITH]->(:Entity {graph_id: $graph_id})
-            } AS alreadyThere
-            WHERE NOT alreadyThere
-            MATCH (tr:Triple {graph_id: $graph_id})
-            CALL {
-                WITH tr
-                MATCH (tr)-[:HAS_HEAD]->(h:Entity {graph_id: $graph_id})
-                MATCH (tr)-[:HAS_TAIL]->(t:Entity {graph_id: $graph_id})
-                MATCH (tr)-[:HAS_PREDICATE]->(p:Predicate {graph_id: $graph_id})
-                OPTIONAL MATCH (tr)-[:BELONGSTO]->(a:Article {graph_id: $graph_id})
-                WITH h, t, p, collect(DISTINCT toString(a.id)) AS arts
-                MERGE (h)-[r:HASRELATIONWITH {predicate: p.name}]->(t)
-                SET r.articles = coalesce(r.articles, []) +
-                                [x IN arts WHERE NOT x IN coalesce(r.articles, [])]
-            } IN TRANSACTIONS OF 5000 ROWS;
-        """, graph_id=graph_id)
 
     def __iter__(self):
 
@@ -243,22 +286,21 @@ class Neo4jUploader(BaseCommand):
 
         with self.driver.session() as session:
 
+            # Indexes first: they're maintained during inserts and ready for the edge MATCHes.
+            self._create_indexes(session, graph)
+            self.send_info_event(progress=0.1, message="[Neo4j] Indexes Created")
+
             self._clear_db(session, graph_id)
             self.send_info_event(progress=0.2, message="[Neo4j] Database cleared")
 
             self._upload_nodes(session, graph, graph_id)
             self.send_info_event(progress=0.4, message="[Neo4j] Nodes Uploaded")
 
-            self._create_indexes(session, graph)
-            self.send_info_event(progress=0.6, message="[Neo4j] Indexes Created")
-
             self._upload_edges(session, graph, graph_id)
             self.send_info_event(progress=0.8, message="[Neo4j] Edges Uploaded")
 
             self._create_missing_relations(session, graph_id)
             self.send_info_event(progress=1.0, message="[Neo4j] Missing Relations Created.")
-
-        # self.driver.close()
 
         self.send_info_event(
             progress=1.0,
