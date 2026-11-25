@@ -15,13 +15,11 @@ set_start_method('spawn', force=True)
 
 from src.commands.knowledge_graph_construction.preprocessing import coreference_resolution, cleaning, sentence_segmentation
 from src.commands.knowledge_graph_construction.content_enrichment import annotation, acronym_extraction, keyword_extraction
-from src.commands.knowledge_graph_construction.triplet_extraction import triples_extractor
 from src.commands.knowledge_graph_construction.graph_cleaning import (
-    llm_based_predicates_cleaning,
-    llm_based_entities_cleaning,
     rule_based_predicates_cleaning,
     entities_cleaning
 )
+from api.wrappers.text2kg import llm_based_entities_cleaning, llm_based_predicates_cleaning, triples_extractor
 
 from pycli.field import Field
 
@@ -53,6 +51,7 @@ class PipeConfig(BaseModel):
     corpus_id : str
     glob: GlobalConfig
     stages: Dict[str, StageInfo]
+    api_key : str
 
     @computed_field
     @property
@@ -87,6 +86,7 @@ class PipeConfig(BaseModel):
             config = ConfigClass(**{
                 "input_filename" : input_filename,
                 "out" : os.path.join(KGS_DIR, data['graph_id'], stage_name),
+                "api_key" : data['api_key'],
                 **override(glob, args)
             })
 
@@ -101,6 +101,7 @@ class PipeConfig(BaseModel):
 class Config(OutputDirOption, ConnectionOption):
     graph_id : str = Field(description=f"Name of folder located in {rel_path(KGS_DIR)} and contains a `config.json` file.")
     stage : Optional[str] = Field(description=f"The stage to execute , if no value is provided the whole pipeline will get executed.", default=None)
+    api_key : str
 
     def output_dir(self) -> str:
         return os.path.join(KGS_DIR, self.graph_id)
@@ -118,6 +119,7 @@ class Config(OutputDirOption, ConnectionOption):
 
         return PipeConfig(**{
             "graph_id" : self.graph_id,
+            "api_key" : self.api_key,
             **config
         })
 
