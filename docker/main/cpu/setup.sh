@@ -1,21 +1,20 @@
 #!/bin/bash
-# GPU setup: FAISS GPU + PyTorch 2.6.0 (CUDA 11.8) + PyG
+# CPU setup: FAISS CPU + PyTorch 2.6.0 (CPU) + PyG
 set -euo pipefail
 
 ENV_NAME=text2kg
 
-# FAISS GPU (conda) — WITHOUT the conda `pytorch` package.
-# faiss-gpu 1.8.0 is compiled against NumPy 1.x -> keep numpy 1.26.4 everywhere
+# FAISS CPU (conda) — WITHOUT the conda `pytorch` package.
+# faiss-cpu 1.8.0 is compiled against NumPy 1.x -> keep numpy 1.26.4 everywhere
 conda install -n "$ENV_NAME" -y \
-    faiss-gpu=1.8.0 \
-    pytorch-cuda=11.8 \
+    faiss-cpu=1.8.0 \
     numpy=1.26.4 \
-    -c pytorch -c nvidia -c conda-forge
+    -c conda-forge
 
-# PyTorch 2.6.0 + CUDA 11.8, all pinned together
+# PyTorch 2.6.0 (CPU build), all pinned together
 python -m pip install \
     torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 \
-    --index-url https://download.pytorch.org/whl/cu118
+    --index-url https://download.pytorch.org/whl/cpu
 
 # Lock torch + numpy for every later pip install
 python -m pip freeze | grep -E '^(torch|torchvision|torchaudio)==' > /tmp/torch-constraints.txt
@@ -26,7 +25,7 @@ cat /tmp/torch-constraints.txt
 python -m pip install torch_geometric -c /tmp/torch-constraints.txt
 python -m pip install \
     pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv \
-    -f https://data.pyg.org/whl/torch-2.6.0+cu118.html \
+    -f https://data.pyg.org/whl/torch-2.6.0+cpu.html \
     -c /tmp/torch-constraints.txt
 
 # Extras

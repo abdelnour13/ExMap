@@ -34,8 +34,8 @@ ENV PATH="/opt/conda/envs/text2kg/bin:/opt/conda/bin:${PATH}"
 # --------------------------------------------------
 # 3. Heavy layer: torch + FAISS + PyG (CPU)
 # --------------------------------------------------
-COPY script.sh ./
-RUN bash script.sh && conda clean -afy
+COPY setup.sh ./
+RUN bash setup.sh && conda clean -afy
 
 # --------------------------------------------------
 # 4. Project requirements (torch versions locked)
