@@ -9,5 +9,5 @@ sudo systemctl restart docker
 sudo ln -s /sbin/ldconfig /sbin/ldconfig.real # YOU MAY NEED TO RUN THIS
 
 ### TEST NVIDIA-CONNECTIVITY (nvidia-drivers should be installed on the host machine)
-sudo  run --name=test --gpus all -it ubuntu
+sudo docker run --name=test --gpus all -it ubuntu
 sudo docker exec -it test nvidia-smi
