@@ -20,10 +20,7 @@ class Config(StageConfig, DomainConfig('domain')):
         description="The model(s) to be used for triple extraction."
     )
 
-    device : str = Field(
-        default=('cuda' if torch.cuda.is_available() else 'cpu'),
-        description=f"The device to run inference on."
-    )
+    device : int = Field(description=f"The device to run inference on.")
 
     domain : str = Field(description="The json file that holds the labels and their definitions.")
 

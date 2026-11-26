@@ -3,7 +3,7 @@ import os
 ROOT_DIR = os.path.dirname(__file__)
 API_DIR = os.path.join(ROOT_DIR, "api", "mount")
 
-DATA_DIR = os.path.join(API_DIR, "data")
+DATA_DIR = os.path.join(ROOT_DIR, "data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
 EXPERIMENTS_DIR = os.path.join(API_DIR, 'experiments')

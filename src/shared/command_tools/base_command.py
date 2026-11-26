@@ -1,3 +1,4 @@
+import traceback
 from src.shared.handlers import Event, EventLevel
 from typing import Any, Generator,Protocol,List, TypeVar, Self, Optional, Dict, Iterable, Type
 from abc import ABC, abstractmethod
@@ -85,9 +86,11 @@ class BaseCommand(ABC):
 
         except Exception as e:
 
+            err = traceback.format_exc()
+
             yield self.make_critical_event(
                 progress=self.get_task_progress(), 
-                message=f"Command stopping due to the following error : {e}"
+                message=f"Command stopping due to the following error : {err}"
             )
 
     def cancel(self):
