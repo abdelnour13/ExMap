@@ -1,5 +1,5 @@
 services:  
-  text2kg:
+  exmap:
     build: ./docker/main/gpu
     deploy:
       resources:

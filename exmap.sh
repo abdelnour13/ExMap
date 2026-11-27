@@ -1,7 +1,7 @@
 #!/bin/sh
-# Text2KG backend: install it, start it, stop it, check it. Linux and macOS (Windows: text2kg.ps1).
+# Text2KG backend: install it, start it, stop it, check it. Linux and macOS (Windows: exmap.ps1).
 #
-#   ./text2kg.sh install [--version NAME | -v NAME] [--no-ui] [--rebuild] [--force-cpu]
+#   ./exmap.sh install [--version NAME | -v NAME] [--no-ui] [--rebuild] [--force-cpu]
 #                                      install a version: switch the backend files to the commit it names,
 #                                      build the images, start the containers, download the resources and
 #                                      the desktop app
@@ -9,11 +9,11 @@
 #                                      --no-ui         do not download the desktop app
 #                                      --rebuild       rebuild every image from scratch (slow)
 #                                      --force-cpu     do not look for a GPU, run on the CPU
-#   ./text2kg.sh list-versions         list the available versions (the files in versions/)
-#   ./text2kg.sh start                 start the containers and wait until the API answers
-#   ./text2kg.sh stop                  stop the containers (nothing is deleted)
-#   ./text2kg.sh status                show the version, the containers and whether the API answers
-#   ./text2kg.sh logs [service]        follow the logs
+#   ./exmap.sh list-versions         list the available versions (the files in versions/)
+#   ./exmap.sh start                 start the containers and wait until the API answers
+#   ./exmap.sh stop                  stop the containers (nothing is deleted)
+#   ./exmap.sh status                show the version, the containers and whether the API answers
+#   ./exmap.sh logs [service]        follow the logs
 #
 # A version is a file versions/<name>.env with these lines (default.env always exists):
 #   DATA_SERVICE_URL=                  address of the API (an exported DATA_SERVICE_URL wins over it)
@@ -29,8 +29,8 @@ set -eu
 cd "$(dirname "$0")"
 
 VERSIONS_DIR="versions"
-SNAPSHOT=".text2kg-version.env"   # what install used, read by the other commands (versions/ can change with the checkout)
-MODE_FILE=".text2kg-mode"         # "cpu" or "gpu", written by install and read by the other commands
+SNAPSHOT=".exmap-version.env"   # what install used, read by the other commands (versions/ can change with the checkout)
+MODE_FILE=".exmap-mode"         # "cpu" or "gpu", written by install and read by the other commands
 WAIT_SECONDS="${TEXT2KG_WAIT_SECONDS:-180}"
 ENV_API_URL="${DATA_SERVICE_URL:-}"   # an exported variable wins over the version file
 
@@ -209,7 +209,7 @@ compose() {
 }
 
 require_installed() {
-  [ -f "$MODE_FILE" ] || die "The backend is not installed yet. Run: ./text2kg.sh install"
+  [ -f "$MODE_FILE" ] || die "The backend is not installed yet. Run: ./exmap.sh install"
 }
 
 # ---------- Is the API answering? ----------
@@ -237,8 +237,8 @@ wait_ready() {
     if [ "$waited" -ge "$WAIT_SECONDS" ]; then
       printf '\n'
       say "The API did not answer within ${WAIT_SECONDS} seconds. The last log lines of the main container:"
-      compose logs --tail 30 text2kg || true
-      die "The API is not ready. See the logs above, or run: ./text2kg.sh logs text2kg"
+      compose logs --tail 30 exmap || true
+      die "The API is not ready. See the logs above, or run: ./exmap.sh logs exmap"
     fi
     printf '.'; sleep 2; waited=$((waited + 2))
   done
@@ -303,7 +303,7 @@ cmd_install() {
       --force-cpu) force_cpu=1 ;;
       --no-ui) no_ui=1 ;;
       --version|-v)
-        [ $# -ge 2 ] || die "$1 needs a version name. Run ./text2kg.sh list-versions to see them."
+        [ $# -ge 2 ] || die "$1 needs a version name. Run ./exmap.sh list-versions to see them."
         version=$2; shift ;;
       --version=*) version=${1#--version=} ;;
       *) die "Unknown option: $1" ;;
@@ -339,7 +339,7 @@ cmd_install() {
   # shellcheck disable=SC2086
   compose build $flags --progress "$progress" || {
     say ""
-    say "The build failed. To see the full output of every build step, run: TEXT2KG_BUILD_PROGRESS=plain ./text2kg.sh install"
+    say "The build failed. To see the full output of every build step, run: TEXT2KG_BUILD_PROGRESS=plain ./exmap.sh install"
     exit 1
   }
 
@@ -347,7 +347,7 @@ cmd_install() {
   if [ "$rebuild" -eq 1 ]; then compose up -d --force-recreate; else compose up -d; fi
 
   step "6/$total" "Downloading the resources from the manifest"
-  compose exec -T text2kg python -m src.manifest download
+  compose exec -T exmap python -m src.manifest download
   say "Restarting Neo4j so that it loads the downloaded plugins..."
   compose restart neo4j
   wait_ready

@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-  Text2KG backend on Windows: install it, start it, stop it, check it. (Linux/macOS: text2kg.sh.)
+  Text2KG backend on Windows: install it, start it, stop it, check it. (Linux/macOS: exmap.sh.)
 .DESCRIPTION
-  .\text2kg.cmd install [-Version NAME | -v NAME] [-NoUI] [-Rebuild] [-ForceCpu]
+  .\exmap.cmd install [-Version NAME | -v NAME] [-NoUI] [-Rebuild] [-ForceCpu]
                                      install a version: switch the backend files to the commit it names,
                                      build the images, start the containers, download the resources and
                                      the desktop app
@@ -10,11 +10,11 @@
                                      -NoUI          do not download the desktop app
                                      -Rebuild       rebuild every image from scratch (slow)
                                      -ForceCpu      do not look for a GPU, run on the CPU
-  .\text2kg.cmd list-versions        list the available versions (the files in versions\)
-  .\text2kg.cmd start                start the containers and wait until the API answers
-  .\text2kg.cmd stop                 stop the containers (nothing is deleted)
-  .\text2kg.cmd status               show the version, the containers and whether the API answers
-  .\text2kg.cmd logs [service]       follow the logs
+  .\exmap.cmd list-versions        list the available versions (the files in versions\)
+  .\exmap.cmd start                start the containers and wait until the API answers
+  .\exmap.cmd stop                 stop the containers (nothing is deleted)
+  .\exmap.cmd status               show the version, the containers and whether the API answers
+  .\exmap.cmd logs [service]       follow the logs
 
   A version is a file versions\<name>.env with these lines (default.env always exists):
     DATA_SERVICE_URL=                address of the API (an environment variable DATA_SERVICE_URL wins over it)
@@ -45,8 +45,8 @@ $ErrorActionPreference = 'Stop'
 Set-Location -LiteralPath $PSScriptRoot
 
 $VersionsDir = 'versions'
-$Snapshot    = '.text2kg-version.env'   # what install used, read by the other commands (versions\ can change with the checkout)
-$ModeFile    = '.text2kg-mode'          # "cpu" or "gpu", written by install and read by the other commands
+$Snapshot    = '.exmap-version.env'   # what install used, read by the other commands (versions\ can change with the checkout)
+$ModeFile    = '.exmap-mode'          # "cpu" or "gpu", written by install and read by the other commands
 $WaitSeconds = if ($env:TEXT2KG_WAIT_SECONDS) { [int]$env:TEXT2KG_WAIT_SECONDS } else { 180 }
 $EnvApiUrl   = $env:DATA_SERVICE_URL    # an environment variable wins over the version file
 $script:Current = ''
@@ -242,7 +242,7 @@ function Compose {
 }
 
 function Assert-Installed {
-  if (-not (Test-Path -LiteralPath $ModeFile)) { throw 'The backend is not installed yet. Run: .\text2kg.cmd install' }
+  if (-not (Test-Path -LiteralPath $ModeFile)) { throw 'The backend is not installed yet. Run: .\exmap.cmd install' }
 }
 
 # ---------- Is the API answering? ----------
@@ -264,8 +264,8 @@ function Wait-Ready {
     if ($waited -ge $WaitSeconds) {
       Write-Host ''
       Write-Host "The API did not answer within $WaitSeconds seconds. The last log lines of the main container:"
-      try { Compose logs --tail 30 text2kg } catch { }
-      throw 'The API is not ready. See the logs above, or run: .\text2kg.cmd logs text2kg'
+      try { Compose logs --tail 30 exmap } catch { }
+      throw 'The API is not ready. See the logs above, or run: .\exmap.cmd logs exmap'
     }
     Write-Host -NoNewline '.'
     Start-Sleep -Seconds 2
@@ -344,7 +344,7 @@ function Install-Backend {
     if ($Rebuild) { Compose build --pull --no-cache --progress $progress } else { Compose build --pull --progress $progress }
   } catch {
     Write-Host ''
-    Write-Host 'The build failed. To see the full output of every build step, run: $env:TEXT2KG_BUILD_PROGRESS = ''plain''; .\text2kg.cmd install'
+    Write-Host 'The build failed. To see the full output of every build step, run: $env:TEXT2KG_BUILD_PROGRESS = ''plain''; .\exmap.cmd install'
     throw
   }
 
@@ -352,7 +352,7 @@ function Install-Backend {
   if ($Rebuild) { Compose up -d --force-recreate } else { Compose up -d }
 
   Step "6/$total" 'Downloading the resources from the manifest'
-  Compose exec -T text2kg python -m src.manifest download
+  Compose exec -T exmap python -m src.manifest download
   Write-Host 'Restarting Neo4j so that it loads the downloaded plugins...'
   Compose restart neo4j
   Wait-Ready

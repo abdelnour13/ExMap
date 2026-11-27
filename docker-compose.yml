@@ -30,7 +30,7 @@ services:
       start_period: 20s
     restart: unless-stopped
 
-  text2kg:
+  exmap:
     build: ./docker/main/cpu
     environment:
       - ALLENNLP_URL=http://allennlp:8080
@@ -38,7 +38,7 @@ services:
       # The data service the desktop app talks to, reachable from this machine only.
       - "127.0.0.1:8000:8000"
     volumes:
-      - .:/text2kg
+      - .:/exmap
     depends_on:
       allennlp:
         condition: service_started
