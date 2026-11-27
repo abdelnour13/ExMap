@@ -3,7 +3,7 @@ import math
 from torch import Tensor
 from torch import nn
 from typing import Tuple, List, Optional
-from src.graph_dl import ops
+from src.graph_learning import ops
 from torch.nn import functional as F
 from functools import reduce
 from dataclasses import dataclass

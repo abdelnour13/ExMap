@@ -3,9 +3,9 @@ import torch_scatter
 from torch import nn, Tensor
 from typing import Literal, Optional, TypedDict
 from torch_geometric import utils as gnn_utils
-from src.graph_dl.layers.activation import Activation
-from src.graph_dl.layers.norm import Norm, NORM_TYPE
-from src.graph_dl.utils import AdjMatrix, SparseTensor, EdgeIndex
+from src.graph_learning.layers.activation import Activation
+from src.graph_learning.layers.norm import Norm, NORM_TYPE
+from src.graph_learning.utils import AdjMatrix, SparseTensor, EdgeIndex
 from src import helpers
 
 class TransGNNOutput(TypedDict):

@@ -1,37 +1,29 @@
-import torch
 from pydantic import BaseModel
-from src.graph_dl.layers.encoder import TransEncoder
-from src.graph_dl.layers.reduction import Reduction, READOUT
-from src.graph_dl.layers.multi_task_head import MultiTaskHead
-from src.graph_dl.models.base_model import TopicModel, Context, IterationContext
-from torch import nn, Tensor
+from src.graph_learning.layers.encoder import TransEncoder
+from src.graph_learning.models.base_model import TopicModel, Context, IterationContext
+from torch import Tensor
 from typing import Literal, List, Optional, Dict
 from torch_geometric.data import HeteroData
-from src.graph_dl import losses
+from src.graph_learning import losses
 from dataclasses import dataclass
 
 ENCODER_TYPE = Literal['gnn', 'mlp']
 
 @TopicModel.register
-class ArticleClassifier(TopicModel):
+class EncoderDecoder(TopicModel):
 
     @dataclass
     class Output:
-        entities_sem_embeddings: Tensor
-        entities_importance_embeddings : Tensor
-        articles_embeddings : Tensor
-        attn_weights : Tensor
-        entities_labels : Dict[str, Tensor]
-        articles_labels : Dict[str, Tensor]
+        hidden_representations : Tensor
+        xe_hat : Tensor
 
         def context(self, batch : HeteroData, batch_size : int) -> Dict[str, losses.BaseLossContext]:
 
             return {
-                f'bec_loss_{label}' : losses.BCELossContext(
-                    y=batch['Article'][label],
-                    y_hat=y
+                'cosine_rec_loss' : losses.CosineRecLossContext(
+                    x1=batch['Entity'].x,
+                    y1=self.xe_hat,
                 )
-                for label, y in self.articles_labels.items()
             }
 
     class Config(BaseModel):
@@ -44,7 +36,6 @@ class ArticleClassifier(TopicModel):
         shortcut: bool = False
         shortcut_dim: Optional[int]  = None
         jk: bool = True
-        readout : READOUT = 'attn'
 
     def __init__(
         self,
@@ -58,8 +49,6 @@ class ArticleClassifier(TopicModel):
         shortcut: bool,
         shortcut_dim: Optional[int] ,
         jk: bool ,
-        readout : READOUT,
-        num_labels : Dict[str, int]
     ) -> None:
 
         super().__init__()
@@ -73,12 +62,10 @@ class ArticleClassifier(TopicModel):
         self.shortcut = shortcut
         self.shortcut_dim = shortcut_dim
         self.jk = jk
-        self.readout = readout
-        self.num_labels = num_labels
 
         self.encoder = TransEncoder(
             in_channels=in_channels,
-            out_channels=2 * out_channels,
+            out_channels=out_channels,
             hidden_channels=hidden_channels,
             variant=variant,
             activation=activation,
@@ -86,18 +73,22 @@ class ArticleClassifier(TopicModel):
             shortcut=shortcut,
             shortcut_dim=shortcut_dim,
             jk=jk,
-            mlp=(encoder_type == 'mlp')
+            mlp=(encoder_type == 'mlp'),
+            use_edges_info=True
         )
 
-        self.reduce = Reduction(
-            kind=self.readout,
-            weights_nn=nn.Linear(in_features=self.out_channels, out_features=1) if self.readout == 'attn' else None
-        )
-
-        self.head = MultiTaskHead(
-            in_features=out_channels,
-            dropout_rate=0.0,
-            num_labels=num_labels
+        self.decoder = TransEncoder(
+            in_channels=out_channels,
+            out_channels=out_channels,
+            hidden_channels=hidden_channels[::-1],
+            variant=variant,
+            activation=activation,
+            norm=norm,
+            shortcut=shortcut,
+            shortcut_dim=shortcut_dim,
+            jk=jk,
+            mlp=(encoder_type == 'mlp'),
+            use_edges_info=False
         )
 
     @staticmethod
@@ -105,11 +96,10 @@ class ArticleClassifier(TopicModel):
         config : Config, 
         ctx : Context, 
         labels : Dict[str, int] = None
-    ) -> 'ArticleClassifier':
+    ) -> 'EncoderDecoder':
 
-        return ArticleClassifier(
+        return EncoderDecoder(
             in_channels = ctx.num_features[0],
-            num_labels=labels,
             **config.model_dump()
         )
 
@@ -124,28 +114,15 @@ class ArticleClassifier(TopicModel):
             'edge_index' : data['Entity', 'HASRELATIONWITH', 'Entity'].edge_index
         }
 
-        ED = data['Entity', 'APPEARIN', 'Article'].edge_index
-        N = data['Article'].x.size(0)
-
         ### Encoder
         h = self.encoder(KG)
-        he, he_imp = torch.split(h, split_size_or_sections=self.out_channels, dim=-1)
 
-        hd, weights, _ = self.reduce.forward(
-            x=he,
-            edge_index=ED,
-            num_nodes=N,
-            weights_x=he_imp
-        ).astuple()
+        KG['x'] = h
+        KG['edge_attr'] = None
 
-        entities_labels = self.head.forward(he)
-        articles_labels = self.head.forward(hd)
+        xe_hat = self.decoder(KG)
 
         return self.Output(
-            entities_importance_embeddings=he_imp,
-            entities_sem_embeddings=he,
-            articles_embeddings=hd,
-            attn_weights=weights,
-            entities_labels=entities_labels,
-            articles_labels=articles_labels
+            hidden_representations=h,
+            xe_hat=xe_hat
         )

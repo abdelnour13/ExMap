@@ -11,8 +11,8 @@ from instance import cli
 from torch_geometric.data import HeteroData
 from src.commands.feature_extraction.graph_utils import EdgeType, Graph
 from src.commands.graph_learning.main import Config as TrainerConfig
-from src.graph_dl.models import Context
-from src.graph_dl.models.classifier import ArticleClassifier
+from src.graph_learning.models import Context
+from src.graph_learning.models.classifier import ArticleClassifier
 from src.shared.command_tools import BaseCommand, add_handlers, ConnectionOption, OutputDirOption
 from src.shared.file_tools import Batched, Map, Enumerate
 from src.shared.handlers import ConsoleLogger

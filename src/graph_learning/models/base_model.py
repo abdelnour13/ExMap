@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from dataclasses import dataclass
 from torch_geometric.data import HeteroData
 from typing import Tuple, List, Optional, Self, Dict, Type, TypeVar
-from src.graph_dl import losses
+from src.graph_learning import losses
 
 T = TypeVar('T')
 

@@ -1,42 +1,37 @@
 import torch
 from pydantic import BaseModel
-from src.graph_dl.layers.encoder import TransEncoder
-from src.graph_dl.layers.reduction import Reduction, READOUT
-from src.graph_dl.layers.activation import Activation
-from src.graph_dl.layers.mlp import MLP
-from src.graph_dl.models.base_model import TopicModel, Context, IterationContext
+from src.graph_learning.layers.encoder import TransEncoder
+from src.graph_learning.layers.reduction import Reduction, READOUT
+from src.graph_learning.layers.multi_task_head import MultiTaskHead
+from src.graph_learning.models.base_model import TopicModel, Context, IterationContext
 from torch import nn, Tensor
 from typing import Literal, List, Optional, Dict
 from torch_geometric.data import HeteroData
-from src.graph_dl import losses
+from src.graph_learning import losses
 from dataclasses import dataclass
 
 ENCODER_TYPE = Literal['gnn', 'mlp']
 
 @TopicModel.register
-class KGEncoder(TopicModel):
+class ArticleClassifier(TopicModel):
 
     @dataclass
     class Output:
         entities_sem_embeddings: Tensor
         entities_importance_embeddings : Tensor
-        entities_embeddings : Tensor
         articles_embeddings : Tensor
         attn_weights : Tensor
+        entities_labels : Dict[str, Tensor]
+        articles_labels : Dict[str, Tensor]
 
         def context(self, batch : HeteroData, batch_size : int) -> Dict[str, losses.BaseLossContext]:
 
             return {
-                'aa_cosine_rec_loss' : losses.CosineRecLossContext(
-                    x1=batch['Article'].x,
-                    y1=self.articles_embeddings
-                ),
-                'ea_cosine_rec_loss' : losses.CosineRecLossContext(
-                    x1=batch['Article'].x,
-                    x2=batch['Entity'].x,
-                    y1=self.articles_embeddings,
-                    y2=self.entities_embeddings
+                f'bec_loss_{label}' : losses.BCELossContext(
+                    y=batch['Article'][label],
+                    y_hat=y
                 )
+                for label, y in self.articles_labels.items()
             }
 
     class Config(BaseModel):
@@ -64,6 +59,7 @@ class KGEncoder(TopicModel):
         shortcut_dim: Optional[int] ,
         jk: bool ,
         readout : READOUT,
+        num_labels : Dict[str, int]
     ) -> None:
 
         super().__init__()
@@ -78,6 +74,7 @@ class KGEncoder(TopicModel):
         self.shortcut_dim = shortcut_dim
         self.jk = jk
         self.readout = readout
+        self.num_labels = num_labels
 
         self.encoder = TransEncoder(
             in_channels=in_channels,
@@ -92,18 +89,15 @@ class KGEncoder(TopicModel):
             mlp=(encoder_type == 'mlp')
         )
 
-        self.decoder = MLP(
-            input_dim=out_channels,
-            channels=hidden_channels[::-1],
-            output_dim=out_channels,
-            hidden_activation=activation,
-            norm=norm,
-            output_activation=nn.Identity()
-        )
-
         self.reduce = Reduction(
             kind=self.readout,
-            weights_nn=nn.Linear(in_features=self.out_channels, out_features=1)
+            weights_nn=nn.Linear(in_features=self.out_channels, out_features=1) if self.readout == 'attn' else None
+        )
+
+        self.head = MultiTaskHead(
+            in_features=out_channels,
+            dropout_rate=0.0,
+            num_labels=num_labels
         )
 
     @staticmethod
@@ -111,10 +105,11 @@ class KGEncoder(TopicModel):
         config : Config, 
         ctx : Context, 
         labels : Dict[str, int] = None
-    ) -> 'KGEncoder':
+    ) -> 'ArticleClassifier':
 
-        return KGEncoder(
+        return ArticleClassifier(
             in_channels = ctx.num_features[0],
+            num_labels=labels,
             **config.model_dump()
         )
 
@@ -134,20 +129,23 @@ class KGEncoder(TopicModel):
 
         ### Encoder
         h = self.encoder(KG)
-        xe_sem, xe_imp = torch.split(h, split_size_or_sections=self.out_channels, dim=-1)
-        xe_hat = self.decoder(xe_sem)
+        he, he_imp = torch.split(h, split_size_or_sections=self.out_channels, dim=-1)
 
-        xd_hat, weights, _ = self.reduce.forward(
-            x=xe_sem,
+        hd, weights, _ = self.reduce.forward(
+            x=he,
             edge_index=ED,
             num_nodes=N,
-            weights_x=xe_imp
+            weights_x=he_imp
         ).astuple()
 
+        entities_labels = self.head.forward(he)
+        articles_labels = self.head.forward(hd)
+
         return self.Output(
-            entities_embeddings=xe_hat,
-            entities_importance_embeddings=xe_imp,
-            entities_sem_embeddings=xe_sem,
-            articles_embeddings=xd_hat,
-            attn_weights=weights
+            entities_importance_embeddings=he_imp,
+            entities_sem_embeddings=he,
+            articles_embeddings=hd,
+            attn_weights=weights,
+            entities_labels=entities_labels,
+            articles_labels=articles_labels
         )

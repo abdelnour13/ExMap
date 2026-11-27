@@ -1,15 +1,15 @@
 import torch
 from torch import nn, Tensor
 from src import helpers
-from src.graph_dl.pooling.cluster_pool import create_pooling_layer, POOLING_KIND, Pool, ClusterPoolOutput, UNPOOL_KIND
-from src.graph_dl.models.base_model import TopicModel, Context, IterationContext
-from src.graph_dl.layers.trans_gnn import TransGNN
-from src.graph_dl.layers.encoder import _Linear, TransEncoder
-from src.graph_dl.layers.reduction import Reduction
-from src.graph_dl.layers.mlp import MLP, NORM_TYPE
-from src.graph_dl import losses
+from src.graph_learning.pooling.cluster_pool import create_pooling_layer, POOLING_KIND, Pool, ClusterPoolOutput, UNPOOL_KIND
+from src.graph_learning.models.base_model import TopicModel, Context, IterationContext
+from src.graph_learning.layers.trans_gnn import TransGNN
+from src.graph_learning.layers.encoder import _Linear, TransEncoder
+from src.graph_learning.layers.reduction import Reduction
+from src.graph_learning.layers.mlp import MLP, NORM_TYPE
+from src.graph_learning import losses
 from torch_geometric.data import HeteroData
-from src.graph_dl.utils import AdjMatrix, EdgeIndex
+from src.graph_learning.utils import AdjMatrix, EdgeIndex
 from typing import List, Literal, Optional, Dict, Any
 from dataclasses import dataclass
 from pydantic import BaseModel, Field

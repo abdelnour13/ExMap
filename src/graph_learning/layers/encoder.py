@@ -2,10 +2,10 @@ import torch
 from torch import nn, Tensor
 from torch_geometric import nn as gnn
 from typing import Optional, Dict, List, Type, Union
-from src.graph_dl.layers.activation import  Activation
-from src.graph_dl.layers.trans_gnn import  TransGNN
-from src.graph_dl.layers.rgnn import RGNNLayer
-from src.graph_dl.layers.norm import Norm, NORM_TYPE
+from src.graph_learning.layers.activation import  Activation
+from src.graph_learning.layers.trans_gnn import  TransGNN
+from src.graph_learning.layers.rgnn import RGNNLayer
+from src.graph_learning.layers.norm import Norm, NORM_TYPE
 from typing import Union, Literal, Optional
 
 def _Linear(feature_name : str):

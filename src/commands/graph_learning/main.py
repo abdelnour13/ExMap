@@ -29,7 +29,7 @@ from torch_geometric.data import HeteroData
 from src.shared.file_tools import Range, Enumerate
 from src import helpers
 from src.commands.feature_extraction.graph_utils import Graph, NodeTypes
-from src.graph_dl.models import TopicModel, Context, IterationContext
+from src.graph_learning.models import TopicModel, Context, IterationContext
 from src.commands.graph_learning.preprocessing import (
     _add_metapaths, _augment, _norm_features, _add_labels,
     _select_nodes, _remove_self_loops, AugmentationConfig,

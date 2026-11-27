@@ -23,7 +23,7 @@ from src.shared.command_tools import BaseCommand
 from pydantic import BaseModel, computed_field
 from typing import Tuple, Dict, Any, List, TypedDict, Callable, Generator
 from definitions import EMS_DIR
-from src.graph_dl.layers.reduction import reduce
+from src.graph_learning.layers.reduction import reduce
 from src.commands.build_emap.scores import score, SCORING_METHOD
 from src.shared.file_tools import Batched, Map
 from src.shared.platforms import LLM, RequestReturnType

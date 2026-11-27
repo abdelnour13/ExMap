@@ -1,8 +1,8 @@
 import torch
 from torch import nn, Tensor
 from typing import Optional
-from src.graph_dl.layers.activation import Activation
-from src.graph_dl.layers.norm import Norm, NORM_TYPE
+from src.graph_learning.layers.activation import Activation
+from src.graph_learning.layers.norm import Norm, NORM_TYPE
 
 class MLP(nn.Module):
 

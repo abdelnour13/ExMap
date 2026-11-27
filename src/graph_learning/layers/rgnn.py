@@ -3,9 +3,9 @@ from torch import Tensor
 from typing import Optional, Tuple, TypedDict
 from torch import nn
 from torch_scatter import scatter
-from src.graph_dl.layers.activation import Activation
+from src.graph_learning.layers.activation import Activation
 from torch_geometric import utils as gnn_utils
-from src.graph_dl.layers.norm import Norm, NORM_TYPE
+from src.graph_learning.layers.norm import Norm, NORM_TYPE
 
 class RGNNOutput(TypedDict):
     x : Tensor

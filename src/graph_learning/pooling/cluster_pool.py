@@ -2,15 +2,15 @@ import torch
 import math
 from torch import nn as tnn
 from torch.nn import functional as F
-from src.graph_dl import ops
-from src.graph_dl.layers.reduction import reduce
-from src.graph_dl.utils import AdjMatrix, EdgeIndex
+from src.graph_learning import ops
+from src.graph_learning.layers.reduction import reduce
+from src.graph_learning.utils import AdjMatrix, EdgeIndex
 from torch import nn, Tensor
 from torch_scatter import scatter
 from torch_geometric import utils as gnn_utils
 from typing import Tuple, Optional, Literal, Dict, Callable, List
 from dataclasses import dataclass, field
-from src.graph_dl.layers.codebook import MultiLevelCodebook, CodebookOutput
+from src.graph_learning.layers.codebook import MultiLevelCodebook, CodebookOutput
 
 POOLING_KIND = Literal['dmon', 'diffpool', 'mincut', 'enad', 'vq']
 AUX_LOSS_KIND = Literal['dmon', 'diffpool', 'mincut', 'enad']

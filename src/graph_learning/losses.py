@@ -6,7 +6,7 @@ from torch_scatter import scatter
 from torch_geometric import utils as gnn_utils
 from pydantic import BaseModel
 from dataclasses import dataclass
-from src.graph_dl import ops
+from src.graph_learning import ops
 from sklearn.metrics import r2_score, accuracy_score, f1_score, recall_score, precision_score
 
 T = TypeVar('T')

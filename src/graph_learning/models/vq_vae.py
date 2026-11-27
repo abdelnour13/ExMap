@@ -1,15 +1,15 @@
 import torch
 import math
 from pydantic import BaseModel
-from src.graph_dl.layers.encoder import TransEncoder
-from src.graph_dl.layers.reduction import Reduction, READOUT
-from src.graph_dl.layers.codebook import MultiLevelCodebook, CodebookOutput
-from src.graph_dl.models.base_model import TopicModel, Context, IterationContext
-from src.graph_dl.pooling.cluster_pool import VQPool, AdjMatrix, EdgeIndex
+from src.graph_learning.layers.encoder import TransEncoder
+from src.graph_learning.layers.reduction import Reduction, READOUT
+from src.graph_learning.layers.codebook import MultiLevelCodebook, CodebookOutput
+from src.graph_learning.models.base_model import TopicModel, Context, IterationContext
+from src.graph_learning.pooling.cluster_pool import VQPool, AdjMatrix, EdgeIndex
 from torch import nn, Tensor
 from typing import Literal, List, Optional, Dict, Any, TypeVar, Callable
 from torch_geometric.data import HeteroData
-from src.graph_dl import losses, ops
+from src.graph_learning import losses, ops
 from dataclasses import dataclass
 
 # S = pooled_graph.S
